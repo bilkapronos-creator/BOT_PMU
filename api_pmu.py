@@ -5,6 +5,7 @@ import re
 
 app = FastAPI(title="Velora Engine", description="Moteur d'analyse multi-sports")
 
+# Configuration CORS pour autoriser les appels depuis ton site Vercel
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,6 +18,7 @@ def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
     if not musique_brute or musique_brute in ["Inédit", "Non renseignée"]:
         return 0
     score_total = 0
+    # Nettoyage des chaînes de caractères (suppression des années entre parenthèses)
     musique_propre = re.sub(r'\(\d{2}\)', '', musique_brute)
     performances = [p for p in musique_propre.split() if p]
     bareme_places = {'1': 10, '2': 7, '3': 5, '4': 3, '5': 2, '6': 1, '7': 0, '8': 0, '9': 0, '0': 0, 'D': 0, 'T': -1, 'A': -1}
@@ -26,6 +28,7 @@ def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
         place = perf[0].upper()
         discipline_perf = perf[1].lower() 
         points = bareme_places.get(place, 0)
+        # Multiplicateurs basés sur l'historique et la discipline
         multiplicateur_fraicheur = 1.5 if index == 0 else (1.2 if index == 1 else 1.0)
         multiplicateur_discipline = 1.0 if discipline_perf == discipline_du_jour else 0.5
         score_total += (points * multiplicateur_fraicheur * multiplicateur_discipline)
@@ -40,12 +43,16 @@ def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
 
 @app.get("/analyser/{date}/{reunion}/{course}")
 def analyser_course(date: str, reunion: str, course: str):
-    url_pmu = f"https://online.turfinfo.api.pmu.fr/rest/client/62/programme/{date}/{reunion}/{course}/participants?specialisation=OFFLINE"
+    # Nettoyage des paramètres d'entrée pour l'API PMU
+    reunion_num = re.sub(r'\D', '', reunion)
+    course_num = re.sub(r'\D', '', course)
+    
+    url_pmu = f"https://online.turfinfo.api.pmu.fr/rest/client/62/programme/{date}/{reunion_num}/{course_num}/participants?specialisation=OFFLINE"
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
     
     response = requests.get(url_pmu, headers=headers)
     if response.status_code != 200:
-        return {"erreur": "Course introuvable"}
+        return {"erreur": "Course introuvable ou non disponible"}
         
     data = response.json()
     participants = data.get("participants", [])
@@ -59,5 +66,8 @@ def analyser_course(date: str, reunion: str, course: str):
             "score_mtech": score
         })
         
+    # Tri des chevaux par score décroissant
     tableau_pronostics.sort(key=lambda x: x["score_mtech"], reverse=True)
-    return {"pronostics": tableau_pronostics}
+    
+    # Retourne la clé attendue par ton index.html
+    return {"pronostic_officiel_mtech": tableau_pronostics}
