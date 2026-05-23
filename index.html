@@ -4,98 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M_Tech | Pronostics Dynamiques</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#10B981">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .loader { border-top-color: #10B981; animation: spinner 1.5s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        ::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4">
 
     <header class="max-w-2xl mx-auto text-center py-6">
         <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">M_TECH</h1>
-        <p class="text-gray-400 text-sm mt-1">L'algorithme de détection Value Bet</p>
     </header>
 
-    <div class="max-w-2xl mx-auto bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8 shadow-lg">
+    <div class="max-w-2xl mx-auto bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-                <label class="block text-xs text-gray-400 uppercase tracking-wider mb-1">Date</label>
-                <input type="date" id="dateInput" class="w-full bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 focus:outline-none focus:border-emerald-500">
-            </div>
-            <div>
-                <label class="block text-xs text-gray-400 uppercase tracking-wider mb-1">Réunion</label>
-                <input type="text" id="reunionInput" placeholder="Ex: R1" class="w-full bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 focus:outline-none focus:border-emerald-500 uppercase font-bold">
-            </div>
-            <div>
-                <label class="block text-xs text-gray-400 uppercase tracking-wider mb-1">Course</label>
-                <input type="text" id="courseInput" placeholder="Ex: C1" class="w-full bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 focus:outline-none focus:border-emerald-500 uppercase font-bold">
-            </div>
-            <div class="flex items-end">
-                <button type="button" onclick="lancerAnalyse()" id="submitBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded shadow-lg shadow-emerald-500/30 transition duration-300">
-                    Analyser
-                </button>
-            </div>
+            <input type="date" id="dateInput" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2">
+            <input type="text" id="reunionInput" placeholder="R1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
+            <input type="text" id="courseInput" placeholder="C1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
+            <button type="button" onclick="lancerAnalyse()" id="submitBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded">Analyser</button>
         </div>
     </div>
 
-    <div id="loading" class="hidden flex justify-center py-8">
-        <div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div>
-    </div>
-
+    <div id="loading" class="hidden flex justify-center py-8"><div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div></div>
     <h2 id="titreResultats" class="max-w-2xl mx-auto text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
-
     <div id="resultats" class="max-w-2xl mx-auto space-y-4"></div>
 
     <script>
         document.getElementById('dateInput').valueAsDate = new Date();
 
         async function lancerAnalyse() {
-            const bouton = document.getElementById('submitBtn');
-            const zoneResultats = document.getElementById('resultats');
-            const loading = document.getElementById('loading');
-            const titreResultats = document.getElementById('titreResultats');
-
-            const dateRaw = document.getElementById('dateInput').value; 
-            if (!dateRaw) return alert("Veuillez choisir une date.");
-            
-            const [year, month, day] = dateRaw.split('-');
-            const dateAPI = `${day}${month}${year}`; 
+            const dateAPI = document.getElementById('dateInput').value.replace(/-/g, '');
             const reunion = document.getElementById('reunionInput').value.toUpperCase().trim();
             const course = document.getElementById('courseInput').value.toUpperCase().trim();
 
-            if (!reunion || !course) return alert("Veuillez remplir la Réunion et la Course.");
-
+            const zoneResultats = document.getElementById('resultats');
+            const loading = document.getElementById('loading');
+            
             zoneResultats.innerHTML = '';
-            titreResultats.classList.add('hidden');
             loading.classList.remove('hidden');
-            bouton.disabled = true;
-            bouton.innerText = "Calculs en cours...";
 
             try {
-                // URL de ton API Velora sur Render
-                const urlDynamique = `https://velora-engine.onrender.com/analyser/${dateAPI}/${reunion}/${course}`;
-                
-                const reponse = await fetch(urlDynamique);
+                const url = `https://velora-engine.onrender.com/analyser/${dateAPI}/${reunion}/${course}`;
+                const reponse = await fetch(url);
                 const data = await reponse.json();
 
                 loading.classList.add('hidden');
-                bouton.disabled = false;
-                bouton.innerText = "Analyser";
 
                 if(data.erreur) {
-                    zoneResultats.innerHTML = `<div class="bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-lg text-center font-bold">Course introuvable.</div>`;
+                    zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : ${data.erreur}</div>`;
                     return;
                 }
 
-                titreResultats.innerText = `Arrivée estimée pour la ${reunion}${course}`;
-                titreResultats.classList.remove('hidden');
-
-                data.pronostic_officiel_mtech.forEach((cheval, index) => {
+                // CORRECTION ICI : On utilise "pronostics" car c'est ce que ton Python envoie
+                data.pronostics.forEach((cheval, index) => {
                     zoneResultats.innerHTML += `
                         <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-center space-x-4">
                             <div class="bg-emerald-600 h-10 w-10 flex items-center justify-center rounded-full text-white font-bold">${index + 1}</div>
@@ -105,11 +66,9 @@
                             </div>
                         </div>`;
                 });
-            } catch (erreur) {
+            } catch (e) {
                 loading.classList.add('hidden');
-                bouton.disabled = false;
-                bouton.innerText = "Analyser";
-                zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : Le serveur se réveille, réessaie dans 30s.</div>`;
+                zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>`;
             }
         }
     </script>
