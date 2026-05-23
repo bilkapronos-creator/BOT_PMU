@@ -52,20 +52,7 @@
     <div id="resultats" class="max-w-2xl mx-auto space-y-4"></div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('PWA M_Tech prête !', reg));
-            });
-        }
-
         document.getElementById('dateInput').valueAsDate = new Date();
-
-        const reseauAffiliation = [
-            { nom: "ZEturf", url: "https://www.zeturf.fr/fr/inscription?parrainage=49D0B4BA67228D8E", couleur: "bg-red-600 hover:bg-red-700" },
-            { nom: "PMU", url: "https://www.pmu.fr/turf/static/offre-parrainage/?codeParrainage=667182868", couleur: "bg-emerald-600 hover:bg-emerald-700" },
-            { nom: "Betclic", url: "https://go.onelink.me/2887093520/6c3132b8?af_sub5=BILKO341", couleur: "bg-red-500 hover:bg-red-600" }
-        ];
 
         async function lancerAnalyse() {
             const bouton = document.getElementById('submitBtn');
@@ -78,7 +65,6 @@
             
             const [year, month, day] = dateRaw.split('-');
             const dateAPI = `${day}${month}${year}`; 
-
             const reunion = document.getElementById('reunionInput').value.toUpperCase().trim();
             const course = document.getElementById('courseInput').value.toUpperCase().trim();
 
@@ -90,10 +76,8 @@
             bouton.disabled = true;
             bouton.innerText = "Calculs en cours...";
 
-            const sponsorDuJour = reseauAffiliation[Math.floor(Math.random() * reseauAffiliation.length)];
-
             try {
-                // URL mise à jour vers ton serveur Velora sur Render
+                // URL de ton API Velora sur Render
                 const urlDynamique = `https://velora-engine.onrender.com/analyser/${dateAPI}/${reunion}/${course}`;
                 
                 const reponse = await fetch(urlDynamique);
@@ -104,7 +88,7 @@
                 bouton.innerText = "Analyser";
 
                 if(data.erreur) {
-                    zoneResultats.innerHTML = `<div class="bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-lg text-center font-bold">Course introuvable ou API en réveil. Réessayez dans 10s.</div>`;
+                    zoneResultats.innerHTML = `<div class="bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-lg text-center font-bold">Course introuvable.</div>`;
                     return;
                 }
 
@@ -112,29 +96,20 @@
                 titreResultats.classList.remove('hidden');
 
                 data.pronostic_officiel_mtech.forEach((cheval, index) => {
-                    // ... (ton code d'affichage reste identique)
-                    const carte = `
-                        <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex flex-col transition duration-200">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="bg-gray-700 h-10 w-10 flex items-center justify-center rounded-full text-lg shadow-inner shrink-0 text-white font-bold">
-                                        ${index + 1}
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-lg text-white">N°${cheval.numero} - ${cheval.nom}</h3>
-                                        <p class="text-xs font-bold mt-1 text-emerald-400">Score M_Tech : ${cheval.score_mtech}</p>
-                                    </div>
-                                </div>
+                    zoneResultats.innerHTML += `
+                        <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-center space-x-4">
+                            <div class="bg-emerald-600 h-10 w-10 flex items-center justify-center rounded-full text-white font-bold">${index + 1}</div>
+                            <div>
+                                <h3 class="font-bold text-white">N°${cheval.numero} - ${cheval.nom}</h3>
+                                <p class="text-sm text-emerald-400">Score : ${cheval.score_mtech}</p>
                             </div>
-                        </div>
-                    `;
-                    zoneResultats.innerHTML += carte;
+                        </div>`;
                 });
             } catch (erreur) {
                 loading.classList.add('hidden');
                 bouton.disabled = false;
                 bouton.innerText = "Analyser";
-                zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur de connexion. Le serveur est peut-être en train de se réveiller.</div>`;
+                zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : Le serveur se réveille, réessaie dans 30s.</div>`;
             }
         }
     </script>
