@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M_Tech | Pronostics Dynamiques</title>
+    <meta name="description" content="Pronostics hippiques dynamiques par algorithme M_Tech">
+    <meta name="theme-color" content="#10B981">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="M_Tech">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .loader { border-top-color: #10B981; animation: spinner 1.5s linear infinite; }
@@ -12,8 +21,32 @@
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4">
 
-    <header class="max-w-2xl mx-auto text-center py-6">
-        <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">M_TECH</h1>
+    <header class="max-w-2xl mx-auto py-6">
+        <div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-between sm:items-center">
+            <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">M_TECH</h1>
+            <button
+                type="button"
+                id="installBtn"
+                class="hidden items-center gap-2 rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                aria-label="Installer l'application M_Tech sur cet appareil"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                </svg>
+                Installer
+            </button>
+        </div>
+
+        <nav class="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3" aria-label="Navigation par sport">
+            <span class="rounded-lg border border-emerald-500/60 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-400 shadow-sm" aria-current="page">🐎 PMU</span>
+            <span class="cursor-not-allowed rounded-lg border border-gray-700 bg-gray-800/40 px-4 py-2 text-sm text-gray-500 opacity-50 select-none" aria-disabled="true" title="Bientôt disponible">⚽ Foot</span>
+            <span class="cursor-not-allowed rounded-lg border border-gray-700 bg-gray-800/40 px-4 py-2 text-sm text-gray-500 opacity-50 select-none" aria-disabled="true" title="Bientôt disponible">🎾 Tennis</span>
+            <span class="cursor-not-allowed rounded-lg border border-gray-700 bg-gray-800/40 px-4 py-2 text-sm text-gray-500 opacity-50 select-none" aria-disabled="true" title="Bientôt disponible">🏎️ F1</span>
+        </nav>
+
+        <p id="installIosHint" class="mt-3 hidden text-center text-xs leading-relaxed text-gray-400">
+            Sur iPhone : touchez <span class="font-medium text-gray-300">Partager</span>, puis <span class="font-medium text-gray-300">Sur l'écran d'accueil</span>.
+        </p>
     </header>
 
     <div class="max-w-2xl mx-auto bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8">
@@ -32,9 +65,111 @@
     <div id="resultats" class="max-w-2xl mx-auto space-y-4"></div>
 
     <script>
+        const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
+        const API_BASE_URL = 'https://velora-engine.onrender.com';
+
         document.getElementById('dateInput').valueAsDate = new Date();
 
+        let deferredInstallPrompt = null;
+        const installBtn = document.getElementById('installBtn');
+        const installIosHint = document.getElementById('installIosHint');
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+        if (!isStandalone && isIos) {
+            installBtn.classList.remove('hidden');
+            installBtn.classList.add('inline-flex');
+            installIosHint.classList.remove('hidden');
+            installBtn.addEventListener('click', () => installIosHint.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+        }
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            installBtn.classList.remove('hidden');
+            installBtn.classList.add('inline-flex');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredInstallPrompt) return;
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                installBtn.classList.add('hidden');
+                installBtn.classList.remove('inline-flex');
+            }
+            deferredInstallPrompt = null;
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            installBtn.classList.add('hidden');
+            installBtn.classList.remove('inline-flex');
+            installIosHint.classList.add('hidden');
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
+
+        function formaterPoids(poids) {
+            if (poids == null || poids === '') return null;
+            const valeur = Number(poids);
+            if (Number.isNaN(valeur)) return poids;
+            return valeur >= 100 ? (valeur / 10).toFixed(1) : String(valeur);
+        }
+
+        const reseauAffiliation = [
+            { nom: "ZEturf", url: "https://www.zeturf.fr/fr/inscription?parrainage=49D0B4BA67228D8E", couleur: "bg-red-600 hover:bg-red-700" },
+            { nom: "PMU", url: "https://www.pmu.fr/turf/static/offre-parrainage/?codeParrainage=667182868", couleur: "bg-emerald-600 hover:bg-emerald-700" },
+            { nom: "Betclic", url: "https://go.onelink.me/2887093520/6c3132b8?af_sub5=BILKO341", couleur: "bg-red-500 hover:bg-red-600" },
+        ];
+
+        function badgeClassement(index) {
+            if (index === 0) return "bg-yellow-500 text-yellow-900";
+            if (index === 1) return "bg-gray-300 text-gray-800";
+            if (index === 2) return "bg-amber-600 text-white";
+            return "bg-gray-600 text-gray-200";
+        }
+
+        function styleCarte(cheval) {
+            if (cheval.is_value_bet) {
+                return "relative overflow-hidden border-2 border-yellow-500 bg-orange-500/10 animate-pulse shadow-[0_0_28px_rgba(249,115,22,0.3)]";
+            }
+            return "border border-gray-700 bg-gray-800/90";
+        }
+
+        function badgeBelleCote(cheval) {
+            if (!cheval.is_value_bet) return "";
+            return `<span class="absolute right-0 top-0 z-10 rounded-bl-xl bg-orange-600 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">🔥 Belle Côte</span>`;
+        }
+
+        function formaterCote(cheval) {
+            if (cheval.cote_pmu_disponible === false) {
+                return `~${cheval.cote} / 1 (estimée)`;
+            }
+            return `${cheval.cote} / 1`;
+        }
+
+        function genererBoutonParrainage(sponsor, index, cheval) {
+            if (index >= 3 && !cheval.is_value_bet) return "";
+
+            return `
+                <div class="mt-4 border-t border-gray-700 pt-4">
+                    <a href="${sponsor.url}" target="_blank" rel="noopener sponsored"
+                       class="${sponsor.couleur} flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-center text-xs font-bold text-white shadow-lg transition duration-200 md:text-sm">
+                        <span>Parier sur ${sponsor.nom} (Bonus Parrainage)</span>
+                        <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>`;
+        }
+
         async function lancerAnalyse() {
+            const bouton = document.getElementById('submitBtn');
             const dateAPI = document.getElementById('dateInput').value.replace(/-/g, '');
             const reunion = document.getElementById('reunionInput').value.toUpperCase().trim();
             const course = document.getElementById('courseInput').value.toUpperCase().trim();
@@ -53,39 +188,73 @@
                 return;
             }
 
+            bouton.disabled = true;
+            bouton.textContent = 'Calculs...';
+            const sponsorDuJour = reseauAffiliation[Math.floor(Math.random() * reseauAffiliation.length)];
+
             try {
-                const url = `https://velora-engine.onrender.com/analyser/${dateAPI}/${reunion}/${course}`;
-                const reponse = await fetch(url);
+                const url = `${API_BASE_URL}/analyser/${dateAPI}/${reunion}/${course}`;
+                const reponse = await fetch(url, {
+                    headers: { 'X-MTech-Key': MTECH_API_KEY },
+                });
+
+                if (reponse.status === 401) {
+                    zoneResultats.innerHTML = '<div class="text-red-500 text-center">Accès refusé : clé API invalide.</div>';
+                    return;
+                }
+
                 const data = await reponse.json();
 
                 loading.classList.add('hidden');
+                bouton.disabled = false;
+                bouton.textContent = 'Analyser';
 
                 if (data.erreur) {
                     zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : ${data.erreur}</div>`;
                     return;
                 }
 
-                const pronostics = data.pronostic_officiel_mtech;
-                if (!Array.isArray(pronostics) || pronostics.length === 0) {
+                const listeBrute = data.pronostic_officiel_mtech;
+                if (!Array.isArray(listeBrute) || listeBrute.length === 0) {
                     zoneResultats.innerHTML = '<div class="text-yellow-500 text-center">Aucun participant trouvé pour cette course.</div>';
                     return;
                 }
+
+                const pronostics = listeBrute
+                    .slice()
+                    .sort((a, b) => (Number(b.score_mtech) || 0) - (Number(a.score_mtech) || 0));
 
                 titreResultats.textContent = `Classement M_Tech — ${reunion}${course}`;
                 titreResultats.classList.remove('hidden');
 
                 pronostics.forEach((cheval, index) => {
+                    const jockey = cheval.jockey || 'N/C';
+                    const poids = formaterPoids(cheval.poids);
+                    const poidsAffiche = poids != null ? `${poids} kg` : 'N/C';
+                    const boutonParrainage = genererBoutonParrainage(sponsorDuJour, index, cheval);
+
                     zoneResultats.innerHTML += `
-                        <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-center space-x-4">
-                            <div class="bg-emerald-600 h-10 w-10 flex items-center justify-center rounded-full text-white font-bold">${index + 1}</div>
-                            <div>
-                                <h3 class="font-bold text-white">N°${cheval.numero} - ${cheval.nom}</h3>
-                                <p class="text-sm text-emerald-400">Score : ${cheval.score_mtech}</p>
+                        <div class="rounded-xl p-4 transition duration-200 ${styleCarte(cheval)}">
+                            ${badgeBelleCote(cheval)}
+                            <div class="flex items-start gap-4">
+                                <div class="${badgeClassement(index)} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold">${index + 1}</div>
+                                <div class="min-w-0 flex-1">
+                                    <h3 class="text-base font-bold leading-tight ${cheval.is_value_bet ? 'text-white' : 'text-gray-100'}">N°${cheval.numero} - ${cheval.nom}</h3>
+                                    <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-0.5 text-xs leading-relaxed text-gray-400">
+                                        <span>Jockey : <span class="font-medium text-gray-300">${jockey}</span></span>
+                                        <span>Poids : <span class="font-medium text-gray-300">${poidsAffiche}</span></span>
+                                    </p>
+                                    <p class="mt-1 text-xs font-semibold ${cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80'}">Cote : ${formaterCote(cheval)}</p>
+                                    <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score M_Tech : ${cheval.score_mtech}</p>
+                                </div>
                             </div>
+                            ${boutonParrainage}
                         </div>`;
                 });
             } catch (e) {
                 loading.classList.add('hidden');
+                bouton.disabled = false;
+                bouton.textContent = 'Analyser';
                 zoneResultats.innerHTML = '<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>';
             }
         }

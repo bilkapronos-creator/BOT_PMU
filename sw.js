@@ -1,7 +1,9 @@
-const CACHE_NAME = 'mtech-v1';
+const CACHE_NAME = 'mtech-v2';
 const ASSETS = [
-  './index.html',
-  './manifest.json'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icons/icon.svg'
 ];
 
 // Installation du Service Worker et mise en cache de l'interface
