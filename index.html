@@ -29,22 +29,49 @@
     <link rel="preload" as="image" href="/icons/splash-mobile.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        :root {
+            --splash-aspect: 9 / 16;
+            --splash-text-space: 4.5rem;
+        }
         .velora-splash-wrap {
             position: relative;
-            width: min(88vw, 320px);
-            aspect-ratio: 9 / 16;
-            max-height: min(72vh, 640px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: var(--splash-aspect);
+            width: auto;
+            height: min(
+                calc(100dvh - var(--splash-text-space) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)),
+                calc(76vw * 16 / 9)
+            );
+            max-width: 88vw;
         }
         .velora-splash-wrap--compact {
-            width: min(72vw, 220px);
-            max-height: min(48vh, 390px);
+            --splash-text-space: 0px;
+            height: min(36dvh, calc(62vw * 16 / 9));
+            max-width: 72vw;
         }
         @media (min-width: 640px) {
             .velora-splash-wrap {
-                width: min(300px, 34vw);
+                height: min(
+                    calc(100dvh - var(--splash-text-space) - 2rem),
+                    calc(min(280px, 32vw) * 16 / 9)
+                );
+                max-width: min(280px, 32vw);
             }
             .velora-splash-wrap--compact {
-                width: min(180px, 22vw);
+                height: min(32dvh, calc(min(180px, 20vw) * 16 / 9));
+                max-width: min(180px, 20vw);
+            }
+        }
+        @media (max-height: 520px) and (orientation: landscape) {
+            .velora-splash-wrap {
+                height: min(calc(100dvh - 3rem), calc(42vh * 16 / 9));
+                max-width: 38vw;
+            }
+            #appSplash p {
+                margin-top: 0.75rem;
+                font-size: 0.65rem;
             }
         }
         .velora-splash-ring {
@@ -60,7 +87,7 @@
         .velora-splash-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 1rem;
             box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.18);
             animation: velora-pulse 1.6s ease-in-out infinite;
@@ -97,7 +124,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
-    <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712] px-4">
+    <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712] px-[max(1rem,env(safe-area-inset-left))] pb-[env(safe-area-inset-bottom,0px)] pt-[env(safe-area-inset-top,0px)]">
         <div class="velora-splash-wrap">
             <div class="velora-splash-ring" aria-hidden="true"></div>
             <img
