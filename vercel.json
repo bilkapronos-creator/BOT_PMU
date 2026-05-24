@@ -1,8 +1,12 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
+  "framework": null,
   "buildCommand": "node scripts/generate-config.js",
   "outputDirectory": ".",
+  "installCommand": "",
   "routes": [
+    { "handle": "filesystem" },
     { "src": "/config.js", "dest": "/config.js" },
     { "src": "/admin.html", "dest": "/admin.html" },
     { "src": "/admin.js", "dest": "/admin.js" },
