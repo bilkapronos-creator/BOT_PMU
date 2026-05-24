@@ -25,7 +25,9 @@
         </div>
     </div>
 
-    <div id="loading" class="hidden flex justify-center py-8"><div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div></div>
+    <div id="loading" class="hidden flex justify-center py-8">
+        <div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div>
+    </div>
     <h2 id="titreResultats" class="max-w-2xl mx-auto text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
     <div id="resultats" class="max-w-2xl mx-auto space-y-4"></div>
 
@@ -38,10 +40,18 @@
             const course = document.getElementById('courseInput').value.toUpperCase().trim();
 
             const zoneResultats = document.getElementById('resultats');
+            const titreResultats = document.getElementById('titreResultats');
             const loading = document.getElementById('loading');
-            
+
             zoneResultats.innerHTML = '';
+            titreResultats.classList.add('hidden');
             loading.classList.remove('hidden');
+
+            if (!dateAPI || !reunion || !course) {
+                loading.classList.add('hidden');
+                zoneResultats.innerHTML = '<div class="text-red-500 text-center">Veuillez renseigner la date, la réunion et la course.</div>';
+                return;
+            }
 
             try {
                 const url = `https://velora-engine.onrender.com/analyser/${dateAPI}/${reunion}/${course}`;
@@ -50,13 +60,21 @@
 
                 loading.classList.add('hidden');
 
-                if(data.erreur) {
+                if (data.erreur) {
                     zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : ${data.erreur}</div>`;
                     return;
                 }
 
-                // CORRECTION ICI : On utilise "pronostics" car c'est ce que ton Python envoie
-                data.pronostics.forEach((cheval, index) => {
+                const pronostics = data.pronostic_officiel_mtech;
+                if (!Array.isArray(pronostics) || pronostics.length === 0) {
+                    zoneResultats.innerHTML = '<div class="text-yellow-500 text-center">Aucun participant trouvé pour cette course.</div>';
+                    return;
+                }
+
+                titreResultats.textContent = `Classement M_Tech — ${reunion}${course}`;
+                titreResultats.classList.remove('hidden');
+
+                pronostics.forEach((cheval, index) => {
                     zoneResultats.innerHTML += `
                         <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-center space-x-4">
                             <div class="bg-emerald-600 h-10 w-10 flex items-center justify-center rounded-full text-white font-bold">${index + 1}</div>
@@ -68,7 +86,7 @@
                 });
             } catch (e) {
                 loading.classList.add('hidden');
-                zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>`;
+                zoneResultats.innerHTML = '<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>';
             }
         }
     </script>
