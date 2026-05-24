@@ -660,7 +660,16 @@
 
         function badgeBelleCote(cheval) {
             if (!cheval.is_value_bet) return "";
-            return `<span class="absolute right-0 top-0 z-10 rounded-bl-xl bg-orange-600 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">🔥 Belle Côte</span>`;
+            const ecart = cheval.anomalie_cote != null
+                ? ` +${cheval.anomalie_cote}`
+                : '';
+            return `<span class="absolute right-0 top-0 z-10 rounded-bl-xl bg-orange-600 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg">🔥 Value Bet${ecart}</span>`;
+        }
+
+        function hintAnomalieCote(cheval) {
+            if (!cheval.is_value_bet || cheval.cote_pmu_disponible === false || cheval.cote === '-') return '';
+            const score = cheval.score_velora ?? cheval.score_mtech;
+            return `<p class="mt-1 text-[10px] font-semibold uppercase tracking-wide text-orange-400/90">Anomalie : cote ${cheval.cote} &gt; score Velora ${score}</p>`;
         }
 
         function formaterCote(cheval) {
@@ -772,6 +781,7 @@
                                     </p>
                                     <p class="mt-1 text-xs font-semibold ${cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80'}">Cote : ${formaterCote(cheval)}</p>
                                     <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score Velora : ${cheval.score_mtech}</p>
+                                    ${hintAnomalieCote(cheval)}
                                 </div>
                             </div>
                             ${boutonParrainage}

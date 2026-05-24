@@ -78,6 +78,7 @@ COTE_INDICATOR = "-"
 SEUIL_SCORE_BELLE_COTE = 7.0
 SEUIL_COTE_BELLE_COTE = 8.0
 TOP_CLASSEMENT_BELLE_COTE = 4
+ECART_MIN_VALUE_BET = 1.0  # cote PMU doit dépasser le score Velora d'au moins ce delta
 
 BASE_URL_PMU = "https://online.turfinfo.api.pmu.fr/rest/client/62/programme"
 
@@ -176,11 +177,15 @@ def est_belle_cote(
     rang: int,
     cote_pmu_disponible: bool,
 ) -> bool:
+    """
+    Value Bet / Belle Côte : top 4 Velora, score solide, cote PMU live nettement
+    supérieure au score (anomalie de sous-estimation du marché).
+    """
     if rang >= TOP_CLASSEMENT_BELLE_COTE or score_mtech < SEUIL_SCORE_BELLE_COTE:
         return False
-    if cote_pmu_disponible and cote is not None:
-        return cote >= SEUIL_COTE_BELLE_COTE
-    return score_mtech >= SEUIL_SCORE_BELLE_COTE + 3
+    if not cote_pmu_disponible or cote is None:
+        return False
+    return cote >= SEUIL_COTE_BELLE_COTE and cote >= score_mtech + ECART_MIN_VALUE_BET
 
 
 def _metadata_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, nb_participants: int = 0) -> dict:
@@ -249,19 +254,25 @@ def analyser_course(date: str, reunion: str, course: str):
             "cote": _formater_cote_reponse(cote, cote_pmu_disponible),
             "cote_pmu_disponible": cote_pmu_disponible,
             "score_mtech": score,
+            "score_velora": score,
             "is_value_bet": False,
+            "anomalie_cote": None,
         })
 
     tableau_pronostics.sort(key=lambda x: x["score_mtech"], reverse=True)
 
     for rang, entree in enumerate(tableau_pronostics):
         cote_num = entree["cote"] if isinstance(entree["cote"], (int, float)) else None
-        entree["is_value_bet"] = est_belle_cote(
-            entree["score_mtech"],
+        score = float(entree["score_mtech"] or 0)
+        is_vb = est_belle_cote(
+            score,
             cote_num,
             rang,
             entree["cote_pmu_disponible"],
         )
+        entree["is_value_bet"] = is_vb
+        if is_vb and cote_num is not None:
+            entree["anomalie_cote"] = round(cote_num - score, 1)
 
     return {
         "pronostic_officiel_mtech": tableau_pronostics,
