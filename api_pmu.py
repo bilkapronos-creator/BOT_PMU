@@ -33,23 +33,42 @@ def verifier_cle_api(x_mtech_key: Optional[str] = Header(default=None, alias="X-
     if not cle_attendue:
         raise HTTPException(status_code=500, detail="Clé API non configurée sur le serveur")
     if not x_mtech_key or x_mtech_key != cle_attendue:
-        raise HTTPException(status_code=401, detail="Accès non autorisé")
+        raise HTTPException(status_code=401, detail="Accès non autorisé : X-MTech-Key invalide")
+
+
+def verifier_cle_api_publique(x_mtech_key: Optional[str] = Header(default=None, alias="X-MTech-Key")):
+    """Clé dédiée vitrine (MTECH_PUBLIC_API_KEY) ou clé principale en secours."""
+    cle_publique = os.environ.get("MTECH_PUBLIC_API_KEY") or os.environ.get("MTECH_API_KEY")
+    if not cle_publique:
+        raise HTTPException(status_code=500, detail="Clé API publique non configurée")
+    if not x_mtech_key or x_mtech_key != cle_publique:
+        raise HTTPException(status_code=401, detail="Accès non autorisé : clé API publique invalide")
 
 
 def exiger_user_id(x_user_id: Optional[str] = Header(default=None, alias="X-User-Id")) -> str:
-    """Identifiant membre obligatoire pour les archives privées."""
     if not x_user_id or not str(x_user_id).strip():
         raise HTTPException(status_code=400, detail="En-tête X-User-Id requis")
     return str(x_user_id).strip()
 
 
+def auth_membre(
+    _cle: None = Depends(verifier_cle_api),
+    user_id: str = Depends(exiger_user_id),
+) -> str:
+    """Exige X-MTech-Key + X-User-Id sur les routes membres."""
+    return user_id
+
+
 def valider_user_id_archive(archive: dict, user_id: str) -> None:
+    """Le user_id du corps doit correspondre à l'utilisateur authentifié."""
     archive_uid = archive.get("user_id")
     if archive_uid and str(archive_uid).strip() != user_id:
         raise HTTPException(
             status_code=403,
-            detail="user_id de l'archive ne correspond pas à l'utilisateur connecté",
+            detail="user_id du corps ne correspond pas à X-User-Id",
         )
+    if "user_id" in archive and not archive_uid:
+        raise HTTPException(status_code=400, detail="user_id invalide dans le corps")
 
 
 def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, meta: dict) -> dict:
@@ -515,10 +534,10 @@ def resultat_course(date: str, reunion: str, course: str):
     }
 
 
-@app.post("/evaluation", dependencies=[Depends(verifier_cle_api)])
+@app.post("/evaluation")
 def evaluation_archive(
     archive: dict = Body(...),
-    user_id: str = Depends(exiger_user_id),
+    user_id: str = Depends(auth_membre),
 ):
     """
     Évalue un pronostic archivé (logique evaluer_pronostic_pmu inchangée),
@@ -588,20 +607,26 @@ def evaluation_archive(
     return {"archive": archive_sauvee, **archive_sauvee}
 
 
-@app.get("/archives", dependencies=[Depends(verifier_cle_api)])
+@app.get("/archives")
 def get_archives_utilisateur(
-    user_id: str = Depends(exiger_user_id),
+    user_id: str = Depends(auth_membre),
     limit: int = Query(default=10, ge=1, le=50),
+    user_id_query: Optional[str] = Query(default=None, alias="user_id"),
 ):
-    """Archives privées du membre connecté (isolation stricte par user_id)."""
+    """Archives privées : uniquement celles du X-User-Id authentifié."""
+    if user_id_query and user_id_query.strip() != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="user_id en paramètre ne correspond pas à X-User-Id",
+        )
     archives = lister_archives(user_id, limit=limit)
     return {"user_id": user_id, "archives": archives, "total": len(archives)}
 
 
-@app.post("/archives", dependencies=[Depends(verifier_cle_api)])
+@app.post("/archives")
 def creer_archive(
     archive: dict = Body(...),
-    user_id: str = Depends(exiger_user_id),
+    user_id: str = Depends(auth_membre),
 ):
     """Enregistre une analyse sans réévaluation (course en attente de résultat)."""
     valider_user_id_archive(archive, user_id)
@@ -612,10 +637,10 @@ def creer_archive(
     return {"archive": archive_sauvee}
 
 
-@app.get("/archives/{archive_id}", dependencies=[Depends(verifier_cle_api)])
+@app.get("/archives/{archive_id}")
 def get_archive_par_id(
     archive_id: int,
-    user_id: str = Depends(exiger_user_id),
+    user_id: str = Depends(auth_membre),
 ):
     """Détail d'une archive — refusée si elle n'appartient pas au membre."""
     archive = obtenir_archive(user_id, archive_id)
@@ -624,15 +649,23 @@ def get_archive_par_id(
     return {"archive": archive}
 
 
-@app.get("/stats", dependencies=[Depends(verifier_cle_api)])
-def get_stats_membre(user_id: str = Depends(exiger_user_id)):
-    """Statistiques personnalisées du membre connecté."""
+@app.get("/stats")
+def get_stats_membre(
+    user_id: str = Depends(auth_membre),
+    user_id_query: Optional[str] = Query(default=None, alias="user_id"),
+):
+    """Statistiques personnalisées : réussites par type de pari (hors Perdu)."""
+    if user_id_query and user_id_query.strip() != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="user_id en paramètre ne correspond pas à X-User-Id",
+        )
     return get_stats_utilisateur(user_id)
 
 
-@app.get("/stats/publiques", dependencies=[Depends(verifier_cle_api)])
+@app.get("/stats/publiques", dependencies=[Depends(verifier_cle_api_publique)])
 def get_stats_vitrine():
-    """Agrégats anonymisés plateforme (page vitrine)."""
+    """Agrégats anonymisés plateforme (aucune donnée par utilisateur)."""
     return get_stats_publiques()
 
 

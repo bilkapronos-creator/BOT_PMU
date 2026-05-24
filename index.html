@@ -219,6 +219,19 @@
         <h2 id="titreResultats" class="text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
         <div id="resultats" class="space-y-4"></div>
 
+        <section id="sectionVitrine" class="mt-8 hidden" aria-label="Statistiques communauté Velora">
+            <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
+                <p class="text-center text-xs uppercase tracking-widest text-cyan-400/80">Communauté Velora</p>
+                <p class="mt-2 text-center text-2xl font-black text-cyan-300">
+                    <span id="vitrineTaux">—</span><span class="text-base">%</span>
+                </p>
+                <p class="text-center text-xs text-gray-400">Taux plateforme (anonymisé)</p>
+                <p id="vitrineMeta" class="mt-2 text-center text-xs text-gray-500"></p>
+                <div id="vitrineParType" class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
+            </div>
+            <p id="vitrineSyncErreur" class="mt-3 hidden text-center text-xs text-amber-200/90" role="alert"></p>
+        </section>
+
         <aside id="guideRapide" class="glass-card mt-10 flex items-start gap-4 rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
@@ -233,12 +246,20 @@
     </section>
 
     <section id="sectionArchives" class="hidden">
-        <div class="glass-card mb-6 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 text-center shadow-lg shadow-black/20">
-            <p class="text-xs uppercase tracking-widest text-emerald-400/80">Performance globale</p>
-            <p class="mt-1 text-2xl font-black text-emerald-400">
-                Taux de réussite global : <span id="tauxReussite">0</span>%
+        <p id="statsSyncErreur" class="mb-4 hidden rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200" role="alert"></p>
+
+        <div class="glass-card mb-4 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
+            <p class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Dashboard privé</p>
+            <p class="mt-2 text-center text-3xl font-black text-emerald-400">
+                <span id="tauxReussite">0</span><span class="text-lg">%</span>
             </p>
-            <p id="statsArchives" class="mt-1 text-xs text-gray-400">0 course analysée</p>
+            <p class="text-center text-xs text-gray-400">Taux de réussite global</p>
+            <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400">0 course analysée</p>
+        </div>
+
+        <div id="statsParType" class="mb-6 hidden">
+            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition des succès</p>
+            <div id="statsParTypeListe" class="grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
         </div>
 
         <div id="resultatsArchives" class="space-y-3"></div>
@@ -248,42 +269,211 @@
 
     <script>
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
+        /** Clé vitrine : même valeur que MTECH_PUBLIC_API_KEY côté Render si définie. */
+        const MTECH_PUBLIC_API_KEY = 'Mouloud2026_MTech_Secure_7788';
         const API_BASE_URL = 'https://velora-engine.onrender.com';
         const USER_ID_KEY = 'velora_user_id';
+        const ARCHIVES_LIMIT = 50;
+        const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
 
-        function obtenirUserId() {
+        /** UUID v4 (crypto.randomUUID ou fallback RFC 4122). */
+        function genererUuidV4() {
+            if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+                return crypto.randomUUID();
+            }
+            const octets = new Uint8Array(16);
+            if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+                crypto.getRandomValues(octets);
+            } else {
+                for (let i = 0; i < 16; i += 1) octets[i] = Math.floor(Math.random() * 256);
+            }
+            octets[6] = (octets[6] & 0x0f) | 0x40;
+            octets[8] = (octets[8] & 0x3f) | 0x80;
+            const hex = [...octets].map((b) => b.toString(16).padStart(2, '0')).join('');
+            return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+        }
+
+        function initVeloraUserId() {
             let uid = localStorage.getItem(USER_ID_KEY);
             if (!uid) {
-                uid = (typeof crypto !== 'undefined' && crypto.randomUUID)
-                    ? crypto.randomUUID()
-                    : `user_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+                uid = genererUuidV4();
                 localStorage.setItem(USER_ID_KEY, uid);
             }
             return uid;
         }
 
-        const USER_ID = obtenirUserId();
+        function getVeloraUserId() {
+            return localStorage.getItem(USER_ID_KEY) || initVeloraUserId();
+        }
 
-        function entetesApi(json = false) {
-            const h = {
-                'X-MTech-Key': MTECH_API_KEY,
-                'X-User-Id': USER_ID,
+        initVeloraUserId();
+
+        function estRoutePublique(url) {
+            return url.includes('/stats/publiques');
+        }
+
+        function installVeloraFetchInterceptor() {
+            const nativeFetch = window.fetch.bind(window);
+            window.fetch = function veloraFetch(input, init = {}) {
+                const url = typeof input === 'string'
+                    ? input
+                    : (input instanceof Request ? input.url : String(input));
+
+                if (!url.startsWith(API_BASE_URL)) {
+                    return nativeFetch(input, init);
+                }
+
+                const headers = new Headers(
+                    init.headers || (input instanceof Request ? input.headers : undefined),
+                );
+                if (estRoutePublique(url)) {
+                    headers.set('X-MTech-Key', MTECH_PUBLIC_API_KEY);
+                } else {
+                    headers.set('X-MTech-Key', MTECH_API_KEY);
+                    headers.set('X-User-Id', getVeloraUserId());
+                }
+
+                const options = { ...init, headers };
+                if (input instanceof Request) {
+                    return nativeFetch(new Request(input, options));
+                }
+                return nativeFetch(input, options);
             };
-            if (json) h['Content-Type'] = 'application/json';
-            return h;
+        }
+
+        installVeloraFetchInterceptor();
+
+        function entetesJson() {
+            return { 'Content-Type': 'application/json' };
+        }
+
+        function estErreurAcces(status) {
+            return status === 403 || status === 404;
+        }
+
+        /**
+         * Appel API centralisé : intercepteur + gestion 403/404 sans planter l'UI.
+         * @returns {{ ok: boolean, status: number, data?: object, erreur?: string }}
+         */
+        async function veloraApi(path, options = {}) {
+            try {
+                const reponse = await fetch(`${API_BASE_URL}${path}`, options);
+                if (estErreurAcces(reponse.status)) {
+                    return { ok: false, status: reponse.status, erreur: MSG_SYNC_ERREUR };
+                }
+                if (!reponse.ok) {
+                    return { ok: false, status: reponse.status, erreur: `Erreur serveur (${reponse.status})` };
+                }
+                const data = await reponse.json();
+                return { ok: true, status: reponse.status, data };
+            } catch {
+                return { ok: false, status: 0, erreur: MSG_SYNC_ERREUR };
+            }
+        }
+
+        function afficherErreurSync(elementId, message) {
+            const el = document.getElementById(elementId);
+            if (!el || !message) return;
+            el.textContent = message;
+            el.classList.remove('hidden');
+        }
+
+        function masquerErreurSync(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.textContent = '';
+            el.classList.add('hidden');
         }
 
         async function lireArchives() {
-            try {
-                const reponse = await fetch(`${API_BASE_URL}/archives`, {
-                    headers: entetesApi(),
-                });
-                if (!reponse.ok) return [];
-                const data = await reponse.json();
-                return data.archives || [];
-            } catch {
-                return [];
+            const result = await veloraApi(`/archives?limit=${ARCHIVES_LIMIT}`);
+            if (!result.ok) return { archives: [], erreur: result.erreur };
+            return { archives: result.data?.archives || [], erreur: null };
+        }
+
+        async function lireStats() {
+            const result = await veloraApi('/stats');
+            if (!result.ok) return { stats: null, erreur: result.erreur };
+            return { stats: result.data, erreur: null };
+        }
+
+        async function lireStatsPubliques() {
+            const result = await veloraApi('/stats/publiques');
+            if (!result.ok) return { stats: null, erreur: result.erreur };
+            return { stats: result.data, erreur: null };
+        }
+
+        function htmlBarreTypePari(label, succes, total, taux) {
+            const largeur = total > 0 ? Math.max(8, Math.round((succes / total) * 100)) : 0;
+            return `
+                <div class="rounded-xl border border-white/10 bg-gray-900/50 px-3 py-2.5">
+                    <div class="flex items-center justify-between gap-2 text-xs">
+                        <span class="font-semibold text-gray-200 truncate" title="${label}">${label}</span>
+                        <span class="shrink-0 text-emerald-400">${succes}/${total} · ${taux}%</span>
+                    </div>
+                    <div class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-gray-800">
+                        <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500" style="width:${largeur}%"></div>
+                    </div>
+                </div>`;
+        }
+
+        function afficherDashboardPrive(stats) {
+            const blocTypes = document.getElementById('statsParType');
+            const listeTypes = document.getElementById('statsParTypeListe');
+            if (!blocTypes || !listeTypes) return;
+
+            const detail = stats?.detail_par_type_pari || {};
+            const entrees = Object.entries(detail)
+                .filter(([, v]) => v && v.succes > 0)
+                .sort((a, b) => (b[1].succes || 0) - (a[1].succes || 0));
+
+            if (entrees.length === 0) {
+                blocTypes.classList.add('hidden');
+                listeTypes.innerHTML = '';
+                return;
             }
+
+            listeTypes.innerHTML = entrees.map(([label, v]) =>
+                htmlBarreTypePari(label, v.succes, v.total, v.taux),
+            ).join('');
+            blocTypes.classList.remove('hidden');
+        }
+
+        async function chargerVitrinePublique() {
+            const section = document.getElementById('sectionVitrine');
+            if (!section) return;
+
+            const { stats, erreur } = await lireStatsPubliques();
+            if (erreur) {
+                afficherErreurSync('vitrineSyncErreur', erreur);
+                return;
+            }
+            masquerErreurSync('vitrineSyncErreur');
+
+            if (!stats) return;
+
+            const tauxEl = document.getElementById('vitrineTaux');
+            const metaEl = document.getElementById('vitrineMeta');
+            const parTypeEl = document.getElementById('vitrineParType');
+            if (tauxEl) tauxEl.textContent = String(stats.taux_reussite_plateforme ?? 0);
+            if (metaEl) {
+                metaEl.textContent = [
+                    stats.membres_actifs != null ? `${stats.membres_actifs} membre${stats.membres_actifs > 1 ? 's' : ''} actif${stats.membres_actifs > 1 ? 's' : ''}` : null,
+                    stats.victoires_plateforme != null ? `${stats.victoires_plateforme} victoire${stats.victoires_plateforme > 1 ? 's' : ''}` : null,
+                ].filter(Boolean).join(' · ');
+            }
+            if (parTypeEl) {
+                const repartition = stats.reussites_par_type_pari || stats.gains_par_famille_pari || {};
+                const entrees = Object.entries(repartition).sort((a, b) => b[1] - a[1]);
+                parTypeEl.innerHTML = entrees.length === 0
+                    ? '<p class="text-center text-xs text-gray-500">Pas encore de données publiques.</p>'
+                    : entrees.map(([label, n]) => `
+                        <div class="rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-xs">
+                            <span class="font-medium text-gray-200">${label}</span>
+                            <span class="float-right text-cyan-300">${n} succès</span>
+                        </div>`).join('');
+            }
+            section.classList.remove('hidden');
         }
 
         const SPLASH_MIN_MS = 4500;
@@ -291,6 +481,8 @@
         const splashShownAt = performance.now();
 
         window.addEventListener('load', () => {
+            chargerVitrinePublique();
+
             const splash = document.getElementById('appSplash');
             if (!splash) return;
 
@@ -391,21 +583,18 @@
         }
 
         async function verifierResultatArchive(archive) {
-            try {
-                const payload = { ...archive, user_id: USER_ID };
-                const reponse = await fetch(`${API_BASE_URL}/evaluation`, {
-                    method: 'POST',
-                    headers: entetesApi(true),
-                    body: JSON.stringify(payload),
-                });
-                if (!reponse.ok) return archive;
-
-                const data = await reponse.json();
-                if (data.erreur) return archive;
-                return data.archive || data;
-            } catch {
-                return archive;
+            const payload = { ...archive, user_id: getVeloraUserId() };
+            const result = await veloraApi('/evaluation', {
+                method: 'POST',
+                headers: entetesJson(),
+                body: JSON.stringify(payload),
+            });
+            if (!result.ok) {
+                return { archive, erreur: result.erreur };
             }
+            const data = result.data;
+            if (data?.erreur) return { archive, erreur: null };
+            return { archive: data.archive || data, erreur: null };
         }
 
         function htmlPronosticVeloraArchive(archive) {
@@ -433,23 +622,44 @@
 
             if (!liste) return;
 
+            masquerErreurSync('statsSyncErreur');
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Mise à jour des archives...</p>';
 
-            let statsServeur = null;
-            try {
-                const repStats = await fetch(`${API_BASE_URL}/stats`, { headers: entetesApi() });
-                if (repStats.ok) statsServeur = await repStats.json();
-            } catch { /* fallback calcul local */ }
+            const [statsResult, archivesResult] = await Promise.all([
+                lireStats(),
+                lireArchives(),
+            ]);
 
-            let archives = await lireArchives();
+            let erreurSync = statsResult.erreur || archivesResult.erreur;
+            if (erreurSync) {
+                afficherErreurSync('statsSyncErreur', erreurSync);
+            }
+
+            let archives = archivesResult.archives;
+            const statsServeur = statsResult.stats;
+
             if (archives.length === 0) {
-                tauxEl.textContent = '0';
-                statsEl.textContent = '0 course analysée';
+                tauxEl.textContent = statsServeur ? String(statsServeur.taux_reussite_global ?? 0) : '0';
+                if (statsServeur) {
+                    afficherDashboardPrive(statsServeur);
+                    const total = statsServeur.total_courses_analysees ?? 0;
+                    statsEl.textContent = `${total} course${total > 1 ? 's' : ''} archivée${total > 1 ? 's' : ''}`;
+                } else {
+                    statsEl.textContent = '0 course analysée';
+                }
                 liste.innerHTML = '<p class="text-center text-sm text-gray-500 py-8">Aucune course archivée. Lance une analyse pour commencer le suivi.</p>';
                 return;
             }
 
-            archives = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
+            const evaluations = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
+            for (const ev of evaluations) {
+                if (ev.erreur) erreurSync = ev.erreur;
+            }
+            if (erreurSync) {
+                afficherErreurSync('statsSyncErreur', erreurSync);
+            }
+
+            archives = evaluations.map((ev) => ev.archive);
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             const taux = statsServeur?.taux_reussite_global ?? calculerTauxReussite(archives);
@@ -458,6 +668,7 @@
             const total = statsServeur?.total_courses_analysees ?? archives.length;
             tauxEl.textContent = String(taux);
             statsEl.textContent = `${total} course${total > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''} · ${victoires} validée${victoires > 1 ? 's' : ''}`;
+            afficherDashboardPrive(statsServeur);
 
             liste.innerHTML = archives.map((a) => `
                 <article class="rounded-2xl border p-4 shadow-lg shadow-black/10 ${classeCarteArchive(a)}">
@@ -492,7 +703,7 @@
             const top3 = pronostics.slice(0, 3).map(mapperCheval);
             const top = pronostics[0];
             const archive = {
-                user_id: USER_ID,
+                user_id: getVeloraUserId(),
                 dateIso,
                 dateApi,
                 dateAffiche: formaterDateAffiche(dateIso),
@@ -516,14 +727,13 @@
                 timestamp: Date.now(),
             };
 
-            try {
-                await fetch(`${API_BASE_URL}/archives`, {
-                    method: 'POST',
-                    headers: entetesApi(true),
-                    body: JSON.stringify(archive),
-                });
-            } catch {
-                /* silencieux : l'évaluation au refresh complétera */
+            const result = await veloraApi('/archives', {
+                method: 'POST',
+                headers: entetesJson(),
+                body: JSON.stringify(archive),
+            });
+            if (!result.ok) {
+                console.warn('[Velora] Sauvegarde archive:', result.erreur);
             }
         }
 
@@ -662,17 +872,18 @@
             const sponsorDuJour = reseauAffiliation[Math.floor(Math.random() * reseauAffiliation.length)];
 
             try {
-                const url = `${API_BASE_URL}/analyser/${dateAPI}/${reunion}/${course}`;
-                const reponse = await fetch(url, {
-                    headers: { 'X-MTech-Key': MTECH_API_KEY },
-                });
+                const result = await veloraApi(`/analyser/${dateAPI}/${reunion}/${course}`);
 
-                if (reponse.status === 401) {
+                if (result.status === 401) {
                     zoneResultats.innerHTML = '<div class="text-red-500 text-center">Accès refusé : clé API invalide.</div>';
                     return;
                 }
+                if (!result.ok) {
+                    zoneResultats.innerHTML = `<div class="text-amber-300 text-center">${result.erreur || MSG_SYNC_ERREUR}</div>`;
+                    return;
+                }
 
-                const data = await reponse.json();
+                const data = result.data;
 
                 loading.classList.add('hidden');
                 loading.classList.remove('flex');

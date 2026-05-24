@@ -91,4 +91,16 @@ def get_stats_publiques() -> dict:
         "taux_reussite_plateforme": taux_plateforme,
         "membres_actifs": membres_actifs,
         "gains_par_famille_pari": gains_par_famille,
+        "reussites_par_type_pari": _agreger_reussites_par_type(archives),
     }
+
+
+def _agreger_reussites_par_type(archives: list) -> dict:
+    """Comptage anonymisé des types de paris gagnants (sans user_id)."""
+    compteur: dict[str, int] = {}
+    for archive in archives:
+        if not _est_victoire(archive):
+            continue
+        label = archive.get("type_pari_pmu") or "Autre"
+        compteur[label] = compteur.get(label, 0) + 1
+    return compteur
