@@ -325,75 +325,6 @@
             red: 'bg-red-500/20 text-red-400 ring-1 ring-red-500/40',
         };
 
-        function numerosVeloraTop(archive, n) {
-            const source = archive.pronostic_velora || archive.top3 || [];
-            return source.slice(0, n).map((p) => Number(p.numero)).filter((num) => !Number.isNaN(num));
-        }
-
-        function tousPresentDans(arriveeNums, poolNums) {
-            return arriveeNums.length > 0 && arriveeNums.every((n) => poolNums.includes(n));
-        }
-
-        function evaluerPronosticVelora(archive, arrivee_officielle) {
-            const arrivee = (arrivee_officielle || [])
-                .map(Number)
-                .filter((n) => !Number.isNaN(n));
-
-            const partants = Number(
-                archive.nombre_partants
-                ?? archive.pronostic_velora?.length
-                ?? archive.top3?.length
-                ?? 0
-            );
-
-            const top3 = numerosVeloraTop(archive, 3);
-            const top4 = numerosVeloraTop(archive, 4);
-            const top6 = numerosVeloraTop(archive, 6);
-            const top7 = numerosVeloraTop(archive, 7);
-
-            const badges = [];
-            const ajouterBadge = (label, style, priorite) => badges.push({ label, style, priorite });
-
-            const top4Arrivee = arrivee.slice(0, 4);
-            const top3Arrivee = arrivee.slice(0, 3);
-
-            if (top4Arrivee.length === 4) {
-                if (partants >= 14 && tousPresentDans(top4Arrivee, top7)) {
-                    ajouterBadge('Multi en 7', 'violet', 1);
-                } else if (partants >= 10 && partants <= 13 && tousPresentDans(top4Arrivee, top6)) {
-                    ajouterBadge('Mini Multi en 6', 'violet', 1);
-                } else if (partants <= 9 && tousPresentDans(top4Arrivee, top4)) {
-                    ajouterBadge('Super 4', 'violet', 1);
-                }
-            }
-
-            if (top3Arrivee.length === 3 && tousPresentDans(top3Arrivee, top3)) {
-                ajouterBadge(archive.est_quinte ? 'Tiercé' : 'Trio', 'gold', 2);
-            }
-
-            if (arrivee.length >= 1 && top3.includes(arrivee[0])) {
-                ajouterBadge('Gagnant', 'green', 3);
-            }
-
-            const deuxieme = arrivee[1];
-            const troisieme = arrivee[2];
-            if ((deuxieme && top3.includes(deuxieme)) || (troisieme && top3.includes(troisieme))) {
-                ajouterBadge('Placé', 'orange', 4);
-            }
-
-            const reussi = badges.length > 0;
-            if (!reussi) {
-                ajouterBadge('Perdu', 'red', 5);
-            }
-
-            badges.sort((a, b) => a.priorite - b.priorite);
-            return {
-                badges,
-                reussi,
-                statutPrincipal: badges[0].label,
-            };
-        }
-
         function classeCarteArchive(archive) {
             if (archive.statut === 'En attente') {
                 return 'glass-card border-white/10 bg-gray-800/40';
@@ -447,41 +378,53 @@
         }
 
         async function verifierResultatArchive(archive) {
-            const url = `${API_BASE_URL}/resultat/${archive.dateApi}/${archive.reunion}/${archive.course}`;
-            const reponse = await fetch(url, { headers: { 'X-MTech-Key': MTECH_API_KEY } });
-            if (!reponse.ok) return archive;
+            try {
+                const reponse = await fetch(`${API_BASE_URL}/evaluation`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-MTech-Key': MTECH_API_KEY,
+                    },
+                    body: JSON.stringify(archive),
+                });
+                if (!reponse.ok) return archive;
 
-            const data = await reponse.json();
-            if (data.erreur || !data.terminee) {
+                const data = await reponse.json();
+                if (data.erreur) return archive;
+
+                if (!data.terminee) {
+                    return {
+                        ...archive,
+                        statut: 'En attente',
+                        resultat: 'Course non terminée',
+                        arrivee_officielle: [],
+                        reussi_pmu: undefined,
+                        type_pari_pmu: null,
+                        mode_pari_pmu: null,
+                        badges_pmu: [],
+                        resultats_pmu_detectes: [],
+                        statut_pmu: null,
+                    };
+                }
+
+                const gagnant = data.gagnant ?? data.arrivee_officielle?.[0];
                 return {
                     ...archive,
-                    statut: 'En attente',
-                    resultat: 'Course non terminée',
-                    arrivee_officielle: [],
-                    reussi_pmu: undefined,
-                    badges_pmu: [],
-                    statut_pmu: null,
+                    statut: 'Terminée',
+                    nombre_partants: data.nombre_partants ?? archive.nombre_partants,
+                    est_quinte: data.est_quinte ?? archive.est_quinte ?? false,
+                    reussi_pmu: data.reussi_pmu,
+                    type_pari_pmu: data.type_pari_pmu,
+                    mode_pari_pmu: data.mode_pari_pmu,
+                    statut_pmu: data.statut_pmu,
+                    badges_pmu: data.badges_pmu || [],
+                    resultats_pmu_detectes: data.resultats_pmu_detectes || [],
+                    resultat: gagnant != null ? `Gagnant N°${gagnant}` : '-',
+                    arrivee_officielle: data.arrivee_officielle || [],
                 };
+            } catch {
+                return archive;
             }
-
-            const arrivee_officielle = data.arrivee_officielle || data.ordre_arrivee || [];
-            const gagnant = data.gagnant ?? arrivee_officielle[0];
-            const archiveEnrichie = {
-                ...archive,
-                nombre_partants: data.nombre_partants ?? archive.nombre_partants,
-                est_quinte: data.est_quinte ?? archive.est_quinte ?? false,
-            };
-            const evaluation = evaluerPronosticVelora(archiveEnrichie, arrivee_officielle);
-
-            return {
-                ...archiveEnrichie,
-                statut: 'Terminée',
-                reussi_pmu: evaluation.reussi,
-                badges_pmu: evaluation.badges,
-                statut_pmu: evaluation.statutPrincipal,
-                resultat: gagnant != null ? `Gagnant N°${gagnant}` : '-',
-                arrivee_officielle,
-            };
         }
 
         function htmlPronosticVeloraArchive(archive) {
@@ -539,10 +482,11 @@
                         </div>
                         <div class="flex flex-wrap justify-end gap-2">${htmlBadgesPmu(a.badges_pmu)}</div>
                     </div>
+                    ${a.type_pari_pmu && a.type_pari_pmu !== 'Perdu' ? `<p class="mt-2 text-sm font-bold text-emerald-400">${a.type_pari_pmu}${a.mode_pari_pmu ? ` <span class="text-xs font-normal text-gray-400">(${a.mode_pari_pmu})</span>` : ''}</p>` : ''}
                     ${htmlPronosticVeloraArchive(a)}
                     <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
                         <p class="text-gray-400">Favori Velora : <span class="font-semibold text-gray-200">N°${a.pronosticNumero} ${a.pronosticNom}</span></p>
-                        <p class="text-gray-400">Résultat : <span class="font-semibold text-gray-200">${a.resultat || '-'}</span></p>
+                        <p class="text-gray-400">Type de pari : <span class="font-semibold text-gray-200">${a.type_pari_pmu || '—'}</span></p>
                     </div>
                     ${htmlArriveeOfficielle(a.arrivee_officielle)}
                 </article>
@@ -580,7 +524,10 @@
                 resultat: '-',
                 arrivee_officielle: [],
                 reussi_pmu: undefined,
+                type_pari_pmu: null,
+                mode_pari_pmu: null,
                 badges_pmu: [],
+                resultats_pmu_detectes: [],
                 statut_pmu: null,
                 timestamp: Date.now(),
             });

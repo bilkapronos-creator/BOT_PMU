@@ -4,7 +4,7 @@ from typing import Any, Optional, Tuple, Union
 
 import requests
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Body, Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -188,6 +188,159 @@ def est_belle_cote(
     return cote >= SEUIL_COTE_BELLE_COTE and cote >= score_mtech + ECART_MIN_VALUE_BET
 
 
+def _numeros_velora(archive: dict, n: int) -> list:
+    """Numéros PMU du Top N Velora (ordre de classement conservé)."""
+    source = archive.get("pronostic_velora") or archive.get("top3") or []
+    numeros = []
+    for cheval in source[:n]:
+        try:
+            numeros.append(int(cheval.get("numero")))
+        except (TypeError, ValueError):
+            continue
+    return numeros
+
+
+def _ordre_exact(arrivee: list, selection: list, k: int) -> bool:
+    if len(arrivee) < k or len(selection) < k:
+        return False
+    return arrivee[:k] == selection[:k]
+
+
+def _desordre(arrivee: list, selection: list, k: int) -> bool:
+    if len(arrivee) < k or not selection:
+        return False
+    pool = set(selection)
+    return all(n in pool for n in arrivee[:k])
+
+
+def _quarte_bonus_3(arrivee: list, top4: list) -> bool:
+    """3 des 4 premiers dans le Top 4 Velora, sans les 4."""
+    if len(arrivee) < 4 or len(top4) < 4:
+        return False
+    pool = set(top4)
+    matches = sum(1 for n in arrivee[:4] if n in pool)
+    return matches == 3
+
+
+def _ajouter_resultat(resultats: list, priorite: int, label: str, style: str, mode: str) -> None:
+    resultats.append({
+        "priorite": priorite,
+        "label": label,
+        "type_pari_pmu": label,
+        "style": style,
+        "mode": mode,
+    })
+
+
+def evaluer_pronostic_pmu(archive: dict, arrivee_officielle: list) -> dict:
+    """
+    Évalue le pronostic Velora vs l'arrivée officielle (terminologie PMU).
+    Retourne le résultat le plus gratifiant : Ordre > Désordre > Bonus > simples.
+    """
+    arrivee = []
+    for n in arrivee_officielle or []:
+        try:
+            arrivee.append(int(n))
+        except (TypeError, ValueError):
+            continue
+
+    if len(arrivee) < 1:
+        perdu = {
+            "priorite": 999,
+            "label": "Perdu",
+            "type_pari_pmu": "Perdu",
+            "style": "red",
+            "mode": None,
+        }
+        return {
+            "reussi_pmu": False,
+            "type_pari_pmu": "Perdu",
+            "statut_pmu": "Perdu",
+            "mode_pari_pmu": None,
+            "badges_pmu": [perdu],
+            "resultats_pmu_detectes": [],
+        }
+
+    partants = int(
+        archive.get("nombre_partants")
+        or len(archive.get("pronostic_velora") or archive.get("top3") or [])
+        or 0
+    )
+    est_quinte = bool(archive.get("est_quinte"))
+
+    top3 = _numeros_velora(archive, 3)
+    top4 = _numeros_velora(archive, 4)
+    top5 = _numeros_velora(archive, 5)
+    top6 = _numeros_velora(archive, 6)
+    top7 = _numeros_velora(archive, 7)
+
+    resultats = []
+
+    if est_quinte:
+        if _ordre_exact(arrivee, top5, 5):
+            _ajouter_resultat(resultats, 10, "Quinté Ordre", "gold", "ordre")
+        elif _desordre(arrivee, top5, 5):
+            _ajouter_resultat(resultats, 20, "Quinté Désordre", "gold", "desordre")
+
+        if _ordre_exact(arrivee, top4, 4):
+            _ajouter_resultat(resultats, 30, "Quarté Ordre", "gold", "ordre")
+        elif _desordre(arrivee, top4, 4):
+            _ajouter_resultat(resultats, 40, "Quarté Désordre", "gold", "desordre")
+        elif _quarte_bonus_3(arrivee, top4):
+            _ajouter_resultat(resultats, 50, "Quarté Bonus 3", "gold", "bonus")
+
+        if _ordre_exact(arrivee, top3, 3):
+            _ajouter_resultat(resultats, 60, "Tiercé Ordre", "gold", "ordre")
+        elif _desordre(arrivee, top3, 3):
+            _ajouter_resultat(resultats, 70, "Tiercé Désordre", "gold", "desordre")
+    else:
+        if _ordre_exact(arrivee, top3, 3):
+            _ajouter_resultat(resultats, 10, "Trio Ordre", "gold", "ordre")
+        elif _desordre(arrivee, top3, 3):
+            _ajouter_resultat(resultats, 20, "Trio Désordre", "gold", "desordre")
+
+        if len(arrivee) >= 4:
+            if partants >= 14 and _desordre(arrivee, top7, 4):
+                _ajouter_resultat(resultats, 30, "Multi en 7", "violet", "groupe")
+            elif 10 <= partants <= 13 and _desordre(arrivee, top6, 4):
+                _ajouter_resultat(resultats, 31, "Mini Multi en 6", "violet", "groupe")
+            elif partants <= 9 and _desordre(arrivee, top4, 4):
+                _ajouter_resultat(resultats, 32, "Super 4", "violet", "groupe")
+
+        if len(arrivee) >= 1 and arrivee[0] in top3:
+            _ajouter_resultat(resultats, 40, "Gagnant", "green", "simple")
+        if len(arrivee) >= 2 and (arrivee[1] in top3 or (len(arrivee) >= 3 and arrivee[2] in top3)):
+            _ajouter_resultat(resultats, 50, "Placé", "orange", "simple")
+
+    if not resultats:
+        perdu = {
+            "priorite": 999,
+            "label": "Perdu",
+            "type_pari_pmu": "Perdu",
+            "style": "red",
+            "mode": None,
+        }
+        return {
+            "reussi_pmu": False,
+            "type_pari_pmu": "Perdu",
+            "statut_pmu": "Perdu",
+            "mode_pari_pmu": None,
+            "badges_pmu": [perdu],
+            "resultats_pmu_detectes": [],
+        }
+
+    resultats.sort(key=lambda r: r["priorite"])
+    meilleur = resultats[0]
+    return {
+        "reussi_pmu": True,
+        "type_pari_pmu": meilleur["type_pari_pmu"],
+        "statut_pmu": meilleur["label"],
+        "mode_pari_pmu": meilleur["mode"],
+        "badges_pmu": [meilleur],
+        "resultats_pmu_detectes": resultats,
+    }
+
+
 def _metadata_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, nb_participants: int = 0) -> dict:
     """Retourne nombre de partants et indicateur Quinté depuis l'API PMU."""
     response = requests.get(
@@ -310,4 +463,61 @@ def resultat_course(date: str, reunion: str, course: str):
         "arrivee_officielle": arrivee_officielle,
         "ordre_arrivee": arrivee_officielle,
         **meta,
+    }
+
+
+@app.post("/evaluation", dependencies=[Depends(verifier_cle_api)])
+def evaluation_archive(archive: dict = Body(...)):
+    """Évalue un pronostic archivé contre l'arrivée PMU (Ordre / Désordre / Bonus)."""
+    date_api = archive.get("dateApi") or archive.get("date_api")
+    reunion = archive.get("reunion")
+    course = archive.get("course")
+    if not date_api or not reunion or not course:
+        return {"erreur": "Archive incomplète (dateApi, reunion, course requis)"}
+
+    date_pmu = normaliser_date_pmu(str(date_api))
+    reunion_pmu = normaliser_code_pmu(str(reunion), "R")
+    course_pmu = normaliser_code_pmu(str(course), "C")
+
+    response = requests.get(
+        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+        headers=HEADERS_PMU,
+        timeout=20,
+    )
+    if response.status_code != 200:
+        return {"erreur": "Course introuvable ou non disponible"}
+
+    data = response.json()
+    ordre_brut = data.get("ordreArrivee") or []
+    ordre_arrivee = [arrivee[0] for arrivee in ordre_brut if arrivee]
+    arrivee_officielle = ordre_arrivee[:5]
+    meta = _metadata_course_pmu(date_pmu, reunion_pmu, course_pmu)
+
+    if len(arrivee_officielle) == 0:
+        return {
+            "terminee": False,
+            "arrivee_officielle": [],
+            **meta,
+            "reussi_pmu": False,
+            "type_pari_pmu": None,
+            "statut_pmu": None,
+            "mode_pari_pmu": None,
+            "badges_pmu": [],
+            "resultats_pmu_detectes": [],
+        }
+
+    archive_enrichie = {
+        **archive,
+        "nombre_partants": meta.get("nombre_partants") or archive.get("nombre_partants"),
+        "est_quinte": meta.get("est_quinte", archive.get("est_quinte", False)),
+    }
+    evaluation = evaluer_pronostic_pmu(archive_enrichie, arrivee_officielle)
+
+    return {
+        "terminee": True,
+        "gagnant": arrivee_officielle[0],
+        "arrivee_officielle": arrivee_officielle,
+        "nombre_partants": archive_enrichie["nombre_partants"],
+        "est_quinte": archive_enrichie["est_quinte"],
+        **evaluation,
     }
