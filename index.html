@@ -15,8 +15,29 @@
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .loader { border-top-color: #10B981; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .velora-loader-ring {
+            border-radius: 9999px;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            border-top-color: #34d399;
+            border-right-color: #22d3ee;
+            animation: velora-spin 0.9s linear infinite;
+        }
+        .velora-loader-pulse {
+            animation: velora-pulse 1.6s ease-in-out infinite;
+        }
+        @keyframes velora-spin { to { transform: rotate(360deg); } }
+        @keyframes velora-pulse {
+            0%, 100% { opacity: 0.55; transform: scale(0.96); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        #appSplash {
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        #appSplash.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
         .glass-card {
             background: rgba(17, 24, 39, 0.55);
             backdrop-filter: blur(14px);
@@ -36,6 +57,22 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
+    <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712]">
+        <div class="relative flex h-20 w-20 items-center justify-center">
+            <div class="velora-loader-ring absolute inset-0"></div>
+            <svg class="velora-loader-pulse relative h-9 w-9" viewBox="0 0 512 512" aria-hidden="true">
+                <defs>
+                    <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#34d399"/>
+                        <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                </defs>
+                <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#splashGrad)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <p class="mt-6 text-sm font-black tracking-widest bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">VELORA ENGINE</p>
+        <p class="mt-2 text-xs text-gray-500">Initialisation du moteur...</p>
+    </div>
     <div class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.08)_0%,transparent_45%)]"></div>
     <div class="mx-auto max-w-2xl px-4 py-6 pb-12">
 
@@ -99,8 +136,20 @@
             </div>
         </div>
 
-        <div id="loading" class="hidden flex justify-center py-8">
-            <div class="loader ease-linear h-12 w-12 rounded-full border-4 border-white/10"></div>
+        <div id="loading" class="hidden flex-col items-center justify-center gap-4 py-10">
+            <div class="relative flex h-16 w-16 items-center justify-center">
+                <div class="velora-loader-ring absolute inset-0"></div>
+                <svg class="velora-loader-pulse relative h-7 w-7" viewBox="0 0 512 512" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="loaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#34d399"/>
+                            <stop offset="100%" stop-color="#22d3ee"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#loaderGrad)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Analyse Velora en cours...</p>
         </div>
         <h2 id="titreResultats" class="text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
         <div id="resultats" class="space-y-4"></div>
@@ -127,7 +176,7 @@
             <p id="statsArchives" class="mt-1 text-xs text-gray-400">0 course analysée</p>
         </div>
 
-        <div id="listeArchives" class="space-y-3"></div>
+        <div id="resultatsArchives" class="space-y-3"></div>
     </section>
 
     </div>
@@ -135,9 +184,18 @@
     <script>
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
         const API_BASE_URL = 'https://velora-engine.onrender.com';
-        const ARCHIVES_KEY = 'velora_archives';
+        const ARCHIVES_KEY = 'mtech_archives';
+        const ARCHIVES_MAX = 10;
 
         document.getElementById('dateInput').valueAsDate = new Date();
+
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('appSplash');
+            if (splash) {
+                splash.classList.add('is-hidden');
+                setTimeout(() => splash.remove(), 500);
+            }
+        });
 
         const sectionPronostic = document.getElementById('sectionPronostic');
         const sectionArchives = document.getElementById('sectionArchives');
@@ -156,13 +214,22 @@
             tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
 
             if (!pronosticActif) {
-                rafraichirArchives();
+                chargerArchives();
             }
         }
 
         function lireArchives() {
             try {
-                return JSON.parse(localStorage.getItem(ARCHIVES_KEY) || '[]');
+                let data = localStorage.getItem(ARCHIVES_KEY);
+                if (!data) {
+                    const legacy = localStorage.getItem('velora_archives');
+                    if (legacy) {
+                        localStorage.setItem(ARCHIVES_KEY, legacy);
+                        localStorage.removeItem('velora_archives');
+                        data = legacy;
+                    }
+                }
+                return JSON.parse(data || '[]');
             } catch {
                 return [];
             }
@@ -239,10 +306,28 @@
             };
         }
 
-        async function rafraichirArchives() {
-            const liste = document.getElementById('listeArchives');
+        function htmlTop3Archive(top3) {
+            if (!top3 || top3.length === 0) return '';
+            const items = top3.map((c, i) => `
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="${badgeClassement(i)} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">${i + 1}</span>
+                    <span class="font-medium text-gray-200">N°${c.numero} ${c.nom}</span>
+                    ${c.score_mtech != null ? `<span class="text-emerald-400/70">Score ${c.score_mtech}</span>` : ''}
+                </div>
+            `).join('');
+            return `
+                <div class="mt-3 border-t border-white/10 pt-3">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/80">Top 3 Velora</p>
+                    <div class="space-y-2">${items}</div>
+                </div>`;
+        }
+
+        async function chargerArchives() {
+            const liste = document.getElementById('resultatsArchives');
             const tauxEl = document.getElementById('tauxReussite');
             const statsEl = document.getElementById('statsArchives');
+
+            if (!liste) return;
 
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Mise à jour des archives...</p>';
 
@@ -256,6 +341,7 @@
 
             archives = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            archives = archives.slice(0, ARCHIVES_MAX);
             sauvegarderArchives(archives);
 
             const taux = calculerTauxReussite(archives);
@@ -263,29 +349,40 @@
             tauxEl.textContent = String(taux);
             statsEl.textContent = `${archives.length} course${archives.length > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''}`;
 
-            liste.innerHTML = archives.map((a) => `
+            liste.innerHTML = archives.map((a) => {
+                const top3 = a.top3 || (a.pronosticNumero ? [{ numero: a.pronosticNumero, nom: a.pronosticNom, score_mtech: null }] : []);
+                return `
                 <article class="rounded-2xl border p-4 shadow-lg shadow-black/10 ${classeStatut(a.statut)}">
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                            <p class="text-sm font-bold text-white">${a.reunion}${a.course}</p>
+                            <p class="text-sm font-bold text-white">${a.reunion} · ${a.course}</p>
                             <p class="text-xs text-gray-400">${a.dateAffiche}</p>
                         </div>
                         <span class="rounded-full px-3 py-1 text-xs font-bold ${badgeStatut(a.statut)}">${a.statut}</span>
                     </div>
+                    ${htmlTop3Archive(top3)}
                     <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
                         <p class="text-gray-400">Pronostic : <span class="font-semibold text-gray-200">N°${a.pronosticNumero} ${a.pronosticNom}</span></p>
                         <p class="text-gray-400">Résultat : <span class="font-semibold text-gray-200">${a.resultat || '-'}</span></p>
                     </div>
                     ${htmlArriveeOfficielle(a.arrivee_officielle)}
                 </article>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics) {
             if (!pronostics.length) return;
+            const top3 = pronostics.slice(0, 3).map((p) => ({
+                numero: p.numero,
+                nom: p.nom,
+                score_mtech: p.score_mtech ?? null,
+                jockey: p.jockey || null,
+                cote: p.cote ?? null,
+            }));
             const top = pronostics[0];
             const id = `${dateApi}-${reunion}-${course}`;
-            const archives = lireArchives().filter((a) => a.id !== id);
+            let archives = lireArchives().filter((a) => a.id !== id);
             archives.unshift({
                 id,
                 dateIso,
@@ -293,6 +390,7 @@
                 dateAffiche: formaterDateAffiche(dateIso),
                 reunion,
                 course,
+                top3,
                 pronosticNumero: top.numero,
                 pronosticNom: top.nom,
                 statut: 'En attente',
@@ -300,7 +398,7 @@
                 arrivee_officielle: [],
                 timestamp: Date.now(),
             });
-            sauvegarderArchives(archives);
+            sauvegarderArchives(archives.slice(0, ARCHIVES_MAX));
         }
 
         let deferredInstallPrompt = null;
@@ -415,9 +513,11 @@
             zoneResultats.innerHTML = '';
             titreResultats.classList.add('hidden');
             loading.classList.remove('hidden');
+            loading.classList.add('flex');
 
             if (!dateAPI || !reunion || !course) {
                 loading.classList.add('hidden');
+                loading.classList.remove('flex');
                 zoneResultats.innerHTML = '<div class="text-red-500 text-center">Veuillez renseigner la date, la réunion et la course.</div>';
                 return;
             }
@@ -440,6 +540,7 @@
                 const data = await reponse.json();
 
                 loading.classList.add('hidden');
+                loading.classList.remove('flex');
                 bouton.disabled = false;
                 bouton.textContent = 'Analyser';
 
@@ -489,6 +590,7 @@
                 });
             } catch (e) {
                 loading.classList.add('hidden');
+                loading.classList.remove('flex');
                 bouton.disabled = false;
                 bouton.textContent = 'Analyser';
                 zoneResultats.innerHTML = '<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>';
