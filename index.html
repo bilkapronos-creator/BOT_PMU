@@ -277,8 +277,8 @@
         const VELORA_STATS_ROW_ID = 'a0000000-0000-4000-8000-000000000001';
         const STATS_COMMUNAUTE_SYNC_KEY = 'velora_communaute_synced';
 
-        /** Client Supabase (disponible après initSupabase()). */
-        let supabase = null;
+        /** Client Supabase (ne pas nommer « supabase » : conflit avec window.supabase du CDN). */
+        let veloraSupabase = null;
 
         function initSupabase() {
             if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
@@ -289,10 +289,10 @@
                 console.warn('[Velora] SDK Supabase introuvable (vérifiez le script CDN).');
                 return null;
             }
-            if (!supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            if (!veloraSupabase) {
+                veloraSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
-            return supabase;
+            return veloraSupabase;
         }
 
         function cleCourseArchive(archive) {
@@ -641,19 +641,35 @@
         const SPLASH_FADE_MS = 600;
         const splashShownAt = performance.now();
 
-        window.addEventListener('load', () => {
-            initSupabase();
-            chargerStatsPlateforme();
-
+        function masquerSplashApp() {
             const splash = document.getElementById('appSplash');
-            if (!splash) return;
+            if (!splash || splash.dataset.ferme === '1') return;
+            splash.dataset.ferme = '1';
 
             const remaining = Math.max(0, SPLASH_MIN_MS - (performance.now() - splashShownAt));
             setTimeout(() => {
                 splash.classList.add('is-hidden');
                 setTimeout(() => splash.remove(), SPLASH_FADE_MS);
             }, remaining);
-        });
+        }
+
+        function demarrerVeloraApp() {
+            masquerSplashApp();
+            try {
+                initSupabase();
+                chargerStatsPlateforme().catch((err) => {
+                    console.warn('[Velora] Stats plateforme au démarrage :', err);
+                });
+            } catch (err) {
+                console.error('[Velora] Erreur au démarrage :', err);
+            }
+        }
+
+        if (document.readyState === 'complete') {
+            demarrerVeloraApp();
+        } else {
+            window.addEventListener('load', demarrerVeloraApp, { once: true });
+        }
 
         const sectionPronostic = document.getElementById('sectionPronostic');
         const sectionArchives = document.getElementById('sectionArchives');
@@ -676,7 +692,8 @@
             }
         }
 
-        document.getElementById('dateInput').valueAsDate = new Date();
+        const dateInputEl = document.getElementById('dateInput');
+        if (dateInputEl) dateInputEl.valueAsDate = new Date();
 
         function formaterDateAffiche(dateIso) {
             if (!dateIso) return '-';
