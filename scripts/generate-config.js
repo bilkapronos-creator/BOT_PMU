@@ -46,12 +46,20 @@ const anonKey = (
 
 const adminPassword = (process.env.VELORA_ADMIN_PASSWORD || '').trim();
 const adminPasswordHash = (process.env.VELORA_ADMIN_PASSWORD_HASH || '').trim();
+const mtechApiKey = (process.env.MTECH_API_KEY || '').trim();
+const mtechPublicKey = (
+  process.env.MTECH_PUBLIC_API_KEY
+  || process.env.MTECH_API_KEY
+  || ''
+).trim();
 
 const outPath = path.join(__dirname, '..', 'config.js');
 const content = `/* Généré par scripts/generate-config.js — ne pas modifier à la main */
 window.VELORA_ENV = Object.freeze({
   SUPABASE_URL: ${JSON.stringify(url)},
   SUPABASE_ANON_KEY: ${JSON.stringify(anonKey)},
+  MTECH_API_KEY: ${JSON.stringify(mtechApiKey)},
+  MTECH_PUBLIC_API_KEY: ${JSON.stringify(mtechPublicKey)},
   VELORA_ADMIN_PASSWORD: ${JSON.stringify(adminPassword)},
   VELORA_ADMIN_PASSWORD_HASH: ${JSON.stringify(adminPasswordHash)},
 });

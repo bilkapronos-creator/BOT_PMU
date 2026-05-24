@@ -25,7 +25,13 @@ app.add_middleware(
 
 @app.on_event("startup")
 def demarrer_application():
+    from database import _resoudre_backend
+
     init_db()
+    try:
+        print(f"[Velora] Archives : backend « {_resoudre_backend()} »")
+    except RuntimeError as err:
+        print(f"[Velora] Archives : erreur configuration — {err}")
 
 
 def verifier_cle_api(x_mtech_key: Optional[str] = Header(default=None, alias="X-MTech-Key")):
@@ -281,6 +287,14 @@ def _desordre(arrivee: list, selection: list, k: int) -> bool:
     return all(n in pool for n in arrivee[:k])
 
 
+def _premiers_arrivee_dans_selection(arrivee: list, selection: list, nb: int) -> bool:
+    """True si les nb premiers chevaux de l'arrivée sont tous dans selection (Top N Velora)."""
+    if len(arrivee) < nb or not selection:
+        return False
+    pool = set(selection)
+    return all(n in pool for n in arrivee[:nb])
+
+
 def _quarte_bonus_3(arrivee: list, top4: list) -> bool:
     """3 des 4 premiers dans le Top 4 Velora, sans les 4."""
     if len(arrivee) < 4 or len(top4) < 4:
@@ -300,10 +314,115 @@ def _ajouter_resultat(resultats: list, priorite: int, label: str, style: str, mo
     })
 
 
+def _fabriquer_badge(label: str, style: str, mode: str, priorite: int = 1) -> dict:
+    return {
+        "priorite": priorite,
+        "label": label,
+        "type_pari_pmu": label,
+        "style": style,
+        "mode": mode,
+    }
+
+
+def _badge_perdu() -> dict:
+    return _fabriquer_badge("Perdu", "red", None, priorite=999)
+
+
+def _evaluer_multi_super4(
+    arrivee: list,
+    top4: list,
+    top5: list,
+    top6: list,
+    top7: list,
+    partants: int,
+) -> Optional[dict]:
+    """
+    Bloc 1 : les 4 premiers de l'arrivée dans le Top 4/5/6/7 Velora.
+    Du plus restrictif (Top 4) au plus large (Top 7), puis libellé selon partants.
+    """
+    if len(arrivee) < 4:
+        return None
+
+    if _premiers_arrivee_dans_selection(arrivee, top4, 4):
+        if partants <= 9:
+            return _fabriquer_badge("Super 4", "violet", "groupe", priorite=10)
+        if 10 <= partants <= 13:
+            return _fabriquer_badge("Mini Multi en 4", "violet", "groupe", priorite=11)
+        if partants >= 14:
+            return _fabriquer_badge("Multi en 4", "violet", "groupe", priorite=12)
+
+    if partants >= 10 and _premiers_arrivee_dans_selection(arrivee, top5, 4):
+        if 10 <= partants <= 13:
+            return _fabriquer_badge("Mini Multi en 5", "violet", "groupe", priorite=13)
+        if partants >= 14:
+            return _fabriquer_badge("Multi en 5", "violet", "groupe", priorite=14)
+
+    if partants >= 10 and _premiers_arrivee_dans_selection(arrivee, top6, 4):
+        if 10 <= partants <= 13:
+            return _fabriquer_badge("Mini Multi en 6", "violet", "groupe", priorite=15)
+        if partants >= 14:
+            return _fabriquer_badge("Multi en 6", "violet", "groupe", priorite=16)
+
+    if partants >= 14 and _premiers_arrivee_dans_selection(arrivee, top7, 4):
+        return _fabriquer_badge("Multi en 7", "violet", "groupe", priorite=17)
+
+    return None
+
+
+def _evaluer_badge_principal(
+    arrivee: list,
+    top3: list,
+    top4: list,
+    top5: list,
+    top6: list,
+    top7: list,
+    partants: int,
+    est_quinte: bool,
+) -> dict:
+    """
+    Hiérarchie stricte (un seul badge) : Multi/Super4 → Trio/Tiercé → Gagnant → Placé → Perdu.
+    Courses Quinté+ : Quinté et Quarté avant le bloc Multi.
+    """
+    if est_quinte:
+        if _ordre_exact(arrivee, top5, 5):
+            return _fabriquer_badge("Quinté Ordre", "gold", "ordre", priorite=1)
+        if _desordre(arrivee, top5, 5):
+            return _fabriquer_badge("Quinté Désordre", "gold", "desordre", priorite=2)
+        if _ordre_exact(arrivee, top4, 4):
+            return _fabriquer_badge("Quarté Ordre", "gold", "ordre", priorite=3)
+        if _desordre(arrivee, top4, 4):
+            return _fabriquer_badge("Quarté Désordre", "gold", "desordre", priorite=4)
+        if _quarte_bonus_3(arrivee, top4):
+            return _fabriquer_badge("Quarté Bonus 3", "gold", "bonus", priorite=5)
+
+    badge_multi = _evaluer_multi_super4(arrivee, top4, top5, top6, top7, partants)
+    if badge_multi:
+        return badge_multi
+
+    if _premiers_arrivee_dans_selection(arrivee, top3, 3):
+        if est_quinte:
+            if _ordre_exact(arrivee, top3, 3):
+                return _fabriquer_badge("Tiercé Ordre", "gold", "ordre", priorite=20)
+            return _fabriquer_badge("Tiercé Désordre", "gold", "desordre", priorite=21)
+        if _ordre_exact(arrivee, top3, 3):
+            return _fabriquer_badge("Trio Ordre", "gold", "ordre", priorite=20)
+        return _fabriquer_badge("Trio Désordre", "gold", "desordre", priorite=21)
+
+    if len(arrivee) >= 1 and arrivee[0] in set(top3):
+        return _fabriquer_badge("Gagnant", "green", "simple", priorite=30)
+
+    if len(arrivee) >= 2 and (
+        arrivee[1] in set(top3) or (len(arrivee) >= 3 and arrivee[2] in set(top3))
+    ):
+        return _fabriquer_badge("Placé", "orange", "simple", priorite=40)
+
+    return _badge_perdu()
+
+
 def evaluer_pronostic_pmu(archive: dict, arrivee_officielle: list) -> dict:
     """
     Évalue le pronostic Velora vs l'arrivée officielle (terminologie PMU).
-    Retourne le résultat le plus gratifiant : Ordre > Désordre > Bonus > simples.
+    Un seul badge affiché : du pari le plus difficile au plus simple.
     """
     arrivee = []
     for n in arrivee_officielle or []:
@@ -313,13 +432,7 @@ def evaluer_pronostic_pmu(archive: dict, arrivee_officielle: list) -> dict:
             continue
 
     if len(arrivee) < 1:
-        perdu = {
-            "priorite": 999,
-            "label": "Perdu",
-            "type_pari_pmu": "Perdu",
-            "style": "red",
-            "mode": None,
-        }
+        perdu = _badge_perdu()
         return {
             "reussi_pmu": False,
             "type_pari_pmu": "Perdu",
@@ -342,70 +455,27 @@ def evaluer_pronostic_pmu(archive: dict, arrivee_officielle: list) -> dict:
     top6 = _numeros_velora(archive, 6)
     top7 = _numeros_velora(archive, 7)
 
-    resultats = []
+    meilleur = _evaluer_badge_principal(
+        arrivee, top3, top4, top5, top6, top7, partants, est_quinte
+    )
 
-    if est_quinte:
-        if _ordre_exact(arrivee, top5, 5):
-            _ajouter_resultat(resultats, 10, "Quinté Ordre", "gold", "ordre")
-        elif _desordre(arrivee, top5, 5):
-            _ajouter_resultat(resultats, 20, "Quinté Désordre", "gold", "desordre")
-
-        if _ordre_exact(arrivee, top4, 4):
-            _ajouter_resultat(resultats, 30, "Quarté Ordre", "gold", "ordre")
-        elif _desordre(arrivee, top4, 4):
-            _ajouter_resultat(resultats, 40, "Quarté Désordre", "gold", "desordre")
-        elif _quarte_bonus_3(arrivee, top4):
-            _ajouter_resultat(resultats, 50, "Quarté Bonus 3", "gold", "bonus")
-
-        if _ordre_exact(arrivee, top3, 3):
-            _ajouter_resultat(resultats, 60, "Tiercé Ordre", "gold", "ordre")
-        elif _desordre(arrivee, top3, 3):
-            _ajouter_resultat(resultats, 70, "Tiercé Désordre", "gold", "desordre")
-    else:
-        if _ordre_exact(arrivee, top3, 3):
-            _ajouter_resultat(resultats, 10, "Trio Ordre", "gold", "ordre")
-        elif _desordre(arrivee, top3, 3):
-            _ajouter_resultat(resultats, 20, "Trio Désordre", "gold", "desordre")
-
-        if len(arrivee) >= 4:
-            if partants >= 14 and _desordre(arrivee, top7, 4):
-                _ajouter_resultat(resultats, 30, "Multi en 7", "violet", "groupe")
-            elif 10 <= partants <= 13 and _desordre(arrivee, top6, 4):
-                _ajouter_resultat(resultats, 31, "Mini Multi en 6", "violet", "groupe")
-            elif partants <= 9 and _desordre(arrivee, top4, 4):
-                _ajouter_resultat(resultats, 32, "Super 4", "violet", "groupe")
-
-        if len(arrivee) >= 1 and arrivee[0] in top3:
-            _ajouter_resultat(resultats, 40, "Gagnant", "green", "simple")
-        if len(arrivee) >= 2 and (arrivee[1] in top3 or (len(arrivee) >= 3 and arrivee[2] in top3)):
-            _ajouter_resultat(resultats, 50, "Placé", "orange", "simple")
-
-    if not resultats:
-        perdu = {
-            "priorite": 999,
-            "label": "Perdu",
-            "type_pari_pmu": "Perdu",
-            "style": "red",
-            "mode": None,
-        }
+    if meilleur["label"] == "Perdu":
         return {
             "reussi_pmu": False,
             "type_pari_pmu": "Perdu",
             "statut_pmu": "Perdu",
             "mode_pari_pmu": None,
-            "badges_pmu": [perdu],
+            "badges_pmu": [meilleur],
             "resultats_pmu_detectes": [],
         }
 
-    resultats.sort(key=lambda r: r["priorite"])
-    meilleur = resultats[0]
     return {
         "reussi_pmu": True,
         "type_pari_pmu": meilleur["type_pari_pmu"],
         "statut_pmu": meilleur["label"],
         "mode_pari_pmu": meilleur["mode"],
         "badges_pmu": [meilleur],
-        "resultats_pmu_detectes": resultats,
+        "resultats_pmu_detectes": [meilleur],
     }
 
 

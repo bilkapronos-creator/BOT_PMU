@@ -4,7 +4,6 @@
   "outputDirectory": ".",
   "routes": [
     { "src": "/config.js", "dest": "/config.js" },
-    { "src": "/js/(.*)", "dest": "/js/$1" },
     { "src": "/admin.html", "dest": "/admin.html" },
     { "src": "/admin.js", "dest": "/admin.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
