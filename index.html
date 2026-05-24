@@ -26,16 +26,43 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="preload" as="image" href="/icons/splash-mobile.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .velora-loader-ring {
-            border-radius: 9999px;
+        .velora-splash-wrap {
+            position: relative;
+            width: min(88vw, 320px);
+            aspect-ratio: 9 / 16;
+            max-height: min(72vh, 640px);
+        }
+        .velora-splash-wrap--compact {
+            width: min(72vw, 220px);
+            max-height: min(48vh, 390px);
+        }
+        @media (min-width: 640px) {
+            .velora-splash-wrap {
+                width: min(300px, 34vw);
+            }
+            .velora-splash-wrap--compact {
+                width: min(180px, 22vw);
+            }
+        }
+        .velora-splash-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 1.35rem;
             border: 3px solid rgba(255, 255, 255, 0.08);
             border-top-color: #34d399;
             border-right-color: #22d3ee;
-            animation: velora-spin 0.9s linear infinite;
+            animation: velora-spin 1.1s linear infinite;
+            pointer-events: none;
         }
-        .velora-loader-pulse {
+        .velora-splash-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.18);
             animation: velora-pulse 1.6s ease-in-out infinite;
         }
         @keyframes velora-spin { to { transform: rotate(360deg); } }
@@ -70,21 +97,19 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
-    <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712]">
-        <div class="relative flex h-20 w-20 items-center justify-center">
-            <div class="velora-loader-ring absolute inset-0"></div>
-            <svg class="velora-loader-pulse relative h-9 w-9" viewBox="0 0 512 512" aria-hidden="true">
-                <defs>
-                    <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#34d399"/>
-                        <stop offset="100%" stop-color="#22d3ee"/>
-                    </linearGradient>
-                </defs>
-                <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#splashGrad)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+    <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712] px-4">
+        <div class="velora-splash-wrap">
+            <div class="velora-splash-ring" aria-hidden="true"></div>
+            <img
+                src="/icons/splash-mobile.png"
+                alt="Velora Engine — Pronostics Premium"
+                class="velora-splash-image relative z-10"
+                width="540"
+                height="960"
+                fetchpriority="high"
+            >
         </div>
-        <p class="mt-6 text-sm font-black tracking-widest bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">VELORA ENGINE</p>
-        <p class="mt-2 text-xs text-gray-500">Initialisation du moteur...</p>
+        <p class="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Initialisation du moteur...</p>
     </div>
     <div class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.08)_0%,transparent_45%)]"></div>
     <div class="mx-auto max-w-2xl px-4 py-6 pb-12">
@@ -150,17 +175,16 @@
         </div>
 
         <div id="loading" class="hidden flex-col items-center justify-center gap-4 py-10">
-            <div class="relative flex h-16 w-16 items-center justify-center">
-                <div class="velora-loader-ring absolute inset-0"></div>
-                <svg class="velora-loader-pulse relative h-7 w-7" viewBox="0 0 512 512" aria-hidden="true">
-                    <defs>
-                        <linearGradient id="loaderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#34d399"/>
-                            <stop offset="100%" stop-color="#22d3ee"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#loaderGrad)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <div class="velora-splash-wrap velora-splash-wrap--compact">
+                <div class="velora-splash-ring" aria-hidden="true"></div>
+                <img
+                    src="/icons/splash-mobile.png"
+                    alt=""
+                    class="velora-splash-image relative z-10"
+                    width="540"
+                    height="960"
+                    aria-hidden="true"
+                >
             </div>
             <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Analyse Velora en cours...</p>
         </div>
