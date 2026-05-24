@@ -29,6 +29,7 @@
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <link rel="preload" as="image" href="/icons/splash-mobile.png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --splash-aspect: 9 / 16;
@@ -226,7 +227,8 @@
                     <span id="vitrineTaux">—</span><span class="text-base">%</span>
                 </p>
                 <p class="text-center text-xs text-gray-400">Taux plateforme (anonymisé)</p>
-                <p id="vitrineMeta" class="mt-2 text-center text-xs text-gray-500"></p>
+                <p id="vitrineVictoires" class="mt-2 text-center text-sm font-semibold text-cyan-300">0 victoire</p>
+                <p id="vitrineMeta" class="mt-1 text-center text-xs text-gray-500"></p>
                 <div id="vitrineParType" class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
             </div>
             <p id="vitrineSyncErreur" class="mt-3 hidden text-center text-xs text-amber-200/90" role="alert"></p>
@@ -268,6 +270,202 @@
     </div>
 
     <script>
+        // ——— Supabase ———
+        const SUPABASE_URL = 'https://ssxpcxukrfcslhfskdei.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzeHBjeHVrcmZjc2xoZnNrZGVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MzI0MzcsImV4cCI6MjA5NTIwODQzN30.0FbP5TsQppB6HeKxR5wOKZ9LiQgfExj72DX45jZSVVw';
+        /** Identifiant fixe de la ligne unique velora_stats (singleton). */
+        const VELORA_STATS_ROW_ID = 'a0000000-0000-4000-8000-000000000001';
+        const STATS_COMMUNAUTE_SYNC_KEY = 'velora_communaute_synced';
+
+        /** Client Supabase (disponible après initSupabase()). */
+        let supabase = null;
+
+        function initSupabase() {
+            if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+                console.warn('[Velora] Supabase : URL ou clé anon manquante.');
+                return null;
+            }
+            if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
+                console.warn('[Velora] SDK Supabase introuvable (vérifiez le script CDN).');
+                return null;
+            }
+            if (!supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+            return supabase;
+        }
+
+        function cleCourseArchive(archive) {
+            const dateApi = archive.dateApi || archive.date_api || '';
+            const reunion = archive.reunion || '';
+            const course = archive.course || '';
+            return `${dateApi}-${reunion}-${course}`;
+        }
+
+        function estArchiveTerminee(archive) {
+            return archive.statut !== 'En attente'
+                && archive.statut !== undefined
+                && archive.reussi_pmu !== undefined
+                && archive.reussi_pmu !== null;
+        }
+
+        const LABELS_BADGE_GAGNANT = [
+            'Gagnant', 'Placé', 'Trio', 'Tiercé', 'Multi', 'Mini Multi', 'Super 4',
+        ];
+
+        function libellesBadges(archive) {
+            return (archive.badges_pmu || []).map((b) => (b.label || '').trim());
+        }
+
+        function estBadgePerdu(archive) {
+            if (!estArchiveTerminee(archive)) return false;
+            if (archive.type_pari_pmu === 'Perdu') return true;
+            return libellesBadges(archive).some((label) => /^perdu$/i.test(label));
+        }
+
+        function estBadgeGagnant(archive) {
+            if (!estArchiveTerminee(archive)) return false;
+            if (estBadgePerdu(archive)) return false;
+            const labels = libellesBadges(archive);
+            if (labels.some((label) => LABELS_BADGE_GAGNANT.some((g) => label.includes(g)))) {
+                return true;
+            }
+            const type = archive.type_pari_pmu || '';
+            if (archive.reussi_pmu === true && type && type !== 'Perdu') {
+                return LABELS_BADGE_GAGNANT.some((g) => type.includes(g)) || labels.length > 0;
+            }
+            return false;
+        }
+
+        function lireCompteursPlateforme(row) {
+            const courses = row.total_courses_analysees ?? row.total_analyses ?? 0;
+            const victoires = row.total_victoires ?? 0;
+            return { courses, victoires };
+        }
+
+        function getCoursesStatsSync() {
+            try {
+                return new Set(JSON.parse(localStorage.getItem(STATS_COMMUNAUTE_SYNC_KEY) || '[]'));
+            } catch {
+                return new Set();
+            }
+        }
+
+        function marquerCourseStatsSync(courseKey) {
+            const set = getCoursesStatsSync();
+            set.add(courseKey);
+            localStorage.setItem(STATS_COMMUNAUTE_SYNC_KEY, JSON.stringify([...set]));
+        }
+
+        function estCourseDejaSync(courseKey) {
+            return getCoursesStatsSync().has(courseKey);
+        }
+
+        async function lireVeloraStatsSupabase() {
+            const client = initSupabase();
+            if (!client) return { row: null, erreur: 'Supabase non configuré' };
+
+            const { data, error } = await client
+                .from('velora_stats')
+                .select('id, total_courses_analysees, total_analyses, total_victoires')
+                .eq('id', VELORA_STATS_ROW_ID)
+                .maybeSingle();
+
+            if (error) return { row: null, erreur: error.message };
+            if (!data) return { row: null, erreur: 'Ligne velora_stats introuvable (exécutez le SQL d’initialisation).' };
+            return { row: data, erreur: null };
+        }
+
+        function injecterStatsPlateformeUI(courses, victoires) {
+            const section = document.getElementById('sectionVitrine');
+            const tauxEl = document.getElementById('vitrineTaux');
+            const victoiresEl = document.getElementById('vitrineVictoires');
+            const metaEl = document.getElementById('vitrineMeta');
+            const parTypeEl = document.getElementById('vitrineParType');
+
+            const taux = courses > 0 ? Math.round((victoires / courses) * 100) : 0;
+
+            if (tauxEl) tauxEl.textContent = String(taux);
+            if (victoiresEl) {
+                victoiresEl.textContent = victoires === 1
+                    ? '1 victoire'
+                    : `${victoires} victoire${victoires > 1 ? 's' : ''}`;
+            }
+            if (metaEl) {
+                metaEl.textContent = courses === 0
+                    ? 'Aucune course validée pour le moment'
+                    : `${courses} course${courses > 1 ? 's' : ''} analysée${courses > 1 ? 's' : ''} et validée${courses > 1 ? 's' : ''}`;
+            }
+            if (parTypeEl) {
+                parTypeEl.innerHTML = courses === 0
+                    ? '<p class="text-center text-xs text-gray-500">Les statistiques communautaires apparaîtront après les premières courses terminées.</p>'
+                    : '<p class="col-span-full text-center text-xs text-cyan-300/90">Taux = victoires ÷ courses validées (Gagnant, Placé, Trio, Tiercé, Multi…).</p>';
+            }
+            if (section) section.classList.remove('hidden');
+        }
+
+        /** Charge les stats Supabase et met à jour le bloc « Communauté Velora ». */
+        async function chargerStatsPlateforme() {
+            masquerErreurSync('vitrineSyncErreur');
+            const { row, erreur } = await lireVeloraStatsSupabase();
+            if (erreur || !row) {
+                afficherErreurSync('vitrineSyncErreur', erreur || MSG_SYNC_ERREUR);
+                return;
+            }
+            const { courses, victoires } = lireCompteursPlateforme(row);
+            injecterStatsPlateformeUI(courses, victoires);
+        }
+
+        async function incrementerStatsPlateforme(estVictoire) {
+            const client = initSupabase();
+            if (!client) return false;
+
+            const { row, erreur } = await lireVeloraStatsSupabase();
+            if (erreur || !row) {
+                console.warn('[Velora] Stats plateforme :', erreur);
+                return false;
+            }
+
+            const { courses, victoires } = lireCompteursPlateforme(row);
+            const payload = {
+                total_victoires: victoires + (estVictoire ? 1 : 0),
+            };
+            if (row.total_courses_analysees !== undefined) {
+                payload.total_courses_analysees = courses + 1;
+            } else {
+                payload.total_analyses = courses + 1;
+            }
+
+            const { error: updateError } = await client
+                .from('velora_stats')
+                .update(payload)
+                .eq('id', row.id);
+
+            if (updateError) {
+                console.warn('[Velora] UPDATE velora_stats :', updateError.message);
+                return false;
+            }
+            return true;
+        }
+
+        /** Envoie +1 course (+1 victoire si badge gagnant) puis rafraîchit l’UI. */
+        async function synchroniserStatsPlateforme(archive) {
+            if (!estArchiveTerminee(archive)) return;
+
+            const courseKey = cleCourseArchive(archive);
+            if (!courseKey || courseKey === '--' || estCourseDejaSync(courseKey)) return;
+
+            const gagnant = estBadgeGagnant(archive);
+            const perdu = estBadgePerdu(archive);
+            if (!gagnant && !perdu) return;
+
+            const ok = await incrementerStatsPlateforme(gagnant);
+            if (!ok) return;
+
+            marquerCourseStatsSync(courseKey);
+            await chargerStatsPlateforme();
+        }
+
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
         /** Clé vitrine : même valeur que MTECH_PUBLIC_API_KEY côté Render si définie. */
         const MTECH_PUBLIC_API_KEY = 'Mouloud2026_MTech_Secure_7788';
@@ -439,49 +637,13 @@
             blocTypes.classList.remove('hidden');
         }
 
-        async function chargerVitrinePublique() {
-            const section = document.getElementById('sectionVitrine');
-            if (!section) return;
-
-            const { stats, erreur } = await lireStatsPubliques();
-            if (erreur) {
-                afficherErreurSync('vitrineSyncErreur', erreur);
-                return;
-            }
-            masquerErreurSync('vitrineSyncErreur');
-
-            if (!stats) return;
-
-            const tauxEl = document.getElementById('vitrineTaux');
-            const metaEl = document.getElementById('vitrineMeta');
-            const parTypeEl = document.getElementById('vitrineParType');
-            if (tauxEl) tauxEl.textContent = String(stats.taux_reussite_plateforme ?? 0);
-            if (metaEl) {
-                metaEl.textContent = [
-                    stats.membres_actifs != null ? `${stats.membres_actifs} membre${stats.membres_actifs > 1 ? 's' : ''} actif${stats.membres_actifs > 1 ? 's' : ''}` : null,
-                    stats.victoires_plateforme != null ? `${stats.victoires_plateforme} victoire${stats.victoires_plateforme > 1 ? 's' : ''}` : null,
-                ].filter(Boolean).join(' · ');
-            }
-            if (parTypeEl) {
-                const repartition = stats.reussites_par_type_pari || stats.gains_par_famille_pari || {};
-                const entrees = Object.entries(repartition).sort((a, b) => b[1] - a[1]);
-                parTypeEl.innerHTML = entrees.length === 0
-                    ? '<p class="text-center text-xs text-gray-500">Pas encore de données publiques.</p>'
-                    : entrees.map(([label, n]) => `
-                        <div class="rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-xs">
-                            <span class="font-medium text-gray-200">${label}</span>
-                            <span class="float-right text-cyan-300">${n} succès</span>
-                        </div>`).join('');
-            }
-            section.classList.remove('hidden');
-        }
-
         const SPLASH_MIN_MS = 4500;
         const SPLASH_FADE_MS = 600;
         const splashShownAt = performance.now();
 
         window.addEventListener('load', () => {
-            chargerVitrinePublique();
+            initSupabase();
+            chargerStatsPlateforme();
 
             const splash = document.getElementById('appSplash');
             if (!splash) return;
@@ -583,6 +745,7 @@
         }
 
         async function verifierResultatArchive(archive) {
+            const etaitTerminee = estArchiveTerminee(archive);
             const payload = { ...archive, user_id: getVeloraUserId() };
             const result = await veloraApi('/evaluation', {
                 method: 'POST',
@@ -594,7 +757,15 @@
             }
             const data = result.data;
             if (data?.erreur) return { archive, erreur: null };
-            return { archive: data.archive || data, erreur: null };
+
+            const archiveMaj = data.archive || data;
+            const vientDeSeTerminer = !etaitTerminee && estArchiveTerminee(archiveMaj);
+            const doitSynchroniser = vientDeSeTerminer
+                || (estArchiveTerminee(archiveMaj) && !estCourseDejaSync(cleCourseArchive(archiveMaj)));
+            if (doitSynchroniser) {
+                await synchroniserStatsPlateforme(archiveMaj);
+            }
+            return { archive: archiveMaj, erreur: null };
         }
 
         function htmlPronosticVeloraArchive(archive) {
