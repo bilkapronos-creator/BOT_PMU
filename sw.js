@@ -1,7 +1,8 @@
-const CACHE_NAME = 'velora-v7';
+const CACHE_NAME = 'velora-v9';
 const ASSETS = [
   '/',
   '/index.html',
+  '/config.js',
   '/manifest.json',
   '/icons/icon.svg'
 ];

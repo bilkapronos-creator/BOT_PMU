@@ -1,24 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "manifest.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "sw.js",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "icons/**",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "node scripts/generate-config.js",
+  "outputDirectory": ".",
   "routes": [
+    { "src": "/config.js", "dest": "/config.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/icons/(.*)", "dest": "/icons/$1" },

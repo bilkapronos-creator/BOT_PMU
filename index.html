@@ -30,6 +30,7 @@
     <link rel="preload" as="image" href="/icons/splash-mobile.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/config.js"></script>
     <style>
         :root {
             --splash-aspect: 9 / 16;
@@ -132,6 +133,13 @@
             display: inline-block;
             animation: vitrine-taux-pop 0.55s ease-out;
         }
+        .velora-loading-bar {
+            animation: velora-loading-slide 1.4s ease-in-out infinite;
+        }
+        @keyframes velora-loading-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
@@ -150,7 +158,7 @@
         <p class="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Initialisation du moteur...</p>
     </div>
     <div class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.08)_0%,transparent_45%)]"></div>
-    <div class="mx-auto max-w-2xl px-4 py-6 pb-12">
+    <div class="mx-auto max-w-2xl px-4 py-6 pb-12 lg:max-w-7xl lg:px-8">
 
     <header class="py-2">
         <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between sm:items-start">
@@ -191,7 +199,7 @@
         </p>
     </header>
 
-    <nav class="mb-6 flex rounded-xl border border-white/10 glass-card p-1 shadow-lg shadow-black/20" aria-label="Navigation principale">
+    <nav class="mb-6 flex rounded-xl border border-white/10 glass-card p-1 shadow-lg shadow-black/20 lg:mb-8" aria-label="Navigation principale">
         <button type="button" id="tabPronostic" onclick="afficherSection('pronostic')"
             class="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow transition">
             Pronostic
@@ -202,86 +210,114 @@
         </button>
     </nav>
 
-    <section id="sectionPronostic">
-        <div class="glass-card mb-8 rounded-2xl border border-white/10 p-6 shadow-lg shadow-black/20">
-            <div class="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-4">
-                <input type="date" id="dateInput" class="input-glass rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white transition">
-                <input type="text" id="reunionInput" placeholder="R1" class="input-glass rounded-lg border border-white/10 px-3 py-2.5 text-sm uppercase text-white transition">
-                <input type="text" id="courseInput" placeholder="C1" class="input-glass rounded-lg border border-white/10 px-3 py-2.5 text-sm uppercase text-white transition">
-                <button type="button" onclick="lancerAnalyse()" id="submitBtn" class="rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-2.5 px-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:from-emerald-400 hover:to-cyan-400">Analyser</button>
+    <div id="dashboardLayout" class="flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
+        <!-- Colonne gauche : contrôles & communauté (mobile : au-dessus du panneau droit) -->
+        <aside id="colonneGauche" class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-6">
+            <div class="glass-card rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20 lg:p-6">
+                <p class="mb-4 text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">Analyse de course</p>
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <label class="block sm:col-span-2 lg:col-span-1">
+                        <span class="mb-1 block text-xs text-gray-500">Date</span>
+                        <input type="date" id="dateInput" class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white transition">
+                    </label>
+                    <label class="block">
+                        <span class="mb-1 block text-xs text-gray-500">Réunion</span>
+                        <input type="text" id="reunionInput" placeholder="R1" class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm uppercase text-white transition">
+                    </label>
+                    <label class="block">
+                        <span class="mb-1 block text-xs text-gray-500">Course</span>
+                        <input type="text" id="courseInput" placeholder="C1" class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm uppercase text-white transition">
+                    </label>
+                    <button type="button" onclick="lancerAnalyse()" id="submitBtn"
+                        class="sm:col-span-2 lg:col-span-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:from-emerald-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-60">
+                        Analyser
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <div id="loading" class="hidden flex-col items-center justify-center gap-4 py-10">
-            <div class="velora-splash-wrap velora-splash-wrap--compact">
-                <div class="velora-splash-ring" aria-hidden="true"></div>
-                <img
-                    src="/icons/splash-mobile.png"
-                    alt=""
-                    class="velora-splash-image relative z-10"
-                    width="540"
-                    height="960"
-                    aria-hidden="true"
-                >
-            </div>
-            <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Analyse Velora en cours...</p>
-        </div>
-        <h2 id="titreResultats" class="text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
-        <div id="resultats" class="space-y-4"></div>
+            <section id="sectionVitrine" aria-label="Statistiques communauté Velora">
+                <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
+                    <p class="text-center text-xs uppercase tracking-widest text-cyan-400/80">Communauté Velora</p>
+                    <p class="mt-2 text-center text-2xl font-black text-cyan-300">
+                        <span id="vitrineTaux">—</span><span class="text-base">%</span>
+                    </p>
+                    <p class="text-center text-xs text-gray-400">Taux plateforme (anonymisé)</p>
+                    <p id="vitrineVictoires" class="mt-2 text-center text-sm font-semibold text-cyan-300">0 victoire</p>
+                    <p id="vitrineMeta" class="mt-1 text-center text-xs text-gray-500"></p>
+                    <div id="vitrineParType" class="mt-4 grid grid-cols-1 gap-2"></div>
+                </div>
+                <p id="vitrineSyncErreur" class="mt-3 hidden text-center text-xs text-amber-200/90" role="alert"></p>
+            </section>
 
-        <section id="sectionVitrine" class="mt-8" aria-label="Statistiques communauté Velora">
-            <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
-                <p class="text-center text-xs uppercase tracking-widest text-cyan-400/80">Communauté Velora</p>
-                <p class="mt-2 text-center text-2xl font-black text-cyan-300">
-                    <span id="vitrineTaux">—</span><span class="text-base">%</span>
-                </p>
-                <p class="text-center text-xs text-gray-400">Taux plateforme (anonymisé)</p>
-                <p id="vitrineVictoires" class="mt-2 text-center text-sm font-semibold text-cyan-300">0 victoire</p>
-                <p id="vitrineMeta" class="mt-1 text-center text-xs text-gray-500"></p>
-                <div id="vitrineParType" class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
-            </div>
-            <p id="vitrineSyncErreur" class="mt-3 hidden text-center text-xs text-amber-200/90" role="alert"></p>
-        </section>
-
-        <aside id="guideRapide" class="glass-card mt-10 flex items-start gap-4 rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <div>
-                <h3 class="text-sm font-bold tracking-wide text-white">Guide Rapide</h3>
-                <p class="mt-1 text-sm leading-relaxed text-gray-400">Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span> pour lancer l'algorithme Velora.</p>
-            </div>
+            <aside id="guideRapide" class="glass-card flex items-start gap-4 rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-wide text-white">Guide Rapide</h3>
+                    <p class="mt-1 text-sm leading-relaxed text-gray-400">Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.</p>
+                </div>
+            </aside>
         </aside>
-    </section>
 
-    <section id="sectionArchives" class="hidden">
-        <p id="statsSyncErreur" class="mb-4 hidden rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200" role="alert"></p>
+        <!-- Colonne droite : résultats live ou archives -->
+        <main id="colonneDroite" class="min-h-[280px] lg:col-span-8 lg:min-h-[min(75vh,800px)]">
+            <section id="sectionPronostic" class="flex h-full min-h-[280px] flex-col gap-4">
+                <div id="loading" class="hidden flex-1 flex-col" role="status" aria-live="polite" aria-busy="true">
+                    <div class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-emerald-500/25 bg-gray-900/50 px-6 py-14 shadow-inner shadow-black/20 lg:min-h-[420px]">
+                        <div class="relative flex h-14 w-14 items-center justify-center" aria-hidden="true">
+                            <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20"></div>
+                            <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
+                            <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
+                        </div>
+                        <p class="mt-8 text-center text-base font-semibold text-white">Connexion au moteur Velora...</p>
+                        <p id="loadingSubtext" class="mt-2 text-center text-sm text-gray-400">Réveil du serveur Render — analyse PMU en cours</p>
+                        <div class="mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-gray-800">
+                            <div class="velora-loading-bar h-full w-1/3 rounded-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-emerald-500"></div>
+                        </div>
+                        <p class="mt-6 text-center text-[10px] uppercase tracking-widest text-gray-500">Ne fermez pas cet onglet</p>
+                    </div>
+                </div>
 
-        <div class="glass-card mb-4 rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
-            <p class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Dashboard privé</p>
-            <p class="mt-2 text-center text-3xl font-black text-emerald-400">
-                <span id="tauxReussite">0</span><span class="text-lg">%</span>
-            </p>
-            <p class="text-center text-xs text-gray-400">Taux de réussite global</p>
-            <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400">0 course analysée</p>
-        </div>
+                <div id="panneauResultatsPronostic" class="flex flex-col gap-4">
+                    <h2 id="titreResultats" class="hidden text-lg font-bold text-emerald-400 lg:text-xl"></h2>
+                    <div id="zoneVidePronostic" class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[420px]">
+                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-2xl" aria-hidden="true">🐎</div>
+                        <p class="text-sm font-semibold text-gray-300">Panneau d'analyse</p>
+                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Saisissez une course à gauche et cliquez sur <span class="text-emerald-400">Analyser</span> pour afficher le classement Velora ici.</p>
+                    </div>
+                    <div id="resultats" class="space-y-4"></div>
+                </div>
+            </section>
 
-        <div id="statsParType" class="mb-6 hidden">
-            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition des succès</p>
-            <div id="statsParTypeListe" class="grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
-        </div>
+            <section id="sectionArchives" class="hidden flex flex-col gap-4">
+                <p id="statsSyncErreur" class="hidden rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200" role="alert"></p>
 
-        <div id="resultatsArchives" class="space-y-3"></div>
-    </section>
+                <div class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
+                    <p class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Dashboard privé</p>
+                    <p class="mt-2 text-center text-3xl font-black text-emerald-400">
+                        <span id="tauxReussite">0</span><span class="text-lg">%</span>
+                    </p>
+                    <p class="text-center text-xs text-gray-400">Taux de réussite global</p>
+                    <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400">0 course analysée</p>
+                </div>
+
+                <div id="statsParType" class="hidden">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition des succès</p>
+                    <div id="statsParTypeListe" class="grid grid-cols-1 gap-2 md:grid-cols-2"></div>
+                </div>
+
+                <div id="resultatsArchives" class="space-y-3"></div>
+            </section>
+        </main>
+    </div>
 
     </div>
 
     <script>
-        // ——— Supabase ———
-        const SUPABASE_URL = 'https://ssxpcxukrfcslhfskdei.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzeHBjeHVrcmZjc2xoZnNrZGVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2MzI0MzcsImV4cCI6MjA5NTIwODQzN30.0FbP5TsQppB6HeKxR5wOKZ9LiQgfExj72DX45jZSVVw';
+        // ——— Supabase (URL + clé via /config.js → window.VELORA_ENV) ———
         /** Identifiant fixe de la ligne unique velora_stats (singleton). */
         const VELORA_STATS_ROW_ID = 'a0000000-0000-4000-8000-000000000001';
         const STATS_COMMUNAUTE_SYNC_KEY = 'velora_communaute_synced';
@@ -289,9 +325,62 @@
         /** Client Supabase (ne pas nommer « supabase » : conflit avec window.supabase du CDN). */
         let veloraSupabase = null;
 
+        /** URL projet pour createClient (sans /rest/v1 — le SDK l’ajoute lui-même). */
+        function normaliserSupabaseUrl(urlBrute) {
+            let url = String(urlBrute || '').trim();
+            url = url.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+            return url;
+        }
+
+        function getSupabaseConfig() {
+            const env = window.VELORA_ENV || {};
+            const url = normaliserSupabaseUrl(env.SUPABASE_URL);
+            const key = String(
+                env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY || '',
+            ).trim();
+            return { url, key };
+        }
+
+        function validerConfigSupabase(url, key) {
+            if (!url || !key) {
+                return 'Configuration Supabase absente. Ajoutez SUPABASE_URL et SUPABASE_ANON_KEY (Vercel ou config.js local).';
+            }
+            if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) {
+                return 'URL Supabase invalide (utilisez https://xxxx.supabase.co, sans /rest/v1).';
+            }
+            if (/^sb_secret_/i.test(key) || /service_role/i.test(key)) {
+                return 'Ne utilisez pas la clé secrète (service_role). Copiez la clé « anon » / « publishable » publique.';
+            }
+            if (key.split('.').length !== 3 && !key.startsWith('sb_publishable_')) {
+                return 'Format de clé Supabase suspect — recopiez la clé anon depuis le dashboard.';
+            }
+            try {
+                const refUrl = url.match(/https:\/\/([a-z0-9-]+)\.supabase\.co/i)?.[1];
+                if (key.includes('.') && refUrl) {
+                    const payload = JSON.parse(atob(key.split('.')[1]));
+                    if (payload.ref && payload.ref !== refUrl) {
+                        return `La clé anon ne correspond pas au projet (${payload.ref} ≠ ${refUrl}).`;
+                    }
+                }
+            } catch {
+                /* clé non-JWT (ex. sb_publishable_…) : pas de vérif ref */
+            }
+            return null;
+        }
+
+        function formaterErreurSupabase(message) {
+            const msg = String(message || '');
+            if (/invalid api key/i.test(msg)) {
+                return 'Clé Supabase refusée : recopiez la clé « anon public » dans Vercel (SUPABASE_ANON_KEY), puis redéployez. Vérifiez qu’elle n’a pas été régénérée dans Supabase.';
+            }
+            return msg;
+        }
+
         function initSupabase() {
-            if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-                console.warn('[Velora] Supabase : URL ou clé anon manquante.');
+            const { url, key } = getSupabaseConfig();
+            const errConfig = validerConfigSupabase(url, key);
+            if (errConfig) {
+                console.warn('[Velora] Supabase :', errConfig);
                 return null;
             }
             if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
@@ -299,7 +388,13 @@
                 return null;
             }
             if (!veloraSupabase) {
-                veloraSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                veloraSupabase = window.supabase.createClient(url, key, {
+                    auth: {
+                        persistSession: false,
+                        autoRefreshToken: false,
+                        detectSessionInUrl: false,
+                    },
+                });
             }
             return veloraSupabase;
         }
@@ -406,7 +501,7 @@
                 .eq('id', VELORA_STATS_ROW_ID)
                 .maybeSingle();
 
-            if (error) return { row: null, erreur: error.message };
+            if (error) return { row: null, erreur: formaterErreurSupabase(error.message) };
             if (!data) return { row: null, erreur: 'Ligne velora_stats introuvable (exécutez le SQL d’initialisation).' };
             return { row: data, erreur: null };
         }
@@ -785,6 +880,7 @@
 
             if (!pronosticActif) {
                 chargerArchives();
+                document.getElementById('colonneDroite')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
 
@@ -1135,6 +1231,47 @@
                 </div>`;
         }
 
+        function afficherChargementAnalyse() {
+            const loading = document.getElementById('loading');
+            const panneau = document.getElementById('panneauResultatsPronostic');
+            const zoneVide = document.getElementById('zoneVidePronostic');
+            if (zoneVide) zoneVide.classList.add('hidden');
+            if (panneau) panneau.classList.add('hidden');
+            if (loading) {
+                loading.classList.remove('hidden');
+                loading.classList.add('flex');
+            }
+            document.getElementById('colonneDroite')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function masquerChargementAnalyse() {
+            const loading = document.getElementById('loading');
+            const panneau = document.getElementById('panneauResultatsPronostic');
+            if (loading) {
+                loading.classList.add('hidden');
+                loading.classList.remove('flex');
+            }
+            if (panneau) panneau.classList.remove('hidden');
+        }
+
+        function finAnalyseBouton(bouton) {
+            if (bouton) {
+                bouton.disabled = false;
+                bouton.textContent = 'Analyser';
+            }
+            masquerChargementAnalyse();
+        }
+
+        function mettreAJourZoneVidePronostic() {
+            const zoneVide = document.getElementById('zoneVidePronostic');
+            const resultats = document.getElementById('resultats');
+            const titre = document.getElementById('titreResultats');
+            if (!zoneVide) return;
+            const aDuContenu = (resultats?.children.length > 0)
+                || (titre && !titre.classList.contains('hidden'));
+            zoneVide.classList.toggle('hidden', aDuContenu);
+        }
+
         async function lancerAnalyse() {
             const bouton = document.getElementById('submitBtn');
             const dateIso = document.getElementById('dateInput').value;
@@ -1144,51 +1281,57 @@
 
             const zoneResultats = document.getElementById('resultats');
             const titreResultats = document.getElementById('titreResultats');
-            const loading = document.getElementById('loading');
+            const loadingSubtext = document.getElementById('loadingSubtext');
 
+            afficherSection('pronostic');
             zoneResultats.innerHTML = '';
             titreResultats.classList.add('hidden');
-            loading.classList.remove('hidden');
-            loading.classList.add('flex');
+            mettreAJourZoneVidePronostic();
 
             if (!dateAPI || !reunion || !course) {
-                loading.classList.add('hidden');
-                loading.classList.remove('flex');
-                zoneResultats.innerHTML = '<div class="text-red-500 text-center">Veuillez renseigner la date, la réunion et la course.</div>';
+                masquerChargementAnalyse();
+                zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Veuillez renseigner la date, la réunion et la course.</div>';
+                mettreAJourZoneVidePronostic();
                 return;
             }
 
             bouton.disabled = true;
-            bouton.textContent = 'Calculs...';
+            bouton.textContent = 'Analyse...';
+            if (loadingSubtext) {
+                loadingSubtext.textContent = `Course ${reunion}${course} — connexion au serveur Render…`;
+            }
+            afficherChargementAnalyse();
+
             const sponsorDuJour = reseauAffiliation[Math.floor(Math.random() * reseauAffiliation.length)];
 
             try {
                 const result = await veloraApi(`/analyser/${dateAPI}/${reunion}/${course}`);
 
+                finAnalyseBouton(bouton);
+
                 if (result.status === 401) {
-                    zoneResultats.innerHTML = '<div class="text-red-500 text-center">Accès refusé : clé API invalide.</div>';
+                    zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Accès refusé : clé API invalide.</div>';
+                    mettreAJourZoneVidePronostic();
                     return;
                 }
                 if (!result.ok) {
-                    zoneResultats.innerHTML = `<div class="text-amber-300 text-center">${result.erreur || MSG_SYNC_ERREUR}</div>`;
+                    zoneResultats.innerHTML = `<div class="glass-card rounded-xl border border-amber-500/30 bg-amber-950/30 p-4 text-center text-sm text-amber-200">${result.erreur || MSG_SYNC_ERREUR}</div>`;
+                    mettreAJourZoneVidePronostic();
                     return;
                 }
 
                 const data = result.data;
 
-                loading.classList.add('hidden');
-                loading.classList.remove('flex');
-                bouton.disabled = false;
-                bouton.textContent = 'Analyser';
-
                 if (data.erreur) {
-                    zoneResultats.innerHTML = `<div class="text-red-500 text-center">Erreur : ${data.erreur}</div>`;
+                    zoneResultats.innerHTML = `<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Erreur : ${data.erreur}</div>`;
+                    mettreAJourZoneVidePronostic();
                     return;
                 }
 
                 const listeBrute = data.pronostic_officiel_mtech;
                 if (!Array.isArray(listeBrute) || listeBrute.length === 0) {
-                    zoneResultats.innerHTML = '<div class="text-yellow-500 text-center">Aucun participant trouvé pour cette course.</div>';
+                    zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-yellow-500/30 bg-yellow-950/20 p-4 text-center text-sm text-yellow-200">Aucun participant trouvé pour cette course.</div>';
+                    mettreAJourZoneVidePronostic();
                     return;
                 }
 
@@ -1229,12 +1372,11 @@
                             ${boutonParrainage}
                         </div>`;
                 });
+                mettreAJourZoneVidePronostic();
             } catch (e) {
-                loading.classList.add('hidden');
-                loading.classList.remove('flex');
-                bouton.disabled = false;
-                bouton.textContent = 'Analyser';
-                zoneResultats.innerHTML = '<div class="text-red-500 text-center">Erreur de connexion. Le serveur se réveille, réessaie dans 30s.</div>';
+                finAnalyseBouton(bouton);
+                zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Erreur de connexion. Le serveur se réveille, réessayez dans 30 secondes.</div>';
+                mettreAJourZoneVidePronostic();
             }
         }
     </script>
