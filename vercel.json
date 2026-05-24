@@ -8,6 +8,7 @@
   "routes": [
     { "handle": "filesystem" },
     { "src": "/config.js", "dest": "/config.js" },
+    { "src": "/auth.js", "dest": "/auth.js" },
     { "src": "/admin.html", "dest": "/admin.html" },
     { "src": "/admin.js", "dest": "/admin.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },

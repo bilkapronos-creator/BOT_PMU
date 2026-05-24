@@ -31,6 +31,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/config.js"></script>
+    <script src="/auth.js"></script>
     <style>
         :root {
             --splash-aspect: 9 / 16;
@@ -174,17 +175,34 @@
                     <span>Moteur Velora : <span class="font-semibold text-emerald-400">En ligne</span></span>
                 </div>
             </div>
-            <button
-                type="button"
-                id="installBtn"
-                class="hidden items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 backdrop-blur-sm transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-950"
-                aria-label="Installer l'application Velora Engine sur cet appareil"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-                </svg>
-                Installer
-            </button>
+            <div class="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+                <p id="authUserLabel" class="hidden max-w-[12rem] truncate text-xs text-emerald-300/90" title=""></p>
+                <button
+                    type="button"
+                    id="btnAuthOpen"
+                    class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/20"
+                >
+                    Se connecter
+                </button>
+                <button
+                    type="button"
+                    id="btnAuthLogout"
+                    class="hidden rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-gray-300 transition hover:text-white"
+                >
+                    Déconnexion
+                </button>
+                <button
+                    type="button"
+                    id="installBtn"
+                    class="hidden items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 backdrop-blur-sm transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-950"
+                    aria-label="Installer l'application Velora Engine sur cet appareil"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                    </svg>
+                    Installer
+                </button>
+            </div>
         </div>
 
         <nav class="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3" aria-label="Navigation par sport">
@@ -205,7 +223,7 @@
             Pronostic
         </button>
         <button type="button" id="tabArchives" onclick="afficherSection('archives')"
-            class="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-gray-200">
+            class="hidden flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-gray-200">
             Archives
         </button>
     </nav>
@@ -295,6 +313,16 @@
             <section id="sectionArchives" class="hidden flex flex-col gap-4">
                 <p id="statsSyncErreur" class="hidden rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200" role="alert"></p>
 
+                <div id="archivesVerrouille" class="glass-card rounded-2xl border border-dashed border-white/15 px-6 py-12 text-center">
+                    <p class="text-sm font-semibold text-gray-300">Espace Parieur réservé</p>
+                    <p class="mt-2 text-xs text-gray-500">Connectez-vous pour accéder à votre dashboard privé et vos archives.</p>
+                    <button type="button" id="btnAuthFromArchives"
+                        class="mt-4 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-2.5 text-sm font-bold text-white shadow">
+                        Se connecter
+                    </button>
+                </div>
+
+                <div id="zoneMembrePrive" class="hidden flex flex-col gap-4">
                 <div class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
                     <p class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Dashboard privé</p>
                     <p class="mt-2 text-center text-3xl font-black text-emerald-400">
@@ -310,10 +338,47 @@
                 </div>
 
                 <div id="resultatsArchives" class="space-y-3"></div>
+                </div>
             </section>
         </main>
     </div>
 
+    </div>
+
+    <!-- Modale Espace Parieur -->
+    <div id="modalAuth" class="fixed inset-0 z-[200] hidden items-center justify-center px-4" role="dialog" aria-modal="true" aria-labelledby="modalAuthTitre">
+        <div id="modalAuthBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-gray-900 p-6 shadow-2xl">
+            <button type="button" id="btnAuthClose"
+                class="absolute right-3 top-3 rounded-lg px-2 py-1 text-lg leading-none text-gray-400 hover:text-white"
+                aria-label="Fermer">×</button>
+            <p class="text-center text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">Espace Parieur</p>
+            <h2 id="modalAuthTitre" class="mt-1 text-center text-xl font-black text-white">Connexion</h2>
+            <p id="modalAuthSousTitre" class="mt-2 text-center text-xs text-gray-400">Accédez à vos archives et à votre dashboard privé.</p>
+            <form id="formAuth" class="mt-6 space-y-4">
+                <label class="block">
+                    <span class="mb-1 block text-xs text-gray-500">Email</span>
+                    <input type="email" id="authEmail" required autocomplete="email"
+                        class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                </label>
+                <label class="block">
+                    <span class="mb-1 block text-xs text-gray-500">Mot de passe</span>
+                    <input type="password" id="authPassword" required minlength="6" autocomplete="current-password"
+                        class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                </label>
+                <p id="authErreur" class="hidden text-center text-xs text-red-400" role="alert"></p>
+                <p id="authSucces" class="hidden text-center text-xs text-emerald-400" role="status"></p>
+                <button type="submit" id="btnAuthSubmit"
+                    class="w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 text-sm font-bold text-white shadow-lg">
+                    Se connecter
+                </button>
+            </form>
+            <p class="mt-4 text-center text-xs text-gray-500">
+                <button type="button" id="btnAuthToggleMode" class="font-semibold text-emerald-400 hover:text-emerald-300">
+                    Créer un compte
+                </button>
+            </p>
+        </div>
     </div>
 
     <script>
@@ -377,6 +442,10 @@
         }
 
         function initSupabase() {
+            if (window.VeloraAuth?.getClient) {
+                veloraSupabase = window.VeloraAuth.getClient();
+                return veloraSupabase;
+            }
             const { url, key } = getSupabaseConfig();
             const errConfig = validerConfigSupabase(url, key);
             if (errConfig) {
@@ -390,9 +459,9 @@
             if (!veloraSupabase) {
                 veloraSupabase = window.supabase.createClient(url, key, {
                     auth: {
-                        persistSession: false,
-                        autoRefreshToken: false,
-                        detectSessionInUrl: false,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true,
                     },
                 });
             }
@@ -716,10 +785,15 @@
         }
 
         function getVeloraUserId() {
-            return localStorage.getItem(USER_ID_KEY) || initVeloraUserId();
+            if (window.VeloraAuth?.isAuthenticated?.()) {
+                return window.VeloraAuth.getUserId();
+            }
+            return null;
         }
 
-        initVeloraUserId();
+        function estMembreConnecte() {
+            return Boolean(window.VeloraAuth?.isAuthenticated?.());
+        }
 
         function estRoutePublique(url) {
             return url.includes('/stats/publiques');
@@ -743,7 +817,8 @@
                     headers.set('X-MTech-Key', getMtechPublicApiKey());
                 } else {
                     headers.set('X-MTech-Key', getMtechApiKey());
-                    headers.set('X-User-Id', getVeloraUserId());
+                    const uid = getVeloraUserId();
+                    if (uid) headers.set('X-User-Id', uid);
                 }
 
                 const options = { ...init, headers };
@@ -1007,13 +1082,142 @@
             }, remaining);
         }
 
-        function demarrerVeloraApp() {
+        let authMode = 'login';
+
+        function ouvrirModalAuth(mode) {
+            if (mode) authMode = mode;
+            const modal = document.getElementById('modalAuth');
+            const err = document.getElementById('authErreur');
+            const ok = document.getElementById('authSucces');
+            if (err) { err.textContent = ''; err.classList.add('hidden'); }
+            if (ok) { ok.textContent = ''; ok.classList.add('hidden'); }
+            mettreAJourModalAuthMode();
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+            document.getElementById('authEmail')?.focus();
+        }
+
+        function fermerModalAuth() {
+            const modal = document.getElementById('modalAuth');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function mettreAJourModalAuthMode() {
+            const titre = document.getElementById('modalAuthTitre');
+            const submit = document.getElementById('btnAuthSubmit');
+            const toggle = document.getElementById('btnAuthToggleMode');
+            const pwd = document.getElementById('authPassword');
+            if (authMode === 'signup') {
+                if (titre) titre.textContent = 'Inscription';
+                if (submit) submit.textContent = 'Créer mon compte';
+                if (toggle) toggle.textContent = 'Déjà un compte ? Se connecter';
+                if (pwd) pwd.autocomplete = 'new-password';
+            } else {
+                if (titre) titre.textContent = 'Connexion';
+                if (submit) submit.textContent = 'Se connecter';
+                if (toggle) toggle.textContent = 'Créer un compte';
+                if (pwd) pwd.autocomplete = 'current-password';
+            }
+        }
+
+        function appliquerEtatAuth() {
+            const connecte = estMembreConnecte();
+            const tabArch = document.getElementById('tabArchives');
+            const btnOpen = document.getElementById('btnAuthOpen');
+            const btnLogout = document.getElementById('btnAuthLogout');
+            const label = document.getElementById('authUserLabel');
+            const zonePrive = document.getElementById('zoneMembrePrive');
+            const verrou = document.getElementById('archivesVerrouille');
+
+            if (tabArch) tabArch.classList.toggle('hidden', !connecte);
+            if (btnOpen) btnOpen.classList.toggle('hidden', connecte);
+            if (btnLogout) btnLogout.classList.toggle('hidden', !connecte);
+            if (zonePrive) zonePrive.classList.toggle('hidden', !connecte);
+            if (verrou) verrou.classList.toggle('hidden', connecte);
+
+            if (label && connecte) {
+                const email = window.VeloraAuth.getUserEmail?.() || 'Membre';
+                label.textContent = email;
+                label.title = email;
+                label.classList.remove('hidden');
+            } else if (label) {
+                label.classList.add('hidden');
+            }
+
+            if (!connecte && sectionArchives && !sectionArchives.classList.contains('hidden')) {
+                afficherSection('pronostic');
+            }
+        }
+
+        function initialiserAuthUi() {
+            document.getElementById('btnAuthOpen')?.addEventListener('click', () => ouvrirModalAuth('login'));
+            document.getElementById('btnAuthFromArchives')?.addEventListener('click', () => ouvrirModalAuth('login'));
+            document.getElementById('btnAuthClose')?.addEventListener('click', fermerModalAuth);
+            document.getElementById('modalAuthBackdrop')?.addEventListener('click', fermerModalAuth);
+            document.getElementById('btnAuthLogout')?.addEventListener('click', async () => {
+                await window.VeloraAuth.signOut();
+                fermerModalAuth();
+            });
+            document.getElementById('btnAuthToggleMode')?.addEventListener('click', () => {
+                authMode = authMode === 'login' ? 'signup' : 'login';
+                mettreAJourModalAuthMode();
+            });
+
+            document.getElementById('formAuth')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('authEmail')?.value;
+                const password = document.getElementById('authPassword')?.value;
+                const errEl = document.getElementById('authErreur');
+                const okEl = document.getElementById('authSucces');
+                const submitBtn = document.getElementById('btnAuthSubmit');
+                if (errEl) errEl.classList.add('hidden');
+                if (okEl) okEl.classList.add('hidden');
+                if (submitBtn) submitBtn.disabled = true;
+
+                const result = authMode === 'signup'
+                    ? await window.VeloraAuth.signUp(email, password)
+                    : await window.VeloraAuth.signIn(email, password);
+
+                if (submitBtn) submitBtn.disabled = false;
+
+                if (!result.ok) {
+                    if (errEl) {
+                        errEl.textContent = result.erreur || 'Erreur';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+                if (result.confirmationEmail && okEl) {
+                    okEl.textContent = result.message || 'Vérifiez votre email.';
+                    okEl.classList.remove('hidden');
+                    return;
+                }
+                fermerModalAuth();
+                appliquerEtatAuth();
+                if (estMembreConnecte()) {
+                    afficherSection('archives');
+                }
+            });
+
+            window.VeloraAuth.onAuthChange(() => {
+                appliquerEtatAuth();
+                initSupabase();
+            });
+        }
+
+        async function demarrerVeloraApp() {
             masquerSplashApp();
             try {
-                restaurerArchivesDepuisBackupSession();
-                migrerArchivesLocalStorage().catch((err) => {
-                    console.warn('[Velora] Migration archives legacy :', err);
-                });
+                if (window.VeloraAuth) {
+                    await window.VeloraAuth.init();
+                    initialiserAuthUi();
+                    appliquerEtatAuth();
+                }
                 initSupabase();
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
@@ -1070,6 +1274,11 @@
         }
 
         function afficherSection(section) {
+            if (section === 'archives' && !estMembreConnecte()) {
+                ouvrirModalAuth('login');
+                section = 'pronostic';
+            }
+
             const pronosticActif = section === 'pronostic';
 
             if (!pronosticActif) {
@@ -1080,7 +1289,10 @@
             sectionArchives.classList.toggle('hidden', pronosticActif);
 
             tabPronostic.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
-            tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
+            if (tabArchives && estMembreConnecte()) {
+                tabArchives.classList.remove('hidden');
+                tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
+            }
 
             if (pronosticActif) {
                 restaurerResultatPronostic();
@@ -1207,6 +1419,11 @@
         }
 
         async function chargerArchives() {
+            if (!estMembreConnecte()) {
+                appliquerEtatAuth();
+                return;
+            }
+
             const liste = document.getElementById('resultatsArchives');
             const tauxEl = document.getElementById('tauxReussite');
             const statsEl = document.getElementById('statsArchives');
@@ -1349,6 +1566,8 @@
                 statut_pmu: null,
                 timestamp: Date.now(),
             };
+
+            if (!estMembreConnecte()) return;
 
             sauvegarderArchiveLocal(archive);
 
