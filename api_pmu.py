@@ -183,6 +183,33 @@ def est_belle_cote(
     return score_mtech >= SEUIL_SCORE_BELLE_COTE + 3
 
 
+def _metadata_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, nb_participants: int = 0) -> dict:
+    """Retourne nombre de partants et indicateur Quinté depuis l'API PMU."""
+    response = requests.get(
+        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+        headers=HEADERS_PMU,
+        timeout=20,
+    )
+    if response.status_code != 200:
+        return {
+            "nombre_partants": nb_participants,
+            "est_quinte": False,
+        }
+
+    data = response.json()
+    paris = data.get("paris") or []
+    est_quinte = any(
+        "QUINT" in str(p.get("codePari") or p.get("typePari", "")).upper()
+        for p in paris
+        if isinstance(p, dict)
+    )
+    nombre_partants = data.get("nombreDeclaresPartants") or nb_participants
+    return {
+        "nombre_partants": int(nombre_partants) if nombre_partants else nb_participants,
+        "est_quinte": est_quinte,
+    }
+
+
 @app.get("/analyser/{date}/{reunion}/{course}", dependencies=[Depends(verifier_cle_api)])
 def analyser_course(date: str, reunion: str, course: str):
     date_pmu = normaliser_date_pmu(date)
@@ -236,7 +263,10 @@ def analyser_course(date: str, reunion: str, course: str):
             entree["cote_pmu_disponible"],
         )
 
-    return {"pronostic_officiel_mtech": tableau_pronostics}
+    return {
+        "pronostic_officiel_mtech": tableau_pronostics,
+        **_metadata_course_pmu(date_pmu, reunion_pmu, course_pmu, len(participants)),
+    }
 
 
 def _url_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str) -> str:
@@ -261,10 +291,12 @@ def resultat_course(date: str, reunion: str, course: str):
     ordre_brut = data.get("ordreArrivee") or []
     ordre_arrivee = [arrivee[0] for arrivee in ordre_brut if arrivee]
     arrivee_officielle = ordre_arrivee[:5]
+    meta = _metadata_course_pmu(date_pmu, reunion_pmu, course_pmu)
 
     return {
         "terminee": len(arrivee_officielle) > 0,
         "gagnant": arrivee_officielle[0] if arrivee_officielle else None,
         "arrivee_officielle": arrivee_officielle,
         "ordre_arrivee": arrivee_officielle,
+        **meta,
     }

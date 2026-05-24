@@ -317,16 +317,105 @@
             return d && m && y ? `${d}/${m}/${y}` : dateIso;
         }
 
-        function classeStatut(statut) {
-            if (statut === 'Gagné') return 'glass-card border-emerald-500/30 bg-emerald-500/10';
-            if (statut === 'Perdu') return 'glass-card border-red-900/50 bg-red-950/40';
-            return 'glass-card border-white/10 bg-gray-800/40';
+        const BADGE_PMU_STYLES = {
+            violet: 'bg-violet-500/20 text-violet-300 ring-1 ring-violet-500/40',
+            gold: 'bg-yellow-500/20 text-yellow-300 ring-1 ring-yellow-500/40',
+            green: 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40',
+            orange: 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/40',
+            red: 'bg-red-500/20 text-red-400 ring-1 ring-red-500/40',
+        };
+
+        function numerosVeloraTop(archive, n) {
+            const source = archive.pronostic_velora || archive.top3 || [];
+            return source.slice(0, n).map((p) => Number(p.numero)).filter((num) => !Number.isNaN(num));
         }
 
-        function badgeStatut(statut) {
-            if (statut === 'Gagné') return 'bg-emerald-500/20 text-emerald-400';
-            if (statut === 'Perdu') return 'bg-red-500/20 text-red-400';
-            return 'bg-gray-700/60 text-gray-400';
+        function tousPresentDans(arriveeNums, poolNums) {
+            return arriveeNums.length > 0 && arriveeNums.every((n) => poolNums.includes(n));
+        }
+
+        function evaluerPronosticVelora(archive, arrivee_officielle) {
+            const arrivee = (arrivee_officielle || [])
+                .map(Number)
+                .filter((n) => !Number.isNaN(n));
+
+            const partants = Number(
+                archive.nombre_partants
+                ?? archive.pronostic_velora?.length
+                ?? archive.top3?.length
+                ?? 0
+            );
+
+            const top3 = numerosVeloraTop(archive, 3);
+            const top4 = numerosVeloraTop(archive, 4);
+            const top6 = numerosVeloraTop(archive, 6);
+            const top7 = numerosVeloraTop(archive, 7);
+
+            const badges = [];
+            const ajouterBadge = (label, style, priorite) => badges.push({ label, style, priorite });
+
+            const top4Arrivee = arrivee.slice(0, 4);
+            const top3Arrivee = arrivee.slice(0, 3);
+
+            if (top4Arrivee.length === 4) {
+                if (partants >= 14 && tousPresentDans(top4Arrivee, top7)) {
+                    ajouterBadge('Multi en 7', 'violet', 1);
+                } else if (partants >= 10 && partants <= 13 && tousPresentDans(top4Arrivee, top6)) {
+                    ajouterBadge('Mini Multi en 6', 'violet', 1);
+                } else if (partants <= 9 && tousPresentDans(top4Arrivee, top4)) {
+                    ajouterBadge('Super 4', 'violet', 1);
+                }
+            }
+
+            if (top3Arrivee.length === 3 && tousPresentDans(top3Arrivee, top3)) {
+                ajouterBadge(archive.est_quinte ? 'Tiercé' : 'Trio', 'gold', 2);
+            }
+
+            if (arrivee.length >= 1 && top3.includes(arrivee[0])) {
+                ajouterBadge('Gagnant', 'green', 3);
+            }
+
+            const deuxieme = arrivee[1];
+            const troisieme = arrivee[2];
+            if ((deuxieme && top3.includes(deuxieme)) || (troisieme && top3.includes(troisieme))) {
+                ajouterBadge('Placé', 'orange', 4);
+            }
+
+            const reussi = badges.length > 0;
+            if (!reussi) {
+                ajouterBadge('Perdu', 'red', 5);
+            }
+
+            badges.sort((a, b) => a.priorite - b.priorite);
+            return {
+                badges,
+                reussi,
+                statutPrincipal: badges[0].label,
+            };
+        }
+
+        function classeCarteArchive(archive) {
+            if (archive.statut === 'En attente') {
+                return 'glass-card border-white/10 bg-gray-800/40';
+            }
+            if (!archive.reussi_pmu) {
+                return 'glass-card border-red-900/50 bg-red-950/40';
+            }
+            const style = archive.badges_pmu?.[0]?.style;
+            if (style === 'violet') return 'glass-card border-violet-500/30 bg-violet-500/10';
+            if (style === 'gold') return 'glass-card border-yellow-500/30 bg-yellow-500/10';
+            if (style === 'green') return 'glass-card border-emerald-500/30 bg-emerald-500/10';
+            if (style === 'orange') return 'glass-card border-orange-500/30 bg-orange-500/10';
+            return 'glass-card border-emerald-500/30 bg-emerald-500/10';
+        }
+
+        function htmlBadgesPmu(badges) {
+            if (!badges || badges.length === 0) {
+                return '<span class="rounded-full bg-gray-700/60 px-3 py-1 text-xs font-bold text-gray-400">En attente</span>';
+            }
+            return badges.map((b) =>
+                `<span class="rounded-full px-3 py-1 text-xs font-bold ${BADGE_PMU_STYLES[b.style] || BADGE_PMU_STYLES.red}">${b.label}</span>`
+            ).join('');
         }
 
         function htmlArriveeOfficielle(arrivee) {
@@ -351,9 +440,9 @@
         }
 
         function calculerTauxReussite(archives) {
-            const terminees = archives.filter((a) => a.statut === 'Gagné' || a.statut === 'Perdu');
+            const terminees = archives.filter((a) => a.statut !== 'En attente' && a.reussi_pmu !== undefined);
             if (terminees.length === 0) return 0;
-            const gagnees = terminees.filter((a) => a.statut === 'Gagné').length;
+            const gagnees = terminees.filter((a) => a.reussi_pmu === true).length;
             return Math.round((gagnees / terminees.length) * 100);
         }
 
@@ -364,23 +453,42 @@
 
             const data = await reponse.json();
             if (data.erreur || !data.terminee) {
-                return { ...archive, statut: 'En attente', resultat: 'Course non terminée', arrivee_officielle: [] };
+                return {
+                    ...archive,
+                    statut: 'En attente',
+                    resultat: 'Course non terminée',
+                    arrivee_officielle: [],
+                    reussi_pmu: undefined,
+                    badges_pmu: [],
+                    statut_pmu: null,
+                };
             }
 
             const arrivee_officielle = data.arrivee_officielle || data.ordre_arrivee || [];
             const gagnant = data.gagnant ?? arrivee_officielle[0];
-            const gagne = Number(archive.pronosticNumero) === Number(gagnant);
-            return {
+            const archiveEnrichie = {
                 ...archive,
-                statut: gagne ? 'Gagné' : 'Perdu',
-                resultat: `Gagnant N°${gagnant}`,
+                nombre_partants: data.nombre_partants ?? archive.nombre_partants,
+                est_quinte: data.est_quinte ?? archive.est_quinte ?? false,
+            };
+            const evaluation = evaluerPronosticVelora(archiveEnrichie, arrivee_officielle);
+
+            return {
+                ...archiveEnrichie,
+                statut: 'Terminée',
+                reussi_pmu: evaluation.reussi,
+                badges_pmu: evaluation.badges,
+                statut_pmu: evaluation.statutPrincipal,
+                resultat: gagnant != null ? `Gagnant N°${gagnant}` : '-',
                 arrivee_officielle,
             };
         }
 
-        function htmlTop3Archive(top3) {
-            if (!top3 || top3.length === 0) return '';
-            const items = top3.map((c, i) => `
+        function htmlPronosticVeloraArchive(archive) {
+            const liste = archive.pronostic_velora || archive.top3 || [];
+            if (liste.length === 0) return '';
+            const labelTop = liste.length >= 7 ? 'Top 7 Velora' : `Top ${Math.min(liste.length, 7)} Velora`;
+            const items = liste.slice(0, 7).map((c, i) => `
                 <div class="flex items-center gap-2 text-xs">
                     <span class="${badgeClassement(i)} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold">${i + 1}</span>
                     <span class="font-medium text-gray-200">N°${c.numero} ${c.nom}</span>
@@ -389,7 +497,7 @@
             `).join('');
             return `
                 <div class="mt-3 border-t border-white/10 pt-3">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/80">Top 3 Velora</p>
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/80">${labelTop}</p>
                     <div class="space-y-2">${items}</div>
                 </div>`;
         }
@@ -417,41 +525,41 @@
             sauvegarderArchives(archives);
 
             const taux = calculerTauxReussite(archives);
-            const terminees = archives.filter((a) => a.statut === 'Gagné' || a.statut === 'Perdu').length;
+            const terminees = archives.filter((a) => a.statut !== 'En attente').length;
+            const victoires = archives.filter((a) => a.reussi_pmu === true).length;
             tauxEl.textContent = String(taux);
-            statsEl.textContent = `${archives.length} course${archives.length > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''}`;
+            statsEl.textContent = `${archives.length} course${archives.length > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''} · ${victoires} validée${victoires > 1 ? 's' : ''}`;
 
-            liste.innerHTML = archives.map((a) => {
-                const top3 = a.top3 || (a.pronosticNumero ? [{ numero: a.pronosticNumero, nom: a.pronosticNom, score_mtech: null }] : []);
-                return `
-                <article class="rounded-2xl border p-4 shadow-lg shadow-black/10 ${classeStatut(a.statut)}">
+            liste.innerHTML = archives.map((a) => `
+                <article class="rounded-2xl border p-4 shadow-lg shadow-black/10 ${classeCarteArchive(a)}">
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div>
                             <p class="text-sm font-bold text-white">${a.reunion} · ${a.course}</p>
-                            <p class="text-xs text-gray-400">${a.dateAffiche}</p>
+                            <p class="text-xs text-gray-400">${a.dateAffiche}${a.nombre_partants ? ` · ${a.nombre_partants} partants` : ''}${a.est_quinte ? ' · Quinté' : ''}</p>
                         </div>
-                        <span class="rounded-full px-3 py-1 text-xs font-bold ${badgeStatut(a.statut)}">${a.statut}</span>
+                        <div class="flex flex-wrap justify-end gap-2">${htmlBadgesPmu(a.badges_pmu)}</div>
                     </div>
-                    ${htmlTop3Archive(top3)}
+                    ${htmlPronosticVeloraArchive(a)}
                     <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
-                        <p class="text-gray-400">Pronostic : <span class="font-semibold text-gray-200">N°${a.pronosticNumero} ${a.pronosticNom}</span></p>
+                        <p class="text-gray-400">Favori Velora : <span class="font-semibold text-gray-200">N°${a.pronosticNumero} ${a.pronosticNom}</span></p>
                         <p class="text-gray-400">Résultat : <span class="font-semibold text-gray-200">${a.resultat || '-'}</span></p>
                     </div>
                     ${htmlArriveeOfficielle(a.arrivee_officielle)}
                 </article>
-            `;
-            }).join('');
+            `).join('');
         }
 
-        function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics) {
+        function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics, meta = {}) {
             if (!pronostics.length) return;
-            const top3 = pronostics.slice(0, 3).map((p) => ({
+            const mapperCheval = (p) => ({
                 numero: p.numero,
                 nom: p.nom,
                 score_mtech: p.score_mtech ?? null,
                 jockey: p.jockey || null,
                 cote: p.cote ?? null,
-            }));
+            });
+            const pronostic_velora = pronostics.slice(0, 7).map(mapperCheval);
+            const top3 = pronostics.slice(0, 3).map(mapperCheval);
             const top = pronostics[0];
             const id = `${dateApi}-${reunion}-${course}`;
             let archives = lireArchives().filter((a) => a.id !== id);
@@ -462,12 +570,18 @@
                 dateAffiche: formaterDateAffiche(dateIso),
                 reunion,
                 course,
+                pronostic_velora,
                 top3,
+                nombre_partants: meta.nombre_partants ?? pronostics.length,
+                est_quinte: meta.est_quinte ?? false,
                 pronosticNumero: top.numero,
                 pronosticNom: top.nom,
                 statut: 'En attente',
                 resultat: '-',
                 arrivee_officielle: [],
+                reussi_pmu: undefined,
+                badges_pmu: [],
+                statut_pmu: null,
                 timestamp: Date.now(),
             });
             sauvegarderArchives(archives.slice(0, ARCHIVES_MAX));
@@ -550,8 +664,8 @@
         }
 
         function formaterCote(cheval) {
-            if (cheval.cote_pmu_disponible === false) {
-                return `~${cheval.cote} / 1 (estimée)`;
+            if (cheval.cote_pmu_disponible === false || cheval.cote === '-' || cheval.cote == null) {
+                return '-';
             }
             return `${cheval.cote} / 1`;
         }
@@ -634,7 +748,10 @@
                 titreResultats.textContent = `Classement Velora — ${reunion}${course}`;
                 titreResultats.classList.remove('hidden');
 
-                enregistrerArchive(dateIso, dateAPI, reunion, course, pronostics);
+                enregistrerArchive(dateIso, dateAPI, reunion, course, pronostics, {
+                    nombre_partants: data.nombre_partants ?? pronostics.length,
+                    est_quinte: data.est_quinte ?? false,
+                });
 
                 pronostics.forEach((cheval, index) => {
                     const jockey = cheval.jockey || 'N/C';
