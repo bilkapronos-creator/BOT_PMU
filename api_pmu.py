@@ -1,14 +1,17 @@
 import os
 import re
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, TypeVar, Union
 
-import requests
 from dotenv import load_dotenv
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from database import init_db, lister_archives, obtenir_archive, sauvegarder_archive
 from stats_pmu import get_stats_publiques, get_stats_utilisateur
+from velora_resilience import ArchivesStorageError, ErreurReseauExterne, pmu_get
+
+T = TypeVar("T")
 
 load_dotenv()
 
@@ -62,11 +65,58 @@ app.add_middleware(
 )
 
 
+def _erreur_pmu_http(exc: ErreurReseauExterne) -> HTTPException:
+    return HTTPException(
+        status_code=502,
+        detail={
+            "erreur": "API PMU temporairement indisponible. Réessayez dans quelques instants.",
+            "message": str(exc)[:300],
+        },
+    )
+
+
+def _erreur_archives_http(exc: ArchivesStorageError) -> HTTPException:
+    return HTTPException(
+        status_code=503,
+        detail={
+            "erreur": "Stockage des archives temporairement indisponible.",
+            "message": str(exc)[:300],
+        },
+    )
+
+
+def _executer_archives(operation: Callable[[], T]) -> T:
+    try:
+        return operation()
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.exception_handler(ArchivesStorageError)
+async def handler_archives_storage(_request, exc: ArchivesStorageError):
+    http_exc = _erreur_archives_http(exc)
+    return JSONResponse(status_code=http_exc.status_code, content=http_exc.detail)
+
+
+@app.exception_handler(ErreurReseauExterne)
+async def handler_erreur_reseau_pmu(_request, exc: ErreurReseauExterne):
+    http_exc = _erreur_pmu_http(exc)
+    return JSONResponse(status_code=http_exc.status_code, content=http_exc.detail)
+
+
 @app.on_event("startup")
 def demarrer_application():
     from database import _resoudre_backend
 
-    init_db()
+    try:
+        init_db()
+    except ArchivesStorageError as err:
+        print(f"[Velora] Supabase archives injoignable au démarrage : {err}")
+    except RuntimeError as err:
+        print(f"[Velora] Archives : erreur configuration — {err}")
+
     try:
         print(f"[Velora] Archives : backend « {_resoudre_backend()} »")
     except RuntimeError as err:
@@ -247,11 +297,13 @@ def _url_participants_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, spec
 def _fetch_participants_pmu(
     date_pmu: str, reunion_pmu: str, course_pmu: str, specialisation: str = "OFFLINE"
 ) -> list:
-    response = requests.get(
-        _url_participants_pmu(date_pmu, reunion_pmu, course_pmu, specialisation),
-        headers=HEADERS_PMU,
-        timeout=20,
-    )
+    try:
+        response = pmu_get(
+            _url_participants_pmu(date_pmu, reunion_pmu, course_pmu, specialisation),
+            headers=HEADERS_PMU,
+        )
+    except ErreurReseauExterne:
+        return []
     if response.status_code != 200:
         return []
     return response.json().get("participants", [])
@@ -520,11 +572,16 @@ def evaluer_pronostic_pmu(archive: dict, arrivee_officielle: list) -> dict:
 
 def _metadata_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, nb_participants: int = 0) -> dict:
     """Retourne nombre de partants et indicateur Quinté depuis l'API PMU."""
-    response = requests.get(
-        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
-        headers=HEADERS_PMU,
-        timeout=20,
-    )
+    try:
+        response = pmu_get(
+            _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+            headers=HEADERS_PMU,
+        )
+    except ErreurReseauExterne:
+        return {
+            "nombre_partants": nb_participants,
+            "est_quinte": False,
+        }
     if response.status_code != 200:
         return {
             "nombre_partants": nb_participants,
@@ -553,7 +610,10 @@ def analyser_course(date: str, reunion: str, course: str):
 
     url_pmu = _url_participants_pmu(date_pmu, reunion_pmu, course_pmu, "OFFLINE")
 
-    response = requests.get(url_pmu, headers=HEADERS_PMU, timeout=20)
+    try:
+        response = pmu_get(url_pmu, headers=HEADERS_PMU)
+    except ErreurReseauExterne as exc:
+        raise _erreur_pmu_http(exc) from exc
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
 
@@ -620,11 +680,13 @@ def resultat_course(date: str, reunion: str, course: str):
     reunion_pmu = normaliser_code_pmu(reunion, "R")
     course_pmu = normaliser_code_pmu(course, "C")
 
-    response = requests.get(
-        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
-        headers=HEADERS_PMU,
-        timeout=20,
-    )
+    try:
+        response = pmu_get(
+            _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+            headers=HEADERS_PMU,
+        )
+    except ErreurReseauExterne as exc:
+        raise _erreur_pmu_http(exc) from exc
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
 
@@ -668,11 +730,13 @@ def evaluation_archive(
     reunion_pmu = normaliser_code_pmu(str(reunion), "R")
     course_pmu = normaliser_code_pmu(str(course), "C")
 
-    response = requests.get(
-        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
-        headers=HEADERS_PMU,
-        timeout=20,
-    )
+    try:
+        response = pmu_get(
+            _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+            headers=HEADERS_PMU,
+        )
+    except ErreurReseauExterne as exc:
+        raise _erreur_pmu_http(exc) from exc
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
 
@@ -696,7 +760,9 @@ def evaluation_archive(
             "resultats_pmu_detectes": [],
             "arrivee_officielle": [],
         }
-        archive_sauvee = sauvegarder_archive(user_id, archive_en_attente)
+        archive_sauvee = _executer_archives(
+            lambda: sauvegarder_archive(user_id, archive_en_attente),
+        )
         return {"archive": archive_sauvee, **archive_sauvee}
 
     archive_enrichie = {
@@ -712,7 +778,9 @@ def evaluation_archive(
     archive_complete = construire_archive_complete(
         user_id, archive_enrichie, evaluation_pmu, meta
     )
-    archive_sauvee = sauvegarder_archive(user_id, archive_complete)
+    archive_sauvee = _executer_archives(
+        lambda: sauvegarder_archive(user_id, archive_complete),
+    )
     return {"archive": archive_sauvee, **archive_sauvee}
 
 
@@ -728,7 +796,7 @@ def get_archives_utilisateur(
             status_code=403,
             detail="user_id en paramètre ne correspond pas à X-User-Id",
         )
-    archives = lister_archives(user_id, limit=limit)
+    archives = _executer_archives(lambda: lister_archives(user_id, limit=limit))
     return {"user_id": user_id, "archives": archives, "total": len(archives)}
 
 
@@ -742,7 +810,7 @@ def creer_archive(
     archive["user_id"] = user_id
     if not archive.get("statut"):
         archive["statut"] = "En attente"
-    archive_sauvee = sauvegarder_archive(user_id, archive)
+    archive_sauvee = _executer_archives(lambda: sauvegarder_archive(user_id, archive))
     return {"archive": archive_sauvee}
 
 
@@ -752,7 +820,7 @@ def get_archive_par_id(
     user_id: str = Depends(auth_membre),
 ):
     """Détail d'une archive — refusée si elle n'appartient pas au membre."""
-    archive = obtenir_archive(user_id, archive_id)
+    archive = _executer_archives(lambda: obtenir_archive(user_id, archive_id))
     if not archive:
         raise HTTPException(status_code=404, detail="Archive introuvable")
     return {"archive": archive}
@@ -769,13 +837,13 @@ def get_stats_membre(
             status_code=403,
             detail="user_id en paramètre ne correspond pas à X-User-Id",
         )
-    return get_stats_utilisateur(user_id)
+    return _executer_archives(lambda: get_stats_utilisateur(user_id))
 
 
 @app.get("/stats/publiques", dependencies=[Depends(verifier_cle_api_publique)])
 def get_stats_vitrine():
     """Agrégats anonymisés plateforme (aucune donnée par utilisateur)."""
-    return get_stats_publiques()
+    return _executer_archives(get_stats_publiques)
 
 
 # Alias : logique de calcul historique (inchangée)

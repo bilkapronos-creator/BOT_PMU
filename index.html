@@ -775,7 +775,20 @@
                     return { ok: false, status: reponse.status, erreur: MSG_SYNC_ERREUR };
                 }
                 if (!reponse.ok) {
-                    return { ok: false, status: reponse.status, erreur: `Erreur serveur (${reponse.status})` };
+                    let erreur = `Erreur serveur (${reponse.status})`;
+                    try {
+                        const body = await reponse.json();
+                        if (body && typeof body.erreur === 'string') {
+                            erreur = body.erreur;
+                        } else if (body?.detail && typeof body.detail.erreur === 'string') {
+                            erreur = body.detail.erreur;
+                        } else if (typeof body?.detail === 'string') {
+                            erreur = body.detail;
+                        }
+                    } catch {
+                        /* corps non JSON */
+                    }
+                    return { ok: false, status: reponse.status, erreur };
                 }
                 const data = await reponse.json();
                 return { ok: true, status: reponse.status, data };

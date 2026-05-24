@@ -7,6 +7,11 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from archives_common import ARCHIVES_MAX_PER_USER, course_key as _course_key
+from velora_resilience import (
+    ArchivesStorageError,
+    options_client_supabase,
+    supabase_execute,
+)
 
 _TABLE = "velora_member_archives"
 _client = None
@@ -36,7 +41,8 @@ def _get_client():
             "Paquet « supabase » manquant. Ajoutez-le à requirements.txt.",
         ) from exc
 
-    _client = create_client(url, key)
+    options = options_client_supabase()
+    _client = create_client(url, key, options) if options else create_client(url, key)
     return _client
 
 
@@ -52,24 +58,34 @@ def _payload_to_archive(row: dict) -> dict:
 
 def init_db() -> None:
     """Vérifie la connexion Supabase (no-op si OK)."""
-    _get_client().table(_TABLE).select("id", count="exact").limit(1).execute()
+    supabase_execute(
+        lambda: _get_client().table(_TABLE).select("id", count="exact").limit(1).execute(),
+        description="init_db velora_member_archives",
+    )
 
 
 def _appliquer_limite_archives(user_id: str) -> None:
     client = _get_client()
-    resp = (
-        client.table(_TABLE)
-        .select("id, created_at")
-        .eq("user_id", user_id)
-        .order("created_at", desc=True)
-        .order("id", desc=True)
-        .execute()
-    )
+
+    def _lire():
+        return (
+            client.table(_TABLE)
+            .select("id, created_at")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .order("id", desc=True)
+            .execute()
+        )
+
+    resp = supabase_execute(_lire, description="liste archives pour limite")
     rows = resp.data or []
     if len(rows) <= ARCHIVES_MAX_PER_USER:
         return
     for row in rows[ARCHIVES_MAX_PER_USER:]:
-        client.table(_TABLE).delete().eq("id", row["id"]).execute()
+        supabase_execute(
+            lambda rid=row["id"]: client.table(_TABLE).delete().eq("id", rid).execute(),
+            description="suppression archive excédentaire",
+        )
 
 
 def sauvegarder_archive(user_id: str, archive: dict) -> dict:
@@ -93,25 +109,37 @@ def sauvegarder_archive(user_id: str, archive: dict) -> dict:
         "updated_at": now,
     }
 
-    existing = (
-        client.table(_TABLE)
-        .select("id, created_at")
-        .eq("user_id", user_id)
-        .eq("course_key", course_key)
-        .limit(1)
-        .execute()
-    )
+    def _lire_existante():
+        return (
+            client.table(_TABLE)
+            .select("id, created_at")
+            .eq("user_id", user_id)
+            .eq("course_key", course_key)
+            .limit(1)
+            .execute()
+        )
+
+    existing = supabase_execute(_lire_existante, description="lecture archive existante")
+
     if existing.data:
         archive_id = existing.data[0]["id"]
         created_at = existing.data[0].get("created_at") or now
-        client.table(_TABLE).update(
-            {"payload": archive, "updated_at": now},
-        ).eq("id", archive_id).execute()
+        supabase_execute(
+            lambda: client.table(_TABLE)
+            .update({"payload": archive, "updated_at": now})
+            .eq("id", archive_id)
+            .execute(),
+            description="mise à jour archive",
+        )
     else:
         row["created_at"] = now
-        ins = client.table(_TABLE).insert(row).execute()
+
+        def _inserer():
+            return client.table(_TABLE).insert(row).execute()
+
+        ins = supabase_execute(_inserer, description="insertion archive")
         if not ins.data:
-            raise RuntimeError("Échec insertion archive Supabase")
+            raise ArchivesStorageError("Échec insertion archive Supabase (réponse vide)")
         archive_id = ins.data[0]["id"]
         created_at = ins.data[0].get("created_at") or now
 
@@ -129,30 +157,38 @@ def lister_archives(user_id: str, limit: Optional[int] = None) -> list:
         return []
 
     lim = min(limit or ARCHIVES_MAX_PER_USER, ARCHIVES_MAX_PER_USER)
-    resp = (
-        _get_client()
-        .table(_TABLE)
-        .select("id, user_id, payload, created_at, updated_at")
-        .eq("user_id", user_id)
-        .order("created_at", desc=True)
-        .order("id", desc=True)
-        .limit(lim)
-        .execute()
-    )
+
+    def _lire():
+        return (
+            _get_client()
+            .table(_TABLE)
+            .select("id, user_id, payload, created_at, updated_at")
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .order("id", desc=True)
+            .limit(lim)
+            .execute()
+        )
+
+    resp = supabase_execute(_lire, description="liste archives membre")
     return [_payload_to_archive(r) for r in (resp.data or [])]
 
 
 def obtenir_archive(user_id: str, archive_id) -> Optional[dict]:
     user_id = str(user_id).strip()
-    resp = (
-        _get_client()
-        .table(_TABLE)
-        .select("id, user_id, payload, created_at, updated_at")
-        .eq("id", str(archive_id))
-        .eq("user_id", user_id)
-        .limit(1)
-        .execute()
-    )
+
+    def _lire():
+        return (
+            _get_client()
+            .table(_TABLE)
+            .select("id, user_id, payload, created_at, updated_at")
+            .eq("id", str(archive_id))
+            .eq("user_id", user_id)
+            .limit(1)
+            .execute()
+        )
+
+    resp = supabase_execute(_lire, description="lecture archive par id")
     if not resp.data:
         return None
     return _payload_to_archive(resp.data[0])
@@ -160,20 +196,30 @@ def obtenir_archive(user_id: str, archive_id) -> Optional[dict]:
 
 def compter_archives_plateforme() -> dict:
     client = _get_client()
-    total_resp = client.table(_TABLE).select("id", count="exact").limit(1).execute()
+
+    def _total():
+        return client.table(_TABLE).select("id", count="exact").limit(1).execute()
+
+    def _users():
+        return client.table(_TABLE).select("user_id").execute()
+
+    total_resp = supabase_execute(_total, description="comptage archives")
+    users_resp = supabase_execute(_users, description="liste user_id archives")
     total = total_resp.count or 0
-    users_resp = client.table(_TABLE).select("user_id").execute()
     membres = len({r["user_id"] for r in (users_resp.data or []) if r.get("user_id")})
     return {"total_archives": total, "membres_actifs": membres}
 
 
 def lister_toutes_archives(limit: int = 10000) -> list:
-    resp = (
-        _get_client()
-        .table(_TABLE)
-        .select("id, user_id, payload, created_at, updated_at")
-        .order("created_at", desc=True)
-        .limit(min(limit, 10000))
-        .execute()
-    )
+    def _lire():
+        return (
+            _get_client()
+            .table(_TABLE)
+            .select("id, user_id, payload, created_at, updated_at")
+            .order("created_at", desc=True)
+            .limit(min(limit, 10000))
+            .execute()
+        )
+
+    resp = supabase_execute(_lire, description="liste toutes archives")
     return [_payload_to_archive(r) for r in (resp.data or [])]
