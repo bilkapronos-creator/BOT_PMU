@@ -732,8 +732,53 @@
             el.classList.add('hidden');
         }
 
-        const LEGACY_ARCHIVES_KEYS = ['velora_archives', 'mtech_archives'];
+        const VELORA_ARCHIVES_KEY = 'velora_archives';
+        const LEGACY_ARCHIVES_KEYS = ['mtech_archives'];
         const ARCHIVES_MIGREES_KEY = 'velora_archives_migrees';
+        const ARCHIVES_LOCAL_MAX = 50;
+
+        function lireArchivesLocal() {
+            try {
+                const brut = localStorage.getItem(VELORA_ARCHIVES_KEY);
+                const liste = brut ? JSON.parse(brut) : [];
+                return Array.isArray(liste) ? liste : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function ecrireArchivesLocal(archives) {
+            const triees = [...archives].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            localStorage.setItem(
+                VELORA_ARCHIVES_KEY,
+                JSON.stringify(triees.slice(0, ARCHIVES_LOCAL_MAX)),
+            );
+        }
+
+        function sauvegarderArchiveLocal(archive) {
+            const key = cleCourseArchive(archive);
+            if (!key || key === '--') return;
+            const archives = lireArchivesLocal().filter((a) => cleCourseArchive(a) !== key);
+            archives.unshift({ ...archive, user_id: getVeloraUserId(), timestamp: archive.timestamp || Date.now() });
+            ecrireArchivesLocal(archives);
+        }
+
+        function fusionnerArchives(archivesServeur, archivesLocal) {
+            const parCle = new Map();
+            for (const archive of archivesLocal) {
+                const key = cleCourseArchive(archive);
+                if (key && key !== '--') parCle.set(key, archive);
+            }
+            for (const archive of archivesServeur) {
+                const key = cleCourseArchive(archive);
+                if (!key || key === '--') continue;
+                const existante = parCle.get(key);
+                const tsSrv = archive.timestamp || 0;
+                const tsLoc = existante?.timestamp || 0;
+                parCle.set(key, tsSrv >= tsLoc ? archive : existante);
+            }
+            return [...parCle.values()].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        }
 
         async function migrerArchivesLocalStorage() {
             if (localStorage.getItem(ARCHIVES_MIGREES_KEY) === '1') return;
@@ -753,21 +798,18 @@
 
                 avaitLegacy = true;
                 for (const archive of anciennes) {
-                    const payload = {
-                        ...archive,
-                        user_id: getVeloraUserId(),
-                    };
+                    sauvegarderArchiveLocal({ ...archive, user_id: getVeloraUserId() });
                     const result = await veloraApi('/archives', {
                         method: 'POST',
                         headers: entetesJson(),
-                        body: JSON.stringify(payload),
+                        body: JSON.stringify({ ...archive, user_id: getVeloraUserId() }),
                     });
                     if (result.ok) migrees += 1;
                 }
             }
 
             if (migrees > 0) {
-                console.info(`[Velora] ${migrees} archive(s) importée(s) depuis le stockage local.`);
+                console.info(`[Velora] ${migrees} archive(s) synchronisée(s) vers le serveur.`);
             }
             if (!avaitLegacy || migrees > 0) {
                 localStorage.setItem(ARCHIVES_MIGREES_KEY, '1');
@@ -968,6 +1010,7 @@
             if (data?.erreur) return { archive, erreur: null };
 
             const archiveMaj = data.archive || data;
+            sauvegarderArchiveLocal(archiveMaj);
 
             // Déclenchement auto : transition « En attente » → résultat définitif + badge
             if (enAttenteAvant && aResultatDefinitifAvecBadge(archiveMaj)) {
@@ -1017,7 +1060,8 @@
                 afficherErreurSync('statsSyncErreur', erreurSync);
             }
 
-            let archives = archivesResult.archives;
+            const archivesLocal = lireArchivesLocal();
+            let archives = fusionnerArchives(archivesResult.archives, archivesLocal);
             const statsServeur = statsResult.stats;
 
             if (archives.length === 0) {
@@ -1047,6 +1091,9 @@
             }
 
             archives = evaluations.map((ev) => ev.archive);
+            for (const archive of archives) {
+                sauvegarderArchiveLocal(archive);
+            }
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             const taux = statsServeur?.taux_reussite_global ?? calculerTauxReussite(archives);
@@ -1114,13 +1161,17 @@
                 timestamp: Date.now(),
             };
 
+            sauvegarderArchiveLocal(archive);
+
             const result = await veloraApi('/archives', {
                 method: 'POST',
                 headers: entetesJson(),
                 body: JSON.stringify(archive),
             });
             if (!result.ok) {
-                console.warn('[Velora] Sauvegarde archive:', result.erreur);
+                console.warn('[Velora] Sauvegarde serveur (archive conservée en local) :', result.erreur);
+            } else if (result.data?.archive) {
+                sauvegarderArchiveLocal(result.data.archive);
             }
         }
 
