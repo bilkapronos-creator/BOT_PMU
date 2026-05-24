@@ -4,8 +4,11 @@ from typing import Any, Optional, Tuple, Union
 
 import requests
 from dotenv import load_dotenv
-from fastapi import Body, Depends, FastAPI, Header, HTTPException
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+
+from database import init_db, lister_archives, obtenir_archive, sauvegarder_archive
+from stats_pmu import get_stats_publiques, get_stats_utilisateur
 
 load_dotenv()
 
@@ -20,12 +23,58 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+def demarrer_application():
+    init_db()
+
+
 def verifier_cle_api(x_mtech_key: Optional[str] = Header(default=None, alias="X-MTech-Key")):
     cle_attendue = os.environ.get("MTECH_API_KEY")
     if not cle_attendue:
         raise HTTPException(status_code=500, detail="Clé API non configurée sur le serveur")
     if not x_mtech_key or x_mtech_key != cle_attendue:
         raise HTTPException(status_code=401, detail="Accès non autorisé")
+
+
+def exiger_user_id(x_user_id: Optional[str] = Header(default=None, alias="X-User-Id")) -> str:
+    """Identifiant membre obligatoire pour les archives privées."""
+    if not x_user_id or not str(x_user_id).strip():
+        raise HTTPException(status_code=400, detail="En-tête X-User-Id requis")
+    return str(x_user_id).strip()
+
+
+def valider_user_id_archive(archive: dict, user_id: str) -> None:
+    archive_uid = archive.get("user_id")
+    if archive_uid and str(archive_uid).strip() != user_id:
+        raise HTTPException(
+            status_code=403,
+            detail="user_id de l'archive ne correspond pas à l'utilisateur connecté",
+        )
+
+
+def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, meta: dict) -> dict:
+    """Assemble l'objet archive persisté (évaluation PMU inchangée + user_id)."""
+    gagnant = evaluation.get("gagnant")
+    if gagnant is None and evaluation.get("arrivee_officielle"):
+        gagnant = evaluation["arrivee_officielle"][0]
+
+    return {
+        **archive,
+        "user_id": user_id,
+        "nombre_partants": meta.get("nombre_partants") or archive.get("nombre_partants"),
+        "est_quinte": meta.get("est_quinte", archive.get("est_quinte", False)),
+        "statut": "Terminée" if evaluation.get("terminee") else "En attente",
+        "terminee": bool(evaluation.get("terminee")),
+        "gagnant": gagnant,
+        "resultat": f"Gagnant N°{gagnant}" if gagnant is not None else "-",
+        "arrivee_officielle": evaluation.get("arrivee_officielle") or [],
+        "reussi_pmu": evaluation.get("reussi_pmu"),
+        "type_pari_pmu": evaluation.get("type_pari_pmu"),
+        "statut_pmu": evaluation.get("statut_pmu"),
+        "mode_pari_pmu": evaluation.get("mode_pari_pmu"),
+        "badges_pmu": evaluation.get("badges_pmu") or [],
+        "resultats_pmu_detectes": evaluation.get("resultats_pmu_detectes") or [],
+    }
 
 
 def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
@@ -467,13 +516,25 @@ def resultat_course(date: str, reunion: str, course: str):
 
 
 @app.post("/evaluation", dependencies=[Depends(verifier_cle_api)])
-def evaluation_archive(archive: dict = Body(...)):
-    """Évalue un pronostic archivé contre l'arrivée PMU (Ordre / Désordre / Bonus)."""
+def evaluation_archive(
+    archive: dict = Body(...),
+    user_id: str = Depends(exiger_user_id),
+):
+    """
+    Évalue un pronostic archivé (logique evaluer_pronostic_pmu inchangée),
+    persiste l'archive avec user_id et renvoie l'objet complet.
+    """
+    valider_user_id_archive(archive, user_id)
+    archive["user_id"] = user_id
+
     date_api = archive.get("dateApi") or archive.get("date_api")
     reunion = archive.get("reunion")
     course = archive.get("course")
     if not date_api or not reunion or not course:
-        return {"erreur": "Archive incomplète (dateApi, reunion, course requis)"}
+        raise HTTPException(
+            status_code=400,
+            detail="Archive incomplète (dateApi, reunion, course requis)",
+        )
 
     date_pmu = normaliser_date_pmu(str(date_api))
     reunion_pmu = normaliser_code_pmu(str(reunion), "R")
@@ -494,30 +555,86 @@ def evaluation_archive(archive: dict = Body(...)):
     meta = _metadata_course_pmu(date_pmu, reunion_pmu, course_pmu)
 
     if len(arrivee_officielle) == 0:
-        return {
-            "terminee": False,
-            "arrivee_officielle": [],
+        archive_en_attente = {
+            **archive,
             **meta,
-            "reussi_pmu": False,
+            "statut": "En attente",
+            "terminee": False,
+            "reussi_pmu": None,
             "type_pari_pmu": None,
             "statut_pmu": None,
             "mode_pari_pmu": None,
             "badges_pmu": [],
             "resultats_pmu_detectes": [],
+            "arrivee_officielle": [],
         }
+        archive_sauvee = sauvegarder_archive(user_id, archive_en_attente)
+        return {"archive": archive_sauvee, **archive_sauvee}
 
     archive_enrichie = {
         **archive,
         "nombre_partants": meta.get("nombre_partants") or archive.get("nombre_partants"),
         "est_quinte": meta.get("est_quinte", archive.get("est_quinte", False)),
     }
-    evaluation = evaluer_pronostic_pmu(archive_enrichie, arrivee_officielle)
+    evaluation_pmu = evaluer_pronostic_pmu(archive_enrichie, arrivee_officielle)
+    evaluation_pmu["terminee"] = True
+    evaluation_pmu["arrivee_officielle"] = arrivee_officielle
+    evaluation_pmu["gagnant"] = arrivee_officielle[0]
 
-    return {
-        "terminee": True,
-        "gagnant": arrivee_officielle[0],
-        "arrivee_officielle": arrivee_officielle,
-        "nombre_partants": archive_enrichie["nombre_partants"],
-        "est_quinte": archive_enrichie["est_quinte"],
-        **evaluation,
-    }
+    archive_complete = construire_archive_complete(
+        user_id, archive_enrichie, evaluation_pmu, meta
+    )
+    archive_sauvee = sauvegarder_archive(user_id, archive_complete)
+    return {"archive": archive_sauvee, **archive_sauvee}
+
+
+@app.get("/archives", dependencies=[Depends(verifier_cle_api)])
+def get_archives_utilisateur(
+    user_id: str = Depends(exiger_user_id),
+    limit: int = Query(default=10, ge=1, le=50),
+):
+    """Archives privées du membre connecté (isolation stricte par user_id)."""
+    archives = lister_archives(user_id, limit=limit)
+    return {"user_id": user_id, "archives": archives, "total": len(archives)}
+
+
+@app.post("/archives", dependencies=[Depends(verifier_cle_api)])
+def creer_archive(
+    archive: dict = Body(...),
+    user_id: str = Depends(exiger_user_id),
+):
+    """Enregistre une analyse sans réévaluation (course en attente de résultat)."""
+    valider_user_id_archive(archive, user_id)
+    archive["user_id"] = user_id
+    if not archive.get("statut"):
+        archive["statut"] = "En attente"
+    archive_sauvee = sauvegarder_archive(user_id, archive)
+    return {"archive": archive_sauvee}
+
+
+@app.get("/archives/{archive_id}", dependencies=[Depends(verifier_cle_api)])
+def get_archive_par_id(
+    archive_id: int,
+    user_id: str = Depends(exiger_user_id),
+):
+    """Détail d'une archive — refusée si elle n'appartient pas au membre."""
+    archive = obtenir_archive(user_id, archive_id)
+    if not archive:
+        raise HTTPException(status_code=404, detail="Archive introuvable")
+    return {"archive": archive}
+
+
+@app.get("/stats", dependencies=[Depends(verifier_cle_api)])
+def get_stats_membre(user_id: str = Depends(exiger_user_id)):
+    """Statistiques personnalisées du membre connecté."""
+    return get_stats_utilisateur(user_id)
+
+
+@app.get("/stats/publiques", dependencies=[Depends(verifier_cle_api)])
+def get_stats_vitrine():
+    """Agrégats anonymisés plateforme (page vitrine)."""
+    return get_stats_publiques()
+
+
+# Alias : logique de calcul historique (inchangée)
+evaluerPronosticVelora = evaluer_pronostic_pmu

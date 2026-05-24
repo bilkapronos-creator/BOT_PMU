@@ -249,10 +249,42 @@
     <script>
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
         const API_BASE_URL = 'https://velora-engine.onrender.com';
-        const ARCHIVES_KEY = 'mtech_archives';
-        const ARCHIVES_MAX = 10;
+        const USER_ID_KEY = 'velora_user_id';
 
-        document.getElementById('dateInput').valueAsDate = new Date();
+        function obtenirUserId() {
+            let uid = localStorage.getItem(USER_ID_KEY);
+            if (!uid) {
+                uid = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                    ? crypto.randomUUID()
+                    : `user_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+                localStorage.setItem(USER_ID_KEY, uid);
+            }
+            return uid;
+        }
+
+        const USER_ID = obtenirUserId();
+
+        function entetesApi(json = false) {
+            const h = {
+                'X-MTech-Key': MTECH_API_KEY,
+                'X-User-Id': USER_ID,
+            };
+            if (json) h['Content-Type'] = 'application/json';
+            return h;
+        }
+
+        async function lireArchives() {
+            try {
+                const reponse = await fetch(`${API_BASE_URL}/archives`, {
+                    headers: entetesApi(),
+                });
+                if (!reponse.ok) return [];
+                const data = await reponse.json();
+                return data.archives || [];
+            } catch {
+                return [];
+            }
+        }
 
         const SPLASH_MIN_MS = 4500;
         const SPLASH_FADE_MS = 600;
@@ -290,26 +322,7 @@
             }
         }
 
-        function lireArchives() {
-            try {
-                let data = localStorage.getItem(ARCHIVES_KEY);
-                if (!data) {
-                    const legacy = localStorage.getItem('velora_archives');
-                    if (legacy) {
-                        localStorage.setItem(ARCHIVES_KEY, legacy);
-                        localStorage.removeItem('velora_archives');
-                        data = legacy;
-                    }
-                }
-                return JSON.parse(data || '[]');
-            } catch {
-                return [];
-            }
-        }
-
-        function sauvegarderArchives(archives) {
-            localStorage.setItem(ARCHIVES_KEY, JSON.stringify(archives));
-        }
+        document.getElementById('dateInput').valueAsDate = new Date();
 
         function formaterDateAffiche(dateIso) {
             if (!dateIso) return '-';
@@ -379,49 +392,17 @@
 
         async function verifierResultatArchive(archive) {
             try {
+                const payload = { ...archive, user_id: USER_ID };
                 const reponse = await fetch(`${API_BASE_URL}/evaluation`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-MTech-Key': MTECH_API_KEY,
-                    },
-                    body: JSON.stringify(archive),
+                    headers: entetesApi(true),
+                    body: JSON.stringify(payload),
                 });
                 if (!reponse.ok) return archive;
 
                 const data = await reponse.json();
                 if (data.erreur) return archive;
-
-                if (!data.terminee) {
-                    return {
-                        ...archive,
-                        statut: 'En attente',
-                        resultat: 'Course non terminée',
-                        arrivee_officielle: [],
-                        reussi_pmu: undefined,
-                        type_pari_pmu: null,
-                        mode_pari_pmu: null,
-                        badges_pmu: [],
-                        resultats_pmu_detectes: [],
-                        statut_pmu: null,
-                    };
-                }
-
-                const gagnant = data.gagnant ?? data.arrivee_officielle?.[0];
-                return {
-                    ...archive,
-                    statut: 'Terminée',
-                    nombre_partants: data.nombre_partants ?? archive.nombre_partants,
-                    est_quinte: data.est_quinte ?? archive.est_quinte ?? false,
-                    reussi_pmu: data.reussi_pmu,
-                    type_pari_pmu: data.type_pari_pmu,
-                    mode_pari_pmu: data.mode_pari_pmu,
-                    statut_pmu: data.statut_pmu,
-                    badges_pmu: data.badges_pmu || [],
-                    resultats_pmu_detectes: data.resultats_pmu_detectes || [],
-                    resultat: gagnant != null ? `Gagnant N°${gagnant}` : '-',
-                    arrivee_officielle: data.arrivee_officielle || [],
-                };
+                return data.archive || data;
             } catch {
                 return archive;
             }
@@ -454,7 +435,13 @@
 
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Mise à jour des archives...</p>';
 
-            let archives = lireArchives();
+            let statsServeur = null;
+            try {
+                const repStats = await fetch(`${API_BASE_URL}/stats`, { headers: entetesApi() });
+                if (repStats.ok) statsServeur = await repStats.json();
+            } catch { /* fallback calcul local */ }
+
+            let archives = await lireArchives();
             if (archives.length === 0) {
                 tauxEl.textContent = '0';
                 statsEl.textContent = '0 course analysée';
@@ -464,14 +451,13 @@
 
             archives = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            archives = archives.slice(0, ARCHIVES_MAX);
-            sauvegarderArchives(archives);
 
-            const taux = calculerTauxReussite(archives);
-            const terminees = archives.filter((a) => a.statut !== 'En attente').length;
-            const victoires = archives.filter((a) => a.reussi_pmu === true).length;
+            const taux = statsServeur?.taux_reussite_global ?? calculerTauxReussite(archives);
+            const terminees = statsServeur?.courses_terminees ?? archives.filter((a) => a.statut !== 'En attente').length;
+            const victoires = statsServeur?.victoires ?? archives.filter((a) => a.reussi_pmu === true).length;
+            const total = statsServeur?.total_courses_analysees ?? archives.length;
             tauxEl.textContent = String(taux);
-            statsEl.textContent = `${archives.length} course${archives.length > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''} · ${victoires} validée${victoires > 1 ? 's' : ''}`;
+            statsEl.textContent = `${total} course${total > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''} · ${victoires} validée${victoires > 1 ? 's' : ''}`;
 
             liste.innerHTML = archives.map((a) => `
                 <article class="rounded-2xl border p-4 shadow-lg shadow-black/10 ${classeCarteArchive(a)}">
@@ -493,7 +479,7 @@
             `).join('');
         }
 
-        function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics, meta = {}) {
+        async function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics, meta = {}) {
             if (!pronostics.length) return;
             const mapperCheval = (p) => ({
                 numero: p.numero,
@@ -505,10 +491,8 @@
             const pronostic_velora = pronostics.slice(0, 7).map(mapperCheval);
             const top3 = pronostics.slice(0, 3).map(mapperCheval);
             const top = pronostics[0];
-            const id = `${dateApi}-${reunion}-${course}`;
-            let archives = lireArchives().filter((a) => a.id !== id);
-            archives.unshift({
-                id,
+            const archive = {
+                user_id: USER_ID,
                 dateIso,
                 dateApi,
                 dateAffiche: formaterDateAffiche(dateIso),
@@ -530,8 +514,17 @@
                 resultats_pmu_detectes: [],
                 statut_pmu: null,
                 timestamp: Date.now(),
-            });
-            sauvegarderArchives(archives.slice(0, ARCHIVES_MAX));
+            };
+
+            try {
+                await fetch(`${API_BASE_URL}/archives`, {
+                    method: 'POST',
+                    headers: entetesApi(true),
+                    body: JSON.stringify(archive),
+                });
+            } catch {
+                /* silencieux : l'évaluation au refresh complétera */
+            }
         }
 
         let deferredInstallPrompt = null;
