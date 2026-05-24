@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 import requests
 from dotenv import load_dotenv
@@ -74,31 +74,111 @@ def normaliser_code_pmu(valeur: str, prefixe: str) -> str:
     return f"{prefixe}{numero}" if numero else valeur.upper()
 
 
-COTE_DEFAUT = 10.0
+COTE_INDICATOR = "-"
 SEUIL_SCORE_BELLE_COTE = 7.0
 SEUIL_COTE_BELLE_COTE = 8.0
 TOP_CLASSEMENT_BELLE_COTE = 4
 
+BASE_URL_PMU = "https://online.turfinfo.api.pmu.fr/rest/client/62/programme"
 
-def extraire_cote_pmu(cheval: dict) -> Tuple[float, bool]:
-    """Retourne (cote, cote_pmu_disponible)."""
-    for cle in ("cote", "rapportDirect", "dernierRapportDirect", "rapportProbable", "dernierRapportRef"):
-        val = cheval.get(cle)
-        if val in (None, "", "-"):
+HEADERS_PMU = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json",
+}
+
+
+def _extraire_rapport_nombre(valeur: Any) -> Optional[float]:
+    """Extrait un rapport PMU depuis un nombre ou un objet {rapport: x}."""
+    if valeur is None or valeur == "" or valeur == "-":
+        return None
+
+    if isinstance(valeur, dict):
+        valeur = valeur.get("rapport")
+
+    if valeur is None or valeur == "" or valeur == "-":
+        return None
+
+    try:
+        cote = float(str(valeur).replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+
+    return round(cote, 1) if cote > 0 else None
+
+
+def extraire_cote_pmu(cheval: dict) -> Tuple[Optional[float], bool]:
+    """Retourne (cote, cote_pmu_disponible). Priorité au direct live, puis référence."""
+    for cle in (
+        "dernierRapportDirect",
+        "dernierRapportDirectInternational",
+        "rapportDirect",
+        "dernierRapportReference",
+        "dernierRapportRef",
+        "rapportProbable",
+        "cote",
+    ):
+        cote = _extraire_rapport_nombre(cheval.get(cle))
+        if cote is not None:
+            return cote, True
+    return None, False
+
+
+def _url_participants_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, specialisation: str) -> str:
+    return (
+        f"{BASE_URL_PMU}/{date_pmu}/{reunion_pmu}/{course_pmu}/participants"
+        f"?specialisation={specialisation}"
+    )
+
+
+def _fetch_participants_pmu(
+    date_pmu: str, reunion_pmu: str, course_pmu: str, specialisation: str = "OFFLINE"
+) -> list:
+    response = requests.get(
+        _url_participants_pmu(date_pmu, reunion_pmu, course_pmu, specialisation),
+        headers=HEADERS_PMU,
+        timeout=20,
+    )
+    if response.status_code != 200:
+        return []
+    return response.json().get("participants", [])
+
+
+def _enrichir_cotes_internet(participants: list, date_pmu: str, reunion_pmu: str, course_pmu: str) -> list:
+    """Complète les cotes manquantes via l'endpoint INTERNET (cotes live web)."""
+    sans_cote = [p for p in participants if not extraire_cote_pmu(p)[1]]
+    if not sans_cote:
+        return participants
+
+    participants_internet = _fetch_participants_pmu(date_pmu, reunion_pmu, course_pmu, "INTERNET")
+    if not participants_internet:
+        return participants
+
+    cotes_par_num = {p.get("numPmu"): p for p in participants_internet if p.get("numPmu") is not None}
+    for cheval in participants:
+        if extraire_cote_pmu(cheval)[1]:
             continue
-        try:
-            cote = float(str(val).replace(",", "."))
-            if cote > 0:
-                return round(cote, 1), True
-        except ValueError:
+        source = cotes_par_num.get(cheval.get("numPmu"))
+        if not source:
             continue
-    return COTE_DEFAUT, False
+        for cle in ("dernierRapportDirect", "dernierRapportReference"):
+            if source.get(cle) and not cheval.get(cle):
+                cheval[cle] = source[cle]
+    return participants
 
 
-def est_belle_cote(score_mtech: float, cote: float, rang: int, cote_pmu_disponible: bool) -> bool:
+def _formater_cote_reponse(cote: Optional[float], disponible: bool) -> Union[float, str]:
+    return cote if disponible and cote is not None else COTE_INDICATOR
+
+
+def est_belle_cote(
+    score_mtech: float,
+    cote: Optional[float],
+    rang: int,
+    cote_pmu_disponible: bool,
+) -> bool:
     if rang >= TOP_CLASSEMENT_BELLE_COTE or score_mtech < SEUIL_SCORE_BELLE_COTE:
         return False
-    if cote_pmu_disponible:
+    if cote_pmu_disponible and cote is not None:
         return cote >= SEUIL_COTE_BELLE_COTE
     return score_mtech >= SEUIL_SCORE_BELLE_COTE + 3
 
@@ -109,21 +189,14 @@ def analyser_course(date: str, reunion: str, course: str):
     reunion_pmu = normaliser_code_pmu(reunion, "R")
     course_pmu = normaliser_code_pmu(course, "C")
 
-    url_pmu = (
-        f"https://online.turfinfo.api.pmu.fr/rest/client/62/programme/"
-        f"{date_pmu}/{reunion_pmu}/{course_pmu}/participants?specialisation=OFFLINE"
-    )
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Accept": "application/json",
-    }
+    url_pmu = _url_participants_pmu(date_pmu, reunion_pmu, course_pmu, "OFFLINE")
 
-    response = requests.get(url_pmu, headers=headers, timeout=20)
+    response = requests.get(url_pmu, headers=HEADERS_PMU, timeout=20)
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
 
-    data = response.json()
-    participants = data.get("participants", [])
+    participants = response.json().get("participants", [])
+    participants = _enrichir_cotes_internet(participants, date_pmu, reunion_pmu, course_pmu)
     tableau_pronostics = []
 
     for cheval in participants:
@@ -146,7 +219,7 @@ def analyser_course(date: str, reunion: str, course: str):
             "nom": cheval.get("nom"),
             "jockey": jockey_nom,
             "poids": poids,
-            "cote": cote,
+            "cote": _formater_cote_reponse(cote, cote_pmu_disponible),
             "cote_pmu_disponible": cote_pmu_disponible,
             "score_mtech": score,
             "is_value_bet": False,
@@ -155,9 +228,10 @@ def analyser_course(date: str, reunion: str, course: str):
     tableau_pronostics.sort(key=lambda x: x["score_mtech"], reverse=True)
 
     for rang, entree in enumerate(tableau_pronostics):
+        cote_num = entree["cote"] if isinstance(entree["cote"], (int, float)) else None
         entree["is_value_bet"] = est_belle_cote(
             entree["score_mtech"],
-            entree["cote"],
+            cote_num,
             rang,
             entree["cote_pmu_disponible"],
         )
@@ -165,17 +239,8 @@ def analyser_course(date: str, reunion: str, course: str):
     return {"pronostic_officiel_mtech": tableau_pronostics}
 
 
-HEADERS_PMU = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-    "Accept": "application/json",
-}
-
-
 def _url_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str) -> str:
-    return (
-        f"https://online.turfinfo.api.pmu.fr/rest/client/62/programme/"
-        f"{date_pmu}/{reunion_pmu}/{course_pmu}"
-    )
+    return f"{BASE_URL_PMU}/{date_pmu}/{reunion_pmu}/{course_pmu}"
 
 
 @app.get("/resultat/{date}/{reunion}/{course}", dependencies=[Depends(verifier_cle_api)])
