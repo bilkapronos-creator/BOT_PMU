@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mtech-v2';
+const CACHE_NAME = 'velora-v3';
 const ASSETS = [
   '/',
   '/index.html',

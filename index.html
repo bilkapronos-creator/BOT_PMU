@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M_Tech | Pronostics Dynamiques</title>
-    <meta name="description" content="Pronostics hippiques dynamiques par algorithme M_Tech">
+    <title>Velora Engine | Pronostics Dynamiques</title>
+    <meta name="description" content="Pronostics hippiques dynamiques par Velora Engine">
     <meta name="theme-color" content="#10B981">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="M_Tech">
+    <meta name="apple-mobile-web-app-title" content="Velora Engine">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
@@ -23,12 +23,12 @@
 
     <header class="max-w-2xl mx-auto py-6">
         <div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-between sm:items-center">
-            <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">M_TECH</h1>
+            <h1 class="text-3xl font-bold text-emerald-400 tracking-wider">VELORA ENGINE</h1>
             <button
                 type="button"
                 id="installBtn"
                 class="hidden items-center gap-2 rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-                aria-label="Installer l'application M_Tech sur cet appareil"
+                aria-label="Installer l'application Velora Engine sur cet appareil"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
@@ -49,26 +49,216 @@
         </p>
     </header>
 
-    <div class="max-w-2xl mx-auto bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input type="date" id="dateInput" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2">
-            <input type="text" id="reunionInput" placeholder="R1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
-            <input type="text" id="courseInput" placeholder="C1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
-            <button type="button" onclick="lancerAnalyse()" id="submitBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded">Analyser</button>
-        </div>
-    </div>
+    <nav class="max-w-2xl mx-auto mb-6 flex rounded-xl border border-gray-700 bg-gray-800 p-1" aria-label="Navigation principale">
+        <button type="button" id="tabPronostic" onclick="afficherSection('pronostic')"
+            class="flex-1 rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-bold text-white shadow transition">
+            Pronostic
+        </button>
+        <button type="button" id="tabArchives" onclick="afficherSection('archives')"
+            class="flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-gray-200">
+            Archives
+        </button>
+    </nav>
 
-    <div id="loading" class="hidden flex justify-center py-8">
-        <div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div>
-    </div>
-    <h2 id="titreResultats" class="max-w-2xl mx-auto text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
-    <div id="resultats" class="max-w-2xl mx-auto space-y-4"></div>
+    <section id="sectionPronostic" class="max-w-2xl mx-auto">
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="date" id="dateInput" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2">
+                <input type="text" id="reunionInput" placeholder="R1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
+                <input type="text" id="courseInput" placeholder="C1" class="bg-gray-900 border border-gray-600 rounded text-white px-3 py-2 uppercase">
+                <button type="button" onclick="lancerAnalyse()" id="submitBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded">Analyser</button>
+            </div>
+        </div>
+
+        <div id="loading" class="hidden flex justify-center py-8">
+            <div class="loader ease-linear rounded-full border-4 border-gray-700 h-12 w-12"></div>
+        </div>
+        <h2 id="titreResultats" class="text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
+        <div id="resultats" class="space-y-4"></div>
+    </section>
+
+    <section id="sectionArchives" class="max-w-2xl mx-auto hidden">
+        <div class="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-center">
+            <p class="text-xs uppercase tracking-widest text-emerald-400/80">Performance globale</p>
+            <p class="mt-1 text-2xl font-black text-emerald-400">
+                Taux de réussite global : <span id="tauxReussite">0</span>%
+            </p>
+            <p id="statsArchives" class="mt-1 text-xs text-gray-400">0 course analysée</p>
+        </div>
+
+        <div id="listeArchives" class="space-y-3"></div>
+    </section>
 
     <script>
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
         const API_BASE_URL = 'https://velora-engine.onrender.com';
+        const ARCHIVES_KEY = 'velora_archives';
 
         document.getElementById('dateInput').valueAsDate = new Date();
+
+        const sectionPronostic = document.getElementById('sectionPronostic');
+        const sectionArchives = document.getElementById('sectionArchives');
+        const tabPronostic = document.getElementById('tabPronostic');
+        const tabArchives = document.getElementById('tabArchives');
+
+        const tabActifClasses = ['bg-emerald-500', 'text-white', 'font-bold', 'shadow'];
+        const tabInactifClasses = ['text-gray-400', 'font-semibold'];
+
+        function afficherSection(section) {
+            const pronosticActif = section === 'pronostic';
+            sectionPronostic.classList.toggle('hidden', !pronosticActif);
+            sectionArchives.classList.toggle('hidden', pronosticActif);
+
+            tabPronostic.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${pronosticActif ? 'bg-emerald-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
+            tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-emerald-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
+
+            if (!pronosticActif) {
+                rafraichirArchives();
+            }
+        }
+
+        function lireArchives() {
+            try {
+                return JSON.parse(localStorage.getItem(ARCHIVES_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function sauvegarderArchives(archives) {
+            localStorage.setItem(ARCHIVES_KEY, JSON.stringify(archives));
+        }
+
+        function formaterDateAffiche(dateIso) {
+            if (!dateIso) return '-';
+            const [y, m, d] = dateIso.split('-');
+            return d && m && y ? `${d}/${m}/${y}` : dateIso;
+        }
+
+        function classeStatut(statut) {
+            if (statut === 'Gagné') return 'border-emerald-500/30 bg-emerald-500/10';
+            if (statut === 'Perdu') return 'border-red-900/50 bg-red-950/40';
+            return 'border-gray-700 bg-gray-800/90';
+        }
+
+        function badgeStatut(statut) {
+            if (statut === 'Gagné') return 'bg-emerald-500/20 text-emerald-400';
+            if (statut === 'Perdu') return 'bg-red-500/20 text-red-400';
+            return 'bg-gray-700/60 text-gray-400';
+        }
+
+        function htmlArriveeOfficielle(arrivee) {
+            const labels = ['1er', '2e', '3e', '4e', '5e'];
+            if (!arrivee || arrivee.length === 0) {
+                return `
+                    <div class="mt-3">
+                        <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/80">Arrivée Officielle</p>
+                        <p class="text-xs text-gray-500">En attente de publication PMU</p>
+                    </div>`;
+            }
+            const cellules = labels.map((label, index) => {
+                const numero = arrivee[index];
+                const affichage = numero != null && numero !== '' ? `N°${numero}` : '—';
+                return `<span class="inline-flex items-center gap-1 rounded-md border border-gray-600 bg-gray-900/70 px-2.5 py-1 text-xs text-gray-200"><span class="font-semibold text-emerald-400/90">${label}</span> ${affichage}</span>`;
+            });
+            return `
+                <div class="mt-3">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/80">Arrivée Officielle</p>
+                    <div class="flex flex-wrap gap-2">${cellules.join('<span class="text-gray-600">·</span>')}</div>
+                </div>`;
+        }
+
+        function calculerTauxReussite(archives) {
+            const terminees = archives.filter((a) => a.statut === 'Gagné' || a.statut === 'Perdu');
+            if (terminees.length === 0) return 0;
+            const gagnees = terminees.filter((a) => a.statut === 'Gagné').length;
+            return Math.round((gagnees / terminees.length) * 100);
+        }
+
+        async function verifierResultatArchive(archive) {
+            const url = `${API_BASE_URL}/resultat/${archive.dateApi}/${archive.reunion}/${archive.course}`;
+            const reponse = await fetch(url, { headers: { 'X-MTech-Key': MTECH_API_KEY } });
+            if (!reponse.ok) return archive;
+
+            const data = await reponse.json();
+            if (data.erreur || !data.terminee) {
+                return { ...archive, statut: 'En attente', resultat: 'Course non terminée', arrivee_officielle: [] };
+            }
+
+            const arrivee_officielle = data.arrivee_officielle || data.ordre_arrivee || [];
+            const gagnant = data.gagnant ?? arrivee_officielle[0];
+            const gagne = Number(archive.pronosticNumero) === Number(gagnant);
+            return {
+                ...archive,
+                statut: gagne ? 'Gagné' : 'Perdu',
+                resultat: `Gagnant N°${gagnant}`,
+                arrivee_officielle,
+            };
+        }
+
+        async function rafraichirArchives() {
+            const liste = document.getElementById('listeArchives');
+            const tauxEl = document.getElementById('tauxReussite');
+            const statsEl = document.getElementById('statsArchives');
+
+            liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Mise à jour des archives...</p>';
+
+            let archives = lireArchives();
+            if (archives.length === 0) {
+                tauxEl.textContent = '0';
+                statsEl.textContent = '0 course analysée';
+                liste.innerHTML = '<p class="text-center text-sm text-gray-500 py-8">Aucune course archivée. Lance une analyse pour commencer le suivi.</p>';
+                return;
+            }
+
+            archives = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
+            archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            sauvegarderArchives(archives);
+
+            const taux = calculerTauxReussite(archives);
+            const terminees = archives.filter((a) => a.statut === 'Gagné' || a.statut === 'Perdu').length;
+            tauxEl.textContent = String(taux);
+            statsEl.textContent = `${archives.length} course${archives.length > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''}`;
+
+            liste.innerHTML = archives.map((a) => `
+                <article class="rounded-xl border p-4 ${classeStatut(a.statut)}">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-bold text-white">${a.reunion}${a.course}</p>
+                            <p class="text-xs text-gray-400">${a.dateAffiche}</p>
+                        </div>
+                        <span class="rounded-full px-3 py-1 text-xs font-bold ${badgeStatut(a.statut)}">${a.statut}</span>
+                    </div>
+                    <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
+                        <p class="text-gray-400">Pronostic : <span class="font-semibold text-gray-200">N°${a.pronosticNumero} ${a.pronosticNom}</span></p>
+                        <p class="text-gray-400">Résultat : <span class="font-semibold text-gray-200">${a.resultat || '-'}</span></p>
+                    </div>
+                    ${htmlArriveeOfficielle(a.arrivee_officielle)}
+                </article>
+            `).join('');
+        }
+
+        function enregistrerArchive(dateIso, dateApi, reunion, course, pronostics) {
+            if (!pronostics.length) return;
+            const top = pronostics[0];
+            const id = `${dateApi}-${reunion}-${course}`;
+            const archives = lireArchives().filter((a) => a.id !== id);
+            archives.unshift({
+                id,
+                dateIso,
+                dateApi,
+                dateAffiche: formaterDateAffiche(dateIso),
+                reunion,
+                course,
+                pronosticNumero: top.numero,
+                pronosticNom: top.nom,
+                statut: 'En attente',
+                resultat: '-',
+                arrivee_officielle: [],
+                timestamp: Date.now(),
+            });
+            sauvegarderArchives(archives);
+        }
 
         let deferredInstallPrompt = null;
         const installBtn = document.getElementById('installBtn');
@@ -170,7 +360,8 @@
 
         async function lancerAnalyse() {
             const bouton = document.getElementById('submitBtn');
-            const dateAPI = document.getElementById('dateInput').value.replace(/-/g, '');
+            const dateIso = document.getElementById('dateInput').value;
+            const dateAPI = dateIso.replace(/-/g, '');
             const reunion = document.getElementById('reunionInput').value.toUpperCase().trim();
             const course = document.getElementById('courseInput').value.toUpperCase().trim();
 
@@ -224,8 +415,10 @@
                     .slice()
                     .sort((a, b) => (Number(b.score_mtech) || 0) - (Number(a.score_mtech) || 0));
 
-                titreResultats.textContent = `Classement M_Tech — ${reunion}${course}`;
+                titreResultats.textContent = `Classement Velora — ${reunion}${course}`;
                 titreResultats.classList.remove('hidden');
+
+                enregistrerArchive(dateIso, dateAPI, reunion, course, pronostics);
 
                 pronostics.forEach((cheval, index) => {
                     const jockey = cheval.jockey || 'N/C';
@@ -245,7 +438,7 @@
                                         <span>Poids : <span class="font-medium text-gray-300">${poidsAffiche}</span></span>
                                     </p>
                                     <p class="mt-1 text-xs font-semibold ${cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80'}">Cote : ${formaterCote(cheval)}</p>
-                                    <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score M_Tech : ${cheval.score_mtech}</p>
+                                    <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score Velora : ${cheval.score_mtech}</p>
                                 </div>
                             </div>
                             ${boutonParrainage}

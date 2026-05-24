@@ -163,3 +163,43 @@ def analyser_course(date: str, reunion: str, course: str):
         )
 
     return {"pronostic_officiel_mtech": tableau_pronostics}
+
+
+HEADERS_PMU = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json",
+}
+
+
+def _url_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str) -> str:
+    return (
+        f"https://online.turfinfo.api.pmu.fr/rest/client/62/programme/"
+        f"{date_pmu}/{reunion_pmu}/{course_pmu}"
+    )
+
+
+@app.get("/resultat/{date}/{reunion}/{course}", dependencies=[Depends(verifier_cle_api)])
+def resultat_course(date: str, reunion: str, course: str):
+    date_pmu = normaliser_date_pmu(date)
+    reunion_pmu = normaliser_code_pmu(reunion, "R")
+    course_pmu = normaliser_code_pmu(course, "C")
+
+    response = requests.get(
+        _url_course_pmu(date_pmu, reunion_pmu, course_pmu),
+        headers=HEADERS_PMU,
+        timeout=20,
+    )
+    if response.status_code != 200:
+        return {"erreur": "Course introuvable ou non disponible"}
+
+    data = response.json()
+    ordre_brut = data.get("ordreArrivee") or []
+    ordre_arrivee = [arrivee[0] for arrivee in ordre_brut if arrivee]
+    arrivee_officielle = ordre_arrivee[:5]
+
+    return {
+        "terminee": len(arrivee_officielle) > 0,
+        "gagnant": arrivee_officielle[0] if arrivee_officielle else None,
+        "arrivee_officielle": arrivee_officielle,
+        "ordre_arrivee": arrivee_officielle,
+    }
