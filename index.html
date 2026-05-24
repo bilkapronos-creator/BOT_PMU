@@ -123,6 +123,15 @@
             box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.25);
         }
         ::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.7; cursor: pointer; }
+        @keyframes vitrine-taux-pop {
+            0% { transform: scale(1); color: rgb(103 232 249); }
+            40% { transform: scale(1.12); color: rgb(52 211 153); }
+            100% { transform: scale(1); color: rgb(103 232 249); }
+        }
+        .vitrine-taux-pulse {
+            display: inline-block;
+            animation: vitrine-taux-pop 0.55s ease-out;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
@@ -220,7 +229,7 @@
         <h2 id="titreResultats" class="text-xl text-center text-emerald-400 font-bold mb-4 hidden"></h2>
         <div id="resultats" class="space-y-4"></div>
 
-        <section id="sectionVitrine" class="mt-8 hidden" aria-label="Statistiques communauté Velora">
+        <section id="sectionVitrine" class="mt-8" aria-label="Statistiques communauté Velora">
             <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
                 <p class="text-center text-xs uppercase tracking-widest text-cyan-400/80">Communauté Velora</p>
                 <p class="mt-2 text-center text-2xl font-black text-cyan-300">
@@ -361,6 +370,32 @@
             return getCoursesStatsSync().has(courseKey);
         }
 
+        /** Anti-doublon : attribut sur l'archive + localStorage par course_key. */
+        function estStatsSupabaseComptees(archive) {
+            if (archive.stats_supabase_sync === true) return true;
+            const key = cleCourseArchive(archive);
+            return key && key !== '--' && estCourseDejaSync(key);
+        }
+
+        function marquerStatsSupabaseComptees(archive) {
+            archive.stats_supabase_sync = true;
+            archive.stats_supabase_sync_at = Date.now();
+            const key = cleCourseArchive(archive);
+            if (key && key !== '--') marquerCourseStatsSync(key);
+        }
+
+        function etaitEnAttente(archive) {
+            return archive.statut === 'En attente'
+                || !estArchiveTerminee(archive)
+                || !archive.badges_pmu?.length;
+        }
+
+        /** Course terminée avec badge définitif (gagnant ou Perdu). */
+        function aResultatDefinitifAvecBadge(archive) {
+            if (!estArchiveTerminee(archive)) return false;
+            return estBadgeGagnant(archive) || estBadgePerdu(archive);
+        }
+
         async function lireVeloraStatsSupabase() {
             const client = initSupabase();
             if (!client) return { row: null, erreur: 'Supabase non configuré' };
@@ -376,7 +411,8 @@
             return { row: data, erreur: null };
         }
 
-        function injecterStatsPlateformeUI(courses, victoires) {
+        function injecterStatsPlateformeUI(courses, victoires, options = {}) {
+            const { animer = false } = options;
             const section = document.getElementById('sectionVitrine');
             const tauxEl = document.getElementById('vitrineTaux');
             const victoiresEl = document.getElementById('vitrineVictoires');
@@ -385,7 +421,14 @@
 
             const taux = courses > 0 ? Math.round((victoires / courses) * 100) : 0;
 
-            if (tauxEl) tauxEl.textContent = String(taux);
+            if (tauxEl) {
+                tauxEl.textContent = String(taux);
+                if (animer) {
+                    tauxEl.classList.remove('vitrine-taux-pulse');
+                    void tauxEl.offsetWidth;
+                    tauxEl.classList.add('vitrine-taux-pulse');
+                }
+            }
             if (victoiresEl) {
                 victoiresEl.textContent = victoires === 1
                     ? '1 victoire'
@@ -405,15 +448,22 @@
         }
 
         /** Charge les stats Supabase et met à jour le bloc « Communauté Velora ». */
-        async function chargerStatsPlateforme() {
+        async function chargerStatsPlateforme(options = {}) {
+            const section = document.getElementById('sectionVitrine');
+            if (section) section.classList.remove('hidden');
+
             masquerErreurSync('vitrineSyncErreur');
             const { row, erreur } = await lireVeloraStatsSupabase();
             if (erreur || !row) {
-                afficherErreurSync('vitrineSyncErreur', erreur || MSG_SYNC_ERREUR);
+                injecterStatsPlateformeUI(0, 0, options);
+                afficherErreurSync(
+                    'vitrineSyncErreur',
+                    erreur || 'Statistiques communautaires indisponibles (vérifiez Supabase).',
+                );
                 return;
             }
             const { courses, victoires } = lireCompteursPlateforme(row);
-            injecterStatsPlateformeUI(courses, victoires);
+            injecterStatsPlateformeUI(courses, victoires, options);
         }
 
         async function incrementerStatsPlateforme(estVictoire) {
@@ -448,22 +498,26 @@
             return true;
         }
 
-        /** Envoie +1 course (+1 victoire si badge gagnant) puis rafraîchit l’UI. */
-        async function synchroniserStatsPlateforme(archive) {
-            if (!estArchiveTerminee(archive)) return;
+        /**
+         * UPDATE velora_stats : +1 course ; +1 victoire si badge gagnant.
+         * Anti-doublon strict — ne compte qu'une fois par course_key.
+         */
+        async function comptabiliserCourseVersSupabase(archive) {
+            if (!aResultatDefinitifAvecBadge(archive)) return false;
+            if (estStatsSupabaseComptees(archive)) {
+                return false;
+            }
 
             const courseKey = cleCourseArchive(archive);
-            if (!courseKey || courseKey === '--' || estCourseDejaSync(courseKey)) return;
+            if (!courseKey || courseKey === '--') return false;
 
-            const gagnant = estBadgeGagnant(archive);
-            const perdu = estBadgePerdu(archive);
-            if (!gagnant && !perdu) return;
+            const estVictoire = estBadgeGagnant(archive);
+            const ok = await incrementerStatsPlateforme(estVictoire);
+            if (!ok) return false;
 
-            const ok = await incrementerStatsPlateforme(gagnant);
-            if (!ok) return;
-
-            marquerCourseStatsSync(courseKey);
-            await chargerStatsPlateforme();
+            marquerStatsSupabaseComptees(archive);
+            await chargerStatsPlateforme({ animer: true });
+            return true;
         }
 
         const MTECH_API_KEY = 'Mouloud2026_MTech_Secure_7788';
@@ -581,6 +635,48 @@
             if (!el) return;
             el.textContent = '';
             el.classList.add('hidden');
+        }
+
+        const LEGACY_ARCHIVES_KEYS = ['velora_archives', 'mtech_archives'];
+        const ARCHIVES_MIGREES_KEY = 'velora_archives_migrees';
+
+        async function migrerArchivesLocalStorage() {
+            if (localStorage.getItem(ARCHIVES_MIGREES_KEY) === '1') return;
+
+            let migrees = 0;
+            let avaitLegacy = false;
+            for (const key of LEGACY_ARCHIVES_KEYS) {
+                const brut = localStorage.getItem(key);
+                if (!brut) continue;
+                let anciennes = [];
+                try {
+                    anciennes = JSON.parse(brut);
+                } catch {
+                    continue;
+                }
+                if (!Array.isArray(anciennes) || anciennes.length === 0) continue;
+
+                avaitLegacy = true;
+                for (const archive of anciennes) {
+                    const payload = {
+                        ...archive,
+                        user_id: getVeloraUserId(),
+                    };
+                    const result = await veloraApi('/archives', {
+                        method: 'POST',
+                        headers: entetesJson(),
+                        body: JSON.stringify(payload),
+                    });
+                    if (result.ok) migrees += 1;
+                }
+            }
+
+            if (migrees > 0) {
+                console.info(`[Velora] ${migrees} archive(s) importée(s) depuis le stockage local.`);
+            }
+            if (!avaitLegacy || migrees > 0) {
+                localStorage.setItem(ARCHIVES_MIGREES_KEY, '1');
+            }
         }
 
         async function lireArchives() {
@@ -762,7 +858,7 @@
         }
 
         async function verifierResultatArchive(archive) {
-            const etaitTerminee = estArchiveTerminee(archive);
+            const enAttenteAvant = etaitEnAttente(archive);
             const payload = { ...archive, user_id: getVeloraUserId() };
             const result = await veloraApi('/evaluation', {
                 method: 'POST',
@@ -776,12 +872,12 @@
             if (data?.erreur) return { archive, erreur: null };
 
             const archiveMaj = data.archive || data;
-            const vientDeSeTerminer = !etaitTerminee && estArchiveTerminee(archiveMaj);
-            const doitSynchroniser = vientDeSeTerminer
-                || (estArchiveTerminee(archiveMaj) && !estCourseDejaSync(cleCourseArchive(archiveMaj)));
-            if (doitSynchroniser) {
-                await synchroniserStatsPlateforme(archiveMaj);
+
+            // Déclenchement auto : transition « En attente » → résultat définitif + badge
+            if (enAttenteAvant && aResultatDefinitifAvecBadge(archiveMaj)) {
+                await comptabiliserCourseVersSupabase(archiveMaj);
             }
+
             return { archive: archiveMaj, erreur: null };
         }
 
@@ -813,6 +909,8 @@
             masquerErreurSync('statsSyncErreur');
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Mise à jour des archives...</p>';
 
+            await migrerArchivesLocalStorage();
+
             const [statsResult, archivesResult] = await Promise.all([
                 lireStats(),
                 lireArchives(),
@@ -835,7 +933,12 @@
                 } else {
                     statsEl.textContent = '0 course analysée';
                 }
-                liste.innerHTML = '<p class="text-center text-sm text-gray-500 py-8">Aucune course archivée. Lance une analyse pour commencer le suivi.</p>';
+                liste.innerHTML = `
+                    <p class="text-center text-sm text-gray-500 py-8">
+                        Aucune course archivée pour ce compte.
+                        ${erreurSync ? '<br><span class="text-amber-300/90">Connexion serveur impossible — vos anciennes archives locales ont peut-être déjà été importées.</span>' : ''}
+                        <br><span class="text-gray-500">Lance une analyse (onglet Pronostic) pour en créer une nouvelle.</span>
+                    </p>`;
                 return;
             }
 
