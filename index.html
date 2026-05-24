@@ -71,7 +71,7 @@
             50% { opacity: 1; transform: scale(1); }
         }
         #appSplash {
-            transition: opacity 0.45s ease, visibility 0.45s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
         #appSplash.is-hidden {
             opacity: 0;
@@ -226,12 +226,19 @@
 
         document.getElementById('dateInput').valueAsDate = new Date();
 
+        const SPLASH_MIN_MS = 2800;
+        const SPLASH_FADE_MS = 600;
+        const splashShownAt = performance.now();
+
         window.addEventListener('load', () => {
             const splash = document.getElementById('appSplash');
-            if (splash) {
+            if (!splash) return;
+
+            const remaining = Math.max(0, SPLASH_MIN_MS - (performance.now() - splashShownAt));
+            setTimeout(() => {
                 splash.classList.add('is-hidden');
-                setTimeout(() => splash.remove(), 500);
-            }
+                setTimeout(() => splash.remove(), SPLASH_FADE_MS);
+            }, remaining);
         });
 
         const sectionPronostic = document.getElementById('sectionPronostic');
