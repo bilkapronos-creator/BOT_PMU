@@ -31,6 +31,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/config.js"></script>
+    <script src="/js/velora-auth.js"></script>
     <style>
         :root {
             --splash-aspect: 9 / 16;
@@ -166,25 +167,39 @@
                 <h1 class="text-3xl sm:text-4xl font-black tracking-widest bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 bg-clip-text text-transparent">
                     VELORA ENGINE
                 </h1>
-                <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-400 backdrop-blur-sm">
-                    <span class="relative flex h-2 w-2" aria-hidden="true">
-                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
-                        <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                    </span>
-                    <span>Moteur Velora : <span class="font-semibold text-emerald-400">En ligne</span></span>
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-400 backdrop-blur-sm">
+                        <span class="relative flex h-2 w-2" aria-hidden="true">
+                            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
+                            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                        </span>
+                        <span>Moteur : <span class="font-semibold text-emerald-400">En ligne</span></span>
+                    </div>
+                    <span id="badgeGodMode" class="hidden rounded-full border border-violet-500/40 bg-violet-500/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-violet-300">God Mode</span>
                 </div>
+                <p id="bandeauPlan" class="mt-2 text-xs text-gray-400">Free · 3 analyses / jour</p>
             </div>
-            <button
-                type="button"
-                id="installBtn"
-                class="hidden items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 backdrop-blur-sm transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-950"
-                aria-label="Installer l'application Velora Engine sur cet appareil"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-                </svg>
-                Installer
-            </button>
+            <div class="flex flex-col items-stretch gap-2 sm:items-end">
+                <div id="authConnecte" class="hidden text-right text-xs text-gray-400">
+                    <span id="authEmail" class="text-gray-300"></span>
+                    <button type="button" id="btnLogout" class="ml-2 text-emerald-400 hover:underline">Déconnexion</button>
+                </div>
+                <button type="button" id="btnOuvrirAuth"
+                    class="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-gray-300 hover:border-emerald-500/30 hover:text-white">
+                    Connexion
+                </button>
+                <button
+                    type="button"
+                    id="installBtn"
+                    class="hidden items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 backdrop-blur-sm transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-950"
+                    aria-label="Installer l'application Velora Engine sur cet appareil"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                    </svg>
+                    Installer
+                </button>
+            </div>
         </div>
 
         <nav class="mt-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3" aria-label="Navigation par sport">
@@ -198,6 +213,25 @@
             Sur iPhone : touchez <span class="font-medium text-gray-300">Partager</span>, puis <span class="font-medium text-gray-300">Sur l'écran d'accueil</span>.
         </p>
     </header>
+
+    <div id="modalAuth" class="fixed inset-0 z-40 hidden items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-md rounded-2xl border border-white/10 p-6 shadow-2xl">
+            <h2 class="text-lg font-bold text-white">Compte Velora</h2>
+            <p class="mt-1 text-sm text-gray-400">Connexion pour synchroniser vos archives (plan Free : 3 analyses / jour).</p>
+            <form id="formAuth" class="mt-6 space-y-3">
+                <input type="email" id="authEmailInput" required placeholder="Email"
+                    class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                <input type="password" id="authPasswordInput" required placeholder="Mot de passe" minlength="6"
+                    class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                <p id="authFormErreur" class="hidden text-sm text-red-400"></p>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-2.5 text-sm font-bold text-white">Connexion</button>
+                    <button type="button" id="btnSignUp" class="flex-1 rounded-lg border border-white/10 py-2.5 text-sm font-semibold text-gray-300 hover:bg-white/5">Inscription</button>
+                </div>
+            </form>
+            <button type="button" id="btnFermerAuth" class="mt-4 w-full text-center text-xs text-gray-500 hover:text-gray-300">Continuer en invité</button>
+        </div>
+    </div>
 
     <nav class="mb-6 flex rounded-xl border border-white/10 glass-card p-1 shadow-lg shadow-black/20 lg:mb-8" aria-label="Navigation principale">
         <button type="button" id="tabPronostic" onclick="afficherSection('pronostic')"
@@ -377,6 +411,13 @@
         }
 
         function initSupabase() {
+            if (typeof VeloraAuth !== 'undefined' && VeloraAuth.getClientAuth) {
+                const clientAuth = VeloraAuth.getClientAuth();
+                if (clientAuth) {
+                    veloraSupabase = clientAuth;
+                    return veloraSupabase;
+                }
+            }
             const { url, key } = getSupabaseConfig();
             const errConfig = validerConfigSupabase(url, key);
             if (errConfig) {
@@ -390,9 +431,9 @@
             if (!veloraSupabase) {
                 veloraSupabase = window.supabase.createClient(url, key, {
                     auth: {
-                        persistSession: false,
-                        autoRefreshToken: false,
-                        detectSessionInUrl: false,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true,
                     },
                 });
             }
@@ -489,6 +530,57 @@
         function aResultatDefinitifAvecBadge(archive) {
             if (!estArchiveTerminee(archive)) return false;
             return estBadgeGagnant(archive) || estBadgePerdu(archive);
+        }
+
+        function extraireFlagsGains(archive) {
+            const labels = libellesBadges(archive);
+            const type = archive.type_pari_pmu || '';
+            const texte = [type, ...labels].join(' ');
+            return {
+                est_tierce: /tiercé/i.test(texte),
+                est_multi7: /multi en 7/i.test(texte),
+                est_super4: /super 4/i.test(texte),
+            };
+        }
+
+        function favoriDansTop3(archive) {
+            const favori = archive.pronosticNumero;
+            const arrivee = archive.arrivee_officielle || [];
+            if (favori == null || arrivee.length === 0) return null;
+            return arrivee.slice(0, 3).some((n) => String(n) === String(favori));
+        }
+
+        function construireLogCourseSupabase(archive) {
+            const flags = extraireFlagsGains(archive);
+            return {
+                course_key: cleCourseArchive(archive),
+                date_api: archive.dateApi || archive.date_api || null,
+                reunion: archive.reunion || null,
+                course: archive.course || null,
+                favori_numero: archive.pronosticNumero ?? null,
+                favori_nom: archive.pronosticNom ?? null,
+                favori_gagne: favoriDansTop3(archive),
+                type_pari_pmu: archive.type_pari_pmu ?? null,
+                reussi_pmu: archive.reussi_pmu ?? null,
+                badges: archive.badges_pmu || [],
+                est_tierce: flags.est_tierce,
+                est_multi7: flags.est_multi7,
+                est_super4: flags.est_super4,
+            };
+        }
+
+        async function enregistrerLogCourseSupabase(archive) {
+            if (!estArchiveTerminee(archive)) return;
+            const client = initSupabase();
+            if (!client) return;
+            const payload = construireLogCourseSupabase(archive);
+            if (!payload.course_key || payload.course_key === '--') return;
+            const { error } = await client
+                .from('velora_course_logs')
+                .upsert(payload, { onConflict: 'course_key' });
+            if (error) {
+                console.warn('[Velora] Journal admin (velora_course_logs) :', error.message);
+            }
         }
 
         async function lireVeloraStatsSupabase() {
@@ -650,7 +742,87 @@
         }
 
         function getVeloraUserId() {
+            const authId = typeof VeloraAuth !== 'undefined' ? VeloraAuth.getUserId() : null;
+            if (authId) return authId;
             return localStorage.getItem(USER_ID_KEY) || initVeloraUserId();
+        }
+
+        function initAuthVelora() {
+            if (typeof VeloraAuth === 'undefined') return;
+
+            const modal = document.getElementById('modalAuth');
+            const formAuth = document.getElementById('formAuth');
+            const authConnecte = document.getElementById('authConnecte');
+            const btnOuvrir = document.getElementById('btnOuvrirAuth');
+            const authFormErreur = document.getElementById('authFormErreur');
+
+            function majUiAuth() {
+                const session = VeloraAuth.getState().session;
+                if (session?.user) {
+                    authConnecte?.classList.remove('hidden');
+                    btnOuvrir?.classList.add('hidden');
+                    const emailEl = document.getElementById('authEmail');
+                    if (emailEl) emailEl.textContent = session.user.email || 'Connecté';
+                } else {
+                    authConnecte?.classList.add('hidden');
+                    btnOuvrir?.classList.remove('hidden');
+                }
+                VeloraAuth.appliquerRestrictionsUI();
+            }
+
+            VeloraAuth.initSession().then(majUiAuth);
+            VeloraAuth.onAuthStateChange(majUiAuth);
+
+            btnOuvrir?.addEventListener('click', () => {
+                modal?.classList.remove('hidden');
+                modal?.classList.add('flex');
+            });
+            document.getElementById('btnFermerAuth')?.addEventListener('click', () => {
+                modal?.classList.add('hidden');
+                modal?.classList.remove('flex');
+            });
+            document.getElementById('btnLogout')?.addEventListener('click', async () => {
+                await VeloraAuth.signOut();
+                majUiAuth();
+            });
+
+            formAuth?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                authFormErreur?.classList.add('hidden');
+                const email = document.getElementById('authEmailInput')?.value?.trim();
+                const password = document.getElementById('authPasswordInput')?.value;
+                try {
+                    await VeloraAuth.signIn(email, password);
+                    modal?.classList.add('hidden');
+                    modal?.classList.remove('flex');
+                    majUiAuth();
+                } catch (err) {
+                    if (authFormErreur) {
+                        authFormErreur.textContent = err.message || 'Connexion impossible';
+                        authFormErreur.classList.remove('hidden');
+                    }
+                }
+            });
+
+            document.getElementById('btnSignUp')?.addEventListener('click', async () => {
+                authFormErreur?.classList.add('hidden');
+                const email = document.getElementById('authEmailInput')?.value?.trim();
+                const password = document.getElementById('authPasswordInput')?.value;
+                try {
+                    await VeloraAuth.signUp(email, password);
+                    if (authFormErreur) {
+                        authFormErreur.textContent = 'Compte créé. Vérifiez votre email si la confirmation est activée, puis connectez-vous.';
+                        authFormErreur.classList.remove('hidden');
+                        authFormErreur.classList.remove('text-red-400');
+                        authFormErreur.classList.add('text-emerald-400');
+                    }
+                } catch (err) {
+                    if (authFormErreur) {
+                        authFormErreur.textContent = err.message || 'Inscription impossible';
+                        authFormErreur.classList.remove('hidden');
+                    }
+                }
+            });
         }
 
         initVeloraUserId();
@@ -890,6 +1062,7 @@
             masquerSplashApp();
             try {
                 initSupabase();
+                initAuthVelora();
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
                 });
@@ -1011,6 +1184,10 @@
 
             const archiveMaj = data.archive || data;
             sauvegarderArchiveLocal(archiveMaj);
+
+            if (estArchiveTerminee(archiveMaj)) {
+                await enregistrerLogCourseSupabase(archiveMaj);
+            }
 
             // Déclenchement auto : transition « En attente » → résultat définitif + badge
             if (enAttenteAvant && aResultatDefinitifAvecBadge(archiveMaj)) {
@@ -1346,6 +1523,18 @@
                 return;
             }
 
+            if (typeof VeloraAuth !== 'undefined' && !VeloraAuth.peutAnalyser()) {
+                masquerChargementAnalyse();
+                zoneResultats.innerHTML = `
+                    <div class="glass-card rounded-xl border border-amber-500/30 bg-amber-950/30 p-4 text-center text-sm text-amber-200">
+                        Limite atteinte : 3 analyses par jour en plan Free.
+                        <br><span class="text-gray-400">Revenez demain ou passez Premium / Admin.</span>
+                    </div>`;
+                mettreAJourZoneVidePronostic();
+                VeloraAuth.appliquerRestrictionsUI();
+                return;
+            }
+
             bouton.disabled = true;
             bouton.textContent = 'Analyse...';
             if (loadingSubtext) {
@@ -1372,6 +1561,11 @@
                 }
 
                 const data = result.data;
+
+                if (typeof VeloraAuth !== 'undefined' && !VeloraAuth.isGodMode()) {
+                    await VeloraAuth.incrementerUsage();
+                    VeloraAuth.appliquerRestrictionsUI();
+                }
 
                 if (data.erreur) {
                     zoneResultats.innerHTML = `<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Erreur : ${data.erreur}</div>`;
