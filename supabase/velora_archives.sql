@@ -28,7 +28,28 @@ COMMENT ON TABLE public.velora_member_archives IS
 ALTER TABLE public.velora_member_archives ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.velora_member_archives FORCE ROW LEVEL SECURITY;
 
--- Droits API (service_role contourne RLS mais doit avoir les GRANT Postgres)
+-- Droits API Render (service_role)
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.velora_member_archives TO service_role;
 
--- Aucune policy pour anon/authenticated : pas d'accès direct depuis le frontend.
+-- Accès direct frontend (clé anon) — voir aussi velora_anon_permissions.sql
+DROP POLICY IF EXISTS "velora_member_archives_select_anon" ON public.velora_member_archives;
+CREATE POLICY "velora_member_archives_select_anon"
+    ON public.velora_member_archives FOR SELECT
+    TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "velora_member_archives_insert_anon" ON public.velora_member_archives;
+CREATE POLICY "velora_member_archives_insert_anon"
+    ON public.velora_member_archives FOR INSERT
+    TO anon, authenticated WITH CHECK (true);
+
+DROP POLICY IF EXISTS "velora_member_archives_update_anon" ON public.velora_member_archives;
+CREATE POLICY "velora_member_archives_update_anon"
+    ON public.velora_member_archives FOR UPDATE
+    TO anon, authenticated USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "velora_member_archives_delete_anon" ON public.velora_member_archives;
+CREATE POLICY "velora_member_archives_delete_anon"
+    ON public.velora_member_archives FOR DELETE
+    TO anon, authenticated USING (true);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.velora_member_archives TO anon, authenticated;

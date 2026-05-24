@@ -14,12 +14,51 @@ load_dotenv()
 
 app = FastAPI(title="Velora Engine", description="Moteur d'analyse multi-sports")
 
+
+def _construire_origines_cors() -> tuple[list[str], bool]:
+    """
+    Origines autorisées pour le frontend (Vercel + dev local).
+    Note : allow_origins=["*"] + allow_credentials=True est refusé par les navigateurs.
+    """
+    defaut = [
+        "https://velora-engine.vercel.app",
+        "http://localhost:5500",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "http://127.0.0.1:5500",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8080",
+    ]
+    extra = os.environ.get("CORS_ORIGINS", "")
+    if extra.strip():
+        defaut.extend(o.strip() for o in extra.split(",") if o.strip())
+    # Dédupliquer en conservant l'ordre
+    origines = list(dict.fromkeys(defaut))
+
+    if os.environ.get("CORS_ALLOW_ALL", "").lower() in ("1", "true", "yes"):
+        return ["*"], False
+
+    return origines, True
+
+
+_CORS_ORIGINS, _CORS_CREDENTIALS = _construire_origines_cors()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=_CORS_ORIGINS,
+    allow_credentials=_CORS_CREDENTIALS,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Content-Type",
+        "Authorization",
+        "X-MTech-Key",
+        "X-User-Id",
+        "Accept",
+        "Origin",
+    ],
+    expose_headers=["*"],
 )
 
 

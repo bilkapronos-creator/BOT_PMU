@@ -185,7 +185,7 @@
     async function lireStatsGlobales(client) {
         const { data, error } = await client
             .from('velora_stats')
-            .select('total_courses_analysees, total_analyses, total_victoires')
+            .select('total_courses_analysees, total_victoires')
             .limit(1)
             .maybeSingle();
         if (error) return null;

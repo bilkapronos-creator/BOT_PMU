@@ -548,7 +548,7 @@
 
             const { data, error } = await client
                 .from('velora_stats')
-                .select('id, total_courses_analysees, total_analyses, total_victoires')
+                .select('id, total_courses_analysees, total_victoires')
                 .eq('id', VELORA_STATS_ROW_ID)
                 .maybeSingle();
 
@@ -1024,15 +1024,54 @@
         const tabActifClasses = ['bg-emerald-500', 'text-white', 'font-bold', 'shadow'];
         const tabInactifClasses = ['text-gray-400', 'font-semibold'];
 
+        /** Dernier classement affiché (conservé au changement d’onglet). */
+        let cacheResultatPronostic = null;
+
+        function memoriserResultatPronostic() {
+            const zoneResultats = document.getElementById('resultats');
+            const titre = document.getElementById('titreResultats');
+            if (!zoneResultats || zoneResultats.children.length === 0) return;
+            cacheResultatPronostic = {
+                html: zoneResultats.innerHTML,
+                titre: titre?.textContent || '',
+                titreVisible: Boolean(titre && !titre.classList.contains('hidden')),
+            };
+        }
+
+        function restaurerResultatPronostic() {
+            masquerChargementAnalyse();
+            const zoneResultats = document.getElementById('resultats');
+            const titre = document.getElementById('titreResultats');
+            if (!cacheResultatPronostic || !zoneResultats) {
+                mettreAJourZoneVidePronostic();
+                return;
+            }
+            if (zoneResultats.children.length === 0 && cacheResultatPronostic.html) {
+                zoneResultats.innerHTML = cacheResultatPronostic.html;
+            }
+            if (titre && cacheResultatPronostic.titre) {
+                titre.textContent = cacheResultatPronostic.titre;
+                titre.classList.toggle('hidden', !cacheResultatPronostic.titreVisible);
+            }
+            mettreAJourZoneVidePronostic();
+        }
+
         function afficherSection(section) {
             const pronosticActif = section === 'pronostic';
+
+            if (!pronosticActif) {
+                memoriserResultatPronostic();
+            }
+
             sectionPronostic.classList.toggle('hidden', !pronosticActif);
             sectionArchives.classList.toggle('hidden', pronosticActif);
 
             tabPronostic.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
             tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
 
-            if (!pronosticActif) {
+            if (pronosticActif) {
+                restaurerResultatPronostic();
+            } else {
                 chargerArchives();
                 document.getElementById('colonneDroite')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
@@ -1424,7 +1463,7 @@
             const panneau = document.getElementById('panneauResultatsPronostic');
             const zoneVide = document.getElementById('zoneVidePronostic');
             if (zoneVide) zoneVide.classList.add('hidden');
-            if (panneau) panneau.classList.add('hidden');
+            if (panneau) panneau.classList.remove('hidden');
             if (loading) {
                 loading.classList.remove('hidden');
                 loading.classList.add('flex');
@@ -1561,10 +1600,12 @@
                         </div>`;
                 });
                 mettreAJourZoneVidePronostic();
+                memoriserResultatPronostic();
             } catch (e) {
                 finAnalyseBouton(bouton);
                 zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Erreur de connexion. Le serveur se réveille, réessayez dans 30 secondes.</div>';
                 mettreAJourZoneVidePronostic();
+                memoriserResultatPronostic();
             }
         }
     </script>
