@@ -206,7 +206,7 @@ def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
         if len(perf) < 2:
             continue
         place = perf[0].upper()
-        discipline_perf = perf[1].lower()
+        discipline_perf = perf[1].lower() 
         points = bareme_places.get(place, 0)
         multiplicateur_fraicheur = 1.5 if index == 0 else (1.2 if index == 1 else 1.0)
         multiplicateur_discipline = 1.0 if discipline_perf == discipline_du_jour else 0.5
@@ -214,10 +214,10 @@ def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
 
     if len(performances) < 3:
         score_total = score_total * 0.5
-
+        
     if deferre_statut == "TOUS":
         score_total += 2.0
-
+        
     return round(score_total, 1)
 
 
@@ -616,11 +616,11 @@ def analyser_course(date: str, reunion: str, course: str):
         raise _erreur_pmu_http(exc) from exc
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
-
+        
     participants = response.json().get("participants", [])
     participants = _enrichir_cotes_internet(participants, date_pmu, reunion_pmu, course_pmu)
     tableau_pronostics = []
-
+    
     for cheval in participants:
         score = calculer_score_forme(cheval.get("musique"), cheval.get("deferre"))
 
@@ -650,7 +650,7 @@ def analyser_course(date: str, reunion: str, course: str):
         })
 
     tableau_pronostics.sort(key=lambda x: x["score_mtech"], reverse=True)
-
+    
     for rang, entree in enumerate(tableau_pronostics):
         cote_num = entree["cote"] if isinstance(entree["cote"], (int, float)) else None
         score = float(entree["score_mtech"] or 0)

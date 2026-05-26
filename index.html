@@ -290,8 +290,8 @@
                             <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
                             <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
                         </div>
-                        <p class="mt-8 text-center text-base font-semibold text-white">Connexion au moteur Velora...</p>
-                        <p id="loadingSubtext" class="mt-2 text-center text-sm text-gray-400">Réveil du serveur Render — analyse PMU en cours</p>
+                        <p class="mt-8 text-center text-base font-semibold text-white">Analyse en cours…</p>
+                        <p id="loadingSubtext" class="mt-2 hidden text-center text-sm text-gray-400" aria-hidden="true"></p>
                         <div class="mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-gray-800">
                             <div class="velora-loading-bar h-full w-1/3 rounded-full bg-gradient-to-r from-emerald-500 via-cyan-400 to-emerald-500"></div>
                         </div>
@@ -1438,7 +1438,7 @@
 
             const archivesLocalAvantApi = lireArchivesLocal();
             if (archivesLocalAvantApi.length > 0) {
-                liste.innerHTML = `<p class="text-center text-sm text-gray-400 py-6">${archivesLocalAvantApi.length} archive(s) en local — synchronisation serveur…</p>`;
+                liste.innerHTML = `<p class="text-center text-sm text-gray-400 py-6">Chargement de vos archives…</p>`;
             }
 
             const [statsResult, archivesResult] = await Promise.all([
@@ -1482,23 +1482,35 @@
                 liste.innerHTML = `
                     <p class="text-center text-sm text-gray-500 py-8">
                         Aucune course archivée pour ce compte.
-                        ${erreurSync ? '<br><span class="text-amber-300/90">Connexion serveur impossible — les archives restent sur cet appareil (localStorage). Évitez « Effacer les données du site ».</span>' : ''}
+                        ${erreurSync ? '<br><span class="text-amber-300/90">Synchronisation indisponible — vos archives restent sur cet appareil. Évitez « Effacer les données du site ».</span>' : ''}
                         <br><span class="text-gray-500">Lance une analyse (onglet Pronostic) pour en créer une nouvelle.</span>
                     </p>`;
                 return;
             }
 
-            const evaluations = await Promise.all(archives.map((a) => verifierResultatArchive(a)));
-            for (const ev of evaluations) {
-                if (ev.erreur) erreurSync = ev.erreur;
-            }
-            if (erreurSync) {
-                afficherErreurSync('statsSyncErreur', erreurSync);
-            }
+            // Performance : ne réévaluer que les archives « en attente » / incomplètes
+            const aVerifier = archives.filter((a) =>
+                a?.statut === 'En attente'
+                || !estArchiveTerminee(a)
+                || !a?.badges_pmu?.length,
+            );
 
-            archives = evaluations.map((ev) => ev.archive);
-            for (const archive of archives) {
-                sauvegarderArchiveLocal(archive);
+            if (aVerifier.length > 0) {
+                liste.innerHTML = `<p class="text-center text-sm text-gray-400 py-6">Vérification des résultats (${aVerifier.length}/${archives.length})…</p>`;
+                const evaluations = await Promise.all(aVerifier.map((a) => verifierResultatArchive(a)));
+                for (const ev of evaluations) {
+                    if (ev.erreur) erreurSync = ev.erreur;
+                }
+                if (erreurSync) {
+                    afficherErreurSync('statsSyncErreur', erreurSync);
+                }
+
+                const majParCle = new Map(evaluations.map((ev) => [cleCourseArchive(ev.archive), ev.archive]));
+                archives = archives.map((a) => majParCle.get(cleCourseArchive(a)) || a);
+
+                for (const archive of majParCle.values()) {
+                    sauvegarderArchiveLocal(archive);
+                }
             }
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
@@ -1757,7 +1769,8 @@
             bouton.disabled = true;
             bouton.textContent = 'Analyse...';
             if (loadingSubtext) {
-                loadingSubtext.textContent = `Course ${reunion}${course} — connexion au serveur Render…`;
+                loadingSubtext.textContent = `${reunion} ${course}`;
+                loadingSubtext.classList.add('hidden');
             }
             afficherChargementAnalyse();
 
@@ -1835,7 +1848,7 @@
                 memoriserResultatPronostic();
             } catch (e) {
                 finAnalyseBouton(bouton);
-                zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Erreur de connexion. Le serveur se réveille, réessayez dans 30 secondes.</div>';
+                zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Service momentanément indisponible. Réessayez dans quelques instants.</div>';
                 mettreAJourZoneVidePronostic();
                 memoriserResultatPronostic();
             }
