@@ -3,12 +3,19 @@ import re
 from typing import Any, Callable, Optional, Tuple, TypeVar, Union
 
 from dotenv import load_dotenv
-from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from database import init_db, lister_archives, obtenir_archive, sauvegarder_archive
 from stats_pmu import get_stats_publiques, get_stats_utilisateur
+from velora_billing import (
+    BillingConfigError,
+    QuotaExceededError,
+    consommer_slot_analyse,
+    creer_session_checkout_stripe,
+    traiter_webhook_stripe,
+)
 from velora_resilience import ArchivesStorageError, ErreurReseauExterne, pmu_get
 
 T = TypeVar("T")
@@ -146,12 +153,47 @@ def exiger_user_id(x_user_id: Optional[str] = Header(default=None, alias="X-User
     return str(x_user_id).strip()
 
 
+def exiger_user_id_analyse(
+    x_user_id: Optional[str] = Header(default=None, alias="X-User-Id"),
+) -> str:
+    """Analyse réservée aux membres connectés (UUID Supabase Auth)."""
+    if not x_user_id or not str(x_user_id).strip():
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "erreur": "Connexion requise pour analyser une course. Créez un compte gratuit ou connectez-vous.",
+                "code": "auth_required",
+            },
+        )
+    return str(x_user_id).strip()
+
+
 def auth_membre(
     _cle: None = Depends(verifier_cle_api),
     user_id: str = Depends(exiger_user_id),
 ) -> str:
     """Exige X-MTech-Key + X-User-Id sur les routes membres."""
     return user_id
+
+
+def appliquer_quota_analyse(user_id: str) -> None:
+    """Quota Freemium (3/jour) pour les membres connectés."""
+    try:
+        consommer_slot_analyse(user_id)
+    except QuotaExceededError as exc:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "erreur": f"Quota journalier atteint ({exc.daily_limit} analyses/jour).",
+                "code": "quota_exceeded",
+                "used_today": exc.used,
+                "daily_limit": exc.daily_limit,
+            },
+        ) from exc
+    except BillingConfigError:
+        pass
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
 
 
 def valider_user_id_archive(archive: dict, user_id: str) -> None:
@@ -603,7 +645,14 @@ def _metadata_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str, nb_pa
 
 
 @app.get("/analyser/{date}/{reunion}/{course}", dependencies=[Depends(verifier_cle_api)])
-def analyser_course(date: str, reunion: str, course: str):
+def analyser_course(
+    date: str,
+    reunion: str,
+    course: str,
+    user_id: str = Depends(exiger_user_id_analyse),
+):
+    appliquer_quota_analyse(user_id)
+
     date_pmu = normaliser_date_pmu(date)
     reunion_pmu = normaliser_code_pmu(reunion, "R")
     course_pmu = normaliser_code_pmu(course, "C")
@@ -844,6 +893,63 @@ def get_stats_membre(
 def get_stats_vitrine():
     """Agrégats anonymisés plateforme (aucune donnée par utilisateur)."""
     return _executer_archives(get_stats_publiques)
+
+
+@app.post("/create-checkout-session", dependencies=[Depends(verifier_cle_api)])
+def create_checkout_session(
+    body: dict = Body(...),
+    user_id_header: str = Depends(exiger_user_id),
+):
+    """
+    Génère un lien Stripe Checkout pour l'abonnement Premium.
+    Corps : { "user_id": "<uuid supabase>", "success_url"?, "cancel_url"? }
+    """
+    user_id = str(body.get("user_id") or user_id_header).strip()
+    if user_id != user_id_header:
+        raise HTTPException(
+            status_code=403,
+            detail="user_id ne correspond pas à X-User-Id",
+        )
+
+    frontend_base = (
+        os.environ.get("VELORA_FRONTEND_URL", "https://velora-engine.vercel.app").rstrip("/")
+    )
+    success_url = str(body.get("success_url") or f"{frontend_base}/?premium=success").strip()
+    cancel_url = str(body.get("cancel_url") or f"{frontend_base}/?premium=cancel").strip()
+    customer_email = str(body.get("email") or "").strip() or None
+
+    try:
+        session = creer_session_checkout_stripe(
+            user_id,
+            success_url=success_url,
+            cancel_url=cancel_url,
+            customer_email=customer_email,
+        )
+    except BillingConfigError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
+
+    return {"url": session["url"], "session_id": session["session_id"]}
+
+
+@app.post("/webhook")
+async def stripe_webhook(
+    request: Request,
+    stripe_signature: Optional[str] = Header(default=None, alias="Stripe-Signature"),
+):
+    """Webhook Stripe (checkout → Premium ; subscription.deleted → Free)."""
+    payload = await request.body()
+    try:
+        result = traiter_webhook_stripe(payload, stripe_signature)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except BillingConfigError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
+
+    return result
 
 
 # Alias : logique de calcul historique (inchangée)

@@ -250,8 +250,8 @@
                         class="sm:col-span-2 lg:col-span-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:from-emerald-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-60">
                         Analyser
                     </button>
-                </div>
-            </div>
+        </div>
+    </div>
 
             <section id="sectionVitrine" aria-label="Statistiques communauté Velora">
                 <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
@@ -275,7 +275,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold tracking-wide text-white">Guide Rapide</h3>
-                    <p class="mt-1 text-sm leading-relaxed text-gray-400">Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.</p>
+                        <p id="guideRapideTexte" class="mt-1 text-sm leading-relaxed text-gray-400">Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.</p>
                 </div>
             </aside>
         </aside>
@@ -740,6 +740,7 @@
         const USER_ID_BACKUP_KEY = 'velora_user_id_backup';
         const ARCHIVES_LIMIT = 50;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
+        const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
 
         function getMtechApiKey() {
             const env = window.VELORA_ENV || {};
@@ -836,16 +837,67 @@
         }
 
         function estErreurAcces(status) {
-            return status === 403 || status === 404;
+            return status === 404;
+        }
+
+        function extraireDetailErreurApi(body) {
+            if (!body || typeof body !== 'object') return null;
+            if (body.detail && typeof body.detail === 'object') return body.detail;
+            return body;
         }
 
         /**
-         * Appel API centralisé : intercepteur + gestion 403/404 sans planter l'UI.
-         * @returns {{ ok: boolean, status: number, data?: object, erreur?: string }}
+         * Appel API centralisé : intercepteur + gestion 403 quota / 404 sans planter l'UI.
+         * @returns {{ ok: boolean, status: number, data?: object, erreur?: string, code?: string }}
          */
         async function veloraApi(path, options = {}) {
             try {
                 const reponse = await fetch(`${API_BASE_URL}${path}`, options);
+                if (reponse.status === 401) {
+                    try {
+                        const body = await reponse.json();
+                        const detail = extraireDetailErreurApi(body);
+                        if (detail?.code === 'auth_required') {
+                            return {
+                                ok: false,
+                                status: 401,
+                                code: 'auth_required',
+                                erreur: detail.erreur || MSG_CONNEXION_REQUISE,
+                                detail,
+                            };
+                        }
+                        if (typeof detail?.erreur === 'string') {
+                            return { ok: false, status: 401, erreur: detail.erreur, detail };
+                        }
+                        if (typeof body?.detail === 'string') {
+                            return { ok: false, status: 401, erreur: body.detail, detail: body.detail };
+                        }
+                    } catch {
+                        /* corps non JSON */
+                    }
+                    return { ok: false, status: 401, erreur: 'Accès refusé : clé API invalide.' };
+                }
+                if (reponse.status === 403) {
+                    try {
+                        const body = await reponse.json();
+                        const detail = extraireDetailErreurApi(body);
+                        if (detail?.code === 'quota_exceeded') {
+                            return {
+                                ok: false,
+                                status: 403,
+                                code: 'quota_exceeded',
+                                erreur: detail.erreur || 'Quota journalier atteint (3 analyses/jour).',
+                                detail,
+                            };
+                        }
+                        if (typeof detail?.erreur === 'string') {
+                            return { ok: false, status: 403, erreur: detail.erreur, detail };
+                        }
+                    } catch {
+                        /* corps non JSON */
+                    }
+                    return { ok: false, status: 403, erreur: MSG_SYNC_ERREUR };
+                }
                 if (estErreurAcces(reponse.status)) {
                     return { ok: false, status: reponse.status, erreur: MSG_SYNC_ERREUR };
                 }
@@ -869,6 +921,162 @@
                 return { ok: true, status: reponse.status, data };
             } catch {
                 return { ok: false, status: 0, erreur: MSG_SYNC_ERREUR };
+            }
+        }
+
+        function genererHtmlConnexionRequise() {
+            return `
+                <div class="glass-card rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-6 text-center shadow-lg">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400/90">Espace Parieur</p>
+                    <p class="mt-3 text-base font-semibold text-white">${MSG_CONNEXION_REQUISE}</p>
+                    <button type="button" id="btnConnexionDepuisAnalyse"
+                        class="mt-5 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-emerald-400 hover:to-cyan-400">
+                        Connexion / Inscription
+                    </button>
+                </div>`;
+        }
+
+        function afficherMessageConnexionRequise(zoneResultats, ouvrirModal = true) {
+            afficherSection('pronostic');
+            const zone = zoneResultats || document.getElementById('resultats');
+            const titre = document.getElementById('titreResultats');
+            if (titre) titre.classList.add('hidden');
+            if (zone) {
+                zone.innerHTML = genererHtmlConnexionRequise();
+                document.getElementById('btnConnexionDepuisAnalyse')
+                    ?.addEventListener('click', () => ouvrirModalAuth('login'), { once: true });
+            }
+            const zoneVide = document.getElementById('zoneVidePronostic');
+            if (zoneVide) zoneVide.classList.add('hidden');
+            if (ouvrirModal) ouvrirModalAuth('login');
+            mettreAJourZoneVidePronostic();
+        }
+
+        function exigerConnexionPourAnalyser(zoneResultats) {
+            if (estMembreConnecte()) return true;
+            afficherMessageConnexionRequise(zoneResultats);
+            return false;
+        }
+
+        function mettreAJourUiAnalyseAuth() {
+            const connecte = estMembreConnecte();
+            const zoneVide = document.getElementById('zoneVidePronostic');
+            const guide = document.getElementById('guideRapideTexte');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (zoneVide && !cacheResultatPronostic) {
+                if (connecte) {
+                    zoneVide.innerHTML = `
+                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-2xl" aria-hidden="true">🐎</div>
+                        <p class="text-sm font-semibold text-gray-300">Panneau d'analyse</p>
+                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Saisissez une course à gauche et cliquez sur <span class="text-emerald-400">Analyser</span> pour afficher le classement Velora ici.</p>`;
+                    zoneVide.classList.remove('cursor-pointer');
+                } else {
+                    zoneVide.innerHTML = `
+                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔒</div>
+                        <p class="text-sm font-semibold text-gray-300">Analyse réservée aux membres</p>
+                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">${MSG_CONNEXION_REQUISE}</p>
+                        <button type="button" id="btnConnexionZoneVide"
+                            class="mt-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20">
+                            Connexion / Inscription
+                        </button>`;
+                    zoneVide.classList.add('cursor-pointer');
+                    document.getElementById('btnConnexionZoneVide')
+                        ?.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            ouvrirModalAuth('login');
+                        }, { once: true });
+                }
+            }
+
+            if (guide) {
+                guide.innerHTML = connecte
+                    ? 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.'
+                    : `${MSG_CONNEXION_REQUISE} <span class="block mt-2 text-emerald-400/90">Compte gratuit — 3 analyses par jour.</span>`;
+            }
+
+            if (submitBtn) {
+                submitBtn.title = connecte ? '' : MSG_CONNEXION_REQUISE;
+            }
+        }
+
+        function genererHtmlBlocPremium(message) {
+            const texte = message || 'Vous avez utilisé vos 3 analyses gratuites du jour.';
+            return `
+                <div class="glass-card rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-gray-900/60 p-6 text-center shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-400/90">Limite Freemium</p>
+                    <p class="mt-3 text-base font-semibold text-white">${texte}</p>
+                    <p class="mt-2 text-sm text-gray-400">Passez Premium pour des analyses illimitées et conserver toutes vos archives.</p>
+                    <button type="button" id="btnPasserPremium"
+                        class="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-amber-400 hover:to-orange-400">
+                        <span aria-hidden="true">★</span> Passer Premium
+                    </button>
+                    <p id="premiumCheckoutErreur" class="mt-3 hidden text-sm text-red-400" role="alert"></p>
+                </div>`;
+        }
+
+        function afficherBlocQuotaPremium(zoneResultats, message) {
+            if (!zoneResultats) return;
+            zoneResultats.innerHTML = genererHtmlBlocPremium(message);
+            const btn = document.getElementById('btnPasserPremium');
+            if (btn) btn.addEventListener('click', lancerCheckoutPremium, { once: true });
+        }
+
+        async function lancerCheckoutPremium() {
+            const errEl = document.getElementById('premiumCheckoutErreur');
+            const btn = document.getElementById('btnPasserPremium');
+
+            if (!estMembreConnecte()) {
+                if (errEl) {
+                    errEl.textContent = 'Connectez-vous pour souscrire à Premium.';
+                    errEl.classList.remove('hidden');
+                }
+                ouvrirModalAuth('signin');
+                return;
+            }
+
+            if (window.VeloraAuth?.isPremiumUser?.()) {
+                if (errEl) {
+                    errEl.textContent = 'Vous êtes déjà membre Premium.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            const userId = getVeloraUserId();
+            if (!userId) return;
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Redirection Stripe…';
+            }
+            if (errEl) errEl.classList.add('hidden');
+
+            const origin = window.location.origin.replace(/\/$/, '');
+            const result = await veloraApi('/create-checkout-session', {
+                method: 'POST',
+                headers: entetesJson(),
+                body: JSON.stringify({
+                    user_id: userId,
+                    email: window.VeloraAuth.getUserEmail?.() || undefined,
+                    success_url: `${origin}/?premium=success`,
+                    cancel_url: `${origin}/?premium=cancel`,
+                }),
+            });
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<span aria-hidden="true">★</span> Passer Premium';
+            }
+
+            if (result.ok && result.data?.url) {
+                window.location.href = result.data.url;
+                return;
+            }
+
+            if (errEl) {
+                errEl.textContent = result.erreur || 'Impossible de lancer le paiement.';
+                errEl.classList.remove('hidden');
             }
         }
 
@@ -1152,11 +1360,15 @@
             if (!connecte && sectionArchives && !sectionArchives.classList.contains('hidden')) {
                 afficherSection('pronostic');
             }
+            mettreAJourUiAnalyseAuth();
         }
 
         function initialiserAuthUi() {
             document.getElementById('btnAuthOpen')?.addEventListener('click', () => ouvrirModalAuth('login'));
             document.getElementById('btnAuthFromArchives')?.addEventListener('click', () => ouvrirModalAuth('login'));
+            document.getElementById('zoneVidePronostic')?.addEventListener('click', () => {
+                if (!estMembreConnecte()) ouvrirModalAuth('login');
+            });
             document.getElementById('btnAuthClose')?.addEventListener('click', fermerModalAuth);
             document.getElementById('modalAuthBackdrop')?.addEventListener('click', fermerModalAuth);
             document.getElementById('btnAuthLogout')?.addEventListener('click', async () => {
@@ -1219,6 +1431,11 @@
                     appliquerEtatAuth();
                 }
                 initSupabase();
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('premium') === 'success' && window.VeloraAuth?.rafraichirProfil) {
+                    await window.VeloraAuth.rafraichirProfil();
+                    history.replaceState({}, '', window.location.pathname);
+                }
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
                 });
@@ -1759,6 +1976,10 @@
             titreResultats.classList.add('hidden');
             mettreAJourZoneVidePronostic();
 
+            if (!exigerConnexionPourAnalyser(zoneResultats)) {
+                return;
+            }
+
             if (!dateAPI || !reunion || !course) {
                 masquerChargementAnalyse();
                 zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Veuillez renseigner la date, la réunion et la course.</div>';
@@ -1780,9 +2001,19 @@
                 const result = await veloraApi(`/analyser/${dateAPI}/${reunion}/${course}`);
 
                 finAnalyseBouton(bouton);
+                masquerChargementAnalyse();
 
+                if (result.code === 'auth_required') {
+                    afficherMessageConnexionRequise(zoneResultats, true);
+                    return;
+                }
                 if (result.status === 401) {
                     zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Accès refusé : clé API invalide.</div>';
+                    mettreAJourZoneVidePronostic();
+                    return;
+                }
+                if (result.code === 'quota_exceeded' || (result.status === 403 && /quota/i.test(result.erreur || ''))) {
+                    afficherBlocQuotaPremium(zoneResultats, result.erreur);
                     mettreAJourZoneVidePronostic();
                     return;
                 }
@@ -1839,7 +2070,7 @@
                                     <p class="mt-1 text-xs font-semibold ${cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80'}">Cote : ${formaterCote(cheval)}</p>
                                     <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score Velora : ${cheval.score_mtech}</p>
                                     ${hintAnomalieCote(cheval)}
-                                </div>
+                            </div>
                             </div>
                             ${boutonParrainage}
                         </div>`;
@@ -1848,6 +2079,7 @@
                 memoriserResultatPronostic();
             } catch (e) {
                 finAnalyseBouton(bouton);
+                masquerChargementAnalyse();
                 zoneResultats.innerHTML = '<div class="glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300">Service momentanément indisponible. Réessayez dans quelques instants.</div>';
                 mettreAJourZoneVidePronostic();
                 memoriserResultatPronostic();

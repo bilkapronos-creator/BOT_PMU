@@ -7,7 +7,10 @@
 
     let client = null;
     let session = null;
+    let isPremium = false;
+    let profil = null;
     const listeners = new Set();
+    const profileListeners = new Set();
 
     function normaliserSupabaseUrl(urlBrute) {
         return String(urlBrute || '').trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
@@ -55,6 +58,50 @@
         });
     }
 
+    function notifierProfil(profilCourant) {
+        profil = profilCourant;
+        profileListeners.forEach((fn) => {
+            try {
+                fn(profilCourant);
+            } catch (err) {
+                console.warn('[Velora Auth] profile listener:', err);
+            }
+        });
+    }
+
+    async function chargerProfil() {
+        const supabase = getClient();
+        if (!supabase || !session?.user?.id) {
+            isPremium = false;
+            profil = null;
+            notifierProfil(null);
+            return null;
+        }
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, role, plan_type, is_premium, stripe_customer_id')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+        if (error) {
+            console.warn('[Velora Auth] profil :', error.message);
+            isPremium = false;
+            profil = null;
+            notifierProfil(null);
+            return null;
+        }
+
+        profil = data;
+        isPremium = Boolean(
+            data?.is_premium === true
+            || data?.role === 'premium'
+            || data?.role === 'admin',
+        );
+        notifierProfil(data);
+        return data;
+    }
+
     function isAuthenticated() {
         return Boolean(session?.user?.id);
     }
@@ -67,9 +114,26 @@
         return session?.user?.email || '';
     }
 
+    function isPremiumUser() {
+        return isPremium;
+    }
+
+    function getProfile() {
+        return profil;
+    }
+
+    function onProfileChange(callback) {
+        if (typeof callback === 'function') profileListeners.add(callback);
+        return () => profileListeners.delete(callback);
+    }
+
     function onAuthChange(callback) {
         if (typeof callback === 'function') listeners.add(callback);
         return () => listeners.delete(callback);
+    }
+
+    async function rafraichirProfil() {
+        return chargerProfil();
     }
 
     async function init() {
@@ -80,9 +144,12 @@
         if (error) console.warn('[Velora Auth] getSession :', error.message);
 
         session = data?.session ?? null;
+        await chargerProfil();
 
-        supabase.auth.onAuthStateChange((_event, newSession) => {
+        supabase.auth.onAuthStateChange(async (_event, newSession) => {
+            session = newSession;
             notifier(newSession);
+            await chargerProfil();
         });
 
         return session;
@@ -117,6 +184,7 @@
         if (error) return { ok: false, erreur: formaterErreurAuth(error) };
         session = data.session;
         notifier(session);
+        await chargerProfil();
         return { ok: true, session };
     }
 
@@ -133,6 +201,7 @@
         if (data.session) {
             session = data.session;
             notifier(session);
+            await chargerProfil();
             return { ok: true, session, confirmationEmail: false };
         }
         return {
@@ -149,7 +218,10 @@
         const { error } = await supabase.auth.signOut();
         if (error) return { ok: false, erreur: formaterErreurAuth(error) };
         session = null;
+        isPremium = false;
+        profil = null;
         notifier(null);
+        notifierProfil(null);
         return { ok: true };
     }
 
@@ -160,7 +232,11 @@
         isAuthenticated,
         getUserId,
         getUserEmail,
+        isPremiumUser,
+        getProfile,
+        rafraichirProfil,
         onAuthChange,
+        onProfileChange,
         signIn,
         signUp,
         signOut,
