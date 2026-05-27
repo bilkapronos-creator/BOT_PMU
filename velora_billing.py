@@ -510,10 +510,35 @@ def obtenir_profil_par_stripe_customer(stripe_customer_id: str) -> Optional[dict
     return rows[0] if rows else None
 
 
-def _extraire_user_id_stripe_session(session: dict[str, Any]) -> str:
-    """Récupère l'UUID Supabase depuis une session Checkout Stripe."""
-    metadata = session.get("metadata") or {}
-    user_id = metadata.get("user_id") or session.get("client_reference_id")
+def _lire_champ_stripe(objet: Any, cle: str, defaut: Any = None) -> Any:
+    """Lit un champ sur un dict ou un StripeObject sans supposer le type."""
+    if objet is None:
+        return defaut
+    if isinstance(objet, dict):
+        return objet.get(cle, defaut)
+    return getattr(objet, cle, defaut)
+
+
+def _extraire_user_id_stripe_session(session: Any) -> str:
+    """Récupère l'UUID Supabase depuis une session Checkout Stripe (dict ou StripeObject)."""
+    # 1. client_reference_id en priorité (getattr sécurisé)
+    user_id = getattr(session, "client_reference_id", None)
+    if not user_id:
+        user_id = _lire_champ_stripe(session, "client_reference_id")
+
+    # 2. metadata.user_id en repli, sans .get() sur une valeur potentiellement None
+    if not user_id:
+        metadata = getattr(session, "metadata", None)
+        if metadata is None:
+            metadata = _lire_champ_stripe(session, "metadata")
+        if metadata is None:
+            metadata = {}
+
+        if isinstance(metadata, dict):
+            user_id = metadata.get("user_id")
+        else:
+            user_id = getattr(metadata, "user_id", None)
+
     if not user_id or not str(user_id).strip():
         raise ValueError(
             "user_id introuvable dans checkout.session.completed "
@@ -523,12 +548,47 @@ def _extraire_user_id_stripe_session(session: dict[str, Any]) -> str:
 
 
 def _extraire_stripe_customer_id(valeur: Any) -> Optional[str]:
-    if not valeur:
+    """Normalise customer (str cus_…, dict {id}, StripeObject ou session Checkout)."""
+    if valeur is None:
         return None
-    if isinstance(valeur, dict):
-        valeur = valeur.get("id")
-    cid = str(valeur or "").strip()
+
+    customer = valeur
+    if not isinstance(valeur, str):
+        customer = getattr(valeur, "customer", None)
+        if customer is None and isinstance(valeur, dict):
+            customer = valeur.get("customer")
+        if customer is None:
+            customer = valeur
+
+    if not customer:
+        return None
+
+    if isinstance(customer, dict):
+        identifiant = customer.get("id")
+    else:
+        identifiant = getattr(customer, "id", customer)
+
+    cid = str(identifiant or "").strip()
     return cid or None
+
+
+def _extraire_user_id_stripe_metadata(objet: Any) -> Optional[str]:
+    """Lit metadata.user_id sur un événement Stripe (ex. subscription.deleted)."""
+    metadata = getattr(objet, "metadata", None)
+    if metadata is None:
+        metadata = _lire_champ_stripe(objet, "metadata")
+    if metadata is None:
+        return None
+
+    if isinstance(metadata, dict):
+        user_id = metadata.get("user_id")
+    else:
+        user_id = getattr(metadata, "user_id", None)
+
+    if not user_id:
+        return None
+    uid = str(user_id).strip()
+    return uid or None
 
 
 def activer_premium_stripe(user_id: str, stripe_customer_id: Optional[str] = None) -> None:
@@ -670,22 +730,22 @@ def traiter_webhook_stripe(payload: bytes, signature: Optional[str]) -> dict[str
         except stripe.error.SignatureVerificationError as exc:
             raise ValueError("Signature webhook Stripe invalide.") from exc
 
-        event_type = event["type"]
-        obj = event["data"]["object"]
+        event_type = _lire_champ_stripe(event, "type")
+        obj = _lire_champ_stripe(_lire_champ_stripe(event, "data"), "object")
         print(f"[Velora] Webhook Stripe reçu : {event_type}")
 
         if event_type == "checkout.session.completed":
             user_id = _extraire_user_id_stripe_session(obj)
-            stripe_customer_id = _extraire_stripe_customer_id(obj.get("customer"))
+            stripe_customer_id = _extraire_stripe_customer_id(obj)
 
             activer_premium_stripe(user_id, stripe_customer_id)
             return {"status": "success", "user_id": user_id, "event": event_type}
 
         if event_type == "customer.subscription.deleted":
-            stripe_customer_id = _extraire_stripe_customer_id(obj.get("customer"))
-            metadata_user_id = (obj.get("metadata") or {}).get("user_id")
+            stripe_customer_id = _extraire_stripe_customer_id(obj)
+            metadata_user_id = _extraire_user_id_stripe_metadata(obj)
             uid = desactiver_premium_stripe(
-                user_id=str(metadata_user_id) if metadata_user_id else None,
+                user_id=metadata_user_id,
                 stripe_customer_id=stripe_customer_id,
             )
             if not uid:
