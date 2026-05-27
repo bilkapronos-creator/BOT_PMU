@@ -975,14 +975,13 @@ async def stripe_webhook(
     payload = await request.body()
     try:
         result = traiter_webhook_stripe(payload, stripe_signature)
+        return JSONResponse(status_code=200, content=result)
     except ValueError as exc:
+        print(f"Erreur interne Webhook: {str(exc)}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except BillingConfigError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
-    except ArchivesStorageError as exc:
-        raise _erreur_archives_http(exc) from exc
-
-    return result
+    except Exception as exc:
+        print(f"Erreur interne Webhook: {str(exc)}")
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 # Alias : logique de calcul historique (inchangée)

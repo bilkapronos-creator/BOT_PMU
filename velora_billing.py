@@ -510,22 +510,57 @@ def obtenir_profil_par_stripe_customer(stripe_customer_id: str) -> Optional[dict
     return rows[0] if rows else None
 
 
+def _extraire_user_id_stripe_session(session: dict[str, Any]) -> str:
+    """Récupère l'UUID Supabase depuis une session Checkout Stripe."""
+    metadata = session.get("metadata") or {}
+    user_id = metadata.get("user_id") or session.get("client_reference_id")
+    if not user_id or not str(user_id).strip():
+        raise ValueError(
+            "user_id introuvable dans checkout.session.completed "
+            "(metadata.user_id ou client_reference_id requis).",
+        )
+    return str(user_id).strip()
+
+
+def _extraire_stripe_customer_id(valeur: Any) -> Optional[str]:
+    if not valeur:
+        return None
+    if isinstance(valeur, dict):
+        valeur = valeur.get("id")
+    cid = str(valeur or "").strip()
+    return cid or None
+
+
 def activer_premium_stripe(user_id: str, stripe_customer_id: Optional[str] = None) -> None:
-    """Webhook Stripe : passage Premium (service_role, bypass RLS)."""
-    client = _get_supabase_client()
-    payload: dict[str, Any] = {
+    """Webhook Stripe : passage Premium via service_role (PATCH REST, bypass RLS)."""
+    uid = str(user_id).strip()
+    obtenir_ou_creer_profil(uid)
+
+    payloads: list[dict[str, Any]] = []
+    complet: dict[str, Any] = {
         "is_premium": True,
         "role": "premium",
         "plan_type": "premium",
         "updated_at": _now_iso(),
     }
     if stripe_customer_id:
-        payload["stripe_customer_id"] = stripe_customer_id
+        complet["stripe_customer_id"] = stripe_customer_id
+    payloads.append(complet)
+    payloads.append({"role": "premium", "plan_type": "premium", "updated_at": _now_iso()})
 
-    def _maj():
-        return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
+    derniere_erreur: Optional[Exception] = None
+    for payload in payloads:
+        try:
+            rows = _patch_profil_rest(uid, payload)
+            print(f"[Velora] Premium activé (REST service_role) : {uid} → {rows[0]}")
+            return
+        except Exception as exc:
+            derniere_erreur = exc
+            print(f"[Velora] PATCH Premium {list(payload.keys())} : {exc}")
 
-    supabase_execute(_maj, description="activation Premium Stripe")
+    raise ArchivesStorageError(
+        f"Activation Premium impossible pour {uid} : {derniere_erreur}",
+    )
 
 
 def desactiver_premium_stripe(
@@ -550,7 +585,6 @@ def desactiver_premium_stripe(
     if str(profil.get("role") or "").lower() == "admin":
         return uid
 
-    client = _get_supabase_client()
     payload: dict[str, Any] = {
         "is_premium": False,
         "role": "free",
@@ -558,10 +592,13 @@ def desactiver_premium_stripe(
         "updated_at": _now_iso(),
     }
 
-    def _maj():
-        return client.table(_PROFILES_TABLE).update(payload).eq("id", uid).execute()
-
-    supabase_execute(_maj, description="désactivation Premium Stripe")
+    try:
+        rows = _patch_profil_rest(uid, payload)
+        print(f"[Velora] Premium désactivé (REST) : {uid} → {rows[0]}")
+    except Exception as exc:
+        fallback = {"role": "free", "plan_type": "free", "updated_at": _now_iso()}
+        rows = _patch_profil_rest(uid, fallback)
+        print(f"[Velora] Premium désactivé (REST fallback) : {uid} → {rows[0]} ({exc})")
     return uid
 
 
@@ -605,58 +642,55 @@ def creer_session_checkout_stripe(
     return {"url": session.url, "session_id": session.id}
 
 
-def traiter_webhook_stripe(payload: bytes, signature: Optional[str]) -> dict[str, str]:
+def traiter_webhook_stripe(payload: bytes, signature: Optional[str]) -> dict[str, Any]:
     """Vérifie la signature Stripe et met à jour le statut Premium."""
-    _stripe_configure()
-    import stripe
-
-    webhook_secret = (os.environ.get("STRIPE_WEBHOOK_SECRET") or "").strip()
-    if not webhook_secret:
-        raise BillingConfigError("STRIPE_WEBHOOK_SECRET non configurée sur Render.")
-    if not signature:
-        raise ValueError("En-tête Stripe-Signature manquant.")
-
     try:
-        event = stripe.Webhook.construct_event(payload, signature, webhook_secret)
-    except ValueError as exc:
-        raise ValueError("Payload webhook invalide.") from exc
-    except stripe.error.SignatureVerificationError as exc:
-        raise ValueError("Signature webhook Stripe invalide.") from exc
+        _stripe_configure()
+        import stripe
 
-    event_type = event["type"]
-    obj = event["data"]["object"]
+        webhook_secret = (os.environ.get("STRIPE_WEBHOOK_SECRET") or "").strip()
+        if not webhook_secret:
+            raise ValueError("STRIPE_WEBHOOK_SECRET non configurée sur Render.")
+        if not signature:
+            raise ValueError("En-tête Stripe-Signature manquant.")
 
-    if event_type == "checkout.session.completed":
-        user_id = (
-            (obj.get("metadata") or {}).get("user_id")
-            or obj.get("client_reference_id")
-        )
-        if not user_id:
-            raise ValueError("user_id absent de la session Stripe.")
+        try:
+            event = stripe.Webhook.construct_event(payload, signature, webhook_secret)
+        except ValueError as exc:
+            raise ValueError("Payload webhook invalide.") from exc
+        except stripe.error.SignatureVerificationError as exc:
+            raise ValueError("Signature webhook Stripe invalide.") from exc
 
-        stripe_customer_id = obj.get("customer")
-        if isinstance(stripe_customer_id, dict):
-            stripe_customer_id = stripe_customer_id.get("id")
+        event_type = event["type"]
+        obj = event["data"]["object"]
+        print(f"[Velora] Webhook Stripe reçu : {event_type}")
 
-        activer_premium_stripe(str(user_id), str(stripe_customer_id) if stripe_customer_id else None)
-        return {"status": "premium_activated", "user_id": str(user_id)}
+        if event_type == "checkout.session.completed":
+            user_id = _extraire_user_id_stripe_session(obj)
+            stripe_customer_id = _extraire_stripe_customer_id(obj.get("customer"))
 
-    if event_type == "customer.subscription.deleted":
-        stripe_customer_id = obj.get("customer")
-        if isinstance(stripe_customer_id, dict):
-            stripe_customer_id = stripe_customer_id.get("id")
+            activer_premium_stripe(user_id, stripe_customer_id)
+            return {"status": "success", "user_id": user_id, "event": event_type}
 
-        metadata_user_id = (obj.get("metadata") or {}).get("user_id")
-        uid = desactiver_premium_stripe(
-            user_id=str(metadata_user_id) if metadata_user_id else None,
-            stripe_customer_id=str(stripe_customer_id) if stripe_customer_id else None,
-        )
-        if not uid:
-            return {
-                "status": "ignored",
-                "type": event_type,
-                "reason": "profile_not_found",
-            }
-        return {"status": "premium_deactivated", "user_id": uid}
+        if event_type == "customer.subscription.deleted":
+            stripe_customer_id = _extraire_stripe_customer_id(obj.get("customer"))
+            metadata_user_id = (obj.get("metadata") or {}).get("user_id")
+            uid = desactiver_premium_stripe(
+                user_id=str(metadata_user_id) if metadata_user_id else None,
+                stripe_customer_id=stripe_customer_id,
+            )
+            if not uid:
+                return {"status": "success", "ignored": True, "reason": "profile_not_found"}
+            return {"status": "success", "user_id": uid, "event": event_type}
 
-    return {"status": "ignored", "type": event_type}
+        return {"status": "success", "ignored": True, "event": event_type}
+
+    except ValueError:
+        raise
+    except ArchivesStorageError as exc:
+        raise ValueError(str(exc)) from exc
+    except BillingConfigError as exc:
+        raise ValueError(str(exc)) from exc
+    except Exception as exc:
+        print(f"Erreur interne Webhook: {str(exc)}")
+        raise ValueError(f"Erreur interne Webhook: {exc}") from exc
