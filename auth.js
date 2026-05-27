@@ -154,12 +154,35 @@
         };
     }
 
-    function _estDeviceMarqueBloque() {
-        return _storageLocalGet(DEVICE_BLOCKED_KEY) === 'true';
+    function _dateProfilIso(profilCourant) {
+        if (!profilCourant?.last_analysis_date) return null;
+        return String(profilCourant.last_analysis_date).slice(0, 10);
+    }
+
+    function _appliquerReinitialisationQuotaJournalier() {
+        const today = _aujourdhuiIso();
+
+        // Ancien flag permanent (anti-abus v1) — ignoré, quota réinitialisé chaque jour
+        _storageLocalRemove(DEVICE_BLOCKED_KEY);
+
+        if (profil && !isPremium) {
+            const last = _dateProfilIso(profil);
+            if (last !== today) {
+                profil = {
+                    ...profil,
+                    analyses_count: 0,
+                    last_analysis_date: today,
+                };
+            }
+        }
+    }
+
+    function verifierEtReinitialiserQuotaJournalier() {
+        _appliquerReinitialisationQuotaJournalier();
+        return getAnalysesCount();
     }
 
     function getDeviceAnalysesCount() {
-        if (_estDeviceMarqueBloque()) return QUOTA_JOURNALIER;
         const { date, count } = _lireDeviceUsage();
         if (date === _aujourdhuiIso()) return Math.min(QUOTA_JOURNALIER, count);
         return 0;
@@ -167,7 +190,6 @@
 
     function isDeviceFreemiumBloque() {
         if (isPremium) return false;
-        if (_estDeviceMarqueBloque()) return true;
         const { date, count } = _lireDeviceUsage();
         return date === _aujourdhuiIso() && count >= QUOTA_JOURNALIER;
     }
@@ -175,14 +197,10 @@
     function enregistrerAnalyseDevice() {
         if (isPremium) return getDeviceAnalysesCount();
         const today = _aujourdhuiIso();
-        let count = 0;
         const usage = _lireDeviceUsage();
-        if (usage.date === today) count = usage.count;
+        let count = usage.date === today ? usage.count : 0;
         count = Math.min(QUOTA_JOURNALIER, count + 1);
         _storageLocalSet(DEVICE_USAGE_KEY, `${today}_count_${count}`);
-        if (count >= QUOTA_JOURNALIER) {
-            _storageLocalSet(DEVICE_BLOCKED_KEY, 'true');
-        }
         return count;
     }
 
@@ -197,9 +215,7 @@
 
     function _compteurEffectif(profilCourant) {
         if (!profilCourant) return 0;
-        const last = profilCourant.last_analysis_date
-            ? String(profilCourant.last_analysis_date).slice(0, 10)
-            : null;
+        const last = _dateProfilIso(profilCourant);
         if (last && last !== _aujourdhuiIso()) return 0;
         return Math.max(0, parseInt(profilCourant.analyses_count, 10) || 0);
     }
@@ -256,6 +272,11 @@
         } else {
             isPremium = false;
         }
+
+        if (!isPremium && profil) {
+            _appliquerReinitialisationQuotaJournalier();
+        }
+
         notifierProfil(profil);
         return profil;
     }
@@ -322,11 +343,9 @@
     /** +1 local après analyse réussie (UI temps réel, resync au prochain chargement profil). */
     function incrementerCompteurAnalysesLocal() {
         if (isPremium || !profil) return getAnalysesCount();
+        _appliquerReinitialisationQuotaJournalier();
         const today = _aujourdhuiIso();
-        const last = profil.last_analysis_date
-            ? String(profil.last_analysis_date).slice(0, 10)
-            : null;
-        let count = last === today ? _compteurEffectif(profil) : 0;
+        let count = _compteurEffectif(profil);
         count = Math.min(QUOTA_JOURNALIER, count + 1);
         profil.analyses_count = count;
         profil.last_analysis_date = today;
@@ -580,6 +599,7 @@
         getDeviceAnalysesCount,
         isDeviceFreemiumBloque,
         isQuotaComplet,
+        verifierEtReinitialiserQuotaJournalier,
         libererDeviceFreemium,
         enregistrerAnalyseDevice,
         incrementerCompteurAnalysesLocal,

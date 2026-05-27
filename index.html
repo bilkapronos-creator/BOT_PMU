@@ -1924,7 +1924,10 @@
                 } else if (retourConfirmationEmail) {
                     gererRetourConfirmationEmail();
                 }
-                if (window.VeloraAuth) appliquerEtatAuth();
+                if (window.VeloraAuth) {
+                    window.VeloraAuth.verifierEtReinitialiserQuotaJournalier?.();
+                    appliquerEtatAuth();
+                }
                 masquerSplashApp();
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
@@ -2468,6 +2471,10 @@
             if (!exigerConnexionPourAnalyser(zoneResultats)) {
                 return;
             }
+
+            window.VeloraAuth?.verifierEtReinitialiserQuotaJournalier?.();
+            mettreAJourUiPlanUtilisateur();
+            mettreAJourUiFormulaireAnalyse();
 
             if (window.VeloraAuth?.isQuotaComplet?.()) {
                 afficherBlocQuotaPremium(null, MSG_QUOTA_ATTEINT);
