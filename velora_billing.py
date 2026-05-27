@@ -93,6 +93,67 @@ def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
     return None
 
 
+def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
+    """Crée un profil free par défaut (service_role) si auth.users existe sans public.profiles."""
+    client = _get_supabase_client()
+    today = _aujourdhui().isoformat()
+    now = _now_iso()
+    uid = str(user_id).strip()
+
+    payloads: list[dict[str, Any]] = [
+        {
+            "id": uid,
+            "role": "free",
+            "plan_type": "free",
+            "is_premium": False,
+            "analyses_count": 0,
+            "last_analysis_date": today,
+            "updated_at": now,
+        },
+        {
+            "id": uid,
+            "role": "free",
+            "plan_type": "free",
+            "analyses_count": 0,
+            "last_analysis_date": today,
+            "updated_at": now,
+        },
+        {
+            "id": uid,
+            "role": "free",
+            "plan_type": "free",
+            "updated_at": now,
+        },
+    ]
+
+    for payload in payloads:
+        try:
+            def _inserer(p=payload):
+                return (
+                    client.table(_PROFILES_TABLE)
+                    .upsert(p, on_conflict="id")
+                    .execute()
+                )
+
+            supabase_execute(_inserer, description="création profil par défaut")
+            profil = obtenir_profil(uid)
+            if profil:
+                return profil
+        except Exception as exc:
+            print(f"[Velora] Création profil ({list(payload.keys())}) : {exc}")
+
+    raise BillingConfigError(f"Impossible de créer le profil pour {uid}.")
+
+
+def obtenir_ou_creer_profil(user_id: str) -> dict[str, Any]:
+    """Lit le profil ou le crée à la volée pour éviter « profil introuvable »."""
+    profil = obtenir_profil(user_id)
+    if profil:
+        return profil
+    print(f"[Velora] Profil absent pour {user_id} — création automatique.")
+    return creer_profil_par_defaut(user_id)
+
+
 def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
     if not profil:
         return False
@@ -141,9 +202,7 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
     Vérifie le quota AVANT analyse (profiles.analyses_count / last_analysis_date).
     Premium → illimité. Sinon blocage strict à daily_limit analyses/jour.
     """
-    profil = obtenir_profil(user_id)
-    if not profil:
-        raise BillingConfigError(f"Profil introuvable pour {user_id}.")
+    profil = obtenir_ou_creer_profil(user_id)
 
     if est_utilisateur_premium(profil):
         return {"allowed": True, "unlimited": True, "is_premium": True}
@@ -177,7 +236,7 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
 
 def incrementer_compteur_analyse(user_id: str) -> None:
     """Incrémente analyses_count APRÈS une analyse réussie (ignore les Premium)."""
-    profil = obtenir_profil(user_id)
+    profil = obtenir_ou_creer_profil(user_id)
     if not profil or est_utilisateur_premium(profil):
         return
 
