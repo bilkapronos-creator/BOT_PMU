@@ -755,6 +755,7 @@
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
         const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
         const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour.';
+        const QUOTA_JOURNALIER_UI = 3;
 
         function getMtechApiKey() {
             const env = window.VELORA_ENV || {};
@@ -1363,9 +1364,6 @@
                 if (pwd) pwd.autocomplete = 'current-password';
             }
         }
-
-        const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour.';
-        const QUOTA_JOURNALIER_UI = 3;
 
         function mettreAJourUiPlanUtilisateur() {
             const bar = document.getElementById('veloraPlanBar');
