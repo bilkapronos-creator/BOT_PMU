@@ -13,9 +13,10 @@ from stats_pmu import get_stats_publiques, get_stats_utilisateur
 from velora_billing import (
     BillingConfigError,
     QuotaExceededError,
-    consommer_slot_analyse,
     creer_session_checkout_stripe,
+    incrementer_compteur_analyse,
     traiter_webhook_stripe,
+    verifier_quota_analyse,
 )
 from velora_resilience import ArchivesStorageError, ErreurReseauExterne, pmu_get
 
@@ -206,25 +207,18 @@ def auth_membre(
 
 
 def appliquer_quota_analyse(user_id: str) -> None:
-    """Quota Freemium (3/jour) pour les membres connectés."""
+    """Blocage strict si analyses_count >= 3 (profils Supabase)."""
     try:
-        consommer_slot_analyse(user_id)
+        verifier_quota_analyse(user_id)
     except QuotaExceededError as exc:
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "erreur": f"Quota journalier atteint ({exc.daily_limit} analyses/jour).",
-                "code": "quota_exceeded",
-                "used_today": exc.used,
-                "daily_limit": exc.daily_limit,
-            },
-        ) from exc
+        raise HTTPException(status_code=403, detail="QUOTA_ATTEINT") from exc
     except BillingConfigError as exc:
-        print(f"[Velora] Quota désactivé (config Supabase billing) : {exc}")
+        raise HTTPException(
+            status_code=503,
+            detail={"erreur": str(exc), "code": "quota_config_error"},
+        ) from exc
     except ArchivesStorageError as exc:
         raise _erreur_archives_http(exc) from exc
-    except Exception as exc:
-        print(f"[Velora] Quota ignoré (erreur Supabase, analyse autorisée) : {exc}")
 
 
 def valider_user_id_archive(archive: dict, user_id: str) -> None:
@@ -743,6 +737,11 @@ def analyser_course(
         entree["is_value_bet"] = is_vb
         if is_vb and cote_num is not None:
             entree["anomalie_cote"] = round(cote_num - score, 1)
+
+    try:
+        incrementer_compteur_analyse(user_id)
+    except Exception as exc:
+        print(f"[Velora] Incrément quota post-analyse : {exc}")
 
     return {
         "pronostic_officiel_mtech": tableau_pronostics,

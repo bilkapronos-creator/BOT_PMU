@@ -9,10 +9,14 @@ from typing import Any, Optional
 from velora_resilience import ArchivesStorageError, options_client_supabase, supabase_execute
 
 _PROFILES_TABLE = "profiles"
-_USAGE_TABLE = "velora_usage_daily"
 _client = None
 
 QUOTA_JOURNALIER = int(os.environ.get("VELORA_DAILY_ANALYSIS_LIMIT", "3"))
+_COLONNES_PROFIL = (
+    "id, role, plan_type, is_premium, stripe_customer_id, analyses_count, last_analysis_date",
+    "id, role, plan_type, is_premium, stripe_customer_id",
+    "id, role, plan_type",
+)
 
 
 class BillingConfigError(RuntimeError):
@@ -75,10 +79,7 @@ def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
             .execute()
         )
 
-    for cols in (
-        "id, role, plan_type, is_premium, stripe_customer_id",
-        "id, role, plan_type",
-    ):
+    for cols in _COLONNES_PROFIL:
         try:
             resp = supabase_execute(
                 lambda c=cols: _lire(c),
@@ -101,77 +102,115 @@ def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
     return role in ("premium", "admin")
 
 
-def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:
-    """Incrémente le quota journalier sauf membre Premium / admin."""
-    profil = obtenir_profil(user_id)
-    if est_utilisateur_premium(profil):
-        return {
-            "allowed": True,
-            "unlimited": True,
-            "is_premium": True,
-            "role": profil.get("role") if profil else "premium",
-        }
+def _aujourdhui() -> date:
+    return datetime.now(timezone.utc).date()
 
-    client = _get_supabase_client()
-    today = date.today().isoformat()
 
-    def _lire_usage():
+def _parser_date_profil(value: Any) -> Optional[date]:
+    if value is None:
+        return None
+    if isinstance(value, date):
+        return value
+    texte = str(value).strip()[:10]
+    try:
+        return date.fromisoformat(texte)
+    except ValueError:
+        return None
+
+
+def _reinitialiser_compteur_jour(client, user_id: str, today: date) -> None:
+    def _maj():
         return (
-            client.table(_USAGE_TABLE)
-            .select("analysis_count")
-            .eq("user_id", user_id)
-            .eq("usage_date", today)
-            .limit(1)
+            client.table(_PROFILES_TABLE)
+            .update(
+                {
+                    "analyses_count": 0,
+                    "last_analysis_date": today.isoformat(),
+                    "updated_at": _now_iso(),
+                },
+            )
+            .eq("id", user_id)
             .execute()
         )
 
-    resp = supabase_execute(_lire_usage, description="lecture quota journalier")
-    rows = resp.data or []
-    count = int(rows[0].get("analysis_count") or 0) if rows else 0
+    supabase_execute(_maj, description="réinitialisation quota journalier")
+
+
+def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:
+    """
+    Vérifie le quota AVANT analyse (profiles.analyses_count / last_analysis_date).
+    Premium → illimité. Sinon blocage strict à daily_limit analyses/jour.
+    """
+    profil = obtenir_profil(user_id)
+    if not profil:
+        raise BillingConfigError(f"Profil introuvable pour {user_id}.")
+
+    if est_utilisateur_premium(profil):
+        return {"allowed": True, "unlimited": True, "is_premium": True}
+
+    if "analyses_count" not in profil:
+        raise BillingConfigError(
+            "Colonnes quota manquantes sur profiles. Exécutez supabase/profiles_quota.sql.",
+        )
+
+    today = _aujourdhui()
+    last_date = _parser_date_profil(profil.get("last_analysis_date"))
+    count = int(profil.get("analyses_count") or 0)
+
+    if last_date != today:
+        count = 0
+        client = _get_supabase_client()
+        _reinitialiser_compteur_jour(client, user_id, today)
 
     if count >= daily_limit:
         raise QuotaExceededError(count, daily_limit)
-
-    new_count = count + 1
-
-    try:
-        def _ecrire_usage():
-            if rows:
-                return (
-                    client.table(_USAGE_TABLE)
-                    .update({"analysis_count": new_count, "updated_at": _now_iso()})
-                    .eq("user_id", user_id)
-                    .eq("usage_date", today)
-                    .execute()
-                )
-            payload: dict[str, Any] = {
-                "user_id": user_id,
-                "usage_date": today,
-                "analysis_count": new_count,
-            }
-            try:
-                payload["updated_at"] = _now_iso()
-            except Exception:
-                pass
-            return client.table(_USAGE_TABLE).insert(payload).execute()
-
-        supabase_execute(_ecrire_usage, description="incrément quota journalier")
-    except Exception as exc:
-        print(f"[Velora] Écriture quota ignorée : {exc}")
-        return {
-            "allowed": True,
-            "unlimited": False,
-            "is_premium": False,
-            "quota_degraded": True,
-        }
 
     return {
         "allowed": True,
         "unlimited": False,
         "is_premium": False,
-        "used_today": new_count,
+        "used_today": count,
         "daily_limit": daily_limit,
-        "remaining": max(0, daily_limit - new_count),
+        "remaining": max(0, daily_limit - count),
+    }
+
+
+def incrementer_compteur_analyse(user_id: str) -> None:
+    """Incrémente analyses_count APRÈS une analyse réussie (ignore les Premium)."""
+    profil = obtenir_profil(user_id)
+    if not profil or est_utilisateur_premium(profil):
+        return
+
+    today = _aujourdhui()
+    last_date = _parser_date_profil(profil.get("last_analysis_date"))
+    count = int(profil.get("analyses_count") or 0)
+    if last_date != today:
+        count = 0
+
+    client = _get_supabase_client()
+    payload = {
+        "analyses_count": count + 1,
+        "last_analysis_date": today.isoformat(),
+        "updated_at": _now_iso(),
+    }
+
+    def _maj():
+        return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
+
+    supabase_execute(_maj, description="incrément analyses_count")
+
+
+def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:
+    """Alias legacy : vérifie puis incrémente (préférer verifier + incrementer séparés)."""
+    stats = verifier_quota_analyse(user_id, daily_limit)
+    if stats.get("unlimited"):
+        return stats
+    incrementer_compteur_analyse(user_id)
+    used = int(stats.get("used_today") or 0) + 1
+    return {
+        **stats,
+        "used_today": used,
+        "remaining": max(0, daily_limit - used),
     }
 
 

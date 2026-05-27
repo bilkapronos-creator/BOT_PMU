@@ -741,6 +741,7 @@
         const ARCHIVES_LIMIT = 50;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
         const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
+        const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour.';
 
         function getMtechApiKey() {
             const env = window.VELORA_ENV || {};
@@ -880,18 +881,30 @@
                 if (reponse.status === 403) {
                     try {
                         const body = await reponse.json();
+                        if (body?.detail === 'QUOTA_ATTEINT') {
+                            return {
+                                ok: false,
+                                status: 403,
+                                code: 'QUOTA_ATTEINT',
+                                erreur: MSG_QUOTA_ATTEINT,
+                                detail: body.detail,
+                            };
+                        }
                         const detail = extraireDetailErreurApi(body);
                         if (detail?.code === 'quota_exceeded') {
                             return {
                                 ok: false,
                                 status: 403,
-                                code: 'quota_exceeded',
-                                erreur: detail.erreur || 'Quota journalier atteint (3 analyses/jour).',
+                                code: 'QUOTA_ATTEINT',
+                                erreur: detail.erreur || MSG_QUOTA_ATTEINT,
                                 detail,
                             };
                         }
                         if (typeof detail?.erreur === 'string') {
                             return { ok: false, status: 403, erreur: detail.erreur, detail };
+                        }
+                        if (typeof body?.detail === 'string') {
+                            return { ok: false, status: 403, erreur: body.detail, detail: body.detail };
                         }
                     } catch {
                         /* corps non JSON */
@@ -1001,7 +1014,7 @@
         }
 
         function genererHtmlBlocPremium(message) {
-            const texte = message || 'Vous avez utilisé vos 3 analyses gratuites du jour.';
+            const texte = message || MSG_QUOTA_ATTEINT;
             return `
                 <div class="glass-card rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-gray-900/60 p-6 text-center shadow-xl">
                     <p class="text-xs font-semibold uppercase tracking-widest text-amber-400/90">Limite Freemium</p>
@@ -2012,8 +2025,8 @@
                     mettreAJourZoneVidePronostic();
                     return;
                 }
-                if (result.code === 'quota_exceeded' || (result.status === 403 && /quota/i.test(result.erreur || ''))) {
-                    afficherBlocQuotaPremium(zoneResultats, result.erreur);
+                if (result.code === 'QUOTA_ATTEINT') {
+                    afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
                     mettreAJourZoneVidePronostic();
                     return;
                 }
