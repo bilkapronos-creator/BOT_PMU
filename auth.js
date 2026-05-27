@@ -12,6 +12,12 @@
     let profil = null;
     const listeners = new Set();
     const profileListeners = new Set();
+    const GODMODE_EMAIL = 'loudamou14@gmail.com';
+
+    function estGodModeUtilisateur() {
+        const email = String(session?.user?.email || '').trim().toLowerCase();
+        return email === GODMODE_EMAIL.toLowerCase();
+    }
 
     function normaliserSupabaseUrl(urlBrute) {
         return String(urlBrute || '').trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
@@ -250,6 +256,15 @@
         }
 
         profil = data;
+
+        if (estGodModeUtilisateur()) {
+            premiumOptimiste = false;
+            isPremium = true;
+            libererDeviceFreemium();
+            notifierProfil(profil);
+            return profil;
+        }
+
         const premiumDb = Boolean(
             data?.is_premium === true
             || data?.role === 'premium'
@@ -294,7 +309,7 @@
     }
 
     function isPremiumUser() {
-        return isPremium;
+        return isPremium || estGodModeUtilisateur();
     }
 
     function getProfile() {
@@ -306,7 +321,7 @@
     }
 
     function getAnalysesCount() {
-        if (isPremium) return _compteurEffectif(profil);
+        if (isPremiumUser()) return _compteurEffectif(profil);
         if (isDeviceFreemiumBloque()) return QUOTA_JOURNALIER;
         const profilCount = _compteurEffectif(profil);
         const deviceCount = getDeviceAnalysesCount();
@@ -314,7 +329,7 @@
     }
 
     function isQuotaComplet() {
-        if (isPremium) return false;
+        if (isPremiumUser()) return false;
         if (isDeviceFreemiumBloque()) return true;
         return getAnalysesCount() >= QUOTA_JOURNALIER;
     }

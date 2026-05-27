@@ -15,6 +15,7 @@ from velora_billing import (
     QuotaExceededError,
     creer_session_checkout_stripe,
     incrementer_compteur_analyse,
+    lister_utilisateurs_admin,
     traiter_webhook_stripe,
     verifier_quota_analyse,
 )
@@ -204,6 +205,20 @@ def auth_membre(
 ) -> str:
     """Exige X-MTech-Key + X-User-Id sur les routes membres."""
     return user_id
+
+
+def verifier_mot_de_passe_admin(
+    x_velora_admin_password: Optional[str] = Header(default=None, alias="X-Velora-Admin-Password"),
+) -> None:
+    """Protège les routes back-office (mot de passe identique à config.js / Vercel)."""
+    attendu = (os.environ.get("VELORA_ADMIN_PASSWORD") or "").strip()
+    if not attendu:
+        raise HTTPException(
+            status_code=503,
+            detail="Admin non configuré (VELORA_ADMIN_PASSWORD sur Render).",
+        )
+    if not x_velora_admin_password or x_velora_admin_password.strip() != attendu:
+        raise HTTPException(status_code=401, detail="Mot de passe admin invalide")
 
 
 def appliquer_quota_analyse(user_id: str) -> None:
@@ -926,6 +941,18 @@ def get_stats_membre(
 def get_stats_vitrine():
     """Agrégats anonymisés plateforme (aucune donnée par utilisateur)."""
     return _executer_archives(get_stats_publiques)
+
+
+@app.get("/admin/utilisateurs")
+def admin_liste_utilisateurs(_admin: None = Depends(verifier_mot_de_passe_admin)):
+    """Liste des inscrits (email, date, abonnement Stripe) pour admin.html."""
+    try:
+        utilisateurs = lister_utilisateurs_admin()
+    except BillingConfigError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
+    return {"utilisateurs": utilisateurs, "total": len(utilisateurs)}
 
 
 @app.post("/create-checkout-session", dependencies=[Depends(verifier_cle_api)])

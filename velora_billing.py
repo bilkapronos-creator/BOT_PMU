@@ -14,6 +14,7 @@ _PROFILES_TABLE = "profiles"
 _client = None
 
 QUOTA_JOURNALIER = int(os.environ.get("VELORA_DAILY_ANALYSIS_LIMIT", "3"))
+GODMODE_EMAIL = (os.environ.get("VELORA_GODMODE_EMAIL") or "loudamou14@gmail.com").strip().lower()
 _COLONNES_PROFIL = (
     "id, role, plan_type, is_premium, stripe_customer_id, analyses_count, last_analysis_date",
     "id, role, plan_type, is_premium, stripe_customer_id",
@@ -348,6 +349,142 @@ def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
     return role in ("premium", "admin")
 
 
+def _normaliser_email(email: Any) -> str:
+    return str(email or "").strip().lower()
+
+
+def est_email_godmode(email: Optional[str]) -> bool:
+    if not GODMODE_EMAIL:
+        return False
+    return _normaliser_email(email) == GODMODE_EMAIL
+
+
+def obtenir_email_utilisateur(user_id: str) -> Optional[str]:
+    """Email Supabase Auth (service_role) — utilisé pour le God Mode admin."""
+    uid = str(user_id).strip()
+    if not uid:
+        return None
+    base_url, key = _credentials_service_role()
+    url = f"{base_url}/auth/v1/admin/users/{uid}"
+    try:
+        response = httpx.get(
+            url,
+            headers={"apikey": key, "Authorization": f"Bearer {key}"},
+            timeout=20.0,
+        )
+    except httpx.HTTPError as exc:
+        print(f"[Velora] Auth admin email {uid} : {exc}")
+        return None
+    if response.status_code >= 400:
+        return None
+    payload = response.json()
+    if isinstance(payload, dict):
+        return payload.get("email")
+    return None
+
+
+def est_utilisateur_illimite(profil: Optional[dict[str, Any]], user_id: Optional[str] = None) -> bool:
+    if est_utilisateur_premium(profil):
+        return True
+    if user_id and est_email_godmode(obtenir_email_utilisateur(user_id)):
+        print(f"[Velora] God Mode : accès illimité pour {user_id}")
+        return True
+    return False
+
+
+def _lister_utilisateurs_auth() -> dict[str, dict[str, Any]]:
+    base_url, key = _credentials_service_role()
+    users_by_id: dict[str, dict[str, Any]] = {}
+    page = 1
+    while page <= 50:
+        try:
+            response = httpx.get(
+                f"{base_url}/auth/v1/admin/users",
+                params={"page": page, "per_page": 200},
+                headers={"apikey": key, "Authorization": f"Bearer {key}"},
+                timeout=35.0,
+            )
+        except httpx.HTTPError as exc:
+            raise ArchivesStorageError(f"Auth admin users : {exc}") from exc
+        if response.status_code >= 400:
+            raise ArchivesStorageError(
+                f"Auth admin users HTTP {response.status_code} : {response.text[:200]}",
+            )
+        payload = response.json()
+        batch = payload.get("users") if isinstance(payload, dict) else payload
+        if not isinstance(batch, list) or not batch:
+            break
+        for user in batch:
+            uid = str(user.get("id") or "").strip()
+            if uid:
+                users_by_id[uid] = user
+        if len(batch) < 200:
+            break
+        page += 1
+    return users_by_id
+
+
+def lister_utilisateurs_admin() -> list[dict[str, Any]]:
+    """Liste inscrits (Auth + profils) pour le back-office admin."""
+    client = _get_supabase_client()
+
+    def _lire_profiles():
+        return (
+            client.table(_PROFILES_TABLE)
+            .select("id, created_at, is_premium, role, stripe_customer_id")
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+    resp = supabase_execute(_lire_profiles, description="liste profils admin")
+    profiles = resp.data or []
+    auth_users = _lister_utilisateurs_auth()
+
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    for prof in profiles:
+        uid = str(prof.get("id") or "").strip()
+        if not uid:
+            continue
+        seen.add(uid)
+        auth_user = auth_users.get(uid) or {}
+        email = auth_user.get("email") or "—"
+        created_at = auth_user.get("created_at") or prof.get("created_at")
+        abonnement_actif = (
+            prof.get("is_premium") is True
+            or str(prof.get("role") or "").lower() in ("premium", "admin")
+            or est_email_godmode(email)
+        )
+        rows.append(
+            {
+                "id": uid,
+                "email": email,
+                "created_at": created_at,
+                "abonnement": "Actif" if abonnement_actif else "Non abonné",
+                "is_premium": abonnement_actif,
+            },
+        )
+
+    for uid, auth_user in auth_users.items():
+        if uid in seen:
+            continue
+        email = auth_user.get("email") or "—"
+        abonnement_actif = est_email_godmode(email)
+        rows.append(
+            {
+                "id": uid,
+                "email": email,
+                "created_at": auth_user.get("created_at"),
+                "abonnement": "Actif" if abonnement_actif else "Non abonné",
+                "is_premium": abonnement_actif,
+            },
+        )
+
+    rows.sort(key=lambda row: str(row.get("created_at") or ""), reverse=True)
+    return rows
+
+
 def _parser_date_profil(value: Any) -> Optional[date]:
     if value is None:
         return None
@@ -386,7 +523,7 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
     obtenir_ou_creer_profil(user_id)
     row = _lire_compteur_supabase(user_id)
 
-    if est_utilisateur_premium(row):
+    if est_utilisateur_illimite(row, user_id):
         return {"allowed": True, "unlimited": True, "is_premium": True}
 
     today = _aujourdhui()
@@ -421,8 +558,8 @@ def incrementer_compteur_analyse(user_id: str) -> None:
     uid = str(user_id).strip()
     row = _lire_compteur_supabase(uid)
 
-    if est_utilisateur_premium(row):
-        print(f"[Velora] Incrément ignoré (Premium) : {uid}")
+    if est_utilisateur_illimite(row, uid):
+        print(f"[Velora] Incrément ignoré (Premium / God Mode) : {uid}")
         return
 
     today = _aujourdhui()

@@ -14,6 +14,11 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
         }
+        .admin-tab-active {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.12);
+            color: rgb(110, 231, 183);
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
@@ -46,7 +51,7 @@
             <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 lg:px-8">
                 <div>
                     <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">Administration</p>
-                    <h1 class="text-xl font-black text-white lg:text-2xl">Velora Engine — Analytics</h1>
+                    <h1 class="text-xl font-black text-white lg:text-2xl">Velora Engine — Back-Office</h1>
                 </div>
                 <div class="flex items-center gap-3">
                     <button type="button" id="btnRefresh"
@@ -59,60 +64,101 @@
                     </button>
                 </div>
             </div>
+            <nav class="mx-auto flex max-w-7xl gap-2 border-t border-white/5 px-4 py-3 lg:px-8" aria-label="Sections admin">
+                <button type="button" id="tabStats" data-vue="stats"
+                    class="admin-tab-active rounded-lg border border-transparent px-4 py-2 text-sm font-semibold text-gray-300 transition hover:text-white">
+                    Statistiques Algorithme
+                </button>
+                <button type="button" id="tabUtilisateurs" data-vue="utilisateurs"
+                    class="rounded-lg border border-transparent px-4 py-2 text-sm font-semibold text-gray-400 transition hover:text-white">
+                    Gestion des Utilisateurs
+                </button>
+            </nav>
         </header>
 
         <main class="mx-auto max-w-7xl px-4 py-8 lg:px-8">
             <p id="dashboardErreur" class="mb-6 hidden rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200" role="alert"></p>
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <article class="glass-card rounded-2xl border border-white/10 p-5">
-                    <p class="text-xs uppercase tracking-wider text-gray-500">Courses analysées</p>
-                    <p id="kpiTotalCourses" class="mt-2 text-3xl font-black text-emerald-400">—</p>
-                    <p id="kpiStatsGlobales" class="mt-1 text-xs text-gray-500"></p>
-                </article>
-                <article class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-5">
-                    <p class="text-xs uppercase tracking-wider text-gray-500">Favori Velora (n°1)</p>
-                    <p id="kpiFavoriTaux" class="mt-2 text-3xl font-black text-emerald-300">—</p>
-                    <p id="kpiFavoriDetail" class="mt-1 text-xs text-gray-500"></p>
-                </article>
-                <article class="glass-card rounded-2xl border border-yellow-500/25 bg-yellow-500/5 p-5">
-                    <p class="text-xs uppercase tracking-wider text-gray-500">Tiercé</p>
-                    <p id="kpiTierce" class="mt-2 text-3xl font-black text-yellow-300">0</p>
-                </article>
-                <article class="glass-card rounded-2xl border border-violet-500/25 bg-violet-500/5 p-5">
-                    <p class="text-xs uppercase tracking-wider text-gray-500">Multi en 7 / Super 4</p>
-                    <p class="mt-2 text-2xl font-black text-violet-300">
-                        <span id="kpiMulti7">0</span>
-                        <span class="text-lg text-gray-500"> / </span>
-                        <span id="kpiSuper4">0</span>
-                    </p>
-                </article>
+            <!-- Vue Statistiques Algorithme -->
+            <div id="vueStats">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    <article class="glass-card rounded-2xl border border-white/10 p-5">
+                        <p class="text-xs uppercase tracking-wider text-gray-500">Courses analysées</p>
+                        <p id="kpiTotalCourses" class="mt-2 text-3xl font-black text-emerald-400">—</p>
+                        <p id="kpiStatsGlobales" class="mt-1 text-xs text-gray-500"></p>
+                    </article>
+                    <article class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-5">
+                        <p class="text-xs uppercase tracking-wider text-gray-500">Favori Velora (n°1)</p>
+                        <p id="kpiFavoriTaux" class="mt-2 text-3xl font-black text-emerald-300">—</p>
+                        <p id="kpiFavoriDetail" class="mt-1 text-xs text-gray-500"></p>
+                    </article>
+                    <article class="glass-card rounded-2xl border border-yellow-500/25 bg-yellow-500/5 p-5">
+                        <p class="text-xs uppercase tracking-wider text-gray-500">Tiercé</p>
+                        <p id="kpiTierce" class="mt-2 text-3xl font-black text-yellow-300">0</p>
+                    </article>
+                    <article class="glass-card rounded-2xl border border-violet-500/25 bg-violet-500/5 p-5">
+                        <p class="text-xs uppercase tracking-wider text-gray-500">Multi en 7 / Super 4</p>
+                        <p class="mt-2 text-2xl font-black text-violet-300">
+                            <span id="kpiMulti7">0</span>
+                            <span class="text-lg text-gray-500"> / </span>
+                            <span id="kpiSuper4">0</span>
+                        </p>
+                    </article>
+                </div>
+
+                <section class="mt-8 glass-card overflow-hidden rounded-2xl border border-white/10">
+                    <div class="border-b border-white/10 px-5 py-4">
+                        <h2 class="text-sm font-bold text-white">Dernières courses validées</h2>
+                        <p class="text-xs text-gray-500">Source : table Supabase <code class="text-emerald-400/80">velora_course_logs</code></p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[640px] text-left text-sm">
+                            <thead class="bg-white/5 text-xs uppercase tracking-wider text-gray-500">
+                                <tr>
+                                    <th class="px-5 py-3">Date</th>
+                                    <th class="px-5 py-3">Course</th>
+                                    <th class="px-5 py-3">Favori</th>
+                                    <th class="px-5 py-3">Résultat</th>
+                                    <th class="px-5 py-3">Favori top 3</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableauCourses" class="divide-y divide-white/5">
+                                <tr>
+                                    <td colspan="5" class="px-5 py-8 text-center text-gray-500">Chargement…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
 
-            <section class="mt-8 glass-card overflow-hidden rounded-2xl border border-white/10">
-                <div class="border-b border-white/10 px-5 py-4">
-                    <h2 class="text-sm font-bold text-white">Dernières courses validées</h2>
-                    <p class="text-xs text-gray-500">Source : table Supabase <code class="text-emerald-400/80">velora_course_logs</code></p>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full min-w-[640px] text-left text-sm">
-                        <thead class="bg-white/5 text-xs uppercase tracking-wider text-gray-500">
-                            <tr>
-                                <th class="px-5 py-3">Date</th>
-                                <th class="px-5 py-3">Course</th>
-                                <th class="px-5 py-3">Favori</th>
-                                <th class="px-5 py-3">Résultat</th>
-                                <th class="px-5 py-3">Favori top 3</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableauCourses" class="divide-y divide-white/5">
-                            <tr>
-                                <td colspan="5" class="px-5 py-8 text-center text-gray-500">Chargement…</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <!-- Vue Gestion des Utilisateurs -->
+            <div id="vueUtilisateurs" class="hidden">
+                <section class="glass-card overflow-hidden rounded-2xl border border-white/10">
+                    <div class="border-b border-white/10 px-5 py-4">
+                        <h2 class="text-sm font-bold text-white">Utilisateurs inscrits</h2>
+                        <p class="text-xs text-gray-500">
+                            Source : Supabase Auth + profils (<code class="text-emerald-400/80">is_premium</code> / Stripe)
+                        </p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[640px] text-left text-sm">
+                            <thead class="bg-white/5 text-xs uppercase tracking-wider text-gray-500">
+                                <tr>
+                                    <th class="px-5 py-3">Email</th>
+                                    <th class="px-5 py-3">Date d'inscription</th>
+                                    <th class="px-5 py-3">Abonnement</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableauUtilisateurs" class="divide-y divide-white/5">
+                                <tr>
+                                    <td colspan="3" class="px-5 py-8 text-center text-gray-500">Chargement…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
         </main>
     </div>
 

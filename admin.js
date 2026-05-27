@@ -6,6 +6,9 @@
 
     const SESSION_KEY = 'velora_admin_session';
     const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
+    const API_BASE_URL = String(
+        (window.VELORA_ENV && window.VELORA_ENV.API_BASE_URL) || 'https://velora-engine.onrender.com',
+    ).replace(/\/+$/, '');
 
     const ecranLogin = document.getElementById('ecranLogin');
     const ecranDashboard = document.getElementById('ecranDashboard');
@@ -13,6 +16,13 @@
     const inputPassword = document.getElementById('inputPassword');
     const loginErreur = document.getElementById('loginErreur');
     const dashboardErreur = document.getElementById('dashboardErreur');
+    const vueStats = document.getElementById('vueStats');
+    const vueUtilisateurs = document.getElementById('vueUtilisateurs');
+    const tabStats = document.getElementById('tabStats');
+    const tabUtilisateurs = document.getElementById('tabUtilisateurs');
+
+    let motDePasseAdmin = '';
+    let vueCourante = 'stats';
 
     function getEnv() {
         return window.VELORA_ENV || {};
@@ -52,23 +62,34 @@
         return false;
     }
 
-    function ouvrirSession() {
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ at: Date.now() }));
+    function ouvrirSession(motDePasse) {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ at: Date.now(), pwd: motDePasse }));
+    }
+
+    function lireSession() {
+        try {
+            const raw = sessionStorage.getItem(SESSION_KEY);
+            if (!raw) return null;
+            return JSON.parse(raw);
+        } catch {
+            return null;
+        }
     }
 
     function sessionValide() {
-        try {
-            const raw = sessionStorage.getItem(SESSION_KEY);
-            if (!raw) return false;
-            const { at } = JSON.parse(raw);
-            return Date.now() - at < SESSION_TTL_MS;
-        } catch {
-            return false;
-        }
+        const session = lireSession();
+        if (!session?.at) return false;
+        return Date.now() - session.at < SESSION_TTL_MS;
+    }
+
+    function restaurerMotDePasseSession() {
+        const session = lireSession();
+        motDePasseAdmin = session?.pwd || '';
     }
 
     function fermerSession() {
         sessionStorage.removeItem(SESSION_KEY);
+        motDePasseAdmin = '';
     }
 
     function afficherLogin(msg) {
@@ -97,12 +118,49 @@
         dashboardErreur.classList.remove('hidden');
     }
 
+    function appliquerStyleOnglet(btn, actif) {
+        btn.classList.toggle('admin-tab-active', actif);
+        btn.classList.toggle('text-gray-300', actif);
+        btn.classList.toggle('text-gray-400', !actif);
+    }
+
+    function basculerVue(nomVue) {
+        vueCourante = nomVue === 'utilisateurs' ? 'utilisateurs' : 'stats';
+        const statsActif = vueCourante === 'stats';
+        vueStats.classList.toggle('hidden', !statsActif);
+        vueUtilisateurs.classList.toggle('hidden', statsActif);
+        appliquerStyleOnglet(tabStats, statsActif);
+        appliquerStyleOnglet(tabUtilisateurs, !statsActif);
+    }
+
     function formaterDateCourse(row) {
         const d = row.date_api || '';
         if (d.length === 8) {
             return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
         }
         return d || '—';
+    }
+
+    function formaterDateInscription(iso) {
+        if (!iso) return '—';
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return String(iso).slice(0, 10);
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+
+    function badgeAbonnement(statut) {
+        const actif = /actif/i.test(String(statut || ''));
+        const cls = actif
+            ? 'bg-emerald-500/20 text-emerald-300 ring-emerald-500/30'
+            : 'bg-gray-500/20 text-gray-400 ring-gray-500/30';
+        const label = actif ? 'Actif' : 'Non abonné';
+        return `<span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ${cls}">${label}</span>`;
     }
 
     function badgeHtml(type, reussi) {
@@ -182,6 +240,25 @@
         }).join('');
     }
 
+    function injecterTableauUtilisateurs(utilisateurs) {
+        const tbody = document.getElementById('tableauUtilisateurs');
+        if (!utilisateurs.length) {
+            tbody.innerHTML = `
+                <tr><td colspan="3" class="px-5 py-8 text-center text-gray-500">
+                    Aucun utilisateur inscrit pour le moment.
+                </td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = utilisateurs.map((row) => `
+            <tr class="hover:bg-white/[0.02]">
+                <td class="px-5 py-3 font-medium text-white">${row.email || '—'}</td>
+                <td class="px-5 py-3 text-gray-400">${formaterDateInscription(row.created_at)}</td>
+                <td class="px-5 py-3">${badgeAbonnement(row.abonnement)}</td>
+            </tr>
+        `).join('');
+    }
+
     async function lireStatsGlobales(client) {
         const { data, error } = await client
             .from('velora_stats')
@@ -202,27 +279,60 @@
         return data || [];
     }
 
-    async function chargerDashboard() {
-        afficherErreurDashboard('');
+    async function lireUtilisateursApi() {
+        if (!motDePasseAdmin) {
+            throw new Error('Session admin expirée — reconnectez-vous.');
+        }
+        const response = await fetch(`${API_BASE_URL}/admin/utilisateurs`, {
+            headers: { 'X-Velora-Admin-Password': motDePasseAdmin },
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            const detail = payload.detail || payload.erreur || `HTTP ${response.status}`;
+            throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+        }
+        return payload.utilisateurs || [];
+    }
+
+    async function chargerStats() {
         const client = getSupabaseClient();
         if (!client) {
             afficherErreurDashboard('Supabase non configuré (config.js : URL + clé anon).');
             return;
         }
 
+        const [logs, stats] = await Promise.all([
+            lireCourseLogs(client),
+            lireStatsGlobales(client),
+        ]);
+        const kpis = calculerKpis(logs, stats);
+        injecterKpis(kpis);
+        injecterTableau(logs);
+    }
+
+    async function chargerUtilisateurs() {
+        const utilisateurs = await lireUtilisateursApi();
+        injecterTableauUtilisateurs(utilisateurs);
+    }
+
+    async function chargerDashboard() {
+        afficherErreurDashboard('');
+
         try {
-            const [logs, stats] = await Promise.all([
-                lireCourseLogs(client),
-                lireStatsGlobales(client),
-            ]);
-            const kpis = calculerKpis(logs, stats);
-            injecterKpis(kpis);
-            injecterTableau(logs);
+            if (vueCourante === 'utilisateurs') {
+                await chargerUtilisateurs();
+            } else {
+                await chargerStats();
+            }
         } catch (err) {
             const msg = String(err.message || err);
             if (/relation.*does not exist|velora_course_logs/i.test(msg)) {
                 afficherErreurDashboard(
                     'Table velora_course_logs absente. Exécutez supabase/velora_admin_schema.sql dans Supabase.',
+                );
+            } else if (/admin non configur|503/i.test(msg)) {
+                afficherErreurDashboard(
+                    'Route admin indisponible : définissez VELORA_ADMIN_PASSWORD sur Render (identique à config.js).',
                 );
             } else {
                 afficherErreurDashboard(msg);
@@ -230,17 +340,25 @@
         }
     }
 
+    async function allerVersVue(nomVue) {
+        basculerVue(nomVue);
+        await chargerDashboard();
+    }
+
     formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const ok = await verifierMotDePasse(inputPassword.value);
+        const saisi = inputPassword.value;
+        const ok = await verifierMotDePasse(saisi);
         if (!ok) {
             loginErreur.textContent = 'Mot de passe incorrect ou non configuré (VELORA_ADMIN_PASSWORD dans config.js).';
             loginErreur.classList.remove('hidden');
             return;
         }
-        ouvrirSession();
+        motDePasseAdmin = saisi;
+        ouvrirSession(saisi);
         inputPassword.value = '';
         afficherDashboard();
+        basculerVue('stats');
         await chargerDashboard();
     });
 
@@ -251,6 +369,9 @@
 
     document.getElementById('btnRefresh').addEventListener('click', () => chargerDashboard());
 
+    tabStats.addEventListener('click', () => allerVersVue('stats'));
+    tabUtilisateurs.addEventListener('click', () => allerVersVue('utilisateurs'));
+
     (async function init() {
         const env = getEnv();
         if (!env.VELORA_ADMIN_PASSWORD && !env.VELORA_ADMIN_PASSWORD_HASH) {
@@ -258,7 +379,9 @@
             return;
         }
         if (sessionValide()) {
+            restaurerMotDePasseSession();
             afficherDashboard();
+            basculerVue('stats');
             await chargerDashboard();
         } else {
             afficherLogin();
