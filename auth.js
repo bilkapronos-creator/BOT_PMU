@@ -425,7 +425,61 @@
         };
     }
 
+    function nettoyerHashAuth() {
+        if (!global.location.hash) return;
+        const url = global.location.pathname + global.location.search;
+        global.history.replaceState({}, global.document.title, url);
+    }
+
+    function lireErreurRetourAuth() {
+        const hash = String(global.location.hash || '').replace(/^#/, '');
+        const hashParams = hash ? new URLSearchParams(hash) : new URLSearchParams();
+        const searchParams = new URLSearchParams(global.location.search || '');
+
+        const error = hashParams.get('error') || searchParams.get('error');
+        if (!error) return null;
+
+        const brut = hashParams.get('error_description') || searchParams.get('error_description') || '';
+        let description = String(brut);
+        try {
+            description = decodeURIComponent(description.replace(/\+/g, ' '));
+        } catch (_) {
+            description = description.replace(/\+/g, ' ');
+        }
+
+        return {
+            error: String(error),
+            error_code: hashParams.get('error_code') || searchParams.get('error_code') || null,
+            description,
+        };
+    }
+
+    function nettoyerUrlErreurAuth() {
+        const search = new URLSearchParams(global.location.search || '');
+        let modifie = false;
+
+        ['error', 'error_description', 'error_code'].forEach((cle) => {
+            if (search.has(cle)) {
+                search.delete(cle);
+                modifie = true;
+            }
+        });
+
+        const hash = String(global.location.hash || '').replace(/^#/, '');
+        if (hash) {
+            const hashParams = new URLSearchParams(hash);
+            if (hashParams.has('error')) modifie = true;
+        }
+
+        if (!modifie) return;
+
+        const query = search.toString();
+        const url = global.location.pathname + (query ? `?${query}` : '');
+        global.history.replaceState({}, global.document.title, url);
+    }
+
     function estRetourConfirmationEmail() {
+        if (lireErreurRetourAuth()) return false;
         const hash = String(global.location.hash || '').replace(/^#/, '');
         if (hash) {
             const params = new URLSearchParams(hash);
@@ -449,13 +503,8 @@
         global.history.replaceState({}, global.document.title, url);
     }
 
-    function nettoyerHashAuth() {
-        if (!global.location.hash) return;
-        const url = global.location.pathname + global.location.search;
-        global.history.replaceState({}, global.document.title, url);
-    }
-
     function estRetourRecovery() {
+        if (lireErreurRetourAuth()) return false;
         const hash = String(global.location.hash || '').replace(/^#/, '');
         if (!hash) return false;
         const params = new URLSearchParams(hash);
@@ -542,6 +591,8 @@
         signOut,
         estRetourRecovery,
         estRetourConfirmationEmail,
+        lireErreurRetourAuth,
+        nettoyerUrlErreurAuth,
         nettoyerHashAuth,
         nettoyerUrlConfirmationEmail,
         demanderReinitialisationMotDePasse,

@@ -1788,16 +1788,33 @@
             });
         }
 
-        function afficherToastVelora(message, dureeMs = 6000) {
+        function afficherToastVelora(message, dureeMs = 6000, variant = 'success') {
             const el = document.getElementById('veloraToast');
             if (!el) {
                 alert(message);
                 return;
             }
+            const classesSucces = 'pointer-events-none fixed bottom-6 left-1/2 z-[100] max-w-[min(22rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-amber-400/40 bg-gradient-to-r from-amber-950/95 to-gray-900/95 px-5 py-3 text-center text-sm font-semibold text-amber-100 shadow-2xl backdrop-blur-md';
+            const classesErreur = 'pointer-events-none fixed bottom-6 left-1/2 z-[100] max-w-[min(22rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-red-400/50 bg-gradient-to-r from-red-950/95 to-gray-900/95 px-5 py-3 text-center text-sm font-semibold text-red-100 shadow-2xl backdrop-blur-md';
+            el.className = variant === 'error' ? classesErreur : classesSucces;
             el.textContent = message;
             el.classList.remove('hidden');
             if (el._veloraToastTimer) clearTimeout(el._veloraToastTimer);
             el._veloraToastTimer = setTimeout(() => el.classList.add('hidden'), dureeMs);
+        }
+
+        function gererErreurRetourAuthAuDemarrage() {
+            const erreur = window.VeloraAuth?.lireErreurRetourAuth?.();
+            if (!erreur) return false;
+
+            if (erreur.description) {
+                console.warn('[Velora Auth] Retour email invalide :', erreur.description);
+            }
+
+            window.VeloraAuth.nettoyerUrlErreurAuth?.();
+            masquerSplashApp();
+            afficherToastVelora('❌ Lien invalide ou expiré. Veuillez refaire la demande.', 8000, 'error');
+            return true;
         }
 
         function synchroniserProfilPremiumArrierePlan() {
@@ -1839,6 +1856,8 @@
 
         async function demarrerVeloraApp() {
             try {
+                gererErreurRetourAuthAuDemarrage();
+
                 const retourConfirmationEmail = Boolean(
                     window.VeloraAuth?.estRetourConfirmationEmail?.()
                     && !window.VeloraAuth?.estRetourRecovery?.(),
