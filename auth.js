@@ -8,6 +8,7 @@
     let client = null;
     let session = null;
     let isPremium = false;
+    let premiumOptimiste = false;
     let profil = null;
     const listeners = new Set();
     const profileListeners = new Set();
@@ -131,6 +132,7 @@
         const supabase = getClient();
         if (!supabase || !session?.user?.id) {
             isPremium = false;
+            premiumOptimiste = false;
             profil = null;
             notifierProfil(null);
             return null;
@@ -144,6 +146,11 @@
 
         if (error) {
             console.warn('[Velora Auth] profil :', error.message);
+            if (premiumOptimiste && profil) {
+                isPremium = true;
+                notifierProfil(profil);
+                return profil;
+            }
             isPremium = false;
             profil = null;
             notifierProfil(null);
@@ -151,13 +158,28 @@
         }
 
         profil = data;
-        isPremium = Boolean(
+        const premiumDb = Boolean(
             data?.is_premium === true
             || data?.role === 'premium'
             || data?.role === 'admin',
         );
-        notifierProfil(data);
-        return data;
+        if (premiumDb) {
+            premiumOptimiste = false;
+            isPremium = true;
+        } else if (premiumOptimiste) {
+            isPremium = true;
+            profil = {
+                ...(data || {}),
+                id: data?.id || session.user.id,
+                is_premium: true,
+                role: 'premium',
+                plan_type: 'premium',
+            };
+        } else {
+            isPremium = false;
+        }
+        notifierProfil(profil);
+        return profil;
     }
 
     function isAuthenticated() {
@@ -191,6 +213,26 @@
     function isQuotaComplet() {
         if (isPremium) return false;
         return getAnalysesCount() >= QUOTA_JOURNALIER;
+    }
+
+    /** Premium optimiste après retour Stripe (?premium=success), avant confirmation webhook. */
+    function appliquerPremiumOptimiste() {
+        premiumOptimiste = true;
+        isPremium = true;
+        const uid = session?.user?.id || profil?.id || null;
+        profil = {
+            ...(profil || {}),
+            id: profil?.id || uid,
+            is_premium: true,
+            role: 'premium',
+            plan_type: 'premium',
+        };
+        notifierProfil({ ...profil });
+        return profil;
+    }
+
+    function isPremiumOptimiste() {
+        return premiumOptimiste;
     }
 
     /** +1 local après analyse réussie (UI temps réel, resync au prochain chargement profil). */
@@ -305,6 +347,7 @@
         if (error) return { ok: false, erreur: formaterErreurAuth(error) };
         session = null;
         isPremium = false;
+        premiumOptimiste = false;
         profil = null;
         notifier(null);
         notifierProfil(null);
@@ -319,6 +362,8 @@
         getUserId,
         getUserEmail,
         isPremiumUser,
+        isPremiumOptimiste,
+        appliquerPremiumOptimiste,
         getProfile,
         getQuotaDailyLimit,
         getAnalysesCount,

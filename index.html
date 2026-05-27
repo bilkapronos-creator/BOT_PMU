@@ -144,6 +144,12 @@
     </style>
 </head>
 <body class="min-h-screen bg-gray-950 text-gray-100 font-sans antialiased">
+    <div
+        id="veloraToast"
+        class="pointer-events-none fixed bottom-6 left-1/2 z-[100] hidden max-w-[min(22rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-amber-400/40 bg-gradient-to-r from-amber-950/95 to-gray-900/95 px-5 py-3 text-center text-sm font-semibold text-amber-100 shadow-2xl backdrop-blur-md"
+        role="status"
+        aria-live="polite"
+    ></div>
     <div id="appSplash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#030712] px-[max(1rem,env(safe-area-inset-left))] pb-[env(safe-area-inset-bottom,0px)] pt-[env(safe-area-inset-top,0px)]">
         <div class="velora-splash-wrap">
             <div class="velora-splash-ring" aria-hidden="true"></div>
@@ -1517,34 +1523,77 @@
             });
         }
 
+        function afficherToastVelora(message, dureeMs = 6000) {
+            const el = document.getElementById('veloraToast');
+            if (!el) {
+                alert(message);
+                return;
+            }
+            el.textContent = message;
+            el.classList.remove('hidden');
+            if (el._veloraToastTimer) clearTimeout(el._veloraToastTimer);
+            el._veloraToastTimer = setTimeout(() => el.classList.add('hidden'), dureeMs);
+        }
+
+        function synchroniserProfilPremiumArrierePlan() {
+            if (!window.VeloraAuth?.rafraichirProfil) return;
+            (async () => {
+                const maxTentatives = 8;
+                for (let i = 0; i < maxTentatives; i += 1) {
+                    if (i > 0) {
+                        await new Promise((resolve) => setTimeout(resolve, 2000));
+                    }
+                    const profilSync = await window.VeloraAuth.rafraichirProfil();
+                    if (profilSync?.is_premium === true && !window.VeloraAuth.isPremiumOptimiste?.()) {
+                        mettreAJourUiPlanUtilisateur();
+                        return;
+                    }
+                    if (profilSync?.is_premium === true) return;
+                }
+                console.warn('[Velora] Sync Premium arrière-plan : webhook non confirmé après attente.');
+            })().catch((err) => console.warn('[Velora] Sync Premium arrière-plan :', err));
+        }
+
+        async function gererRetourPremiumSuccess() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('premium') !== 'success') return;
+
+            if (typeof window.VeloraAuth?.appliquerPremiumOptimiste === 'function') {
+                window.VeloraAuth.appliquerPremiumOptimiste();
+            }
+
+            appliquerEtatAuth();
+            mettreAJourUiPlanUtilisateur();
+
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            afficherToastVelora('🎉 Paiement validé ! Bienvenue dans l\'accès Premium.');
+
+            synchroniserProfilPremiumArrierePlan();
+        }
+
         async function demarrerVeloraApp() {
-            masquerSplashApp();
             try {
                 if (window.VeloraAuth) {
                     await window.VeloraAuth.init();
                     initialiserAuthUi();
-                    appliquerEtatAuth();
                 }
                 initSupabase();
-                const params = new URLSearchParams(window.location.search);
-                if (params.get('premium') === 'success' && window.VeloraAuth?.rafraichirProfil) {
-                    await window.VeloraAuth.rafraichirProfil();
-                    history.replaceState({}, '', window.location.pathname);
-                    mettreAJourUiPlanUtilisateur();
-                }
+                await gererRetourPremiumSuccess();
+                if (window.VeloraAuth) appliquerEtatAuth();
+                masquerSplashApp();
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
                 });
             } catch (err) {
                 console.error('[Velora] Erreur au démarrage :', err);
+                masquerSplashApp();
             }
         }
 
-        if (document.readyState === 'complete') {
+        window.addEventListener('DOMContentLoaded', () => {
             demarrerVeloraApp();
-        } else {
-            window.addEventListener('load', demarrerVeloraApp, { once: true });
-        }
+        }, { once: true });
 
         const sectionPronostic = document.getElementById('sectionPronostic');
         const sectionArchives = document.getElementById('sectionArchives');

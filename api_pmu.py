@@ -935,10 +935,12 @@ def create_checkout_session(
 ):
     """
     Génère un lien Stripe Checkout pour l'abonnement Premium.
-    Corps : { "user_id": "<uuid supabase>", "success_url"?, "cancel_url"? }
+    Corps : { "user_id"?, "success_url"?, "cancel_url"?, "email"? }
+    L'identité provient de l'en-tête X-User-Id (UUID Supabase Auth).
     """
-    user_id = str(body.get("user_id") or user_id_header).strip()
-    if user_id != user_id_header:
+    user_id = user_id_header
+    body_uid = str(body.get("user_id") or "").strip()
+    if body_uid and body_uid != user_id:
         raise HTTPException(
             status_code=403,
             detail="user_id ne correspond pas à X-User-Id",

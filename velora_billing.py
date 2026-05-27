@@ -613,16 +613,21 @@ def creer_session_checkout_stripe(
     _stripe_configure()
     import stripe
 
+    uid = str(user_id or "").strip()
+    if not uid:
+        raise BillingConfigError("user_id (UUID Supabase) requis pour Stripe Checkout.")
+
     price_id = (os.environ.get("STRIPE_PRICE_ID") or "").strip()
     if not price_id:
         raise BillingConfigError("STRIPE_PRICE_ID non configurée sur Render.")
 
-    profil = obtenir_profil(user_id)
+    profil = obtenir_profil(uid)
+    # client_reference_id + metadata : indispensables pour le webhook checkout.session.completed
     params: dict[str, Any] = {
         "mode": "subscription",
-        "client_reference_id": user_id,
-        "metadata": {"user_id": user_id},
-        "subscription_data": {"metadata": {"user_id": user_id}},
+        "client_reference_id": uid,
+        "metadata": {"user_id": uid},
+        "subscription_data": {"metadata": {"user_id": uid}},
         "line_items": [{"price": price_id, "quantity": 1}],
         "success_url": success_url,
         "cancel_url": cancel_url,
@@ -635,6 +640,10 @@ def creer_session_checkout_stripe(
     elif customer_email:
         params["customer_email"] = customer_email
 
+    print(
+        f"[Velora] Stripe Checkout.create : user_id={uid} "
+        f"client_reference_id={uid} metadata.user_id={uid}",
+    )
     session = stripe.checkout.Session.create(**params)
     if not session.url:
         raise BillingConfigError("Stripe n'a pas renvoyé d'URL de paiement.")
