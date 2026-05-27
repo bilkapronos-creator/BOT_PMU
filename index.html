@@ -380,10 +380,16 @@
                     <input type="email" id="authEmail" required autocomplete="email"
                         class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
                 </label>
-                <label class="block">
+                <label class="block" id="authPasswordWrap">
                     <span class="mb-1 block text-xs text-gray-500">Mot de passe</span>
                     <input type="password" id="authPassword" required minlength="6" autocomplete="current-password"
                         class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                    <p id="authForgotWrap" class="mt-1.5 text-right">
+                        <button type="button" id="btnAuthForgotLink"
+                            class="text-xs text-gray-500 underline-offset-2 hover:text-emerald-400 hover:underline">
+                            Mot de passe oublié ?
+                        </button>
+                    </p>
                 </label>
                 <p id="authErreur" class="hidden text-center text-xs text-red-400" role="alert"></p>
                 <p id="authSucces" class="hidden text-center text-xs text-emerald-400" role="status"></p>
@@ -392,7 +398,60 @@
                     Se connecter
                 </button>
             </form>
-            <p class="mt-4 text-center text-xs text-gray-500">
+            <form id="authForgotPassword" class="mt-6 hidden space-y-4">
+                <label class="block">
+                    <span class="mb-1 block text-xs text-gray-500">Email</span>
+                    <input type="email" id="authForgotPasswordEmail" required autocomplete="email"
+                        class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                </label>
+                <p id="authForgotPasswordErreur" class="hidden text-center text-xs text-red-400" role="alert"></p>
+                <button type="submit" id="btnAuthForgotSend"
+                    class="w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 text-sm font-bold text-white shadow-lg">
+                    Envoyer le lien
+                </button>
+                <button type="button" id="btnAuthForgotBack"
+                    class="w-full rounded-lg border border-white/15 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-white">
+                    Retour
+                </button>
+            </form>
+            <div id="authForgotConfirm" class="mt-6 hidden space-y-5 text-center">
+                <p id="authForgotConfirmText"
+                    class="text-sm leading-relaxed text-emerald-300">
+                    ✉️ Si cet email est associé à un compte, un lien de réinitialisation vous a été envoyé.
+                </p>
+                <button type="button" id="btnAuthBackLoginFromForgot"
+                    class="w-full rounded-lg border border-emerald-500/40 bg-emerald-500/10 py-2.5 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/20">
+                    Retour à la connexion
+                </button>
+            </div>
+            <form id="authUpdatePassword" class="mt-6 hidden space-y-4">
+                <label class="block">
+                    <span class="mb-1 block text-xs text-gray-500">Nouveau mot de passe</span>
+                    <input type="password" id="authUpdatePasswordNew" required minlength="6" autocomplete="new-password"
+                        class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                </label>
+                <label class="block">
+                    <span class="mb-1 block text-xs text-gray-500">Confirmer le mot de passe</span>
+                    <input type="password" id="authUpdatePasswordConfirm" required minlength="6" autocomplete="new-password"
+                        class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white">
+                </label>
+                <p id="authUpdatePasswordErreur" class="hidden text-center text-xs text-red-400" role="alert"></p>
+                <button type="submit" id="btnAuthUpdateSubmit"
+                    class="w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 text-sm font-bold text-white shadow-lg">
+                    Mettre à jour
+                </button>
+            </form>
+            <div id="authSignupConfirm" class="mt-6 hidden space-y-5 text-center">
+                <p id="authSignupConfirmText"
+                    class="text-sm leading-relaxed text-emerald-300">
+                    ✉️ Compte créé avec succès ! Un lien de confirmation a été envoyé. Veuillez cliquer dessus pour activer votre compte.
+                </p>
+                <button type="button" id="btnAuthBackLoginFromConfirm"
+                    class="w-full rounded-lg border border-emerald-500/40 bg-emerald-500/10 py-2.5 text-sm font-semibold text-emerald-400 transition hover:bg-emerald-500/20">
+                    Retour à la connexion
+                </button>
+            </div>
+            <p id="authFooterToggle" class="mt-4 text-center text-xs text-gray-500">
                 <button type="button" id="btnAuthToggleMode" class="font-semibold text-emerald-400 hover:text-emerald-300">
                     Créer un compte
                 </button>
@@ -1330,19 +1389,32 @@
 
         let authMode = 'login';
 
+        function masquerMessagesAuthModal() {
+            ['authErreur', 'authSucces', 'authForgotPasswordErreur', 'authUpdatePasswordErreur'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.textContent = '';
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
         function ouvrirModalAuth(mode) {
             if (mode) authMode = mode;
-            const modal = document.getElementById('modalAuth');
-            const err = document.getElementById('authErreur');
-            const ok = document.getElementById('authSucces');
-            if (err) { err.textContent = ''; err.classList.add('hidden'); }
-            if (ok) { ok.textContent = ''; ok.classList.add('hidden'); }
+            masquerMessagesAuthModal();
             mettreAJourModalAuthMode();
+            const modal = document.getElementById('modalAuth');
             if (modal) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             }
-            document.getElementById('authEmail')?.focus();
+            if (authMode === 'forgot') {
+                document.getElementById('authForgotPasswordEmail')?.focus();
+            } else if (authMode === 'updatePassword') {
+                document.getElementById('authUpdatePasswordNew')?.focus();
+            } else {
+                document.getElementById('authEmail')?.focus();
+            }
         }
 
         function fermerModalAuth() {
@@ -1355,20 +1427,90 @@
 
         function mettreAJourModalAuthMode() {
             const titre = document.getElementById('modalAuthTitre');
+            const sousTitre = document.getElementById('modalAuthSousTitre');
             const submit = document.getElementById('btnAuthSubmit');
             const toggle = document.getElementById('btnAuthToggleMode');
             const pwd = document.getElementById('authPassword');
+            const pwdWrap = document.getElementById('authPasswordWrap');
+            const formAuth = document.getElementById('formAuth');
+            const viewForgot = document.getElementById('authForgotPassword');
+            const viewForgotConfirm = document.getElementById('authForgotConfirm');
+            const viewUpdatePassword = document.getElementById('authUpdatePassword');
+            const signupConfirm = document.getElementById('authSignupConfirm');
+            const footerToggle = document.getElementById('authFooterToggle');
+            const forgotWrap = document.getElementById('authForgotWrap');
+
+            const modeLogin = authMode === 'login';
+            const modeSignup = authMode === 'signup';
+            const modeForgot = authMode === 'forgot';
+            const modeForgotConfirm = authMode === 'forgotConfirm';
+            const modeUpdatePassword = authMode === 'updatePassword';
+            const modeSignupConfirm = authMode === 'signupConfirm';
+            const modeConnexion = modeLogin || modeSignup;
+
+            formAuth?.classList.toggle('hidden', !modeConnexion);
+            viewForgot?.classList.toggle('hidden', !modeForgot);
+            viewForgotConfirm?.classList.toggle('hidden', !modeForgotConfirm);
+            viewUpdatePassword?.classList.toggle('hidden', !modeUpdatePassword);
+            signupConfirm?.classList.toggle('hidden', !modeSignupConfirm);
+            footerToggle?.classList.toggle('hidden', !modeConnexion);
+            forgotWrap?.classList.toggle('hidden', !modeLogin);
+            pwdWrap?.classList.toggle('hidden', !modeConnexion);
+            pwd?.toggleAttribute('required', modeConnexion);
+
+            if (modeSignupConfirm) {
+                if (titre) titre.textContent = 'Vérifiez votre email';
+                if (sousTitre) sousTitre.textContent = 'Dernière étape avant d\'accéder à Velora Engine.';
+                return;
+            }
+
+            if (modeForgotConfirm) {
+                if (titre) titre.textContent = 'Email envoyé';
+                if (sousTitre) sousTitre.textContent = 'Consultez votre boîte mail pour réinitialiser votre mot de passe.';
+                return;
+            }
+
+            if (modeForgot) {
+                if (titre) titre.textContent = 'Mot de passe oublié';
+                if (sousTitre) sousTitre.textContent = 'Saisissez votre adresse email pour recevoir un lien sécurisé.';
+                return;
+            }
+
+            if (modeUpdatePassword) {
+                if (titre) titre.textContent = 'Nouveau mot de passe';
+                if (sousTitre) sousTitre.textContent = 'Choisissez un nouveau mot de passe pour votre compte.';
+                return;
+            }
+
             if (authMode === 'signup') {
                 if (titre) titre.textContent = 'Inscription';
+                if (sousTitre) sousTitre.textContent = 'Créez votre compte gratuit Velora Engine.';
                 if (submit) submit.textContent = 'Créer mon compte';
                 if (toggle) toggle.textContent = 'Déjà un compte ? Se connecter';
                 if (pwd) pwd.autocomplete = 'new-password';
             } else {
                 if (titre) titre.textContent = 'Connexion';
+                if (sousTitre) sousTitre.textContent = 'Accédez à vos archives et à votre dashboard privé.';
                 if (submit) submit.textContent = 'Se connecter';
                 if (toggle) toggle.textContent = 'Créer un compte';
                 if (pwd) pwd.autocomplete = 'current-password';
             }
+        }
+
+        function gererRetourConfirmationEmail() {
+            if (!window.VeloraAuth?.estRetourConfirmationEmail?.()) return false;
+            if (window.VeloraAuth?.estRetourRecovery?.()) return false;
+            if (!window.VeloraAuth?.isAuthenticated?.()) return false;
+
+            window.VeloraAuth.nettoyerUrlConfirmationEmail?.();
+            afficherToastVelora('✅ Email confirmé avec succès, bienvenue !');
+            appliquerEtatAuth();
+            return true;
+        }
+
+        function gererRetourRecoveryMotDePasse() {
+            if (!window.VeloraAuth?.estRetourRecovery?.()) return;
+            ouvrirModalAuth('updatePassword');
         }
 
         function mettreAJourUiPlanUtilisateur() {
@@ -1425,6 +1567,15 @@
             mettreAJourUiPlanUtilisateur();
         }
 
+        function appliquerPaywallDeviceSiBloque() {
+            if (!estMembreConnecte() || window.VeloraAuth?.isPremiumUser?.()) return;
+            if (!window.VeloraAuth?.isDeviceFreemiumBloque?.()) return;
+            const zoneResultats = document.getElementById('resultats');
+            if (!zoneResultats) return;
+            afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
+            mettreAJourZoneVidePronostic();
+        }
+
         function appliquerEtatAuth() {
             const connecte = estMembreConnecte();
             const tabArch = document.getElementById('tabArchives');
@@ -1454,6 +1605,7 @@
             }
             mettreAJourUiAnalyseAuth();
             mettreAJourUiPlanUtilisateur();
+            appliquerPaywallDeviceSiBloque();
         }
 
         function initialiserAuthUi() {
@@ -1470,7 +1622,109 @@
             });
             document.getElementById('btnAuthToggleMode')?.addEventListener('click', () => {
                 authMode = authMode === 'login' ? 'signup' : 'login';
+                masquerMessagesAuthModal();
                 mettreAJourModalAuthMode();
+            });
+
+            document.getElementById('btnAuthForgotLink')?.addEventListener('click', () => {
+                const emailConnexion = document.getElementById('authEmail')?.value?.trim();
+                const emailForgot = document.getElementById('authForgotPasswordEmail');
+                if (emailForgot && emailConnexion) emailForgot.value = emailConnexion;
+                authMode = 'forgot';
+                masquerMessagesAuthModal();
+                mettreAJourModalAuthMode();
+                emailForgot?.focus();
+            });
+
+            document.getElementById('btnAuthForgotBack')?.addEventListener('click', () => {
+                authMode = 'login';
+                masquerMessagesAuthModal();
+                mettreAJourModalAuthMode();
+                document.getElementById('authEmail')?.focus();
+            });
+
+            document.getElementById('btnAuthBackLoginFromForgot')?.addEventListener('click', () => {
+                authMode = 'login';
+                masquerMessagesAuthModal();
+                mettreAJourModalAuthMode();
+                document.getElementById('authEmail')?.focus();
+            });
+
+            document.getElementById('btnAuthBackLoginFromConfirm')?.addEventListener('click', () => {
+                authMode = 'login';
+                masquerMessagesAuthModal();
+                mettreAJourModalAuthMode();
+                document.getElementById('authEmail')?.focus();
+            });
+
+            document.getElementById('authForgotPassword')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('authForgotPasswordEmail')?.value;
+                const errEl = document.getElementById('authForgotPasswordErreur');
+                const submitBtn = document.getElementById('btnAuthForgotSend');
+                if (errEl) errEl.classList.add('hidden');
+                if (submitBtn) submitBtn.disabled = true;
+
+                const result = await window.VeloraAuth.demanderReinitialisationMotDePasse(email);
+
+                if (submitBtn) submitBtn.disabled = false;
+
+                if (!result.ok) {
+                    if (errEl) {
+                        errEl.textContent = result.erreur || 'Erreur';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                const confirmText = document.getElementById('authForgotConfirmText');
+                if (confirmText) {
+                    confirmText.textContent = result.message
+                        || '✉️ Si cet email est associé à un compte, un lien de réinitialisation vous a été envoyé.';
+                }
+                authMode = 'forgotConfirm';
+                mettreAJourModalAuthMode();
+            });
+
+            document.getElementById('authUpdatePassword')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const password = document.getElementById('authUpdatePasswordNew')?.value || '';
+                const confirm = document.getElementById('authUpdatePasswordConfirm')?.value || '';
+                const errEl = document.getElementById('authUpdatePasswordErreur');
+                const submitBtn = document.getElementById('btnAuthUpdateSubmit');
+                if (errEl) errEl.classList.add('hidden');
+
+                if (password.length < 6) {
+                    if (errEl) {
+                        errEl.textContent = 'Mot de passe trop court (6 caractères minimum).';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+                if (password !== confirm) {
+                    if (errEl) {
+                        errEl.textContent = 'Les mots de passe ne correspondent pas.';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                if (submitBtn) submitBtn.disabled = true;
+                const result = await window.VeloraAuth.mettreAJourMotDePasse(password);
+                if (submitBtn) submitBtn.disabled = false;
+
+                if (!result.ok) {
+                    if (errEl) {
+                        errEl.textContent = result.erreur || 'Erreur';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                fermerModalAuth();
+                authMode = 'login';
+                appliquerEtatAuth();
+                afficherToastVelora('✅ Mot de passe mis à jour avec succès');
             });
 
             document.getElementById('formAuth')?.addEventListener('submit', async (e) => {
@@ -1497,9 +1751,14 @@
                     }
                     return;
                 }
-                if (result.confirmationEmail && okEl) {
-                    okEl.textContent = result.message || 'Vérifiez votre email.';
-                    okEl.classList.remove('hidden');
+                if (result.confirmationEmail) {
+                    const confirmText = document.getElementById('authSignupConfirmText');
+                    if (confirmText) {
+                        confirmText.textContent = result.message
+                            || '✉️ Compte créé avec succès ! Un lien de confirmation a été envoyé. Veuillez cliquer dessus pour activer votre compte.';
+                    }
+                    authMode = 'signupConfirm';
+                    mettreAJourModalAuthMode();
                     return;
                 }
                 fermerModalAuth();
@@ -1516,6 +1775,12 @@
 
             window.VeloraAuth.onProfileChange?.(() => {
                 mettreAJourUiPlanUtilisateur();
+            });
+
+            window.VeloraAuth.getClient?.()?.auth.onAuthStateChange((event) => {
+                if (event === 'PASSWORD_RECOVERY') {
+                    ouvrirModalAuth('updatePassword');
+                }
             });
 
             document.getElementById('btnPasserPremiumHeader')?.addEventListener('click', () => {
@@ -1574,12 +1839,22 @@
 
         async function demarrerVeloraApp() {
             try {
+                const retourConfirmationEmail = Boolean(
+                    window.VeloraAuth?.estRetourConfirmationEmail?.()
+                    && !window.VeloraAuth?.estRetourRecovery?.(),
+                );
+                const retourRecoveryMotDePasse = Boolean(window.VeloraAuth?.estRetourRecovery?.());
                 if (window.VeloraAuth) {
                     await window.VeloraAuth.init();
                     initialiserAuthUi();
                 }
                 initSupabase();
                 await gererRetourPremiumSuccess();
+                if (retourRecoveryMotDePasse) {
+                    gererRetourRecoveryMotDePasse();
+                } else if (retourConfirmationEmail) {
+                    gererRetourConfirmationEmail();
+                }
                 if (window.VeloraAuth) appliquerEtatAuth();
                 masquerSplashApp();
                 chargerStatsPlateforme().catch((err) => {
@@ -2122,6 +2397,13 @@
             mettreAJourZoneVidePronostic();
 
             if (!exigerConnexionPourAnalyser(zoneResultats)) {
+                return;
+            }
+
+            if (window.VeloraAuth?.isQuotaComplet?.()) {
+                afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
+                mettreAJourUiPlanUtilisateur();
+                mettreAJourZoneVidePronostic();
                 return;
             }
 

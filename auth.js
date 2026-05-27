@@ -114,6 +114,82 @@
     }
 
     const QUOTA_JOURNALIER = 3;
+    const DEVICE_USAGE_KEY = 'velora_device_usage';
+    const DEVICE_BLOCKED_KEY = 'velora_device_blocked';
+
+    function _storageLocalGet(cle) {
+        try {
+            if (typeof global.localStorage !== 'undefined') {
+                return global.localStorage.getItem(cle);
+            }
+        } catch (_) { /* Tracking Prevention */ }
+        return null;
+    }
+
+    function _storageLocalSet(cle, valeur) {
+        try {
+            if (typeof global.localStorage !== 'undefined') {
+                global.localStorage.setItem(cle, valeur);
+                return true;
+            }
+        } catch (_) { /* Tracking Prevention */ }
+        return false;
+    }
+
+    function _storageLocalRemove(cle) {
+        try {
+            if (typeof global.localStorage !== 'undefined') {
+                global.localStorage.removeItem(cle);
+            }
+        } catch (_) { /* Tracking Prevention */ }
+    }
+
+    function _lireDeviceUsage() {
+        const raw = String(_storageLocalGet(DEVICE_USAGE_KEY) || '').trim();
+        const match = /^(\d{4}-\d{2}-\d{2})_count_(\d+)$/.exec(raw);
+        if (!match) return { date: null, count: 0 };
+        return {
+            date: match[1],
+            count: Math.max(0, parseInt(match[2], 10) || 0),
+        };
+    }
+
+    function _estDeviceMarqueBloque() {
+        return _storageLocalGet(DEVICE_BLOCKED_KEY) === 'true';
+    }
+
+    function getDeviceAnalysesCount() {
+        if (_estDeviceMarqueBloque()) return QUOTA_JOURNALIER;
+        const { date, count } = _lireDeviceUsage();
+        if (date === _aujourdhuiIso()) return Math.min(QUOTA_JOURNALIER, count);
+        return 0;
+    }
+
+    function isDeviceFreemiumBloque() {
+        if (isPremium) return false;
+        if (_estDeviceMarqueBloque()) return true;
+        const { date, count } = _lireDeviceUsage();
+        return date === _aujourdhuiIso() && count >= QUOTA_JOURNALIER;
+    }
+
+    function enregistrerAnalyseDevice() {
+        if (isPremium) return getDeviceAnalysesCount();
+        const today = _aujourdhuiIso();
+        let count = 0;
+        const usage = _lireDeviceUsage();
+        if (usage.date === today) count = usage.count;
+        count = Math.min(QUOTA_JOURNALIER, count + 1);
+        _storageLocalSet(DEVICE_USAGE_KEY, `${today}_count_${count}`);
+        if (count >= QUOTA_JOURNALIER) {
+            _storageLocalSet(DEVICE_BLOCKED_KEY, 'true');
+        }
+        return count;
+    }
+
+    function libererDeviceFreemium() {
+        _storageLocalRemove(DEVICE_USAGE_KEY);
+        _storageLocalRemove(DEVICE_BLOCKED_KEY);
+    }
 
     function _aujourdhuiIso() {
         return new Date().toISOString().slice(0, 10);
@@ -166,8 +242,10 @@
         if (premiumDb) {
             premiumOptimiste = false;
             isPremium = true;
+            libererDeviceFreemium();
         } else if (premiumOptimiste) {
             isPremium = true;
+            libererDeviceFreemium();
             profil = {
                 ...(data || {}),
                 id: data?.id || session.user.id,
@@ -207,11 +285,16 @@
     }
 
     function getAnalysesCount() {
-        return _compteurEffectif(profil);
+        if (isPremium) return _compteurEffectif(profil);
+        if (isDeviceFreemiumBloque()) return QUOTA_JOURNALIER;
+        const profilCount = _compteurEffectif(profil);
+        const deviceCount = getDeviceAnalysesCount();
+        return Math.min(QUOTA_JOURNALIER, Math.max(profilCount, deviceCount));
     }
 
     function isQuotaComplet() {
         if (isPremium) return false;
+        if (isDeviceFreemiumBloque()) return true;
         return getAnalysesCount() >= QUOTA_JOURNALIER;
     }
 
@@ -219,6 +302,7 @@
     function appliquerPremiumOptimiste() {
         premiumOptimiste = true;
         isPremium = true;
+        libererDeviceFreemium();
         const uid = session?.user?.id || profil?.id || null;
         profil = {
             ...(profil || {}),
@@ -246,8 +330,9 @@
         count = Math.min(QUOTA_JOURNALIER, count + 1);
         profil.analyses_count = count;
         profil.last_analysis_date = today;
+        enregistrerAnalyseDevice();
         notifierProfil({ ...profil });
-        return count;
+        return getAnalysesCount();
     }
 
     function onProfileChange(callback) {
@@ -336,8 +421,84 @@
             ok: true,
             session: null,
             confirmationEmail: true,
-            message: 'Compte créé. Vérifiez votre email pour confirmer l\'inscription, puis connectez-vous.',
+            message: '✉️ Compte créé avec succès ! Un lien de confirmation a été envoyé. Veuillez cliquer dessus pour activer votre compte.',
         };
+    }
+
+    function estRetourConfirmationEmail() {
+        const hash = String(global.location.hash || '').replace(/^#/, '');
+        if (hash) {
+            const params = new URLSearchParams(hash);
+            const type = params.get('type');
+            if (type === 'signup' || type === 'email') return true;
+        }
+        const search = new URLSearchParams(global.location.search || '');
+        if (search.get('signup') === 'confirmed') return true;
+        if (search.get('email') === 'confirmed') return true;
+        return false;
+    }
+
+    function nettoyerUrlConfirmationEmail() {
+        nettoyerHashAuth();
+        const search = new URLSearchParams(global.location.search || '');
+        if (!search.has('signup') && !search.has('email')) return;
+        search.delete('signup');
+        search.delete('email');
+        const query = search.toString();
+        const url = global.location.pathname + (query ? `?${query}` : '');
+        global.history.replaceState({}, global.document.title, url);
+    }
+
+    function nettoyerHashAuth() {
+        if (!global.location.hash) return;
+        const url = global.location.pathname + global.location.search;
+        global.history.replaceState({}, global.document.title, url);
+    }
+
+    function estRetourRecovery() {
+        const hash = String(global.location.hash || '').replace(/^#/, '');
+        if (!hash) return false;
+        const params = new URLSearchParams(hash);
+        return params.get('type') === 'recovery';
+    }
+
+    async function demanderReinitialisationMotDePasse(email) {
+        const supabase = getClient();
+        if (!supabase) {
+            return { ok: false, erreur: 'Supabase non configuré.' };
+        }
+        const redirectTo = String(global.location.origin || '').replace(/\/$/, '');
+        const { error } = await supabase.auth.resetPasswordForEmail(
+            String(email || '').trim(),
+            { redirectTo },
+        );
+        if (error) return { ok: false, erreur: formaterErreurAuth(error) };
+        return {
+            ok: true,
+            message: '✉️ Si cet email est associé à un compte, un lien de réinitialisation vous a été envoyé.',
+        };
+    }
+
+    async function mettreAJourMotDePasse(newPassword) {
+        const supabase = getClient();
+        if (!supabase) {
+            return { ok: false, erreur: 'Supabase non configuré.' };
+        }
+        const { data, error } = await supabase.auth.updateUser({
+            password: String(newPassword || ''),
+        });
+        if (error) return { ok: false, erreur: formaterErreurAuth(error) };
+
+        if (data?.session) {
+            session = data.session;
+        } else {
+            const { data: sessionData } = await supabase.auth.getSession();
+            session = sessionData?.session ?? session;
+        }
+        notifier(session);
+        await chargerProfil();
+        nettoyerHashAuth();
+        return { ok: true, session };
     }
 
     async function signOut() {
@@ -367,7 +528,11 @@
         getProfile,
         getQuotaDailyLimit,
         getAnalysesCount,
+        getDeviceAnalysesCount,
+        isDeviceFreemiumBloque,
         isQuotaComplet,
+        libererDeviceFreemium,
+        enregistrerAnalyseDevice,
         incrementerCompteurAnalysesLocal,
         rafraichirProfil,
         onAuthChange,
@@ -375,6 +540,12 @@
         signIn,
         signUp,
         signOut,
+        estRetourRecovery,
+        estRetourConfirmationEmail,
+        nettoyerHashAuth,
+        nettoyerUrlConfirmationEmail,
+        demanderReinitialisationMotDePasse,
+        mettreAJourMotDePasse,
         formaterErreurAuth,
     };
 })(window);
