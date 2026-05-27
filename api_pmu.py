@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from database import init_db, lister_archives, obtenir_archive, sauvegarder_archive
 from stats_pmu import get_stats_publiques, get_stats_utilisateur
@@ -55,6 +56,27 @@ def _construire_origines_cors() -> tuple[list[str], bool]:
 
 _CORS_ORIGINS, _CORS_CREDENTIALS = _construire_origines_cors()
 
+
+class VeloraCORSEnforcerMiddleware(BaseHTTPMiddleware):
+    """Garantit Access-Control-Allow-Origin même sur erreurs 4xx/5xx (sinon le navigateur affiche une erreur CORS)."""
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        origin = request.headers.get("origin")
+        if not origin:
+            return response
+        if _CORS_ORIGINS != ["*"] and origin not in _CORS_ORIGINS:
+            return response
+        if response.headers.get("access-control-allow-origin"):
+            return response
+        response.headers["Access-Control-Allow-Origin"] = origin if _CORS_ORIGINS != ["*"] else "*"
+        if _CORS_CREDENTIALS and _CORS_ORIGINS != ["*"]:
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers.setdefault("Vary", "Origin")
+        return response
+
+
+app.add_middleware(VeloraCORSEnforcerMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS,
@@ -63,6 +85,20 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def handler_erreur_inattendue(_request: Request, exc: Exception):
+    if isinstance(exc, HTTPException):
+        raise exc
+    print(f"[Velora] Erreur 500 : {type(exc).__name__}: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "erreur": "Erreur interne du serveur.",
+            "message": str(exc)[:300],
+        },
+    )
 
 
 def _erreur_pmu_http(exc: ErreurReseauExterne) -> HTTPException:
@@ -183,10 +219,12 @@ def appliquer_quota_analyse(user_id: str) -> None:
                 "daily_limit": exc.daily_limit,
             },
         ) from exc
-    except BillingConfigError:
-        pass
+    except BillingConfigError as exc:
+        print(f"[Velora] Quota désactivé (config Supabase billing) : {exc}")
     except ArchivesStorageError as exc:
         raise _erreur_archives_http(exc) from exc
+    except Exception as exc:
+        print(f"[Velora] Quota ignoré (erreur Supabase, analyse autorisée) : {exc}")
 
 
 def valider_user_id_archive(archive: dict, user_id: str) -> None:

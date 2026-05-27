@@ -24,6 +24,48 @@
         };
     }
 
+    function creerStorageAuth() {
+        const memoire = new Map();
+        const candidats = [];
+
+        try {
+            if (typeof global.sessionStorage !== 'undefined') candidats.push(global.sessionStorage);
+        } catch (_) { /* Tracking Prevention */ }
+        try {
+            if (typeof global.localStorage !== 'undefined') candidats.push(global.localStorage);
+        } catch (_) { /* Tracking Prevention */ }
+
+        return {
+            getItem(key) {
+                for (const store of candidats) {
+                    try {
+                        const val = store.getItem(key);
+                        if (val != null) return val;
+                    } catch (_) { /* ignore */ }
+                }
+                return memoire.has(key) ? memoire.get(key) : null;
+            },
+            setItem(key, value) {
+                let persiste = false;
+                for (const store of candidats) {
+                    try {
+                        store.setItem(key, value);
+                        persiste = true;
+                    } catch (_) { /* ignore */ }
+                }
+                if (!persiste) memoire.set(key, value);
+            },
+            removeItem(key) {
+                for (const store of candidats) {
+                    try {
+                        store.removeItem(key);
+                    } catch (_) { /* ignore */ }
+                }
+                memoire.delete(key);
+            },
+        };
+    }
+
     function getClient() {
         if (client) return client;
 
@@ -42,6 +84,7 @@
                 persistSession: true,
                 autoRefreshToken: true,
                 detectSessionInUrl: true,
+                storage: creerStorageAuth(),
             },
         });
         return client;
@@ -160,10 +203,10 @@
         if (/invalid login credentials/i.test(msg)) {
             return 'Email ou mot de passe incorrect.';
         }
-        if (/user already registered/i.test(msg)) {
+        if (/user already registered|already been registered/i.test(msg)) {
             return 'Un compte existe déjà avec cet email. Connectez-vous.';
         }
-        if (/password should be at least/i.test(msg)) {
+        if (/password should be at least|password.*weak|password.*short|at least/i.test(msg)) {
             return 'Mot de passe trop court (6 caractères minimum).';
         }
         if (/email not confirmed/i.test(msg)) {

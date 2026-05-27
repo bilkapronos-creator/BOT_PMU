@@ -66,18 +66,30 @@ def _stripe_configure() -> None:
 def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
     client = _get_supabase_client()
 
-    def _lire():
+    def _lire(cols: str):
         return (
             client.table(_PROFILES_TABLE)
-            .select("id, role, plan_type, is_premium, stripe_customer_id")
+            .select(cols)
             .eq("id", user_id)
             .limit(1)
             .execute()
         )
 
-    resp = supabase_execute(_lire, description="lecture profil billing")
-    rows = resp.data or []
-    return rows[0] if rows else None
+    for cols in (
+        "id, role, plan_type, is_premium, stripe_customer_id",
+        "id, role, plan_type",
+    ):
+        try:
+            resp = supabase_execute(
+                lambda c=cols: _lire(c),
+                description=f"lecture profil ({cols})",
+            )
+            rows = resp.data or []
+            if rows:
+                return rows[0]
+        except Exception as exc:
+            print(f"[Velora] Lecture profil ({cols}) : {exc}")
+    return None
 
 
 def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
@@ -122,29 +134,37 @@ def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
 
     new_count = count + 1
 
-    def _ecrire_usage():
-        if rows:
-            return (
-                client.table(_USAGE_TABLE)
-                .update({"analysis_count": new_count, "updated_at": _now_iso()})
-                .eq("user_id", user_id)
-                .eq("usage_date", today)
-                .execute()
-            )
-        return (
-            client.table(_USAGE_TABLE)
-            .insert(
-                {
-                    "user_id": user_id,
-                    "usage_date": today,
-                    "analysis_count": new_count,
-                    "updated_at": _now_iso(),
-                },
-            )
-            .execute()
-        )
+    try:
+        def _ecrire_usage():
+            if rows:
+                return (
+                    client.table(_USAGE_TABLE)
+                    .update({"analysis_count": new_count, "updated_at": _now_iso()})
+                    .eq("user_id", user_id)
+                    .eq("usage_date", today)
+                    .execute()
+                )
+            payload: dict[str, Any] = {
+                "user_id": user_id,
+                "usage_date": today,
+                "analysis_count": new_count,
+            }
+            try:
+                payload["updated_at"] = _now_iso()
+            except Exception:
+                pass
+            return client.table(_USAGE_TABLE).insert(payload).execute()
 
-    supabase_execute(_ecrire_usage, description="incrément quota journalier")
+        supabase_execute(_ecrire_usage, description="incrément quota journalier")
+    except Exception as exc:
+        print(f"[Velora] Écriture quota ignorée : {exc}")
+        return {
+            "allowed": True,
+            "unlimited": False,
+            "is_premium": False,
+            "quota_degraded": True,
+        }
+
     return {
         "allowed": True,
         "unlimited": False,
