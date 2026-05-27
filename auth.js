@@ -112,6 +112,21 @@
         });
     }
 
+    const QUOTA_JOURNALIER = 3;
+
+    function _aujourdhuiIso() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
+    function _compteurEffectif(profilCourant) {
+        if (!profilCourant) return 0;
+        const last = profilCourant.last_analysis_date
+            ? String(profilCourant.last_analysis_date).slice(0, 10)
+            : null;
+        if (last && last !== _aujourdhuiIso()) return 0;
+        return Math.max(0, parseInt(profilCourant.analyses_count, 10) || 0);
+    }
+
     async function chargerProfil() {
         const supabase = getClient();
         if (!supabase || !session?.user?.id) {
@@ -123,7 +138,7 @@
 
         const { data, error } = await supabase
             .from('profiles')
-            .select('id, role, plan_type, is_premium, stripe_customer_id')
+            .select('id, role, plan_type, is_premium, stripe_customer_id, analyses_count, last_analysis_date')
             .eq('id', session.user.id)
             .maybeSingle();
 
@@ -163,6 +178,34 @@
 
     function getProfile() {
         return profil;
+    }
+
+    function getQuotaDailyLimit() {
+        return QUOTA_JOURNALIER;
+    }
+
+    function getAnalysesCount() {
+        return _compteurEffectif(profil);
+    }
+
+    function isQuotaComplet() {
+        if (isPremium) return false;
+        return getAnalysesCount() >= QUOTA_JOURNALIER;
+    }
+
+    /** +1 local après analyse réussie (UI temps réel, resync au prochain chargement profil). */
+    function incrementerCompteurAnalysesLocal() {
+        if (isPremium || !profil) return getAnalysesCount();
+        const today = _aujourdhuiIso();
+        const last = profil.last_analysis_date
+            ? String(profil.last_analysis_date).slice(0, 10)
+            : null;
+        let count = last === today ? _compteurEffectif(profil) : 0;
+        count = Math.min(QUOTA_JOURNALIER, count + 1);
+        profil.analyses_count = count;
+        profil.last_analysis_date = today;
+        notifierProfil({ ...profil });
+        return count;
     }
 
     function onProfileChange(callback) {
@@ -277,6 +320,10 @@
         getUserEmail,
         isPremiumUser,
         getProfile,
+        getQuotaDailyLimit,
+        getAnalysesCount,
+        isQuotaComplet,
+        incrementerCompteurAnalysesLocal,
         rafraichirProfil,
         onAuthChange,
         onProfileChange,

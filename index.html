@@ -176,6 +176,19 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+                <div id="veloraPlanBar" class="hidden flex flex-col items-center gap-1.5 sm:items-end">
+                    <div class="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
+                        <span id="badgePlanUtilisateur" class="hidden rounded-full px-3 py-1 text-xs font-bold tracking-wide"></span>
+                        <span id="quotaAnalysesLabel" class="hidden text-xs font-semibold tabular-nums"></span>
+                    </div>
+                    <button
+                        type="button"
+                        id="btnPasserPremiumHeader"
+                        class="hidden rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1.5 text-xs font-bold text-white shadow transition hover:from-amber-400 hover:to-orange-400"
+                    >
+                        ⭐ Passer Premium
+                    </button>
+                </div>
                 <p id="authUserLabel" class="hidden max-w-[12rem] truncate text-xs text-emerald-300/90" title=""></p>
                 <button
                     type="button"
@@ -1039,7 +1052,9 @@
 
         async function lancerCheckoutPremium() {
             const errEl = document.getElementById('premiumCheckoutErreur');
-            const btn = document.getElementById('btnPasserPremium');
+            const btnPaywall = document.getElementById('btnPasserPremium');
+            const btnHeader = document.getElementById('btnPasserPremiumHeader');
+            const boutons = [btnPaywall, btnHeader].filter(Boolean);
 
             if (!estMembreConnecte()) {
                 if (errEl) {
@@ -1061,10 +1076,11 @@
             const userId = getVeloraUserId();
             if (!userId) return;
 
-            if (btn) {
+            boutons.forEach((btn) => {
                 btn.disabled = true;
+                btn.dataset.veloraLabel = btn.textContent;
                 btn.textContent = 'Redirection Stripe…';
-            }
+            });
             if (errEl) errEl.classList.add('hidden');
 
             const origin = window.location.origin.replace(/\/$/, '');
@@ -1079,10 +1095,10 @@
                 }),
             });
 
-            if (btn) {
+            boutons.forEach((btn) => {
                 btn.disabled = false;
-                btn.innerHTML = '<span aria-hidden="true">★</span> Passer Premium';
-            }
+                btn.textContent = btn.dataset.veloraLabel || '⭐ Passer Premium';
+            });
 
             if (result.ok && result.data?.url) {
                 window.location.href = result.data.url;
@@ -1348,6 +1364,63 @@
             }
         }
 
+        const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour.';
+        const QUOTA_JOURNALIER_UI = 3;
+
+        function mettreAJourUiPlanUtilisateur() {
+            const bar = document.getElementById('veloraPlanBar');
+            const badge = document.getElementById('badgePlanUtilisateur');
+            const quotaEl = document.getElementById('quotaAnalysesLabel');
+            const btnPremiumHeader = document.getElementById('btnPasserPremiumHeader');
+
+            if (!bar || !badge || !quotaEl || !btnPremiumHeader) return;
+
+            if (!estMembreConnecte()) {
+                bar.classList.add('hidden');
+                badge.classList.add('hidden');
+                quotaEl.classList.add('hidden');
+                btnPremiumHeader.classList.add('hidden');
+                return;
+            }
+
+            bar.classList.remove('hidden');
+            const premium = Boolean(window.VeloraAuth?.isPremiumUser?.());
+            const count = window.VeloraAuth?.getAnalysesCount?.() ?? 0;
+            const limite = window.VeloraAuth?.getQuotaDailyLimit?.() ?? QUOTA_JOURNALIER_UI;
+
+            badge.classList.remove('hidden');
+            quotaEl.classList.remove('hidden', 'text-red-400', 'text-orange-400', 'text-gray-400');
+
+            if (premium) {
+                badge.textContent = '👑 Premium';
+                badge.className = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
+                quotaEl.classList.add('hidden');
+                btnPremiumHeader.classList.add('hidden');
+                return;
+            }
+
+            badge.textContent = 'Plan Gratuit';
+            badge.className = 'rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold tracking-wide text-gray-400';
+
+            quotaEl.textContent = `Analyses : ${count} / ${limite}`;
+            if (count >= limite) {
+                quotaEl.classList.add('text-red-400');
+            } else {
+                quotaEl.classList.add('text-gray-400');
+            }
+            quotaEl.classList.remove('hidden');
+
+            btnPremiumHeader.classList.remove('hidden');
+        }
+
+        function incrementerCompteurUiApresAnalyse() {
+            if (window.VeloraAuth?.isPremiumUser?.()) return;
+            if (typeof window.VeloraAuth?.incrementerCompteurAnalysesLocal === 'function') {
+                window.VeloraAuth.incrementerCompteurAnalysesLocal();
+            }
+            mettreAJourUiPlanUtilisateur();
+        }
+
         function appliquerEtatAuth() {
             const connecte = estMembreConnecte();
             const tabArch = document.getElementById('tabArchives');
@@ -1376,6 +1449,7 @@
                 afficherSection('pronostic');
             }
             mettreAJourUiAnalyseAuth();
+            mettreAJourUiPlanUtilisateur();
         }
 
         function initialiserAuthUi() {
@@ -1435,6 +1509,14 @@
                 appliquerEtatAuth();
                 initSupabase();
             });
+
+            window.VeloraAuth.onProfileChange?.(() => {
+                mettreAJourUiPlanUtilisateur();
+            });
+
+            document.getElementById('btnPasserPremiumHeader')?.addEventListener('click', () => {
+                lancerCheckoutPremium();
+            });
         }
 
         async function demarrerVeloraApp() {
@@ -1450,6 +1532,7 @@
                 if (params.get('premium') === 'success' && window.VeloraAuth?.rafraichirProfil) {
                     await window.VeloraAuth.rafraichirProfil();
                     history.replaceState({}, '', window.location.pathname);
+                    mettreAJourUiPlanUtilisateur();
                 }
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
@@ -2092,6 +2175,7 @@
                         </div>`;
                 });
                 mettreAJourZoneVidePronostic();
+                incrementerCompteurUiApresAnalyse();
                 memoriserResultatPronostic();
             } catch (e) {
                 finAnalyseBouton(bouton);
