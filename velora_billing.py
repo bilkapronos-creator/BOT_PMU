@@ -829,6 +829,7 @@ def creer_session_checkout_stripe(
         "success_url": success_url,
         "cancel_url": cancel_url,
         "allow_promotion_codes": True,
+        "consent_collection": {"terms_of_service": "required"},
     }
 
     stripe_customer_id = (profil or {}).get("stripe_customer_id")
