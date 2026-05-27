@@ -49,27 +49,29 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW
     EXECUTE FUNCTION public.handle_new_user();
 
--- ─── Rattrapage : compte de test bloqué (auth sans profil) ───
-INSERT INTO public.profiles (
-    id,
-    role,
-    plan_type,
-    is_premium,
-    analyses_count,
-    last_analysis_date
-)
-VALUES (
-    'b3304292-4992-4c5d-8b45-d50192d050ae'::uuid,
-    'free',
-    'free',
-    FALSE,
-    0,
-    CURRENT_DATE
-)
-ON CONFLICT (id) DO UPDATE SET
-    role = EXCLUDED.role,
-    plan_type = EXCLUDED.plan_type,
-    is_premium = EXCLUDED.is_premium,
-    analyses_count = EXCLUDED.analyses_count,
-    last_analysis_date = EXCLUDED.last_analysis_date,
-    updated_at = now();
+-- ─── Rattrapage : compte bloqué (auth sans profil) ───
+DO $$
+BEGIN
+    INSERT INTO public.profiles (
+        id, role, plan_type, is_premium, analyses_count, last_analysis_date
+    )
+    VALUES (
+        'b3304292-4992-4c5d-8b45-d50192d050ae'::uuid,
+        'free', 'free', FALSE, 0, CURRENT_DATE
+    )
+    ON CONFLICT (id) DO UPDATE SET
+        role = EXCLUDED.role,
+        plan_type = EXCLUDED.plan_type,
+        is_premium = EXCLUDED.is_premium,
+        analyses_count = EXCLUDED.analyses_count,
+        last_analysis_date = EXCLUDED.last_analysis_date,
+        updated_at = now();
+EXCEPTION
+    WHEN undefined_column THEN
+        INSERT INTO public.profiles (id, role, plan_type)
+        VALUES ('b3304292-4992-4c5d-8b45-d50192d050ae'::uuid, 'free', 'free')
+        ON CONFLICT (id) DO UPDATE SET
+            role = EXCLUDED.role,
+            plan_type = EXCLUDED.plan_type,
+            updated_at = now();
+END $$;

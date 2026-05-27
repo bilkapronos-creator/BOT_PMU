@@ -93,14 +93,44 @@ def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
     return None
 
 
-def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
-    """Crée un profil free par défaut (service_role) si auth.users existe sans public.profiles."""
-    client = _get_supabase_client()
-    today = _aujourdhui().isoformat()
-    now = _now_iso()
-    uid = str(user_id).strip()
+def _aujourdhui() -> date:
+    return datetime.now(timezone.utc).date()
 
+
+def _profil_defaut_dict(user_id: str) -> dict[str, Any]:
+    """Valeurs par défaut si la ligne profiles n'existe pas encore en base."""
+    today = _aujourdhui()
+    return {
+        "id": str(user_id).strip(),
+        "role": "free",
+        "plan_type": "free",
+        "is_premium": False,
+        "analyses_count": 0,
+        "last_analysis_date": today.isoformat(),
+    }
+
+
+def _est_erreur_ligne_existe(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    return "duplicate" in msg or "23505" in msg or "already exists" in msg
+
+
+def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
+    """Crée un profil free (service_role) — ne lève jamais « profil introuvable »."""
+    uid = str(user_id).strip()
+    default = _profil_defaut_dict(uid)
+    today = default["last_analysis_date"]
+    now = _now_iso()
+
+    try:
+        client = _get_supabase_client()
+    except BillingConfigError as exc:
+        print(f"[Velora] service_role indisponible, profil synthétique pour {uid} : {exc}")
+        return default
+
+    # Minimal d'abord (FK auth.users → échoue si l'UUID n'existe pas côté Auth)
     payloads: list[dict[str, Any]] = [
+        {"id": uid, "role": "free", "plan_type": "free"},
         {
             "id": uid,
             "role": "free",
@@ -110,48 +140,63 @@ def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
             "last_analysis_date": today,
             "updated_at": now,
         },
-        {
-            "id": uid,
-            "role": "free",
-            "plan_type": "free",
-            "analyses_count": 0,
-            "last_analysis_date": today,
-            "updated_at": now,
-        },
-        {
-            "id": uid,
-            "role": "free",
-            "plan_type": "free",
-            "updated_at": now,
-        },
     ]
 
+    insert_ok = False
     for payload in payloads:
         try:
-            def _inserer(p=payload):
-                return (
-                    client.table(_PROFILES_TABLE)
-                    .upsert(p, on_conflict="id")
-                    .execute()
-                )
+            def _insert(p=payload):
+                return client.table(_PROFILES_TABLE).insert(p).execute()
 
-            supabase_execute(_inserer, description="création profil par défaut")
-            profil = obtenir_profil(uid)
-            if profil:
-                return profil
+            supabase_execute(_insert, description="insert profil par défaut")
+            insert_ok = True
+            break
         except Exception as exc:
-            print(f"[Velora] Création profil ({list(payload.keys())}) : {exc}")
+            if _est_erreur_ligne_existe(exc):
+                insert_ok = True
+                break
+            print(f"[Velora] Insert profil {list(payload.keys())} : {exc}")
 
-    raise BillingConfigError(f"Impossible de créer le profil pour {uid}.")
+    if insert_ok:
+        profil = obtenir_profil(uid)
+        if profil:
+            return {**default, **profil}
+
+    # Ligne peut exister en minimal : tenter patch quota
+    try:
+        def _patch():
+            return (
+                client.table(_PROFILES_TABLE)
+                .update(
+                    {
+                        "analyses_count": 0,
+                        "last_analysis_date": today,
+                        "updated_at": now,
+                    },
+                )
+                .eq("id", uid)
+                .execute()
+            )
+
+        supabase_execute(_patch, description="patch quota profil")
+        profil = obtenir_profil(uid)
+        if profil:
+            return {**default, **profil}
+    except Exception as exc:
+        print(f"[Velora] Patch quota profil {uid} : {exc}")
+
+    print(f"[Velora] Profil {uid} : utilisation du profil synthétique (quota en mémoire).")
+    return default
 
 
 def obtenir_ou_creer_profil(user_id: str) -> dict[str, Any]:
-    """Lit le profil ou le crée à la volée pour éviter « profil introuvable »."""
-    profil = obtenir_profil(user_id)
+    """Lit le profil ou le crée à la volée."""
+    uid = str(user_id).strip()
+    profil = obtenir_profil(uid)
     if profil:
-        return profil
-    print(f"[Velora] Profil absent pour {user_id} — création automatique.")
-    return creer_profil_par_defaut(user_id)
+        return {**_profil_defaut_dict(uid), **profil}
+    print(f"[Velora] Profil absent pour {uid} — création automatique.")
+    return creer_profil_par_defaut(uid)
 
 
 def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
@@ -161,10 +206,6 @@ def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
         return True
     role = str(profil.get("role") or "").lower()
     return role in ("premium", "admin")
-
-
-def _aujourdhui() -> date:
-    return datetime.now(timezone.utc).date()
 
 
 def _parser_date_profil(value: Any) -> Optional[date]:
@@ -207,19 +248,17 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
     if est_utilisateur_premium(profil):
         return {"allowed": True, "unlimited": True, "is_premium": True}
 
-    if "analyses_count" not in profil:
-        raise BillingConfigError(
-            "Colonnes quota manquantes sur profiles. Exécutez supabase/profiles_quota.sql.",
-        )
-
     today = _aujourdhui()
     last_date = _parser_date_profil(profil.get("last_analysis_date"))
     count = int(profil.get("analyses_count") or 0)
 
     if last_date != today:
         count = 0
-        client = _get_supabase_client()
-        _reinitialiser_compteur_jour(client, user_id, today)
+        try:
+            client = _get_supabase_client()
+            _reinitialiser_compteur_jour(client, user_id, today)
+        except Exception as exc:
+            print(f"[Velora] Reset quota jour {user_id} : {exc}")
 
     if count >= daily_limit:
         raise QuotaExceededError(count, daily_limit)
@@ -246,17 +285,20 @@ def incrementer_compteur_analyse(user_id: str) -> None:
     if last_date != today:
         count = 0
 
-    client = _get_supabase_client()
-    payload = {
-        "analyses_count": count + 1,
-        "last_analysis_date": today.isoformat(),
-        "updated_at": _now_iso(),
-    }
+    try:
+        client = _get_supabase_client()
+        payload = {
+            "analyses_count": count + 1,
+            "last_analysis_date": today.isoformat(),
+            "updated_at": _now_iso(),
+        }
 
-    def _maj():
-        return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
+        def _maj():
+            return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
 
-    supabase_execute(_maj, description="incrément analyses_count")
+        supabase_execute(_maj, description="incrément analyses_count")
+    except Exception as exc:
+        print(f"[Velora] Incrément analyses_count {user_id} : {exc}")
 
 
 def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:
