@@ -207,18 +207,13 @@ def auth_membre(
 
 
 def appliquer_quota_analyse(user_id: str) -> None:
-    """Blocage strict si analyses_count >= 3 (profils Supabase)."""
+    """Blocage strict si analyses_count >= 3 (ne bloque pas si sync profil en cours)."""
     try:
         verifier_quota_analyse(user_id)
     except QuotaExceededError as exc:
         raise HTTPException(status_code=403, detail="QUOTA_ATTEINT") from exc
-    except BillingConfigError as exc:
-        raise HTTPException(
-            status_code=503,
-            detail={"erreur": str(exc), "code": "quota_config_error"},
-        ) from exc
-    except ArchivesStorageError as exc:
-        raise _erreur_archives_http(exc) from exc
+    except Exception as exc:
+        print(f"[Velora] Quota non appliqué pour {user_id} (analyse autorisée) : {exc}")
 
 
 def valider_user_id_archive(archive: dict, user_id: str) -> None:

@@ -68,7 +68,11 @@ def _stripe_configure() -> None:
 
 
 def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
-    client = _get_supabase_client()
+    try:
+        client = _get_supabase_client()
+    except BillingConfigError as exc:
+        print(f"[Velora] Lecture profil sans client Supabase : {exc}")
+        return None
 
     def _lire(cols: str):
         return (
@@ -91,6 +95,22 @@ def obtenir_profil(user_id: str) -> Optional[dict[str, Any]]:
         except Exception as exc:
             print(f"[Velora] Lecture profil ({cols}) : {exc}")
     return None
+
+
+def _profil_depuis_rpc(data: Any, default: dict[str, Any]) -> Optional[dict[str, Any]]:
+    if not isinstance(data, dict) or not data.get("ok"):
+        reason = data.get("reason") if isinstance(data, dict) else data
+        print(f"[Velora] ensure_velora_profile échec : {reason}")
+        return None
+    return {
+        **default,
+        "id": data.get("id", default["id"]),
+        "role": data.get("role", "free"),
+        "plan_type": data.get("plan_type", "free"),
+        "is_premium": data.get("is_premium", False),
+        "analyses_count": data.get("analyses_count", 0),
+        "last_analysis_date": data.get("last_analysis_date"),
+    }
 
 
 def _aujourdhui() -> date:
@@ -116,7 +136,7 @@ def _est_erreur_ligne_existe(exc: Exception) -> bool:
 
 
 def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
-    """Crée un profil free (service_role) — ne lève jamais « profil introuvable »."""
+    """Crée un profil free via RPC Supabase — ne bloque jamais l'analyse."""
     uid = str(user_id).strip()
     default = _profil_defaut_dict(uid)
     today = default["last_analysis_date"]
@@ -128,7 +148,21 @@ def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
         print(f"[Velora] service_role indisponible, profil synthétique pour {uid} : {exc}")
         return default
 
-    # Minimal d'abord (FK auth.users → échoue si l'UUID n'existe pas côté Auth)
+    # 1) RPC SECURITY DEFINER (contourne RLS, vérifie auth.users)
+    try:
+        def _rpc():
+            return client.rpc("ensure_velora_profile", {"p_user_id": uid}).execute()
+
+        resp = supabase_execute(_rpc, description="RPC ensure_velora_profile")
+        if _profil_depuis_rpc(resp.data, default) is not None:
+            profil = obtenir_profil(uid)
+            if profil:
+                return {**default, **profil}
+            return _profil_depuis_rpc(resp.data, default) or default
+    except Exception as exc:
+        print(f"[Velora] RPC ensure_velora_profile {uid} : {exc}")
+
+    # 2) Insert direct (secours)
     payloads: list[dict[str, Any]] = [
         {"id": uid, "role": "free", "plan_type": "free"},
         {
@@ -162,7 +196,6 @@ def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
         if profil:
             return {**default, **profil}
 
-    # Ligne peut exister en minimal : tenter patch quota
     try:
         def _patch():
             return (
@@ -185,7 +218,7 @@ def creer_profil_par_defaut(user_id: str) -> dict[str, Any]:
     except Exception as exc:
         print(f"[Velora] Patch quota profil {uid} : {exc}")
 
-    print(f"[Velora] Profil {uid} : utilisation du profil synthétique (quota en mémoire).")
+    print(f"[Velora] Profil {uid} : profil synthétique (analyse autorisée).")
     return default
 
 
