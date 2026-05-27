@@ -137,6 +137,13 @@
         .velora-loading-bar {
             animation: velora-loading-slide 1.4s ease-in-out infinite;
         }
+        @keyframes velora-paywall-fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .velora-paywall-fade-in {
+            animation: velora-paywall-fade-in 0.4s ease-out both;
+        }
         @keyframes velora-loading-slide {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(200%); }
@@ -250,9 +257,9 @@
     <div id="dashboardLayout" class="flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
         <!-- Colonne gauche : contrôles & communauté (mobile : au-dessus du panneau droit) -->
         <aside id="colonneGauche" class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-6">
-            <div class="glass-card rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20 lg:p-6">
+            <div id="analyseCourseCarte" class="glass-card rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20 lg:p-6">
                 <p class="mb-4 text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">Analyse de course</p>
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div id="analyseCourseForm" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
                     <label class="block sm:col-span-2 lg:col-span-1">
                         <span class="mb-1 block text-xs text-gray-500">Date</span>
                         <input type="date" id="dateInput" class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white transition">
@@ -269,8 +276,20 @@
                         class="sm:col-span-2 lg:col-span-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:from-emerald-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-60">
                         Analyser
                     </button>
-        </div>
-    </div>
+                </div>
+                <div id="analyseCoursePaywall" class="hidden" aria-live="polite">
+                    <div class="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-gray-900/60 p-6 text-center shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-widest text-amber-400/90">Limite Freemium</p>
+                        <p id="analyseCoursePaywallTexte" class="mt-3 text-base font-semibold text-white">Vous avez épuisé vos 3 analyses gratuites du jour.</p>
+                        <p class="mt-2 text-sm text-gray-400">Passez Premium pour des analyses illimitées et conserver toutes vos archives.</p>
+                        <button type="button" id="btnPasserPremium"
+                            class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-amber-400 hover:to-orange-400 sm:w-auto">
+                            <span aria-hidden="true">★</span> Passer Premium
+                        </button>
+                        <p id="premiumCheckoutErreur" class="mt-3 hidden text-sm text-red-400" role="alert"></p>
+                    </div>
+                </div>
+            </div>
 
             <section id="sectionVitrine" aria-label="Statistiques communauté Velora">
                 <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
@@ -1101,19 +1120,45 @@
                     <p class="text-xs font-semibold uppercase tracking-widest text-amber-400/90">Limite Freemium</p>
                     <p class="mt-3 text-base font-semibold text-white">${texte}</p>
                     <p class="mt-2 text-sm text-gray-400">Passez Premium pour des analyses illimitées et conserver toutes vos archives.</p>
-                    <button type="button" id="btnPasserPremium"
-                        class="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-amber-400 hover:to-orange-400">
+                    <button type="button" class="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-amber-400 hover:to-orange-400">
                         <span aria-hidden="true">★</span> Passer Premium
                     </button>
-                    <p id="premiumCheckoutErreur" class="mt-3 hidden text-sm text-red-400" role="alert"></p>
                 </div>`;
         }
 
-        function afficherBlocQuotaPremium(zoneResultats, message) {
-            if (!zoneResultats) return;
-            zoneResultats.innerHTML = genererHtmlBlocPremium(message);
-            const btn = document.getElementById('btnPasserPremium');
-            if (btn) btn.addEventListener('click', lancerCheckoutPremium, { once: true });
+        function mettreAJourUiFormulaireAnalyse(options = {}) {
+            const { animer = false } = options;
+            const form = document.getElementById('analyseCourseForm');
+            const paywall = document.getElementById('analyseCoursePaywall');
+            const paywallTexte = document.getElementById('analyseCoursePaywallTexte');
+            if (!form || !paywall) return;
+
+            const quotaAtteint = estMembreConnecte()
+                && !window.VeloraAuth?.isPremiumUser?.()
+                && Boolean(window.VeloraAuth?.isQuotaComplet?.());
+
+            if (paywallTexte) paywallTexte.textContent = MSG_QUOTA_ATTEINT;
+
+            if (quotaAtteint) {
+                form.classList.add('hidden');
+                paywall.classList.remove('hidden');
+                if (animer) {
+                    paywall.classList.remove('velora-paywall-fade-in');
+                    void paywall.offsetWidth;
+                    paywall.classList.add('velora-paywall-fade-in');
+                }
+                return;
+            }
+
+            form.classList.remove('hidden');
+            paywall.classList.add('hidden');
+            paywall.classList.remove('velora-paywall-fade-in');
+        }
+
+        function afficherBlocQuotaPremium(_zoneResultats, message) {
+            const paywallTexte = document.getElementById('analyseCoursePaywallTexte');
+            if (paywallTexte && message) paywallTexte.textContent = message;
+            mettreAJourUiFormulaireAnalyse({ animer: true });
         }
 
         async function lancerCheckoutPremium() {
@@ -1526,6 +1571,7 @@
                 badge.classList.add('hidden');
                 quotaEl.classList.add('hidden');
                 btnPremiumHeader.classList.add('hidden');
+                mettreAJourUiFormulaireAnalyse();
                 return;
             }
 
@@ -1542,6 +1588,7 @@
                 badge.className = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
                 quotaEl.classList.add('hidden');
                 btnPremiumHeader.classList.add('hidden');
+                mettreAJourUiFormulaireAnalyse();
                 return;
             }
 
@@ -1557,6 +1604,7 @@
             quotaEl.classList.remove('hidden');
 
             btnPremiumHeader.classList.remove('hidden');
+            mettreAJourUiFormulaireAnalyse();
         }
 
         function incrementerCompteurUiApresAnalyse() {
@@ -1565,15 +1613,13 @@
                 window.VeloraAuth.incrementerCompteurAnalysesLocal();
             }
             mettreAJourUiPlanUtilisateur();
+            if (window.VeloraAuth?.isQuotaComplet?.()) {
+                mettreAJourUiFormulaireAnalyse({ animer: true });
+            }
         }
 
         function appliquerPaywallDeviceSiBloque() {
-            if (!estMembreConnecte() || window.VeloraAuth?.isPremiumUser?.()) return;
-            if (!window.VeloraAuth?.isDeviceFreemiumBloque?.()) return;
-            const zoneResultats = document.getElementById('resultats');
-            if (!zoneResultats) return;
-            afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
-            mettreAJourZoneVidePronostic();
+            mettreAJourUiFormulaireAnalyse();
         }
 
         function appliquerEtatAuth() {
@@ -1784,6 +1830,10 @@
             });
 
             document.getElementById('btnPasserPremiumHeader')?.addEventListener('click', () => {
+                lancerCheckoutPremium();
+            });
+
+            document.getElementById('btnPasserPremium')?.addEventListener('click', () => {
                 lancerCheckoutPremium();
             });
         }
@@ -2420,9 +2470,8 @@
             }
 
             if (window.VeloraAuth?.isQuotaComplet?.()) {
-                afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
+                afficherBlocQuotaPremium(null, MSG_QUOTA_ATTEINT);
                 mettreAJourUiPlanUtilisateur();
-                mettreAJourZoneVidePronostic();
                 return;
             }
 
@@ -2459,9 +2508,9 @@
                     return;
                 }
                 if (result.code === 'QUOTA_ATTEINT') {
-                    console.log('[Velora] Affichage paywall Premium — quota journalier épuisé');
-                    afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
-                    mettreAJourZoneVidePronostic();
+                    console.log('[Velora] Quota journalier épuisé — paywall analyse de course');
+                    incrementerCompteurUiApresAnalyse();
+                    afficherBlocQuotaPremium(null, MSG_QUOTA_ATTEINT);
                     return;
                 }
                 if (!result.ok) {
