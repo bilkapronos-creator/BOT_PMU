@@ -881,7 +881,9 @@
                 if (reponse.status === 403) {
                     try {
                         const body = await reponse.json();
+                        console.log('[Velora] HTTP 403 reçu — corps :', body);
                         if (body?.detail === 'QUOTA_ATTEINT') {
+                            console.log('[Velora] Paywall : QUOTA_ATTEINT confirmé');
                             return {
                                 ok: false,
                                 status: 403,
@@ -2026,6 +2028,7 @@
                     return;
                 }
                 if (result.code === 'QUOTA_ATTEINT') {
+                    console.log('[Velora] Affichage paywall Premium — quota journalier épuisé');
                     afficherBlocQuotaPremium(zoneResultats, MSG_QUOTA_ATTEINT);
                     mettreAJourZoneVidePronostic();
                     return;

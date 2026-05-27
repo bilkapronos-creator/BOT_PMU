@@ -207,13 +207,19 @@ def auth_membre(
 
 
 def appliquer_quota_analyse(user_id: str) -> None:
-    """Blocage strict si analyses_count >= 3 (ne bloque pas si sync profil en cours)."""
+    """Blocage strict : analyses_count >= 3 → HTTP 403 QUOTA_ATTEINT."""
     try:
         verifier_quota_analyse(user_id)
     except QuotaExceededError as exc:
+        print(f"[Velora] Quota bloqué pour {user_id} : {exc.used}/{exc.daily_limit}")
         raise HTTPException(status_code=403, detail="QUOTA_ATTEINT") from exc
-    except Exception as exc:
-        print(f"[Velora] Quota non appliqué pour {user_id} (analyse autorisée) : {exc}")
+    except BillingConfigError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"erreur": str(exc), "code": "quota_config_error"},
+        ) from exc
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
 
 
 def valider_user_id_archive(archive: dict, user_id: str) -> None:
@@ -685,7 +691,7 @@ def analyser_course(
         raise _erreur_pmu_http(exc) from exc
     if response.status_code != 200:
         return {"erreur": "Course introuvable ou non disponible"}
-        
+
     participants = response.json().get("participants", [])
     participants = _enrichir_cotes_internet(participants, date_pmu, reunion_pmu, course_pmu)
     tableau_pronostics = []
@@ -733,10 +739,10 @@ def analyser_course(
         if is_vb and cote_num is not None:
             entree["anomalie_cote"] = round(cote_num - score, 1)
 
-    try:
-        incrementer_compteur_analyse(user_id)
-    except Exception as exc:
-        print(f"[Velora] Incrément quota post-analyse : {exc}")
+    if not tableau_pronostics:
+        return {"erreur": "Aucun participant trouvé pour cette course"}
+
+    incrementer_compteur_analyse(user_id)
 
     return {
         "pronostic_officiel_mtech": tableau_pronostics,

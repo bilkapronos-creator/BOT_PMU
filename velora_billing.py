@@ -117,6 +117,53 @@ def _aujourdhui() -> date:
     return datetime.now(timezone.utc).date()
 
 
+def _normaliser_profil_lu(profil: dict[str, Any], user_id: str) -> dict[str, Any]:
+    """Normalise une ligne profiles lue en base (sans écraser le compteur par défaut)."""
+    return {
+        "id": profil.get("id", user_id),
+        "role": profil.get("role", "free"),
+        "plan_type": profil.get("plan_type", "free"),
+        "is_premium": profil.get("is_premium") is True,
+        "stripe_customer_id": profil.get("stripe_customer_id"),
+        "analyses_count": int(profil.get("analyses_count") or 0),
+        "last_analysis_date": profil.get("last_analysis_date"),
+    }
+
+
+def _lire_compteur_supabase(user_id: str) -> dict[str, Any]:
+    """Lit analyses_count / last_analysis_date depuis Supabase (source de vérité quota)."""
+    client = _get_supabase_client()
+    uid = str(user_id).strip()
+
+    def _lire():
+        return (
+            client.table(_PROFILES_TABLE)
+            .select("id, role, plan_type, is_premium, analyses_count, last_analysis_date")
+            .eq("id", uid)
+            .limit(1)
+            .execute()
+        )
+
+    try:
+        resp = supabase_execute(_lire, description="lecture compteur quota")
+    except Exception as exc:
+        raise BillingConfigError(
+            f"Lecture quota impossible ({uid}) : {exc}. "
+            "Exécutez supabase/profiles_quota.sql et vérifiez SUPABASE_SERVICE_ROLE_KEY.",
+        ) from exc
+
+    rows = resp.data or []
+    if not rows:
+        raise BillingConfigError(f"Profil quota introuvable en base pour {uid}.")
+
+    if "analyses_count" not in rows[0]:
+        raise BillingConfigError(
+            "Colonne analyses_count absente. Exécutez supabase/profiles_quota.sql.",
+        )
+
+    return _normaliser_profil_lu(rows[0], uid)
+
+
 def _profil_defaut_dict(user_id: str) -> dict[str, Any]:
     """Valeurs par défaut si la ligne profiles n'existe pas encore en base."""
     today = _aujourdhui()
@@ -227,9 +274,13 @@ def obtenir_ou_creer_profil(user_id: str) -> dict[str, Any]:
     uid = str(user_id).strip()
     profil = obtenir_profil(uid)
     if profil:
-        return {**_profil_defaut_dict(uid), **profil}
+        return _normaliser_profil_lu(profil, uid)
     print(f"[Velora] Profil absent pour {uid} — création automatique.")
-    return creer_profil_par_defaut(uid)
+    created = creer_profil_par_defaut(uid)
+    try:
+        return _lire_compteur_supabase(uid)
+    except BillingConfigError:
+        return _normaliser_profil_lu(created, uid)
 
 
 def est_utilisateur_premium(profil: Optional[dict[str, Any]]) -> bool:
@@ -276,22 +327,22 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
     Vérifie le quota AVANT analyse (profiles.analyses_count / last_analysis_date).
     Premium → illimité. Sinon blocage strict à daily_limit analyses/jour.
     """
-    profil = obtenir_ou_creer_profil(user_id)
+    obtenir_ou_creer_profil(user_id)
+    row = _lire_compteur_supabase(user_id)
 
-    if est_utilisateur_premium(profil):
+    if est_utilisateur_premium(row):
         return {"allowed": True, "unlimited": True, "is_premium": True}
 
     today = _aujourdhui()
-    last_date = _parser_date_profil(profil.get("last_analysis_date"))
-    count = int(profil.get("analyses_count") or 0)
+    last_date = _parser_date_profil(row.get("last_analysis_date"))
+    count = int(row.get("analyses_count") or 0)
 
     if last_date != today:
         count = 0
-        try:
-            client = _get_supabase_client()
-            _reinitialiser_compteur_jour(client, user_id, today)
-        except Exception as exc:
-            print(f"[Velora] Reset quota jour {user_id} : {exc}")
+        client = _get_supabase_client()
+        _reinitialiser_compteur_jour(client, user_id, today)
+
+    print(f"[Velora] Quota check {user_id} : {count}/{daily_limit} (premium={row.get('is_premium')})")
 
     if count >= daily_limit:
         raise QuotaExceededError(count, daily_limit)
@@ -308,30 +359,35 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
 
 def incrementer_compteur_analyse(user_id: str) -> None:
     """Incrémente analyses_count APRÈS une analyse réussie (ignore les Premium)."""
-    profil = obtenir_ou_creer_profil(user_id)
-    if not profil or est_utilisateur_premium(profil):
+    row = _lire_compteur_supabase(user_id)
+    if est_utilisateur_premium(row):
         return
 
     today = _aujourdhui()
-    last_date = _parser_date_profil(profil.get("last_analysis_date"))
-    count = int(profil.get("analyses_count") or 0)
+    last_date = _parser_date_profil(row.get("last_analysis_date"))
+    count = int(row.get("analyses_count") or 0)
     if last_date != today:
         count = 0
 
-    try:
-        client = _get_supabase_client()
-        payload = {
-            "analyses_count": count + 1,
-            "last_analysis_date": today.isoformat(),
-            "updated_at": _now_iso(),
-        }
+    new_count = count + 1
+    client = _get_supabase_client()
+    payload = {
+        "analyses_count": new_count,
+        "last_analysis_date": today.isoformat(),
+        "updated_at": _now_iso(),
+    }
 
-        def _maj():
-            return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
+    def _maj():
+        return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
 
-        supabase_execute(_maj, description="incrément analyses_count")
-    except Exception as exc:
-        print(f"[Velora] Incrément analyses_count {user_id} : {exc}")
+    supabase_execute(_maj, description="incrément analyses_count")
+    print(f"[Velora] Quota incrémenté {user_id} : {new_count}/{QUOTA_JOURNALIER}")
+
+    verify = _lire_compteur_supabase(user_id)
+    if int(verify.get("analyses_count") or 0) != new_count:
+        raise ArchivesStorageError(
+            f"Incrément quota non persisté pour {user_id} (attendu {new_count}).",
+        )
 
 
 def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:
