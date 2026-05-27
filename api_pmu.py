@@ -14,6 +14,7 @@ from velora_billing import (
     BillingConfigError,
     QuotaExceededError,
     creer_session_checkout_stripe,
+    creer_session_portail_stripe,
     incrementer_compteur_analyse,
     lister_utilisateurs_admin,
     traiter_webhook_stripe,
@@ -993,6 +994,31 @@ def create_checkout_session(
         raise _erreur_archives_http(exc) from exc
 
     return {"url": session["url"], "session_id": session["session_id"]}
+
+
+@app.post("/create-portal-session", dependencies=[Depends(verifier_cle_api)])
+@app.post("/api/create-portal-session", dependencies=[Depends(verifier_cle_api)])
+def create_portal_session(
+    body: dict = Body(default={}),
+    user_id_header: str = Depends(exiger_user_id),
+):
+    """
+    Génère un lien Stripe Customer Portal pour gérer / résilier l'abonnement Premium.
+    Corps optionnel : { "return_url"? }
+    """
+    frontend_base = (
+        os.environ.get("VELORA_FRONTEND_URL", "https://velora-pronos.com").rstrip("/")
+    )
+    return_url = str(body.get("return_url") or frontend_base).strip()
+
+    try:
+        session = creer_session_portail_stripe(user_id_header, return_url=return_url)
+    except BillingConfigError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except ArchivesStorageError as exc:
+        raise _erreur_archives_http(exc) from exc
+
+    return {"url": session["url"]}
 
 
 @app.post("/webhook")

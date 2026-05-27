@@ -312,6 +312,11 @@
         return isPremium || estGodModeUtilisateur();
     }
 
+    function peutGererAbonnementStripe() {
+        if (!isPremiumUser() || estGodModeUtilisateur()) return false;
+        return Boolean(String(profil?.stripe_customer_id || '').trim());
+    }
+
     function getProfile() {
         return profil;
     }
@@ -607,6 +612,7 @@
         getUserEmail,
         isPremiumUser,
         isPremiumOptimiste,
+        peutGererAbonnementStripe,
         appliquerPremiumOptimiste,
         getProfile,
         getQuotaDailyLimit,

@@ -848,6 +848,41 @@ def creer_session_checkout_stripe(
     return {"url": session.url, "session_id": session.id}
 
 
+def creer_session_portail_stripe(user_id: str, *, return_url: str) -> dict[str, str]:
+    """Crée une session Stripe Customer Portal pour gérer / résilier l'abonnement."""
+    _stripe_configure()
+    import stripe
+
+    uid = str(user_id or "").strip()
+    if not uid:
+        raise BillingConfigError("user_id (UUID Supabase) requis pour le portail Stripe.")
+
+    profil = obtenir_profil(uid)
+    if not profil:
+        raise BillingConfigError("Profil introuvable pour cet utilisateur.")
+
+    stripe_customer_id = str(profil.get("stripe_customer_id") or "").strip()
+    if not stripe_customer_id:
+        raise BillingConfigError(
+            "Aucun abonnement Stripe associé à ce compte. "
+            "Souscrivez d'abord à Premium ou contactez le support.",
+        )
+
+    retour = str(return_url or "").strip()
+    if not retour:
+        retour = (os.environ.get("VELORA_FRONTEND_URL") or "https://velora-pronos.com").rstrip("/")
+
+    print(f"[Velora] Stripe BillingPortal.create : user_id={uid} customer={stripe_customer_id}")
+    session = stripe.billing_portal.Session.create(
+        customer=stripe_customer_id,
+        return_url=retour,
+    )
+    if not session.url:
+        raise BillingConfigError("Stripe n'a pas renvoyé d'URL du portail client.")
+
+    return {"url": session.url}
+
+
 def traiter_webhook_stripe(payload: bytes, signature: Optional[str]) -> dict[str, Any]:
     """Vérifie la signature Stripe et met à jour le statut Premium."""
     try:

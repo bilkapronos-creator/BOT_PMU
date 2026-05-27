@@ -221,6 +221,13 @@
                 </button>
                 <button
                     type="button"
+                    id="btnGererAbonnement"
+                    class="hidden rounded-xl border border-amber-500/35 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-300 transition hover:bg-amber-500/20"
+                >
+                    Gérer mon abonnement
+                </button>
+                <button
+                    type="button"
                     id="btnAuthLogout"
                     class="hidden rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-gray-300 transition hover:text-white"
                 >
@@ -402,6 +409,9 @@
             </svg>
             Contact
         </a>
+        <p class="mt-4">
+            <a href="/legales.html" class="text-xs text-gray-600 transition hover:text-gray-400">Mentions Légales &amp; CGV</a>
+        </p>
     </footer>
 
     </div>
@@ -1245,6 +1255,43 @@
             }
         }
 
+        async function lancerPortailAbonnement() {
+            const btn = document.getElementById('btnGererAbonnement');
+            if (!estMembreConnecte()) {
+                ouvrirModalAuth('signin');
+                return;
+            }
+            if (!window.VeloraAuth?.peutGererAbonnementStripe?.()) {
+                afficherToastVelora('Aucun abonnement Stripe actif sur ce compte.', 5000, 'error');
+                return;
+            }
+
+            const label = btn?.textContent || 'Gérer mon abonnement';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Redirection Stripe…';
+            }
+
+            const origin = window.location.origin.replace(/\/$/, '');
+            const result = await veloraApi('/create-portal-session', {
+                method: 'POST',
+                headers: entetesJson(),
+                body: JSON.stringify({ return_url: origin }),
+            });
+
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = label;
+            }
+
+            if (result.ok && result.data?.url) {
+                window.location.href = result.data.url;
+                return;
+            }
+
+            afficherToastVelora(result.erreur || 'Impossible d\'ouvrir le portail d\'abonnement.', 6000, 'error');
+        }
+
         function afficherErreurSync(elementId, message) {
             const el = document.getElementById(elementId);
             if (!el || !message) return;
@@ -1586,8 +1633,11 @@
             const badge = document.getElementById('badgePlanUtilisateur');
             const quotaEl = document.getElementById('quotaAnalysesLabel');
             const btnPremiumHeader = document.getElementById('btnPasserPremiumHeader');
+            const btnGererAbonnement = document.getElementById('btnGererAbonnement');
 
             if (!bar || !badge || !quotaEl || !btnPremiumHeader) return;
+
+            if (btnGererAbonnement) btnGererAbonnement.classList.add('hidden');
 
             if (!estMembreConnecte()) {
                 bar.classList.add('hidden');
@@ -1611,6 +1661,9 @@
                 badge.className = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
                 quotaEl.classList.add('hidden');
                 btnPremiumHeader.classList.add('hidden');
+                if (btnGererAbonnement && window.VeloraAuth?.peutGererAbonnementStripe?.()) {
+                    btnGererAbonnement.classList.remove('hidden');
+                }
                 mettreAJourUiFormulaireAnalyse();
                 return;
             }
@@ -1858,6 +1911,10 @@
 
             document.getElementById('btnPasserPremium')?.addEventListener('click', () => {
                 lancerCheckoutPremium();
+            });
+
+            document.getElementById('btnGererAbonnement')?.addEventListener('click', () => {
+                lancerPortailAbonnement();
             });
         }
 
