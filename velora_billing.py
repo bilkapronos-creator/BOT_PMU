@@ -669,7 +669,7 @@ def creer_session_checkout_stripe(
     cancel_url: str,
     customer_email: Optional[str] = None,
 ) -> dict[str, str]:
-    """Crée une session Checkout Stripe (mode abonnement test)."""
+    """Crée une session Checkout Stripe (mode abonnement Live)."""
     _stripe_configure()
     import stripe
 
