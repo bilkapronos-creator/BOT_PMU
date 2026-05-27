@@ -280,7 +280,7 @@
                 <div id="analyseCoursePaywall" class="hidden" aria-live="polite">
                     <div class="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-gray-900/60 p-6 text-center shadow-xl">
                         <p class="text-xs font-semibold uppercase tracking-widest text-amber-400/90">Limite Freemium</p>
-                        <p id="analyseCoursePaywallTexte" class="mt-3 text-base font-semibold text-white">Vous avez épuisé vos 3 analyses gratuites du jour.</p>
+                        <p id="analyseCoursePaywallTexte" class="mt-3 text-base font-semibold leading-relaxed text-white">Vous avez épuisé vos 3 analyses gratuites du jour. Revenez demain pour de nouvelles analyses, ou passez Premium pour débloquer un accès illimité immédiat !</p>
                         <p class="mt-2 text-sm text-gray-400">Passez Premium pour des analyses illimitées et conserver toutes vos archives.</p>
                         <button type="button" id="btnPasserPremium"
                             class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-amber-400 hover:to-orange-400 sm:w-auto">
@@ -838,7 +838,7 @@
         const ARCHIVES_LIMIT = 50;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
         const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
-        const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour.';
+        const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour. Revenez demain pour de nouvelles analyses, ou passez Premium pour débloquer un accès illimité immédiat !';
         const QUOTA_JOURNALIER_UI = 3;
 
         function getMtechApiKey() {
