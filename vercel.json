@@ -5,16 +5,27 @@
   "buildCommand": "node scripts/generate-config.js",
   "outputDirectory": ".",
   "installCommand": "",
+  "rewrites": [
+    { "source": "/landing", "destination": "/landing.html" },
+    { "source": "/landing/", "destination": "/landing.html" },
+    { "source": "/legales", "destination": "/legales.html" },
+    { "source": "/legales/", "destination": "/legales.html" }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/config.js", "dest": "/config.js" },
     { "src": "/auth.js", "dest": "/auth.js" },
     { "src": "/admin.html", "dest": "/admin.html" },
     { "src": "/admin.js", "dest": "/admin.js" },
+    { "src": "/landing.html", "dest": "/landing.html" },
+    { "src": "/legales.html", "dest": "/legales.html" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/icons/(.*)", "dest": "/icons/$1" },
     { "src": "/vendor/(.*)", "dest": "/vendor/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/((?!landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|sw\\.js|icons/|vendor/).*)",
+      "dest": "/index.html"
+    }
   ]
 }

@@ -19,6 +19,15 @@
         return email === GODMODE_EMAIL.toLowerCase();
     }
 
+    function estPageStatiqueSansAuth() {
+        const path = String(global.location.pathname || '/').replace(/\/+$/, '') || '/';
+        return path === '/landing'
+            || path === '/landing.html'
+            || path === '/legales'
+            || path === '/legales.html'
+            || path === '/admin.html';
+    }
+
     function normaliserSupabaseUrl(urlBrute) {
         return String(urlBrute || '').trim().replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
     }
@@ -389,6 +398,8 @@
     }
 
     async function init() {
+        if (estPageStatiqueSansAuth()) return null;
+
         const supabase = getClient();
         if (!supabase) return null;
 
@@ -605,6 +616,7 @@
 
     global.VeloraAuth = {
         init,
+        estPageStatiqueSansAuth,
         getClient,
         getConfig,
         isAuthenticated,

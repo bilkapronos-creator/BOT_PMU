@@ -30,6 +30,15 @@
     <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <link rel="preload" as="image" href="/icons/splash-mobile.png">
+    <script>
+        (function () {
+            var path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+            var redirects = { '/landing': '/landing.html', '/legales': '/legales.html' };
+            if (redirects[path]) {
+                window.location.replace(redirects[path] + window.location.search + window.location.hash);
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/vendor/supabase.min.js"></script>
     <script src="/config.js"></script>
@@ -1987,7 +1996,16 @@
             synchroniserProfilPremiumArrierePlan();
         }
 
+        function estPageStatiqueHorsApp() {
+            const path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+            return ['/landing', '/landing.html', '/legales', '/legales.html', '/admin.html'].includes(path);
+        }
+
         async function demarrerVeloraApp() {
+            if (estPageStatiqueHorsApp()) {
+                masquerSplashApp();
+                return;
+            }
             try {
                 gererErreurRetourAuthAuDemarrage();
 
@@ -2425,7 +2443,7 @@
             installIosHint.classList.add('hidden');
         });
 
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && !estPageStatiqueHorsApp()) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').catch(() => {});
             });
