@@ -6,6 +6,8 @@ import os
 from datetime import date, datetime, timezone
 from typing import Any, Optional
 
+import httpx
+
 from velora_resilience import ArchivesStorageError, options_client_supabase, supabase_execute
 
 _PROFILES_TABLE = "profiles"
@@ -55,7 +57,61 @@ def _get_supabase_client():
 
     options = options_client_supabase()
     _client = create_client(url, key, options) if options else create_client(url, key)
+    print(f"[Velora] Client Supabase billing initialisé (service_role, url={url[:40]}…)")
     return _client
+
+
+def _credentials_service_role() -> tuple[str, str]:
+    """URL PostgREST + clé service_role (contourne RLS)."""
+    url = (os.environ.get("SUPABASE_URL") or "").strip().replace("/rest/v1", "").rstrip("/")
+    key = (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
+    if not url or not key:
+        raise BillingConfigError(
+            "SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY requis sur Render pour le quota.",
+        )
+    return url, key
+
+
+def _headers_service_role() -> dict[str, str]:
+    _, key = _credentials_service_role()
+    return {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation",
+    }
+
+
+def _patch_profil_rest(user_id: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """PATCH PostgREST direct avec service_role — bypass RLS garanti."""
+    base_url, _key = _credentials_service_role()
+    url = f"{base_url}/rest/v1/{_PROFILES_TABLE}"
+    uid = str(user_id).strip()
+
+    response = httpx.patch(
+        url,
+        params={"id": f"eq.{uid}"},
+        headers=_headers_service_role(),
+        json=payload,
+        timeout=35.0,
+    )
+
+    if response.status_code >= 400:
+        raise ArchivesStorageError(
+            f"PATCH profiles échoué ({response.status_code}) : {response.text[:400]}",
+        )
+
+    try:
+        data = response.json()
+    except ValueError as exc:
+        raise ArchivesStorageError("PATCH profiles : réponse JSON invalide.") from exc
+
+    if not isinstance(data, list) or len(data) == 0:
+        raise ArchivesStorageError(
+            f"PATCH profiles : 0 ligne mise à jour pour {uid} (vérifiez l'UUID / auth.users).",
+        )
+
+    return data
 
 
 def _stripe_configure() -> None:
@@ -358,9 +414,15 @@ def verifier_quota_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) ->
 
 
 def incrementer_compteur_analyse(user_id: str) -> None:
-    """Incrémente analyses_count APRÈS une analyse réussie (ignore les Premium)."""
-    row = _lire_compteur_supabase(user_id)
+    """
+    Incrémente analyses_count via service_role (RPC SECURITY DEFINER ou PATCH REST).
+    Lève ArchivesStorageError si la persistance échoue.
+    """
+    uid = str(user_id).strip()
+    row = _lire_compteur_supabase(uid)
+
     if est_utilisateur_premium(row):
+        print(f"[Velora] Incrément ignoré (Premium) : {uid}")
         return
 
     today = _aujourdhui()
@@ -369,25 +431,47 @@ def incrementer_compteur_analyse(user_id: str) -> None:
     if last_date != today:
         count = 0
 
-    new_count = count + 1
-    client = _get_supabase_client()
+    nouvelle_valeur = count + 1
     payload = {
-        "analyses_count": new_count,
+        "analyses_count": nouvelle_valeur,
         "last_analysis_date": today.isoformat(),
         "updated_at": _now_iso(),
     }
 
-    def _maj():
-        return client.table(_PROFILES_TABLE).update(payload).eq("id", user_id).execute()
+    # 1) RPC atomique (recommandé — exécuter supabase/increment_analysis_count.sql)
+    try:
+        client = _get_supabase_client()
 
-    supabase_execute(_maj, description="incrément analyses_count")
-    print(f"[Velora] Quota incrémenté {user_id} : {new_count}/{QUOTA_JOURNALIER}")
+        def _rpc():
+            return client.rpc("increment_velora_analysis_count", {"p_user_id": uid}).execute()
 
-    verify = _lire_compteur_supabase(user_id)
-    if int(verify.get("analyses_count") or 0) != new_count:
-        raise ArchivesStorageError(
-            f"Incrément quota non persisté pour {user_id} (attendu {new_count}).",
-        )
+        resp = supabase_execute(_rpc, description="RPC increment_velora_analysis_count")
+        data = resp.data
+        if isinstance(data, dict) and data.get("ok") is True:
+            if data.get("skipped"):
+                return
+            persisted = int(data.get("analyses_count") or nouvelle_valeur)
+            print(f"[Velora] Incrémentation réussie (RPC) : {uid} → {persisted}")
+            return
+        if isinstance(data, dict) and data.get("ok") is False:
+            print(f"[Velora] RPC increment échec : {data.get('reason')}")
+    except Exception as exc:
+        print(f"[Velora] RPC increment_velora_analysis_count : {exc}")
+
+    # 2) PATCH REST direct service_role (contourne RLS PostgREST)
+    try:
+        rows = _patch_profil_rest(uid, payload)
+        persisted = int(rows[0].get("analyses_count") or nouvelle_valeur)
+        if persisted != nouvelle_valeur:
+            raise ArchivesStorageError(
+                f"Valeur persistée inattendue pour {uid} : {persisted} (attendu {nouvelle_valeur}).",
+            )
+        print(f"[Velora] Incrémentation réussie (REST) : {uid} → {persisted}")
+        return
+    except ArchivesStorageError:
+        raise
+    except Exception as exc:
+        raise ArchivesStorageError(f"PATCH REST increment échoué pour {uid} : {exc}") from exc
 
 
 def consommer_slot_analyse(user_id: str, daily_limit: int = QUOTA_JOURNALIER) -> dict[str, Any]:

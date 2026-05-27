@@ -742,12 +742,14 @@ def analyser_course(
     if not tableau_pronostics:
         return {"erreur": "Aucun participant trouvé pour cette course"}
 
-    incrementer_compteur_analyse(user_id)
-
-    return {
+    reponse_analyse = {
         "pronostic_officiel_mtech": tableau_pronostics,
         **_metadata_course_pmu(date_pmu, reunion_pmu, course_pmu, len(participants)),
     }
+
+    incrementer_compteur_analyse(user_id)
+
+    return reponse_analyse
 
 
 def _url_course_pmu(date_pmu: str, reunion_pmu: str, course_pmu: str) -> str:
