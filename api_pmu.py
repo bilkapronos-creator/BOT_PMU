@@ -33,7 +33,7 @@ def _construire_origines_cors() -> tuple[list[str], bool]:
     Note : allow_origins=["*"] + allow_credentials=True est refusé par les navigateurs.
     """
     defaut = [
-        "https://velora-engine.vercel.app",
+        "https://velora-pronos.com",
         "http://localhost:5500",
         "http://localhost:3000",
         "http://localhost:5173",
@@ -947,7 +947,7 @@ def create_checkout_session(
         )
 
     frontend_base = (
-        os.environ.get("VELORA_FRONTEND_URL", "https://velora-engine.vercel.app").rstrip("/")
+        os.environ.get("VELORA_FRONTEND_URL", "https://velora-pronos.com").rstrip("/")
     )
     success_url = str(body.get("success_url") or f"{frontend_base}/?premium=success").strip()
     cancel_url = str(body.get("cancel_url") or f"{frontend_base}/?premium=cancel").strip()
