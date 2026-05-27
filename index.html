@@ -171,7 +171,7 @@
             <div class="velora-splash-ring" aria-hidden="true"></div>
             <img
                 src="/icons/splash-mobile.png"
-                alt="Velora Engine — Pronostics Premium"
+                alt="Velora Engine — Analyses Premium"
                 class="velora-splash-image relative z-10"
                 width="540"
                 height="960"
@@ -262,7 +262,7 @@
     <nav class="mb-6 flex rounded-xl border border-white/10 glass-card p-1 shadow-lg shadow-black/20 lg:mb-8" aria-label="Navigation principale">
         <button type="button" id="tabPronostic" onclick="afficherSection('pronostic')"
             class="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow transition">
-            Pronostic
+            Analyse
         </button>
         <button type="button" id="tabArchives" onclick="afficherSection('archives')"
             class="hidden flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-gray-200">
@@ -411,6 +411,9 @@
         </a>
         <p class="mt-4">
             <a href="/legales.html" class="text-xs text-gray-600 transition hover:text-gray-400">Mentions Légales &amp; CGV</a>
+        </p>
+        <p class="mx-auto mt-4 max-w-2xl px-4 text-center text-[11px] leading-relaxed text-gray-500">
+            Les liens présents sur ce site sont des liens d'affiliation vers nos partenaires. Les jeux d'argent et de hasard comportent des risques : endettement, dépendance, isolement. Appelez le 09 74 75 13 13.
         </p>
     </footer>
 
@@ -2272,7 +2275,7 @@
                     <p class="text-center text-sm text-gray-500 py-8">
                         Aucune course archivée pour ce compte.
                         ${erreurSync ? '<br><span class="text-amber-300/90">Synchronisation indisponible — vos archives restent sur cet appareil. Évitez « Effacer les données du site ».</span>' : ''}
-                        <br><span class="text-gray-500">Lance une analyse (onglet Pronostic) pour en créer une nouvelle.</span>
+                        <br><span class="text-gray-500">Lance une analyse (onglet Analyse) pour en créer une nouvelle.</span>
                     </p>`;
                 return;
             }
