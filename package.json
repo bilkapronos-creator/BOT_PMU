@@ -1,0 +1,12 @@
+{
+  "name": "velora-app",
+  "version": "1.0.0",
+  "description": "Velora Engine - PMU racing analytics platform",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/generate-config.js"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^1.1.0"
+  }
+}
