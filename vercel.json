@@ -29,29 +29,21 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/landing/sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/landing", "destination": "/landing.html" },
     { "source": "/landing/", "destination": "/landing.html" },
     { "source": "/legales", "destination": "/legales.html" },
-    { "source": "/legales/", "destination": "/legales.html" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
-    { "src": "/robots.txt", "dest": "/robots.txt" },
-    { "src": "/config.js", "dest": "/config.js" },
-    { "src": "/auth.js", "dest": "/auth.js" },
-    { "src": "/admin.html", "dest": "/admin.html" },
-    { "src": "/admin.js", "dest": "/admin.js" },
-    { "src": "/landing.html", "dest": "/landing.html" },
-    { "src": "/legales.html", "dest": "/legales.html" },
-    { "src": "/manifest.json", "dest": "/manifest.json" },
-    { "src": "/sw.js", "dest": "/sw.js" },
-    { "src": "/icons/(.*)", "dest": "/icons/$1" },
-    { "src": "/vendor/(.*)", "dest": "/vendor/$1" },
+    { "source": "/legales/", "destination": "/legales.html" },
     {
-      "src": "/((?!landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|robots\\.txt|sitemap\\.xml|sw\\.js|icons/|vendor/).*)",
-      "dest": "/index.html"
+      "source": "/((?!landing/?$|legales/?$|landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|robots\\.txt|sitemap\\.xml|sw\\.js|icons/|vendor/).*)",
+      "destination": "/index.html"
     }
   ]
 }
