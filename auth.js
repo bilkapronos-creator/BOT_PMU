@@ -309,6 +309,10 @@
         return Boolean(session?.user?.id);
     }
 
+    function estModeInvite() {
+        return !isAuthenticated();
+    }
+
     function getUserId() {
         return session?.user?.id || null;
     }
@@ -397,22 +401,71 @@
         return chargerProfil();
     }
 
+    function avecTimeout(promise, ms, label) {
+        return new Promise((resolve, reject) => {
+            const timer = global.setTimeout(() => {
+                reject(new Error(`${label} timeout (${ms}ms)`));
+            }, ms);
+            Promise.resolve(promise)
+                .then((value) => {
+                    global.clearTimeout(timer);
+                    resolve(value);
+                })
+                .catch((err) => {
+                    global.clearTimeout(timer);
+                    reject(err);
+                });
+        });
+    }
+
+    function reinitialiserEtatInvite() {
+        isPremium = false;
+        premiumOptimiste = false;
+        profil = null;
+        notifierProfil(null);
+    }
+
     async function init() {
         if (estPageStatiqueSansAuth()) return null;
 
         const supabase = getClient();
-        if (!supabase) return null;
+        if (!supabase) {
+            session = null;
+            reinitialiserEtatInvite();
+            return null;
+        }
 
-        const { data, error } = await supabase.auth.getSession();
-        if (error) console.warn('[Velora Auth] getSession :', error.message);
+        try {
+            const { data, error } = await avecTimeout(
+                supabase.auth.getSession(),
+                8000,
+                'supabase.auth.getSession',
+            );
+            if (error) console.warn('[Velora Auth] getSession :', error.message);
+            session = data?.session ?? null;
+        } catch (err) {
+            console.warn('[Velora Auth] Session indisponible — mode invité.', err);
+            session = null;
+        }
 
-        session = data?.session ?? null;
-        await chargerProfil();
+        if (session?.user?.id) {
+            try {
+                await chargerProfil();
+            } catch (err) {
+                console.warn('[Velora Auth] Profil ignoré au démarrage :', err);
+            }
+        } else {
+            reinitialiserEtatInvite();
+        }
 
         supabase.auth.onAuthStateChange(async (_event, newSession) => {
             session = newSession;
             notifier(newSession);
-            await chargerProfil();
+            if (newSession?.user?.id) {
+                await chargerProfil();
+            } else {
+                reinitialiserEtatInvite();
+            }
         });
 
         return session;
@@ -620,6 +673,7 @@
         getClient,
         getConfig,
         isAuthenticated,
+        estModeInvite,
         getUserId,
         getUserEmail,
         isPremiumUser,

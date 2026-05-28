@@ -1094,7 +1094,14 @@
                 </div>`;
         }
 
-        function afficherMessageConnexionRequise(zoneResultats, ouvrirModal = true) {
+        function htmlPanneauVideAnalyse() {
+            return `
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-2xl" aria-hidden="true">🐎</div>
+                <p class="text-sm font-semibold text-gray-300">Panneau d'analyse</p>
+                <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Saisissez une course à gauche et cliquez sur <span class="text-emerald-400">Analyser</span> pour afficher le classement Velora ici.</p>`;
+        }
+
+        function afficherMessageConnexionRequise(zoneResultats, ouvrirModal = false) {
             afficherSection('pronostic');
             const zone = zoneResultats || document.getElementById('resultats');
             const titre = document.getElementById('titreResultats');
@@ -1123,37 +1130,18 @@
             const submitBtn = document.getElementById('submitBtn');
 
             if (zoneVide && !cacheResultatPronostic) {
-                if (connecte) {
-                    zoneVide.innerHTML = `
-                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-2xl" aria-hidden="true">🐎</div>
-                        <p class="text-sm font-semibold text-gray-300">Panneau d'analyse</p>
-                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Saisissez une course à gauche et cliquez sur <span class="text-emerald-400">Analyser</span> pour afficher le classement Velora ici.</p>`;
-                    zoneVide.classList.remove('cursor-pointer');
-                } else {
-                    zoneVide.innerHTML = `
-                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔒</div>
-                        <p class="text-sm font-semibold text-gray-300">Analyse réservée aux membres</p>
-                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">${MSG_CONNEXION_REQUISE}</p>
-                        <button type="button" id="btnConnexionZoneVide"
-                            class="mt-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20">
-                            Connexion / Inscription
-                        </button>`;
-                    zoneVide.classList.add('cursor-pointer');
-                    document.getElementById('btnConnexionZoneVide')
-                        ?.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            ouvrirModalAuth('login');
-                        }, { once: true });
-                }
+                zoneVide.innerHTML = htmlPanneauVideAnalyse();
+                zoneVide.classList.remove('cursor-pointer');
             }
 
             if (guide) {
                 guide.innerHTML = connecte
                     ? 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.'
-                    : `${MSG_CONNEXION_REQUISE} <span class="block mt-2 text-emerald-400/90">Compte gratuit — 3 analyses par jour.</span>`;
+                    : 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis cliquez sur <span class="font-medium text-emerald-400">Analyser</span>. <span class="block mt-2 text-emerald-400/90">Mode invité — connectez-vous pour lancer une analyse (3 gratuites/jour).</span>';
             }
 
             if (submitBtn) {
+                submitBtn.disabled = false;
                 submitBtn.title = connecte ? '' : MSG_CONNEXION_REQUISE;
             }
         }
@@ -1745,9 +1733,6 @@
         function initialiserAuthUi() {
             document.getElementById('btnAuthOpen')?.addEventListener('click', () => ouvrirModalAuth('login'));
             document.getElementById('btnAuthFromArchives')?.addEventListener('click', () => ouvrirModalAuth('login'));
-            document.getElementById('zoneVidePronostic')?.addEventListener('click', () => {
-                if (!estMembreConnecte()) ouvrirModalAuth('login');
-            });
             document.getElementById('btnAuthClose')?.addEventListener('click', fermerModalAuth);
             document.getElementById('modalAuthBackdrop')?.addEventListener('click', fermerModalAuth);
             document.getElementById('btnAuthLogout')?.addEventListener('click', async () => {
@@ -2027,15 +2012,16 @@
                 }
                 if (window.VeloraAuth) {
                     window.VeloraAuth.verifierEtReinitialiserQuotaJournalier?.();
-                    appliquerEtatAuth();
                 }
+                appliquerEtatAuth();
+            } catch (err) {
+                console.error('[Velora] Erreur au démarrage :', err);
+                appliquerEtatAuth();
+            } finally {
                 masquerSplashApp();
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
                 });
-            } catch (err) {
-                console.error('[Velora] Erreur au démarrage :', err);
-                masquerSplashApp();
             }
         }
 
