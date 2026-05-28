@@ -20,11 +20,13 @@
     { "src": "/landing.html", "dest": "/landing.html" },
     { "src": "/legales.html", "dest": "/legales.html" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/robots.txt", "dest": "/robots.txt" },
+    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
     { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/icons/(.*)", "dest": "/icons/$1" },
     { "src": "/vendor/(.*)", "dest": "/vendor/$1" },
     {
-      "src": "/((?!landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|sw\\.js|icons/|vendor/).*)",
+      "src": "/((?!landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|robots\\.txt|sitemap\\.xml|sw\\.js|icons/|vendor/).*)",
       "dest": "/index.html"
     }
   ]
