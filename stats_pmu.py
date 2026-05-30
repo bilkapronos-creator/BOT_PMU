@@ -3,6 +3,7 @@
 from typing import Any
 
 from database import lister_archives, lister_toutes_archives
+from velora_finance import MISE_UNITAIRE, agreger_stats_archives
 
 
 def _est_terminee(archive: dict) -> bool:
@@ -75,6 +76,7 @@ def get_stats_publiques() -> dict:
     taux_plateforme = (
         round(victoires / terminees * 100) if terminees else 0
     )
+    finance = agreger_stats_archives(archives, champ_reussi="reussi_pmu")
 
     gains_par_famille: dict[str, int] = {}
     for archive in archives:
@@ -85,10 +87,18 @@ def get_stats_publiques() -> dict:
         gains_par_famille[famille] = gains_par_famille.get(famille, 0) + 1
 
     return {
+        "sport": "pmu",
+        "mise_unitaire": MISE_UNITAIRE,
         "total_courses_plateforme": total_courses,
         "courses_terminees_plateforme": terminees,
         "victoires_plateforme": victoires,
         "taux_reussite_plateforme": taux_plateforme,
+        "taux": finance["taux"],
+        "victoires": finance["victoires"],
+        "total": finance["total"],
+        "mises_cumulees": finance["mises_cumulees"],
+        "profit_net": finance["profit_net"],
+        "roi_pct": finance["roi_pct"],
         "membres_actifs": membres_actifs,
         "gains_par_famille_pari": gains_par_famille,
         "reussites_par_type_pari": _agreger_reussites_par_type(archives),

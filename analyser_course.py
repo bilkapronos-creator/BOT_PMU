@@ -74,8 +74,19 @@ if response.status_code == 200:
     tableau_pronostics = []
     discipline_course_du_jour = 'a' # Attelé
     
-    # Analyse de chaque cheval un par un
+    def est_non_partant(c):
+        if c.get("nonPartant") is True or c.get("estPartant") is False:
+            return True
+        statut = str(c.get("statut") or "").strip().upper().replace(" ", "_")
+        if statut == "NON_PARTANT":
+            return True
+        inc = str(c.get("incident") or "").strip().upper().replace(" ", "_")
+        return inc == "NON_PARTANT"
+
+    # Analyse de chaque cheval un par un (NP exclus du classement)
     for cheval in participants:
+        if est_non_partant(cheval):
+            continue
         numero = cheval.get("numPmu")
         nom = cheval.get("nom")
         musique = cheval.get("musique", "Non renseignée")

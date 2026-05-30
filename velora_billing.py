@@ -805,8 +805,9 @@ def creer_session_checkout_stripe(
     success_url: str,
     cancel_url: str,
     customer_email: Optional[str] = None,
+    plan: str = "pmu",
 ) -> dict[str, str]:
-    """Crée une session Checkout Stripe (mode abonnement Live)."""
+    """Crée une session Checkout Stripe (mode abonnement Live). plan: pmu | foot."""
     _stripe_configure()
     import stripe
 
@@ -814,17 +815,25 @@ def creer_session_checkout_stripe(
     if not uid:
         raise BillingConfigError("user_id (UUID Supabase) requis pour Stripe Checkout.")
 
-    price_id = (os.environ.get("STRIPE_PRICE_ID") or "").strip()
-    if not price_id:
-        raise BillingConfigError("STRIPE_PRICE_ID non configurée sur Render.")
+    plan_norm = str(plan or "pmu").strip().lower()
+    if plan_norm == "foot":
+        price_id = (os.environ.get("STRIPE_PRICE_ID_FOOT") or "").strip()
+        if not price_id:
+            raise BillingConfigError("STRIPE_PRICE_ID_FOOT non configurée sur Render.")
+    else:
+        plan_norm = "pmu"
+        price_id = (os.environ.get("STRIPE_PRICE_ID") or "").strip()
+        if not price_id:
+            raise BillingConfigError("STRIPE_PRICE_ID non configurée sur Render.")
 
     profil = obtenir_profil(uid)
+    meta = {"user_id": uid, "velora_plan": plan_norm}
     # client_reference_id + metadata : indispensables pour le webhook checkout.session.completed
     params: dict[str, Any] = {
         "mode": "subscription",
         "client_reference_id": uid,
-        "metadata": {"user_id": uid},
-        "subscription_data": {"metadata": {"user_id": uid}},
+        "metadata": meta,
+        "subscription_data": {"metadata": meta},
         "line_items": [{"price": price_id, "quantity": 1}],
         "success_url": success_url,
         "cancel_url": cancel_url,
@@ -839,8 +848,8 @@ def creer_session_checkout_stripe(
         params["customer_email"] = customer_email
 
     print(
-        f"[Velora] Stripe Checkout.create : user_id={uid} "
-        f"client_reference_id={uid} metadata.user_id={uid}",
+        f"[Velora] Stripe Checkout.create : user_id={uid} plan={plan_norm} "
+        f"client_reference_id={uid}",
     )
     session = stripe.checkout.Session.create(**params)
     if not session.url:

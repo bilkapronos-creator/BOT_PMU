@@ -251,12 +251,14 @@ def valider_user_id_archive(archive: dict, user_id: str) -> None:
 
 
 def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, meta: dict) -> dict:
-    """Assemble l'objet archive persisté (évaluation PMU inchangée + user_id)."""
+    """Assemble l'objet archive persisté (évaluation PMU + bloc financier)."""
+    from velora_finance import enrichir_archive_pmu_financier
+
     gagnant = evaluation.get("gagnant")
     if gagnant is None and evaluation.get("arrivee_officielle"):
         gagnant = evaluation["arrivee_officielle"][0]
 
-    return {
+    out = {
         **archive,
         "user_id": user_id,
         "nombre_partants": meta.get("nombre_partants") or archive.get("nombre_partants"),
@@ -273,6 +275,9 @@ def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, m
         "badges_pmu": evaluation.get("badges_pmu") or [],
         "resultats_pmu_detectes": evaluation.get("resultats_pmu_detectes") or [],
     }
+    if evaluation.get("terminee"):
+        enrichir_archive_pmu_financier(out, evaluation)
+    return out
 
 
 def calculer_score_forme(musique_brute, deferre_statut, discipline_du_jour='a'):
@@ -354,6 +359,102 @@ def _extraire_rapport_nombre(valeur: Any) -> Optional[float]:
     return round(cote, 1) if cote > 0 else None
 
 
+STATUT_PARTANT_PMU = "PARTANT"
+STATUT_NON_PARTANT_PMU = "NON_PARTANT"
+
+
+def est_cheval_non_partant(cheval: dict) -> bool:
+    """
+    Détecte un non-partant PMU (statut, incident, flags JSON).
+    Ne confond pas TOMBE / ARRETE (chevaux partis mais incidents de course).
+    """
+    if not isinstance(cheval, dict):
+        return True
+    try:
+        if cheval.get("nonPartant") is True or cheval.get("estNonPartant") is True:
+            return True
+        if cheval.get("estPartant") is False:
+            return True
+
+        statut = str(cheval.get("statut") or "").strip().upper().replace(" ", "_")
+        if statut == STATUT_NON_PARTANT_PMU:
+            return True
+
+        incident = cheval.get("incident")
+        if incident is not None:
+            inc = str(incident).strip().upper().replace(" ", "_")
+            if inc == STATUT_NON_PARTANT_PMU:
+                return True
+
+        engagement = cheval.get("engagement")
+        if isinstance(engagement, dict):
+            eng_statut = str(engagement.get("statut") or "").strip().upper().replace(" ", "_")
+            if eng_statut == STATUT_NON_PARTANT_PMU:
+                return True
+    except Exception:
+        return False
+    return False
+
+
+def _entree_cheval_np(cheval: dict) -> dict:
+    """Entrée tableau : NP en fin de liste, hors classement actif."""
+    jockey_info = cheval.get("jockey") or {}
+    jockey_nom = jockey_info.get("nom") if isinstance(jockey_info, dict) else None
+    if not jockey_nom:
+        driver = cheval.get("driver")
+        jockey_nom = driver.get("nom") if isinstance(driver, dict) else driver
+
+    poids = cheval.get("poids")
+    if poids is None:
+        poids = cheval.get("handicapPoids")
+
+    return {
+        "numero": cheval.get("numPmu"),
+        "nom": cheval.get("nom"),
+        "jockey": jockey_nom,
+        "poids": poids,
+        "cote": COTE_INDICATOR,
+        "cote_pmu_disponible": False,
+        "score_mtech": 0,
+        "score_velora": 0,
+        "is_value_bet": False,
+        "is_non_partant": True,
+        "anomalie_cote": None,
+        "statut_pmu_partant": STATUT_NON_PARTANT_PMU,
+    }
+
+
+def _entree_cheval_actif(cheval: dict) -> dict:
+    score = calculer_score_forme(cheval.get("musique"), cheval.get("deferre"))
+
+    jockey_info = cheval.get("jockey") or {}
+    jockey_nom = jockey_info.get("nom") if isinstance(jockey_info, dict) else None
+    if not jockey_nom:
+        driver = cheval.get("driver")
+        jockey_nom = driver.get("nom") if isinstance(driver, dict) else driver
+
+    poids = cheval.get("poids")
+    if poids is None:
+        poids = cheval.get("handicapPoids")
+
+    cote, cote_pmu_disponible = extraire_cote_pmu(cheval)
+
+    return {
+        "numero": cheval.get("numPmu"),
+        "nom": cheval.get("nom"),
+        "jockey": jockey_nom,
+        "poids": poids,
+        "cote": _formater_cote_reponse(cote, cote_pmu_disponible),
+        "cote_pmu_disponible": cote_pmu_disponible,
+        "score_mtech": score,
+        "score_velora": score,
+        "is_value_bet": False,
+        "is_non_partant": False,
+        "anomalie_cote": None,
+        "statut_pmu_partant": STATUT_PARTANT_PMU,
+    }
+
+
 def extraire_cote_pmu(cheval: dict) -> Tuple[Optional[float], bool]:
     """Retourne (cote, cote_pmu_disponible). Priorité au direct live, puis référence."""
     for cle in (
@@ -395,7 +496,11 @@ def _fetch_participants_pmu(
 
 def _enrichir_cotes_internet(participants: list, date_pmu: str, reunion_pmu: str, course_pmu: str) -> list:
     """Complète les cotes manquantes via l'endpoint INTERNET (cotes live web)."""
-    sans_cote = [p for p in participants if not extraire_cote_pmu(p)[1]]
+    sans_cote = [
+        p
+        for p in participants
+        if not est_cheval_non_partant(p) and not extraire_cote_pmu(p)[1]
+    ]
     if not sans_cote:
         return participants
 
@@ -442,6 +547,8 @@ def _numeros_velora(archive: dict, n: int) -> list:
     source = archive.get("pronostic_velora") or archive.get("top3") or []
     numeros = []
     for cheval in source[:n]:
+        if cheval.get("is_non_partant"):
+            continue
         try:
             numeros.append(int(cheval.get("numero")))
         except (TypeError, ValueError):
@@ -710,39 +817,19 @@ def analyser_course(
 
     participants = response.json().get("participants", [])
     participants = _enrichir_cotes_internet(participants, date_pmu, reunion_pmu, course_pmu)
-    tableau_pronostics = []
-    
+
+    partants_actifs: list[dict] = []
+    partants_np: list[dict] = []
+
     for cheval in participants:
-        score = calculer_score_forme(cheval.get("musique"), cheval.get("deferre"))
+        if est_cheval_non_partant(cheval):
+            partants_np.append(_entree_cheval_np(cheval))
+            continue
+        partants_actifs.append(_entree_cheval_actif(cheval))
 
-        jockey_info = cheval.get("jockey") or {}
-        jockey_nom = jockey_info.get("nom") if isinstance(jockey_info, dict) else None
-        if not jockey_nom:
-            driver = cheval.get("driver")
-            jockey_nom = driver.get("nom") if isinstance(driver, dict) else driver
+    partants_actifs.sort(key=lambda x: float(x.get("score_mtech") or 0), reverse=True)
 
-        poids = cheval.get("poids")
-        if poids is None:
-            poids = cheval.get("handicapPoids")
-
-        cote, cote_pmu_disponible = extraire_cote_pmu(cheval)
-
-        tableau_pronostics.append({
-            "numero": cheval.get("numPmu"),
-            "nom": cheval.get("nom"),
-            "jockey": jockey_nom,
-            "poids": poids,
-            "cote": _formater_cote_reponse(cote, cote_pmu_disponible),
-            "cote_pmu_disponible": cote_pmu_disponible,
-            "score_mtech": score,
-            "score_velora": score,
-            "is_value_bet": False,
-            "anomalie_cote": None,
-        })
-
-    tableau_pronostics.sort(key=lambda x: x["score_mtech"], reverse=True)
-    
-    for rang, entree in enumerate(tableau_pronostics):
+    for rang, entree in enumerate(partants_actifs):
         cote_num = entree["cote"] if isinstance(entree["cote"], (int, float)) else None
         score = float(entree["score_mtech"] or 0)
         is_vb = est_belle_cote(
@@ -755,11 +842,20 @@ def analyser_course(
         if is_vb and cote_num is not None:
             entree["anomalie_cote"] = round(cote_num - score, 1)
 
-    if not tableau_pronostics:
+    partants_np.sort(
+        key=lambda x: (int(x["numero"]) if str(x.get("numero") or "").isdigit() else 999),
+    )
+    tableau_pronostics = partants_actifs + partants_np
+
+    if not partants_actifs and not partants_np:
         return {"erreur": "Aucun participant trouvé pour cette course"}
+    if not partants_actifs:
+        return {"erreur": "Aucun cheval partant (tous non partants) pour cette course"}
 
     reponse_analyse = {
         "pronostic_officiel_mtech": tableau_pronostics,
+        "nombre_non_partants": len(partants_np),
+        "nombre_partants_actifs": len(partants_actifs),
         **_metadata_course_pmu(date_pmu, reunion_pmu, course_pmu, len(participants)),
     }
 
@@ -977,8 +1073,17 @@ def create_checkout_session(
     frontend_base = (
         os.environ.get("VELORA_FRONTEND_URL", "https://velora-pronos.com").rstrip("/")
     )
-    success_url = str(body.get("success_url") or f"{frontend_base}/?premium=success").strip()
-    cancel_url = str(body.get("cancel_url") or f"{frontend_base}/?premium=cancel").strip()
+    plan = str(body.get("plan") or "pmu").strip().lower()
+    if plan not in ("pmu", "foot"):
+        plan = "pmu"
+    if plan == "foot":
+        default_ok = f"{frontend_base}/?premium_foot=success"
+        default_ko = f"{frontend_base}/?premium_foot=cancel"
+    else:
+        default_ok = f"{frontend_base}/?premium_pmu=success"
+        default_ko = f"{frontend_base}/?premium_pmu=cancel"
+    success_url = str(body.get("success_url") or default_ok).strip()
+    cancel_url = str(body.get("cancel_url") or default_ko).strip()
     customer_email = str(body.get("email") or "").strip() or None
 
     try:
@@ -987,6 +1092,7 @@ def create_checkout_session(
             success_url=success_url,
             cancel_url=cancel_url,
             customer_email=customer_email,
+            plan=plan,
         )
     except BillingConfigError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc

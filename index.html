@@ -157,6 +157,33 @@
             display: inline-block;
             animation: vitrine-taux-pop 0.55s ease-out;
         }
+        .vitrine-sport--pmu .vitrine-sport-taux { color: rgb(52 211 153); }
+        .vitrine-sport--foot .vitrine-sport-taux { color: rgb(103 232 249); }
+        .vitrine-global-taux { color: rgb(253 224 71); text-shadow: 0 0 20px rgba(253, 224, 71, 0.25); }
+        .vitrine-sports-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        @media (min-width: 400px) {
+            .vitrine-sports-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .vitrine-sport--pmu {
+                border-right: 1px solid rgba(255, 255, 255, 0.08);
+                padding-right: 1rem;
+            }
+            .vitrine-sport--foot {
+                padding-left: 1rem;
+            }
+        }
+        .vitrine-sport-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 1rem 0;
+        }
+        @media (min-width: 400px) {
+            .vitrine-sport-divider { display: none; }
+        }
         .velora-loading-bar {
             animation: velora-loading-slide 1.4s ease-in-out infinite;
         }
@@ -293,6 +320,24 @@
             font-weight: 600;
             line-height: 1.2;
         }
+        .velora-marche-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(34, 211, 238, 0.22);
+            background: rgba(34, 211, 238, 0.08);
+            padding: 0.3rem 0.65rem;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(207, 250, 254, 0.95);
+            line-height: 1.25;
+        }
+        .velora-marche-pill--opp {
+            border-color: rgba(251, 191, 36, 0.28);
+            background: rgba(251, 191, 36, 0.08);
+            color: rgba(254, 243, 199, 0.95);
+        }
         /* Alertes Value Bet expertes (conseil JSON) */
         .velora-alert-type-badge {
             display: inline-block;
@@ -381,6 +426,105 @@
             border-color: rgba(255, 69, 0, 0.5) !important;
             box-shadow: 0 0 32px rgba(255, 69, 0, 0.18), inset 0 0 0 1px rgba(255, 120, 50, 0.06);
         }
+        .alert-over-25 {
+            background: linear-gradient(145deg, rgba(6, 32, 18, 0.94), rgba(8, 22, 36, 0.96));
+            border: 1px solid #34d399;
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.22), inset 0 1px 0 rgba(16, 185, 129, 0.12);
+        }
+        .alert-over-25 .velora-alert-type-badge {
+            color: #ecfdf5;
+            background: linear-gradient(90deg, #059669, #34d399);
+            border: 1px solid rgba(52, 211, 153, 0.55);
+        }
+        .alert-over-25 .velora-alert-conseil-text {
+            color: #6ee7b7;
+            text-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+        }
+        .opp-alert-badge-premium.alert-over-25 {
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.55), rgba(52, 211, 153, 0.35));
+            border-bottom-color: #34d399;
+            color: #ecfdf5;
+        }
+        .opp-alert-card--over-25 {
+            border-color: rgba(52, 211, 153, 0.5) !important;
+            box-shadow: 0 0 28px rgba(16, 185, 129, 0.15);
+        }
+        .opp-neon-hero {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.45);
+            background: linear-gradient(
+                105deg,
+                rgba(120, 53, 15, 0.55) 0%,
+                rgba(69, 26, 3, 0.75) 35%,
+                rgba(28, 25, 23, 0.9) 100%
+            );
+            padding: 0.85rem 1rem;
+            text-align: center;
+            animation: opp-neon-pulse 2.4s ease-in-out infinite;
+        }
+        .opp-neon-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 215, 0, 0.12) 45%,
+                rgba(255, 215, 0, 0.22) 50%,
+                rgba(255, 215, 0, 0.12) 55%,
+                transparent 100%
+            );
+            animation: opp-neon-sweep 3s linear infinite;
+            pointer-events: none;
+        }
+        .opp-neon-hero-label {
+            position: relative;
+            z-index: 1;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(253, 230, 138, 0.85);
+        }
+        .opp-neon-hero-text {
+            position: relative;
+            z-index: 1;
+            margin-top: 0.35rem;
+            font-size: 1.05rem;
+            font-weight: 900;
+            line-height: 1.3;
+            color: #fde68a;
+            text-shadow:
+                0 0 18px rgba(255, 215, 0, 0.55),
+                0 0 6px rgba(251, 191, 36, 0.8),
+                0 2px 4px rgba(0, 0, 0, 0.85);
+        }
+        .opp-neon-hero--btts .opp-neon-hero-text { color: #fdba74; text-shadow: 0 0 16px rgba(255, 69, 0, 0.5); }
+        .opp-neon-hero--buteur .opp-neon-hero-text { color: #7dd3fc; text-shadow: 0 0 16px rgba(0, 191, 255, 0.45); }
+        .opp-neon-hero--score_exact .opp-neon-hero-text { color: #fde047; text-shadow: 0 0 18px rgba(255, 215, 0, 0.6); }
+        .opp-neon-hero--over_25 .opp-neon-hero-text { color: #6ee7b7; text-shadow: 0 0 16px rgba(52, 211, 153, 0.45); }
+        @keyframes opp-neon-pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.12); }
+        }
+        @keyframes opp-neon-sweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .opp-pari-focus {
+            border-radius: 0.75rem;
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.85rem 1rem;
+            text-align: center;
+        }
+        .opp-pari-focus-value {
+            font-size: 1.35rem;
+            font-weight: 900;
+            line-height: 1.25;
+            color: #fef3c7;
+        }
         .opp-alert-card--buteur {
             border-color: rgba(0, 191, 255, 0.45) !important;
             box-shadow: 0 0 32px rgba(0, 191, 255, 0.16), inset 0 0 0 1px rgba(138, 43, 226, 0.08);
@@ -396,6 +540,27 @@
         .foot-card--buteur {
             border-color: rgba(0, 191, 255, 0.35) !important;
             box-shadow: 0 0 24px rgba(0, 191, 255, 0.1);
+        }
+        .pmu-card--np {
+            opacity: 0.55;
+            border-color: rgba(75, 85, 99, 0.45) !important;
+            background: rgba(17, 24, 39, 0.65) !important;
+        }
+        .pmu-card--np .pmu-nom-np {
+            text-decoration: line-through;
+            text-decoration-color: rgba(156, 163, 175, 0.7);
+        }
+        .pmu-badge-np {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            border: 1px solid rgba(107, 114, 128, 0.55);
+            background: rgba(55, 65, 81, 0.65);
+            padding: 0.15rem 0.5rem;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: rgba(209, 213, 219, 0.9);
         }
         .foot-opp-pro-badge {
             display: inline-flex;
@@ -756,13 +921,36 @@
             <section id="sectionVitrine" aria-label="Statistiques communauté Velora">
                 <div class="glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-5 py-4 shadow-lg shadow-black/20">
                     <p class="text-center text-xs uppercase tracking-widest text-cyan-400/80">Communauté Velora</p>
-                    <p class="mt-2 text-center text-2xl font-black text-cyan-300">
-                        <span id="vitrineTaux">—</span><span class="text-base">%</span>
-                    </p>
-                    <p class="text-center text-xs text-gray-400">Taux plateforme (anonymisé)</p>
-                    <p id="vitrineVictoires" class="mt-2 text-center text-sm font-semibold text-cyan-300">0 victoire</p>
-                    <p id="vitrineMeta" class="mt-1 text-center text-xs text-gray-500"></p>
-                    <div id="vitrineParType" class="mt-4 grid grid-cols-1 gap-2"></div>
+
+                    <div class="mt-4 border-b border-white/10 pb-4 text-center">
+                        <p class="text-[10px] font-semibold uppercase tracking-widest text-amber-400/90">Score général Velora</p>
+                        <p class="mt-1.5 text-3xl font-black leading-none vitrine-global-taux">
+                            <span id="vitrineTauxGlobal" class="vitrine-taux-val">—</span><span class="text-lg">%</span>
+                        </p>
+                        <p id="vitrineGlobalMeta" class="mt-1.5 text-xs text-gray-500">Moyenne communautaire PMU &amp; Football</p>
+                        <p id="vitrineGlobalFinance" class="mt-2 text-[10px] font-semibold text-amber-200/80">ROI — · Bénéfice —</p>
+                    </div>
+
+                    <div class="vitrine-sports-grid mt-4">
+                        <div class="vitrine-sport vitrine-sport--pmu text-center">
+                            <p class="text-xs font-bold uppercase tracking-wide text-emerald-400/90">🐎 PMU</p>
+                            <p class="mt-2 text-2xl font-black leading-none">
+                                <span id="vitrinePmuTaux" class="vitrine-sport-taux vitrine-taux-val">—</span><span class="text-sm">%</span>
+                            </p>
+                            <p id="vitrinePmuDetail" class="mt-2 text-xs leading-relaxed text-gray-400">— victoires / — courses validées (Gagnant, Placé, etc.)</p>
+                            <p id="vitrinePmuFinance" class="mt-2 text-[10px] font-semibold text-emerald-300/85">ROI — · Bénéfice —</p>
+                        </div>
+                        <div class="vitrine-sport-divider" aria-hidden="true"></div>
+                        <div class="vitrine-sport vitrine-sport--foot text-center">
+                            <p class="text-xs font-bold uppercase tracking-wide text-cyan-400/90">⚽ Football</p>
+                            <p class="mt-2 text-2xl font-black leading-none">
+                                <span id="vitrineFootTaux" class="vitrine-sport-taux vitrine-taux-val">—</span><span class="text-sm">%</span>
+                            </p>
+                            <p id="vitrineFootDetail" class="mt-2 text-xs leading-relaxed text-gray-400">— victoires / — matchs validés (Value Bets, BTTS, Buteurs)</p>
+                            <p id="vitrineFootFinance" class="mt-2 text-[10px] font-semibold text-cyan-300/85">ROI — · Bénéfice —</p>
+                            <p id="vitrineFootApercu" class="mt-1 hidden text-[10px] italic text-cyan-500/60">En attente de résultats (velora_foot_resultats.json)</p>
+                        </div>
+                    </div>
                 </div>
                 <p id="vitrineSyncErreur" class="mt-3 hidden text-center text-xs text-amber-200/90" role="alert"></p>
             </section>
@@ -847,12 +1035,20 @@
                 </div>
 
                 <div id="zoneMembrePrive" class="hidden flex flex-col gap-4">
-                <div class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
-                    <p class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Dashboard privé</p>
-                    <p class="mt-2 text-center text-3xl font-black text-emerald-400">
-                        <span id="tauxReussite">0</span><span class="text-lg">%</span>
-                    </p>
-                    <p class="text-center text-xs text-gray-400">Taux de réussite global</p>
+                <div id="archivesDashboardCard" class="glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20">
+                    <p id="archivesSportTitre" class="text-center text-xs uppercase tracking-widest text-emerald-400/80">Archives PMU</p>
+                    <div id="archivesDashboardPmu">
+                        <p class="mt-2 text-center text-3xl font-black text-emerald-400">
+                            <span id="tauxReussite">0</span><span class="text-lg">%</span>
+                        </p>
+                        <p class="text-center text-xs text-gray-400">Taux de réussite global</p>
+                    </div>
+                    <div id="archivesDashboardFoot" class="hidden">
+                        <p class="mt-2 text-center text-3xl font-black text-cyan-400">
+                            <span id="archivesFootCount">0</span>
+                        </p>
+                        <p class="text-center text-xs text-gray-400">Matchs football archivés</p>
+                    </div>
                     <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400">0 course analysée</p>
                 </div>
 
@@ -1119,6 +1315,219 @@
             return { courses, victoires };
         }
 
+        const VELORA_JSON_COMMUNAUTE = '/api_velora_communaute.json';
+        const VELORA_MISE_UNITAIRE = 10;
+
+        function blocSportStats(victoires, total) {
+            const v = Math.max(0, Number(victoires) || 0);
+            const t = Math.max(0, Number(total) || 0);
+            const taux = t > 0 ? Math.round((v / t) * 100) : 0;
+            return {
+                taux,
+                victoires: v,
+                total: t,
+                mises_cumulees: 0,
+                profit_net: 0,
+                roi_pct: 0,
+                source: 'calc',
+            };
+        }
+
+        function normaliserBlocSport(raw, source = 'api') {
+            if (!raw || typeof raw !== 'object') {
+                return blocSportStats(0, 0);
+            }
+            const v = Math.max(0, Number(raw.victoires) || 0);
+            const t = Math.max(0, Number(raw.total) || 0);
+            const taux = Number.isFinite(Number(raw.taux))
+                ? Math.round(Number(raw.taux))
+                : (t > 0 ? Math.round((v / t) * 100) : 0);
+            return {
+                taux,
+                victoires: v,
+                total: t,
+                mises_cumulees: Number(raw.mises_cumulees) || 0,
+                profit_net: Number(raw.profit_net) || 0,
+                roi_pct: Number(raw.roi_pct) || 0,
+                source,
+            };
+        }
+
+        function formatVeloraEuro(val) {
+            const v = Number(val);
+            if (!Number.isFinite(v)) return '—';
+            const sign = v > 0 ? '+' : '';
+            return `${sign}${v.toFixed(2).replace('.', ',')} €`;
+        }
+
+        function formatVeloraRoi(val) {
+            const v = Number(val);
+            if (!Number.isFinite(v)) return '—';
+            const sign = v > 0 ? '+' : '';
+            return `${sign}${v.toFixed(1).replace('.', ',')}%`;
+        }
+
+        function formaterLigneFinance(stats) {
+            if (!stats || stats.total === 0) {
+                return 'ROI — · Bénéfice —';
+            }
+            return `ROI ${formatVeloraRoi(stats.roi_pct)} · Bénéfice ${formatVeloraEuro(stats.profit_net)}`;
+        }
+
+        async function lireCommunauteJson() {
+            try {
+                const res = await fetch(`${VELORA_JSON_COMMUNAUTE}?t=${Date.now()}`, { cache: 'no-store' });
+                if (!res.ok) return null;
+                const data = await res.json();
+                return data && typeof data === 'object' ? data : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function lireStatsFootDepuisRow(row) {
+            if (!row || typeof row !== 'object') {
+                return blocSportStats(0, 0);
+            }
+            const total = row.foot_matchs_valides ?? row.total_foot_matchs ?? row.foot_total ?? null;
+            const victoires = row.foot_victoires ?? row.total_foot_victoires ?? null;
+            if (total == null && victoires == null) {
+                return blocSportStats(0, 0);
+            }
+            return normaliserBlocSport(
+                {
+                    taux: row.foot_taux ?? row.stats_foot_taux,
+                    victoires: victoires ?? 0,
+                    total: total ?? 0,
+                    mises_cumulees: row.foot_mises_cumulees,
+                    profit_net: row.foot_profit_net,
+                    roi_pct: row.foot_roi_pct,
+                },
+                'supabase',
+            );
+        }
+
+        function resoudreStatsCommunaute(row, communaute) {
+            let pmu = blocSportStats(0, 0);
+            let foot = blocSportStats(0, 0);
+            let global = blocSportStats(0, 0);
+
+            if (communaute && typeof communaute === 'object') {
+                if (communaute.pmu) pmu = normaliserBlocSport(communaute.pmu, 'communaute');
+                if (communaute.foot) foot = normaliserBlocSport(communaute.foot, 'communaute');
+                if (communaute.global) {
+                    global = normaliserBlocSport(communaute.global, 'communaute');
+                } else {
+                    global = normaliserBlocSport({
+                        taux: null,
+                        victoires: pmu.victoires + foot.victoires,
+                        total: pmu.total + foot.total,
+                        mises_cumulees: pmu.mises_cumulees + foot.mises_cumulees,
+                        profit_net: pmu.profit_net + foot.profit_net,
+                        roi_pct: (pmu.mises_cumulees + foot.mises_cumulees) > 0
+                            ? ((pmu.profit_net + foot.profit_net) / (pmu.mises_cumulees + foot.mises_cumulees)) * 100
+                            : 0,
+                    }, 'communaute');
+                }
+            } else {
+                if (row) {
+                    const c = lireCompteursPlateforme(row);
+                    pmu = normaliserBlocSport(
+                        {
+                            taux: c.courses > 0 ? Math.round((c.victoires / c.courses) * 100) : 0,
+                            victoires: c.victoires,
+                            total: c.courses,
+                            mises_cumulees: row.pmu_mises_cumulees,
+                            profit_net: row.pmu_profit_net,
+                            roi_pct: row.pmu_roi_pct,
+                        },
+                        'supabase',
+                    );
+                }
+                foot = lireStatsFootDepuisRow(row);
+                global = normaliserBlocSport({
+                    victoires: pmu.victoires + foot.victoires,
+                    total: pmu.total + foot.total,
+                    mises_cumulees: pmu.mises_cumulees + foot.mises_cumulees,
+                    profit_net: pmu.profit_net + foot.profit_net,
+                    roi_pct: (pmu.mises_cumulees + foot.mises_cumulees) > 0
+                        ? ((pmu.profit_net + foot.profit_net) / (pmu.mises_cumulees + foot.mises_cumulees)) * 100
+                        : 0,
+                }, 'calc');
+            }
+            return { pmu, foot, global };
+        }
+
+        function formaterDetailPmu(stats) {
+            const v = stats.victoires;
+            const t = stats.total;
+            const victLabel = v === 1 ? 'victoire' : 'victoires';
+            const courseLabel = t === 1 ? 'course validée' : 'courses validées';
+            if (t === 0) {
+                return '0 victoire / 0 course validée (Gagnant, Placé, etc.)';
+            }
+            return `${v} ${victLabel} / ${t} ${courseLabel} (Gagnant, Placé, etc.)`;
+        }
+
+        function formaterDetailFoot(stats) {
+            const v = stats.victoires;
+            const t = stats.total;
+            const victLabel = v === 1 ? 'victoire' : 'victoires';
+            const matchLabel = t === 1 ? 'match validé' : 'matchs validés';
+            if (t === 0) {
+                return '0 victoire / 0 match validé (Value Bets, BTTS, Buteurs)';
+            }
+            return `${v} ${victLabel} / ${t} ${matchLabel} (Value Bets, BTTS, Buteurs)`;
+        }
+
+        function pulseVitrineTaux(elements) {
+            elements.forEach((el) => {
+                if (!el) return;
+                el.classList.remove('vitrine-taux-pulse');
+                void el.offsetWidth;
+                el.classList.add('vitrine-taux-pulse');
+            });
+        }
+
+        function injecterStatsCommunauteUI(stats, options = {}) {
+            const { animer = false } = options;
+            const section = document.getElementById('sectionVitrine');
+            const { pmu, foot, global } = stats;
+
+            const globalTaux = document.getElementById('vitrineTauxGlobal');
+            const globalMeta = document.getElementById('vitrineGlobalMeta');
+            const globalFinance = document.getElementById('vitrineGlobalFinance');
+            const pmuTaux = document.getElementById('vitrinePmuTaux');
+            const pmuDetail = document.getElementById('vitrinePmuDetail');
+            const pmuFinance = document.getElementById('vitrinePmuFinance');
+            const footTaux = document.getElementById('vitrineFootTaux');
+            const footDetail = document.getElementById('vitrineFootDetail');
+            const footFinance = document.getElementById('vitrineFootFinance');
+            const footApercu = document.getElementById('vitrineFootApercu');
+
+            if (globalTaux) globalTaux.textContent = global.total > 0 ? String(global.taux) : '—';
+            if (globalMeta) {
+                globalMeta.textContent = global.total > 0
+                    ? `${global.victoires} victoire${global.victoires > 1 ? 's' : ''} sur ${global.total} pronostic${global.total > 1 ? 's' : ''} validé${global.total > 1 ? 's' : ''} (PMU + Foot) · mise ${VELORA_MISE_UNITAIRE} €`
+                    : 'Moyenne communautaire PMU & Football';
+            }
+            if (globalFinance) globalFinance.textContent = formaterLigneFinance(global);
+            if (pmuTaux) pmuTaux.textContent = pmu.total > 0 ? String(pmu.taux) : '—';
+            if (pmuDetail) pmuDetail.textContent = formaterDetailPmu(pmu);
+            if (pmuFinance) pmuFinance.textContent = formaterLigneFinance(pmu);
+            if (footTaux) footTaux.textContent = foot.total > 0 ? String(foot.taux) : '—';
+            if (footDetail) footDetail.textContent = formaterDetailFoot(foot);
+            if (footFinance) footFinance.textContent = formaterLigneFinance(foot);
+            if (footApercu) {
+                footApercu.classList.toggle('hidden', foot.total > 0);
+            }
+
+            if (animer) {
+                pulseVitrineTaux([globalTaux, pmuTaux, footTaux]);
+            }
+            if (section) section.classList.remove('hidden');
+        }
+
         function getCoursesStatsSync() {
             try {
                 return new Set(JSON.parse(localStorage.getItem(STATS_COMMUNAUTE_SYNC_KEY) || '[]'));
@@ -1229,59 +1638,32 @@
             return { row: data, erreur: null };
         }
 
+        /** @deprecated — préférer injecterStatsCommunauteUI(resoudreStatsCommunaute(row, communaute)). */
         function injecterStatsPlateformeUI(courses, victoires, options = {}) {
-            const { animer = false } = options;
-            const section = document.getElementById('sectionVitrine');
-            const tauxEl = document.getElementById('vitrineTaux');
-            const victoiresEl = document.getElementById('vitrineVictoires');
-            const metaEl = document.getElementById('vitrineMeta');
-            const parTypeEl = document.getElementById('vitrineParType');
-
-            const taux = courses > 0 ? Math.round((victoires / courses) * 100) : 0;
-
-            if (tauxEl) {
-                tauxEl.textContent = String(taux);
-                if (animer) {
-                    tauxEl.classList.remove('vitrine-taux-pulse');
-                    void tauxEl.offsetWidth;
-                    tauxEl.classList.add('vitrine-taux-pulse');
-                }
-            }
-            if (victoiresEl) {
-                victoiresEl.textContent = victoires === 1
-                    ? '1 victoire'
-                    : `${victoires} victoire${victoires > 1 ? 's' : ''}`;
-            }
-            if (metaEl) {
-                metaEl.textContent = courses === 0
-                    ? 'Aucune course validée pour le moment'
-                    : `${courses} course${courses > 1 ? 's' : ''} analysée${courses > 1 ? 's' : ''} et validée${courses > 1 ? 's' : ''}`;
-            }
-            if (parTypeEl) {
-                parTypeEl.innerHTML = courses === 0
-                    ? '<p class="text-center text-xs text-gray-500">Les statistiques communautaires apparaîtront après les premières courses terminées.</p>'
-                    : '<p class="col-span-full text-center text-xs text-cyan-300/90">Taux = victoires ÷ courses validées (Gagnant, Placé, Trio, Tiercé, Multi…).</p>';
-            }
-            if (section) section.classList.remove('hidden');
+            const pmu = blocSportStats(victoires, courses);
+            const foot = blocSportStats(0, 0);
+            const global = blocSportStats(pmu.victoires + foot.victoires, pmu.total + foot.total);
+            injecterStatsCommunauteUI({ pmu, foot, global }, options);
         }
 
-        /** Charge les stats Supabase et met à jour le bloc « Communauté Velora ». */
+        /** Charge Supabase + api_velora_communaute.json pour le widget Communauté Velora. */
         async function chargerStatsPlateforme(options = {}) {
             const section = document.getElementById('sectionVitrine');
             if (section) section.classList.remove('hidden');
 
             masquerErreurSync('vitrineSyncErreur');
-            const { row, erreur } = await lireVeloraStatsSupabase();
-            if (erreur || !row) {
-                injecterStatsPlateformeUI(0, 0, options);
+            const [{ row, erreur }, communaute] = await Promise.all([
+                lireVeloraStatsSupabase(),
+                lireCommunauteJson(),
+            ]);
+            const stats = resoudreStatsCommunaute(row, communaute);
+            injecterStatsCommunauteUI(stats, options);
+            if (erreur && !communaute) {
                 afficherErreurSync(
                     'vitrineSyncErreur',
-                    erreur || 'Statistiques communautaires indisponibles (vérifiez Supabase).',
+                    erreur || 'Statistiques communautaires indisponibles.',
                 );
-                return;
             }
-            const { courses, victoires } = lireCompteursPlateforme(row);
-            injecterStatsPlateformeUI(courses, victoires, options);
         }
 
         async function incrementerStatsPlateforme(estVictoire) {
@@ -2735,7 +3117,10 @@
             tabPronostic.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
             if (tabArchives && estMembreConnecte()) {
                 tabArchives.classList.remove('hidden');
-                tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
+                const gradArch = sportActif === 'foot'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500'
+                    : 'bg-gradient-to-r from-emerald-500 to-cyan-500';
+                tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? `${gradArch} font-bold text-white shadow` : 'font-semibold text-gray-400 hover:text-gray-200'}`;
             }
 
             if (pronosticActif) {
@@ -2745,7 +3130,7 @@
                     renderFootMatchs();
                 }
             } else {
-                chargerArchives();
+                chargerArchivesPourSportActif();
                 document.getElementById('colonneDroite')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
@@ -2772,6 +3157,9 @@
 
         function changerSport(sport) {
             sportActif = sport === 'foot' ? 'foot' : 'pmu';
+            if (sectionActive === 'archives') {
+                majUiArchivesSport(sportActif);
+            }
 
             if (navSportPmu) {
                 navSportPmu.className = navSportClasses(sportActif === 'pmu');
@@ -3100,6 +3488,137 @@
             }
             majFootMeta();
             renderFootMatchs();
+            synchroniserArchivesFootDepuisMatchs(footMatchs);
+        }
+
+        const VELORA_ARCHIVES_FOOT_KEY = 'velora_archives_foot';
+        const ARCHIVES_FOOT_MAX = 80;
+
+        function lireArchivesFootLocal() {
+            try {
+                const brut = localStorage.getItem(VELORA_ARCHIVES_FOOT_KEY);
+                const data = brut ? JSON.parse(brut) : [];
+                return Array.isArray(data) ? data : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function ecrireArchivesFootLocal(archives) {
+            const triees = [...archives].sort(
+                (a, b) => (Number(b.match_start_ts) || 0) - (Number(a.match_start_ts) || 0),
+            );
+            localStorage.setItem(
+                VELORA_ARCHIVES_FOOT_KEY,
+                JSON.stringify(triees.slice(0, ARCHIVES_FOOT_MAX)),
+            );
+        }
+
+        function extraireScoreArchiveFoot(m) {
+            const ts = m.top_scores;
+            if (Array.isArray(ts) && ts.length && ts[0]?.score) {
+                return String(ts[0].score).trim();
+            }
+            if (typeof ts === 'string' && ts.trim() && !/indisponible/i.test(ts)) {
+                return ts.trim();
+            }
+            return null;
+        }
+
+        function construireArchiveFootDepuisMatch(m) {
+            return {
+                sport: 'foot',
+                id_match: String(m.id_match || ''),
+                equipe_domicile: m.equipe_domicile || '?',
+                equipe_exterieur: m.equipe_exterieur || '?',
+                date_match: m.date_match || '',
+                match_start_ts: Number(m.match_start_ts) || null,
+                indice_velora: Number(m.indice_velora) || null,
+                conseil: m.conseil || '',
+                cotes: m.cotes || {},
+                score_affichage: extraireScoreArchiveFoot(m),
+                statut: 'Terminé',
+                timestamp: Number(m.match_start_ts) || Date.now(),
+            };
+        }
+
+        function synchroniserArchivesFootDepuisMatchs(matchs) {
+            if (!Array.isArray(matchs) || !matchs.length) return;
+            const parId = new Map(
+                lireArchivesFootLocal().map((a) => [String(a.id_match), a]),
+            );
+            for (const m of matchs) {
+                if (!estMatchTermine(m)) continue;
+                const id = String(m.id_match || '');
+                if (!id) continue;
+                parId.set(id, construireArchiveFootDepuisMatch(m));
+            }
+            ecrireArchivesFootLocal([...parId.values()]);
+        }
+
+        function majUiArchivesSport(sport) {
+            const titre = document.getElementById('archivesSportTitre');
+            const card = document.getElementById('archivesDashboardCard');
+            const blocPmu = document.getElementById('archivesDashboardPmu');
+            const blocFoot = document.getElementById('archivesDashboardFoot');
+            const statsParType = document.getElementById('statsParType');
+            const tabArch = document.getElementById('tabArchives');
+            const isFoot = sport === 'foot';
+            if (titre) {
+                titre.textContent = isFoot ? 'Archives Football' : 'Archives PMU';
+                titre.className = isFoot
+                    ? 'text-center text-xs uppercase tracking-widest text-cyan-400/80'
+                    : 'text-center text-xs uppercase tracking-widest text-emerald-400/80';
+            }
+            if (card) {
+                card.className = isFoot
+                    ? 'glass-card rounded-2xl border border-cyan-500/25 bg-cyan-500/10 px-5 py-4 shadow-lg shadow-black/20'
+                    : 'glass-card rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-5 py-4 shadow-lg shadow-black/20';
+            }
+            if (blocPmu) blocPmu.classList.toggle('hidden', isFoot);
+            if (blocFoot) blocFoot.classList.toggle('hidden', !isFoot);
+            if (statsParType) statsParType.classList.toggle('hidden', isFoot);
+            if (tabArch && estMembreConnecte() && sectionActive === 'archives') {
+                tabArch.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${isFoot ? 'bg-gradient-to-r from-cyan-500 to-blue-500 font-bold text-white shadow' : 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow'}`;
+            }
+        }
+
+        function htmlCarteArchiveFoot(a) {
+            const score = a.score_affichage
+                ? escHtml(a.score_affichage)
+                : '—';
+            const scoreLabel = a.score_affichage
+                ? 'Top score moteur'
+                : 'Score non renseigné';
+            const c = a.cotes || {};
+            const fmt = (v) => (v != null && !Number.isNaN(Number(v)) ? Number(v).toFixed(2) : '—');
+            const stars = a.indice_velora
+                ? etoilesVelora(a.indice_velora)
+                : '';
+            return `
+                <article class="glass-card overflow-hidden rounded-2xl border border-white/10 shadow-lg shadow-black/20">
+                    <div class="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 bg-gradient-to-r from-gray-900/90 to-cyan-950/40 px-4 py-3">
+                        <div class="min-w-0 flex-1">
+                            <span class="block text-[10px] font-medium text-slate-500">${escHtml(a.date_match || '')}</span>
+                            <h3 class="mt-0.5 text-base font-bold text-white sm:text-lg">${escHtml(a.equipe_domicile)} <span class="font-normal text-gray-500">—</span> ${escHtml(a.equipe_exterieur)}</h3>
+                        </div>
+                        <span class="shrink-0 rounded-full border border-slate-500/50 bg-slate-800/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-300">Terminé</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-4 px-4 py-4">
+                        <div>
+                            <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-500">${scoreLabel}</p>
+                            <p class="text-3xl font-black leading-none text-cyan-300">${score}</p>
+                        </div>
+                        ${stars ? `<div class="text-right"><p class="text-[10px] text-amber-400/80">Indice Velora</p><p class="text-sm leading-none">${stars}</p></div>` : ''}
+                    </div>
+                    ${a.conseil ? `<p class="border-t border-white/10 px-4 py-2.5 text-xs text-gray-400"><span class="font-semibold text-cyan-400/90">Conseil :</span> ${escHtml(a.conseil)}</p>` : ''}
+                    ${a.financier && a.statut === 'Terminée' ? `<p class="border-t border-white/10 px-4 py-2 text-[10px] font-semibold text-gray-400">P&L simulé (mise ${VELORA_MISE_UNITAIRE} €) : <span class="${a.reussi_foot ? 'text-emerald-400' : 'text-red-400'}">${formatVeloraEuro(a.financier.profit)}</span> · ROI ${formatVeloraRoi(a.financier.roi_pari)}</p>` : ''}
+                    <div class="flex gap-2 border-t border-white/10 px-4 py-3">
+                        <span class="flex-1 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-center text-xs font-bold text-white">1 · ${fmt(c['1'])}</span>
+                        <span class="flex-1 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-center text-xs font-bold text-white">N · ${fmt(c.N)}</span>
+                        <span class="flex-1 rounded-lg border border-white/15 bg-white/5 px-2 py-1.5 text-center text-xs font-bold text-white">2 · ${fmt(c['2'])}</span>
+                    </div>
+                </article>`;
         }
 
         function parseMatchStartMs(m) {
@@ -3157,10 +3676,82 @@
         }
 
         function estOpportunitePremium(m) {
+            if (m?.is_opportunite === true) return true;
+            const oppType = String(m?.opportunite_type || '').trim();
+            if (oppType && oppType !== '—') return true;
             const vbt = String(m?.value_bet_type || '').trim();
             if (vbt && vbt !== '—' && vbt.toLowerCase() !== 'none') return true;
             const idx = Number(m.indice_velora);
             return idx === 4 || idx === 5;
+        }
+
+        const OPP_TYPE_META = {
+            score_exact: {
+                type: 'score_exact',
+                alertClass: 'alert-score-exact',
+                cardClass: 'opp-alert-card--score-exact',
+                badgeLabel: 'VALUE SCORE EXACT',
+                icon: '🎯',
+                heroLabel: 'Pari recommandé — Score exact',
+            },
+            btts: {
+                type: 'btts',
+                alertClass: 'alert-btts',
+                cardClass: 'opp-alert-card--btts',
+                badgeLabel: 'VALUE BTTS',
+                icon: '🔥',
+                heroLabel: 'Pari recommandé — BTTS',
+            },
+            buteur: {
+                type: 'buteur',
+                alertClass: 'alert-buteur',
+                cardClass: 'opp-alert-card--buteur',
+                badgeLabel: 'VALUE BUTEUR',
+                icon: '⚽',
+                heroLabel: 'Pari recommandé — Buteur',
+            },
+            over_25: {
+                type: 'over_25',
+                alertClass: 'alert-over-25',
+                cardClass: 'opp-alert-card--over-25',
+                badgeLabel: 'VALUE OVER 2.5',
+                icon: '📊',
+                heroLabel: 'Pari recommandé — Over 2.5',
+            },
+            '1n2': {
+                type: '1n2',
+                alertClass: '',
+                cardClass: '',
+                badgeLabel: 'VALUE 1N2',
+                icon: '🔥',
+                heroLabel: 'Pari recommandé — Résultat',
+            },
+        };
+
+        function getOpportuniteMeta(m) {
+            const t = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
+            if (t && OPP_TYPE_META[t]) return OPP_TYPE_META[t];
+            return classifyConseilAlert(m?.opportunite_detail || m?.conseil);
+        }
+
+        function oppCacheMarcheSecondaire(m) {
+            const t = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
+            return ['buteur', 'score_exact', 'btts', 'over_25'].includes(t);
+        }
+
+        function htmlOppNeonHero(m) {
+            const detail = String(m?.opportunite_detail || m?.conseil || '').trim();
+            if (!detail) return '';
+            const meta = getOpportuniteMeta(m);
+            const type = meta?.type || 'standard';
+            const heroCls = meta?.type ? `opp-neon-hero--${type}` : '';
+            const label = meta?.heroLabel || 'Radar Premium Velora';
+            const icon = meta?.icon || '🔥';
+            return `
+                <div class="opp-neon-hero ${heroCls}" role="status" aria-live="polite">
+                    <p class="opp-neon-hero-label">${escHtml(label)}</p>
+                    <p class="opp-neon-hero-text"><span aria-hidden="true">${icon}</span> ${escHtml(detail)}</p>
+                </div>`;
         }
 
         function etoilesVelora(n) {
@@ -3175,6 +3766,9 @@
 
         function classifyConseilAlert(conseil) {
             const t = String(conseil || '').toLowerCase();
+            if (t.includes('over 2.5') || t.includes('+2.5') || t.includes('over 2,5')) {
+                return OPP_TYPE_META.over_25;
+            }
             if (t.includes('score exact')) {
                 return {
                     type: 'score_exact',
@@ -3212,9 +3806,9 @@
             return null;
         }
 
-        function htmlConseilVelora(conseil, variant = 'opp') {
+        function htmlConseilVelora(conseil, variant = 'opp', match = null) {
             const text = String(conseil || '').trim() || 'Analyse en cours';
-            const meta = classifyConseilAlert(text);
+            const meta = match ? getOpportuniteMeta(match) : classifyConseilAlert(text);
             if (!meta) {
                 if (variant === 'opp') {
                     return `
@@ -3235,8 +3829,8 @@
                 </div>`;
         }
 
-        function htmlOppAlertBanner(conseil) {
-            const meta = classifyConseilAlert(conseil);
+        function htmlOppAlertBanner(conseil, match = null) {
+            const meta = match ? getOpportuniteMeta(match) : classifyConseilAlert(conseil);
             if (meta) {
                 return `
                     <div class="opp-alert-badge-premium ${meta.alertClass} px-4 py-2.5 text-center text-xs font-black uppercase tracking-widest">
@@ -3272,12 +3866,150 @@
             );
         }
 
+        function bttsCotesFromMatch(m) {
+            const b = m && m.btts;
+            if (b && typeof b === 'object' && (fmtCoteMarche(b.oui) != null || fmtCoteMarche(b.non) != null)) {
+                return b;
+            }
+            return null;
+        }
+
+        function ou25CotesFromMatch(m) {
+            const ou = m && m.over_under_25;
+            if (ou && typeof ou === 'object' && (fmtCoteMarche(ou.plus) != null || fmtCoteMarche(ou.moins) != null)) {
+                return ou;
+            }
+            const pm = m?.marches_supplementaires?.plus_moins_buts?.['2.5'];
+            if (ligneOuUtilisable(pm)) {
+                return { plus: pm.plus_cote, moins: pm.moins_cote };
+            }
+            return null;
+        }
+
+        function buteursFromMatch(m) {
+            if (Array.isArray(m?.buteurs) && m.buteurs.length) {
+                return m.buteurs.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
+            }
+            const bm = m?.marches_supplementaires?.buteur_match;
+            if (buteursMatchUtilisables(bm)) return bm;
+            return [];
+        }
+
+        function scoresExactFromMatch(m) {
+            if (Array.isArray(m?.score_exact) && m.score_exact.length) {
+                return m.score_exact.filter((s) => s && s.score);
+            }
+            const top = m?.top_scores;
+            if (!Array.isArray(top)) return [];
+            return [...top]
+                .filter((s) => s && s.score && fmtCoteMarche(s.cote) != null)
+                .sort((a, b) => Number(a.cote) - Number(b.cote))
+                .slice(0, 4);
+        }
+
+        function marchesPillsVisible(m) {
+            return bttsCotesFromMatch(m) != null || ou25CotesFromMatch(m) != null
+                || (m?.les_deux_marquent != null && m.les_deux_marquent !== '');
+        }
+
+        function marchesPlusVisible(m) {
+            return buteursFromMatch(m).length > 0 || scoresExactFromMatch(m).length > 0;
+        }
+
         function marchesDetailVisible(ms) {
             if (!ms || typeof ms !== 'object') return false;
             const pm = ms.plus_moins_buts || {};
             const butsOk = ligneOuUtilisable(pm['1.5']) || ligneOuUtilisable(pm['2.5']);
             const butOk = buteursMatchUtilisables(ms.buteur_match);
             return butsOk || butOk;
+        }
+
+        function htmlMarchesPillsRow(m, theme = 'foot') {
+            const pills = [];
+            const pillCls = theme === 'opp' ? 'velora-marche-pill velora-marche-pill--opp' : 'velora-marche-pill';
+            const btts = bttsCotesFromMatch(m);
+            if (btts) {
+                const parts = [];
+                const o = fmtCoteMarche(btts.oui);
+                const n = fmtCoteMarche(btts.non);
+                if (o != null) parts.push(`Oui: ${o}`);
+                if (n != null) parts.push(`Non: ${n}`);
+                if (parts.length) {
+                    pills.push(`<span class="${pillCls}">⚽ BTTS (${parts.join(' | ')})</span>`);
+                }
+            } else if (m?.les_deux_marquent != null && m.les_deux_marquent !== '') {
+                const lbl = typeof m.les_deux_marquent === 'number'
+                    ? `${m.les_deux_marquent}% Oui`
+                    : escHtml(m.les_deux_marquent);
+                pills.push(`<span class="${pillCls}">⚽ BTTS: ${lbl}</span>`);
+            }
+            const ou = ou25CotesFromMatch(m);
+            if (ou) {
+                const parts = [];
+                const p = fmtCoteMarche(ou.plus);
+                const mn = fmtCoteMarche(ou.moins);
+                if (p != null) parts.push(`+: ${p}`);
+                if (mn != null) parts.push(`−: ${mn}`);
+                if (parts.length) {
+                    pills.push(`<span class="${pillCls}">📊 O/U 2.5 (${parts.join(' | ')})</span>`);
+                }
+            }
+            if (!pills.length) return '';
+            return `<div class="flex flex-wrap gap-2">${pills.join('')}</div>`;
+        }
+
+        function htmlBlocScoresExactListe(scores, theme) {
+            if (!scores.length) return '';
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            const items = scores.slice(0, 4).map((s) => {
+                const cote = fmtCoteMarche(s.cote);
+                const prob = s.prob != null ? `<span class="text-gray-500">${escHtml(s.prob)}%</span>` : '';
+                const coteHtml = cote != null
+                    ? `<span class="font-bold text-cyan-300/90">${cote}</span>`
+                    : prob;
+                return `<li class="flex justify-between gap-2 text-xs text-gray-300"><span>${escHtml(s.score)}</span>${coteHtml || prob}</li>`;
+            }).join('');
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Scores exacts</p>
+                    <ul class="space-y-1">${items}</ul>
+                </div>`;
+        }
+
+        function htmlVoirPlusParis(m, theme = 'foot') {
+            const buteurs = buteursFromMatch(m);
+            const scores = scoresExactFromMatch(m);
+            const legacyMs = m.marches_supplementaires;
+            const legacyDetail = marchesDetailVisible(legacyMs) && !buteurs.length
+                ? htmlBlocButsMarches(legacyMs, theme) + htmlBlocButeursMarches(legacyMs, theme)
+                : '';
+            if (!buteurs.length && !scores.length && !legacyDetail) return '';
+
+            const badgeCls = theme === 'opp'
+                ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
+                : 'velora-buteur-badge border-cyan-500/20 text-gray-200';
+            const buteursHtml = buteurs.length
+                ? `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85'}">Buteurs</p>
+                    <div class="flex flex-wrap gap-1.5">${buteurs.slice(0, 4).map((b) => `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`).join('')}</div>
+                </div>`
+                : '';
+            const scoresHtml = htmlBlocScoresExactListe(scores, theme);
+            const cols = (buteursHtml && scoresHtml) ? 'sm:grid-cols-2' : 'grid-cols-1';
+            const borderCls = theme === 'opp' ? 'border-amber-500/20 bg-amber-500/[0.04]' : 'border-white/10 bg-white/[0.02]';
+            const summaryCls = theme === 'opp'
+                ? 'text-gray-400 group-open:text-amber-300'
+                : 'text-gray-400 group-open:text-cyan-300';
+            return `
+                <details class="velora-marches-detail group rounded-lg border ${borderCls} px-3 py-2">
+                    <summary class="cursor-pointer text-xs font-medium ${summaryCls} marker:content-none">
+                        Voir plus de paris (buteurs &amp; scores exacts)
+                    </summary>
+                    <div class="velora-marches-panel mt-2 grid ${cols} gap-2 border-t border-white/10 pt-2">
+                        ${buteursHtml}${scoresHtml}${legacyDetail}
+                    </div>
+                </details>`;
         }
 
         function htmlOuLigneCompact(label, lineVal, theme) {
@@ -3360,15 +4092,16 @@
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
-            const btts = m.les_deux_marquent;
             const tendance = m.tendance_buts || 'Match Tactique';
             const topScores = m.top_scores;
-            const scoresHtml = typeof topScores === 'string'
+            const scoresMoteurHtml = typeof topScores === 'string'
                 ? `<li class="text-xs text-gray-500">${escHtml(topScores)}</li>`
                 : Array.isArray(topScores) && topScores.length
                     ? topScores.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
-                    : '<li class="text-xs text-gray-500">Scores exacts non disponibles</li>';
+                    : '';
             const offensif = tendance === 'Match Offensif';
+            const pillsMarches = htmlMarchesPillsRow(m, 'foot');
+            const plusParis = htmlVoirPlusParis(m, 'foot');
             const alertMeta = classifyConseilAlert(m.conseil);
             const footCardExtra = alertMeta ? alertMeta.footCardClass : '';
 
@@ -3398,14 +4131,15 @@
                         ${htmlConseilVelora(m.conseil, 'foot')}
                         <div class="flex flex-wrap gap-2">
                             <span class="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${offensif ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-300' : 'border-white/15 bg-white/5 text-gray-300'}">${offensif ? '📈' : '🛡️'} ${escHtml(tendance)}</span>
-                            ${btts != null && btts !== '' ? `<span class="inline-flex items-center gap-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-semibold text-cyan-200">⚽ BTTS: ${typeof btts === 'number' ? escHtml(btts) + '%' : escHtml(btts)}</span>` : ''}
                         </div>
+                        ${pillsMarches}
+                        ${plusParis}
+                        ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Top 3 scores exacts (moteur)</summary>
-                            <ul class="mt-2 space-y-1 border-t border-white/10 pt-2">${scoresHtml}</ul>
-                        </details>
-                        ${htmlMarchesDetailAccordion(m, 'foot')}
-                        <div class="flex gap-2 pt-1">
+                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Top scores moteur (probas)</summary>
+                            <ul class="mt-2 space-y-1 border-t border-white/10 pt-2">${scoresMoteurHtml}</ul>
+                        </details>` : ''}
+                        <div class="flex gap-2 border-t border-white/10 pt-3">
                             ${htmlFootCoteLabel('1', c['1'])}
                             ${htmlFootCoteLabel('N', c.N)}
                             ${htmlFootCoteLabel('2', c['2'])}
@@ -3522,8 +4256,8 @@
                 .sort((a, b) => {
                     const d = Number(b.indice_velora) - Number(a.indice_velora);
                     if (d !== 0) return d;
-                    const pa = a.value_bet_type ? 1 : 0;
-                    const pb = b.value_bet_type ? 1 : 0;
+                    const pa = (a.opportunite_type || a.value_bet_type) ? 1 : 0;
+                    const pb = (b.opportunite_type || b.value_bet_type) ? 1 : 0;
                     if (pb !== pa) return pb - pa;
                     return (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0);
                 });
@@ -3590,13 +4324,46 @@
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
+            const c = m.cotes || {};
+            const alertMeta = getOpportuniteMeta(m);
+            const cardTheme = alertMeta?.cardClass || '';
+            const oppType = String(m.opportunite_type || m.value_bet_type || alertMeta?.type || 'standard');
+            const hide1n2 = oppCacheMarcheSecondaire(m);
+            const detail = String(m.opportunite_detail || m.conseil || '').trim();
             const scoresHtml = htmlTopScoresList(m.top_scores);
-            const alertMeta = classifyConseilAlert(m.conseil);
-            const cardTheme = alertMeta ? alertMeta.cardClass : '';
+            const pariFocus = hide1n2 && detail
+                ? `<div class="opp-pari-focus"><p class="text-[10px] font-semibold uppercase tracking-wider text-amber-400/90">À jouer</p><p class="opp-pari-focus-value mt-1">${escHtml(detail)}</p></div>`
+                : '';
+            const bloc1n2 = hide1n2
+                ? ''
+                : `
+                        <div>
+                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probabilités algorithme</p>
+                            <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
+                                <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
+                                <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
+                                <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
+                            </div>
+                            <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
+                        </div>
+                        <div class="flex gap-2 border-t border-white/10 pt-3">
+                            ${htmlFootCoteLabel('1', c['1'])}
+                            ${htmlFootCoteLabel('N', c.N)}
+                            ${htmlFootCoteLabel('2', c['2'])}
+                        </div>`;
+            const extraMarches = hide1n2 ? '' : `${htmlMarchesPillsRow(m, 'opp')}${htmlVoirPlusParis(m, 'opp')}`;
+            const scoresBloc = hide1n2
+                ? ''
+                : `
+                        <div class="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5">
+                            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">Top scores moteur (probas)</p>
+                            <ul class="space-y-1.5">${scoresHtml}</ul>
+                        </div>`;
 
             return `
-                <article class="opp-alert-card relative overflow-hidden rounded-2xl ${cardTheme}" data-match-id="${escHtml(m.id_match)}" data-alert-type="${escHtml(alertMeta ? alertMeta.type : 'standard')}">
-                    ${htmlOppAlertBanner(m.conseil)}
+                <article class="opp-alert-card relative overflow-hidden rounded-2xl ${cardTheme}" data-match-id="${escHtml(m.id_match)}" data-alert-type="${escHtml(oppType)}" data-opp-type="${escHtml(oppType)}">
+                    ${htmlOppNeonHero(m)}
+                    ${htmlOppAlertBanner(m.conseil, m)}
                     <div class="space-y-4 px-4 py-4">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div class="min-w-0 flex-1">
@@ -3609,21 +4376,11 @@
                                 <p class="text-base leading-none">${etoilesVelora(m.indice_velora)}</p>
                             </div>
                         </div>
-                        ${htmlConseilVelora(m.conseil, 'opp')}
-                        <div>
-                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probabilités algorithme</p>
-                            <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
-                                <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
-                                <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
-                                <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
-                            </div>
-                            <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
-                        </div>
-                        <div class="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5">
-                            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">Top 3 scores exacts</p>
-                            <ul class="space-y-1.5">${scoresHtml}</ul>
-                        </div>
-                        ${htmlMarchesDetailAccordion(m, 'opp')}
+                        ${pariFocus}
+                        ${htmlConseilVelora(m.conseil, 'opp', m)}
+                        ${bloc1n2}
+                        ${extraMarches}
+                        ${scoresBloc}
                     </div>
                 </article>`;
         }
@@ -3754,7 +4511,8 @@
         }
 
         function htmlPronosticVeloraArchive(archive) {
-            const liste = archive.pronostic_velora || archive.top3 || [];
+            const liste = (archive.pronostic_velora || archive.top3 || [])
+                .filter((c) => !c.is_non_partant);
             if (liste.length === 0) return '';
             const labelTop = liste.length >= 7 ? 'Top 7 Velora' : `Top ${Math.min(liste.length, 7)} Velora`;
             const items = liste.slice(0, 7).map((c, i) => `
@@ -3771,7 +4529,63 @@
                 </div>`;
         }
 
-        async function chargerArchives() {
+        async function chargerArchivesPourSportActif() {
+            if (!estMembreConnecte()) {
+                appliquerEtatAuth();
+                return;
+            }
+            const liste = document.getElementById('resultatsArchives');
+            if (liste) liste.innerHTML = '';
+            majUiArchivesSport(sportActif);
+            if (sportActif === 'foot') {
+                await chargerArchivesFoot();
+            } else {
+                await chargerArchivesPmu();
+            }
+        }
+
+        async function chargerArchivesFoot() {
+            const liste = document.getElementById('resultatsArchives');
+            const statsEl = document.getElementById('statsArchives');
+            const countEl = document.getElementById('archivesFootCount');
+            if (!liste) return;
+
+            masquerErreurSync('statsSyncErreur');
+            liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Chargement des archives Foot…</p>';
+
+            try {
+                if (!footMatchsCharges) {
+                    footMatchs = await fetchVeloraJson(VELORA_JSON_MATCHS);
+                    footMatchsCharges = true;
+                }
+                synchroniserArchivesFootDepuisMatchs(footMatchs);
+            } catch {
+                /* conserve le cache local foot */
+            }
+
+            const archives = lireArchivesFootLocal();
+            const n = archives.length;
+            if (countEl) countEl.textContent = String(n);
+            if (statsEl) {
+                statsEl.textContent = n
+                    ? `${n} match${n > 1 ? 's' : ''} terminé${n > 1 ? 's' : ''} archivé${n > 1 ? 's' : ''}`
+                    : 'Aucun match Foot archivé pour le moment';
+            }
+
+            liste.innerHTML = '';
+            if (n === 0) {
+                liste.innerHTML = `
+                    <p class="text-center text-sm text-gray-500 py-8">
+                        Aucun match football terminé à afficher.
+                        <br><span class="text-gray-500">Les matchs passés (hors fenêtre live) sont archivés automatiquement depuis les données Velora.</span>
+                    </p>`;
+                return;
+            }
+
+            liste.innerHTML = archives.map(htmlCarteArchiveFoot).join('');
+        }
+
+        async function chargerArchivesPmu() {
             if (!estMembreConnecte()) {
                 appliquerEtatAuth();
                 return;
@@ -3903,6 +4717,7 @@
                 score_mtech: p.score_mtech ?? null,
                 jockey: p.jockey || null,
                 cote: p.cote ?? null,
+                is_non_partant: p.is_non_partant === true,
             });
             const pronostic_velora = pronostics.slice(0, 7).map(mapperCheval);
             const top3 = pronostics.slice(0, 3).map(mapperCheval);
@@ -4013,6 +4828,9 @@
         }
 
         function styleCarte(cheval) {
+            if (cheval.is_non_partant) {
+                return "glass-card pmu-card--np relative overflow-hidden rounded-2xl shadow-lg shadow-black/5";
+            }
             if (cheval.is_value_bet) {
                 return "glass-card relative overflow-hidden border-2 border-yellow-500/80 bg-orange-500/10 animate-pulse shadow-[0_0_28px_rgba(249,115,22,0.25)]";
             }
@@ -4020,7 +4838,7 @@
         }
 
         function badgeBelleCote(cheval) {
-            if (!cheval.is_value_bet) return "";
+            if (cheval.is_non_partant || !cheval.is_value_bet) return "";
             const ecart = cheval.anomalie_cote != null
                 ? ` +${cheval.anomalie_cote}`
                 : '';
@@ -4028,19 +4846,55 @@
         }
 
         function hintAnomalieCote(cheval) {
-            if (!cheval.is_value_bet || cheval.cote_pmu_disponible === false || cheval.cote === '-') return '';
+            if (cheval.is_non_partant || !cheval.is_value_bet || cheval.cote_pmu_disponible === false || cheval.cote === '-') return '';
             const score = cheval.score_velora ?? cheval.score_mtech;
             return `<p class="mt-1 text-[10px] font-semibold uppercase tracking-wide text-orange-400/90">Anomalie : cote ${cheval.cote} &gt; score Velora ${score}</p>`;
         }
 
         function formaterCote(cheval) {
+            if (cheval.is_non_partant) return 'NP';
             if (cheval.cote_pmu_disponible === false || cheval.cote === '-' || cheval.cote == null) {
                 return '-';
             }
             return `${cheval.cote} / 1`;
         }
 
+        function htmlCarteChevalPmu(cheval, indexClassement, sponsorDuJour) {
+            const isNp = cheval.is_non_partant === true;
+            const jockey = cheval.jockey || 'N/C';
+            const poids = formaterPoids(cheval.poids);
+            const poidsAffiche = poids != null ? `${poids} kg` : 'N/C';
+            const rangBadge = isNp
+                ? '<span class="pmu-badge-np">NP</span>'
+                : `<div class="${badgeClassement(indexClassement)} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold">${indexClassement + 1}</div>`;
+            const nomCls = isNp ? 'pmu-nom-np text-gray-500' : (cheval.is_value_bet ? 'text-white' : 'text-gray-100');
+            const scoreHtml = isNp
+                ? '<p class="mt-1 text-xs font-medium text-gray-500">Hors course — non classé</p>'
+                : `<p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score Velora : ${cheval.score_mtech}</p>`;
+            const boutonParrainage = genererBoutonParrainage(sponsorDuJour, indexClassement, cheval);
+
+            return `
+                <div class="rounded-2xl p-4 transition duration-200 ${styleCarte(cheval)}">
+                    ${badgeBelleCote(cheval)}
+                    <div class="flex items-start gap-4">
+                        ${rangBadge}
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-base font-bold leading-tight ${nomCls}">N°${cheval.numero} - ${cheval.nom}</h3>
+                            <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-0.5 text-xs leading-relaxed text-gray-400">
+                                <span>Jockey : <span class="font-medium text-gray-300">${jockey}</span></span>
+                                <span>Poids : <span class="font-medium text-gray-300">${poidsAffiche}</span></span>
+                            </p>
+                            <p class="mt-1 text-xs font-semibold ${isNp ? 'text-gray-500' : (cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80')}">Cote : ${formaterCote(cheval)}</p>
+                            ${scoreHtml}
+                            ${hintAnomalieCote(cheval)}
+                        </div>
+                    </div>
+                    ${boutonParrainage}
+                </div>`;
+        }
+
         function genererBoutonParrainage(sponsor, index, cheval) {
+            if (cheval.is_non_partant) return '';
             if (index >= 3 && !cheval.is_value_bet) return "";
 
             return `
@@ -4185,43 +5039,33 @@
                     return;
                 }
 
-                const pronostics = listeBrute
+                const partantsActifs = listeBrute
+                    .filter((c) => !c.is_non_partant)
                     .slice()
                     .sort((a, b) => (Number(b.score_mtech) || 0) - (Number(a.score_mtech) || 0));
+                const nonPartants = listeBrute.filter((c) => c.is_non_partant);
 
                 titreResultats.textContent = `Classement Velora — ${reunion}${course}`;
                 titreResultats.classList.remove('hidden');
 
-                enregistrerArchive(dateIso, dateAPI, reunion, course, pronostics, {
-                    nombre_partants: data.nombre_partants ?? pronostics.length,
+                enregistrerArchive(dateIso, dateAPI, reunion, course, partantsActifs, {
+                    nombre_partants: data.nombre_partants_actifs ?? data.nombre_partants ?? partantsActifs.length,
                     est_quinte: data.est_quinte ?? false,
                 });
 
-                pronostics.forEach((cheval, index) => {
-                    const jockey = cheval.jockey || 'N/C';
-                    const poids = formaterPoids(cheval.poids);
-                    const poidsAffiche = poids != null ? `${poids} kg` : 'N/C';
-                    const boutonParrainage = genererBoutonParrainage(sponsorDuJour, index, cheval);
-
-                    zoneResultats.innerHTML += `
-                        <div class="rounded-2xl p-4 transition duration-200 ${styleCarte(cheval)}">
-                            ${badgeBelleCote(cheval)}
-                            <div class="flex items-start gap-4">
-                                <div class="${badgeClassement(index)} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold">${index + 1}</div>
-                                <div class="min-w-0 flex-1">
-                                    <h3 class="text-base font-bold leading-tight ${cheval.is_value_bet ? 'text-white' : 'text-gray-100'}">N°${cheval.numero} - ${cheval.nom}</h3>
-                                    <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-0.5 text-xs leading-relaxed text-gray-400">
-                                        <span>Jockey : <span class="font-medium text-gray-300">${jockey}</span></span>
-                                        <span>Poids : <span class="font-medium text-gray-300">${poidsAffiche}</span></span>
-                                    </p>
-                                    <p class="mt-1 text-xs font-semibold ${cheval.is_value_bet ? 'text-orange-400' : 'text-blue-400/80'}">Cote : ${formaterCote(cheval)}</p>
-                                    <p class="mt-1 text-sm font-medium ${cheval.is_value_bet ? 'text-orange-300' : 'text-emerald-400/80'}">Score Velora : ${cheval.score_mtech}</p>
-                                    ${hintAnomalieCote(cheval)}
-                            </div>
-                            </div>
-                            ${boutonParrainage}
-                        </div>`;
+                partantsActifs.forEach((cheval, index) => {
+                    zoneResultats.innerHTML += htmlCarteChevalPmu(cheval, index, sponsorDuJour);
                 });
+
+                if (nonPartants.length > 0) {
+                    zoneResultats.innerHTML += `
+                        <div class="mt-4 border-t border-dashed border-gray-600/60 pt-4">
+                            <p class="mb-3 text-center text-[10px] font-semibold uppercase tracking-widest text-gray-500">Non partants (${nonPartants.length})</p>
+                            <div class="space-y-3">
+                                ${nonPartants.map((c) => htmlCarteChevalPmu(c, 999, sponsorDuJour)).join('')}
+                            </div>
+                        </div>`;
+                }
                 mettreAJourZoneVidePronostic();
                 incrementerCompteurUiApresAnalyse();
                 memoriserResultatPronostic();

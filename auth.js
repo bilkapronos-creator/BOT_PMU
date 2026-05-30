@@ -677,6 +677,7 @@
         getUserId,
         getUserEmail,
         isPremiumUser,
+        estGodModeUtilisateur,
         isPremiumOptimiste,
         peutGererAbonnementStripe,
         appliquerPremiumOptimiste,
