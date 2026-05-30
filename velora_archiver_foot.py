@@ -13,14 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from velora_finance import (
-    MISE_UNITAIRE,
-    bloc_communaute_depuis_stats,
-    calculer_resultat_financier,
-    fusionner_blocs_sports,
-)
-from stats_foot import get_stats_foot_publiques
-
+from velora_finance import MISE_UNITAIRE, calculer_resultat_financier
 ROOT = Path(__file__).resolve().parent
 ARCHIVES_FOOT_PATH = ROOT / "velora_archives_foot.json"
 RESULTATS_PATH = ROOT / "velora_foot_resultats.json"
@@ -410,43 +403,17 @@ def traiter_archives_foot() -> dict[str, Any]:
     )
     _ecrire_json(ARCHIVES_FOOT_PATH, archives_finales)
 
-    foot_stats = get_stats_foot_publiques()
-    pmu_stats = _pmu_depuis_communaute_existante()
-    communaute = fusionner_blocs_sports(pmu_stats, foot_stats)
-    communaute["meta"] = {
-        "mise_unitaire": MISE_UNITAIRE,
-        "genere_at": datetime.now(tz=timezone.utc).isoformat(),
-        "archives_foot": len(archives_finales),
-        "nouvelles_validations": nouvelles,
-        "sync_winamax": sync_stats,
-    }
+    from publish_communaute import construire_communaute
+
+    communaute = construire_communaute(
+        {
+            "archives_foot": len(archives_finales),
+            "nouvelles_validations": nouvelles,
+            "sync_winamax": sync_stats,
+        }
+    )
     _ecrire_json(COMMUNAUTE_PATH, communaute)
     return communaute
-
-
-def _pmu_depuis_communaute_existante() -> dict:
-    """Conserve le bloc PMU si déjà présent, sinon zéro."""
-    data = _lire_json(COMMUNAUTE_PATH, {})
-    if isinstance(data, dict) and isinstance(data.get("pmu"), dict):
-        return data["pmu"]
-    try:
-        from stats_pmu import get_stats_publiques
-
-        pub = get_stats_publiques()
-        return bloc_communaute_depuis_stats(
-            {
-                "taux": pub.get("taux_reussite_plateforme", 0),
-                "victoires": pub.get("victoires_plateforme", 0),
-                "total": pub.get("courses_terminees_plateforme", 0),
-                "mises_cumulees": pub.get("mises_cumulees", 0),
-                "profit_net": pub.get("profit_net", 0),
-                "roi_pct": pub.get("roi_pct", 0),
-            }
-        )
-    except Exception:
-        return bloc_communaute_depuis_stats(
-            {"taux": 0, "victoires": 0, "total": 0, "mises_cumulees": 0, "profit_net": 0, "roi_pct": 0}
-        )
 
 
 def main() -> int:

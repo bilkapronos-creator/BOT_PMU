@@ -184,6 +184,61 @@
         @media (min-width: 400px) {
             .vitrine-sport-divider { display: none; }
         }
+        .vitrine-pmu-historique {
+            margin-top: 0.75rem;
+            border-top: 1px dashed rgba(52, 211, 153, 0.25);
+            padding-top: 0.75rem;
+            text-align: left;
+        }
+        .vitrine-pmu-historique-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.35rem 0.5rem;
+            border-radius: 0.65rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 0.45rem 0.6rem;
+            font-size: 10px;
+        }
+        .vitrine-pmu-badge {
+            display: inline-flex;
+            border-radius: 9999px;
+            padding: 0.1rem 0.4rem;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .vitrine-pmu-badge--tierce {
+            border: 1px solid rgba(251, 191, 36, 0.45);
+            background: rgba(251, 191, 36, 0.12);
+            color: rgb(253, 224, 71);
+        }
+        .vitrine-pmu-badge--ok {
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            background: rgba(16, 185, 129, 0.12);
+            color: rgb(110, 231, 183);
+        }
+        .vitrine-pmu-badge--ko {
+            border: 1px solid rgba(248, 113, 113, 0.35);
+            background: rgba(127, 29, 29, 0.2);
+            color: rgb(252, 165, 165);
+        }
+        .vitrine-par-type-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(17, 24, 39, 0.65);
+            padding: 0.25rem 0.5rem;
+            font-size: 10px;
+            color: rgb(209, 213, 219);
+        }
+        .vitrine-foot-historique .vitrine-pmu-historique-item {
+            border-color: rgba(34, 211, 238, 0.15);
+        }
         .velora-loading-bar {
             animation: velora-loading-slide 1.4s ease-in-out infinite;
         }
@@ -938,7 +993,16 @@
                                 <span id="vitrinePmuTaux" class="vitrine-sport-taux vitrine-taux-val">—</span><span class="text-sm">%</span>
                             </p>
                             <p id="vitrinePmuDetail" class="mt-2 text-xs leading-relaxed text-gray-400">— victoires / — courses validées (Gagnant, Placé, etc.)</p>
+                            <p id="vitrinePmuCompteur" class="mt-1 text-[10px] text-emerald-400/70">— courses analysées (historique plateforme)</p>
                             <p id="vitrinePmuFinance" class="mt-2 text-[10px] font-semibold text-emerald-300/85">ROI — · Bénéfice —</p>
+                            <div id="vitrinePmuParType" class="hidden mt-3 text-left">
+                                <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/75">Réussites par type</p>
+                                <div id="vitrinePmuParTypeListe" class="flex flex-wrap justify-center gap-1.5"></div>
+                            </div>
+                            <div id="vitrinePmuHistorique" class="vitrine-pmu-historique hidden">
+                                <p class="mb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-emerald-400/75">Dernières courses validées</p>
+                                <ul id="vitrinePmuHistoriqueListe" class="space-y-1.5"></ul>
+                            </div>
                         </div>
                         <div class="vitrine-sport-divider" aria-hidden="true"></div>
                         <div class="vitrine-sport vitrine-sport--foot text-center">
@@ -949,6 +1013,14 @@
                             <p id="vitrineFootDetail" class="mt-2 text-xs leading-relaxed text-gray-400">— victoires / — matchs validés (Value Bets, BTTS, Buteurs)</p>
                             <p id="vitrineFootFinance" class="mt-2 text-[10px] font-semibold text-cyan-300/85">ROI — · Bénéfice —</p>
                             <p id="vitrineFootApercu" class="mt-1 hidden text-[10px] italic text-cyan-500/60">En attente de résultats (velora_foot_resultats.json)</p>
+                            <div id="vitrineFootParType" class="hidden mt-3 text-left">
+                                <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Réussites par marché</p>
+                                <div id="vitrineFootParTypeListe" class="flex flex-wrap justify-center gap-1.5"></div>
+                            </div>
+                            <div id="vitrineFootHistorique" class="vitrine-pmu-historique vitrine-foot-historique hidden">
+                                <p class="mb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Derniers matchs validés</p>
+                                <ul id="vitrineFootHistoriqueListe" class="space-y-1.5"></ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1407,44 +1479,134 @@
             );
         }
 
-        function resoudreStatsCommunaute(row, communaute) {
-            let pmu = blocSportStats(0, 0);
-            let foot = blocSportStats(0, 0);
-            let global = blocSportStats(0, 0);
+        function pmuDepuisSupabase(row) {
+            if (!row) return null;
+            const c = lireCompteursPlateforme(row);
+            return normaliserBlocSport(
+                {
+                    taux: c.courses > 0 ? Math.round((c.victoires / c.courses) * 100) : 0,
+                    victoires: c.victoires,
+                    total: c.courses,
+                    mises_cumulees: row.pmu_mises_cumulees,
+                    profit_net: row.pmu_profit_net,
+                    roi_pct: row.pmu_roi_pct,
+                },
+                'supabase',
+            );
+        }
 
-            if (communaute && typeof communaute === 'object') {
-                if (communaute.pmu) pmu = normaliserBlocSport(communaute.pmu, 'communaute');
-                if (communaute.foot) foot = normaliserBlocSport(communaute.foot, 'communaute');
-                if (communaute.global) {
-                    global = normaliserBlocSport(communaute.global, 'communaute');
-                } else {
-                    global = normaliserBlocSport({
-                        taux: null,
-                        victoires: pmu.victoires + foot.victoires,
-                        total: pmu.total + foot.total,
-                        mises_cumulees: pmu.mises_cumulees + foot.mises_cumulees,
-                        profit_net: pmu.profit_net + foot.profit_net,
-                        roi_pct: (pmu.mises_cumulees + foot.mises_cumulees) > 0
-                            ? ((pmu.profit_net + foot.profit_net) / (pmu.mises_cumulees + foot.mises_cumulees)) * 100
-                            : 0,
-                    }, 'communaute');
-                }
-            } else {
-                if (row) {
-                    const c = lireCompteursPlateforme(row);
-                    pmu = normaliserBlocSport(
-                        {
-                            taux: c.courses > 0 ? Math.round((c.victoires / c.courses) * 100) : 0,
-                            victoires: c.victoires,
-                            total: c.courses,
-                            mises_cumulees: row.pmu_mises_cumulees,
-                            profit_net: row.pmu_profit_net,
-                            roi_pct: row.pmu_roi_pct,
-                        },
-                        'supabase',
-                    );
-                }
+        function enrichirBlocPmu(pmuBase, sources = {}) {
+            const { communaute, statsPubliques, historiqueLocal } = sources;
+            const blocJson = communaute?.pmu && typeof communaute.pmu === 'object' ? communaute.pmu : {};
+            const pub = statsPubliques && typeof statsPubliques === 'object' ? statsPubliques : {};
+            const ch = blocJson.compteur_historique || {};
+
+            const pmu = { ...pmuBase };
+            pmu.mises_cumulees = Number(blocJson.mises_cumulees ?? pub.mises_cumulees ?? pmu.mises_cumulees) || 0;
+            pmu.profit_net = Number(blocJson.profit_net ?? pub.profit_net ?? pmu.profit_net) || 0;
+            pmu.roi_pct = Number(blocJson.roi_pct ?? pub.roi_pct ?? pmu.roi_pct) || 0;
+
+            pmu.compteur_historique = {
+                courses_analysees: Number(
+                    ch.courses_analysees ?? pub.total_courses_plateforme ?? pub.total_courses_analysees ?? pmu.total,
+                ) || 0,
+                courses_terminees: Number(
+                    ch.courses_terminees ?? pub.courses_terminees_plateforme ?? pub.courses_terminees ?? pmu.total,
+                ) || 0,
+                victoires: Number(ch.victoires ?? pub.victoires_plateforme ?? pub.victoires ?? pmu.victoires) || 0,
+                taux_reussite: Number(ch.taux_reussite ?? pub.taux_reussite_plateforme ?? pub.taux ?? pmu.taux) || 0,
+            };
+
+            pmu.gains_par_famille = blocJson.gains_par_famille || pub.gains_par_famille || {};
+            pmu.reussites_par_type = blocJson.reussites_par_type || pub.reussites_par_type || {};
+            pmu.historique_courses = choisirHistoriquePmu(
+                historiqueLocal,
+                blocJson.historique_courses,
+            );
+            pmu.detail_par_type_pari = pub.detail_par_type_pari || blocJson.detail_par_type_pari || {};
+            return pmu;
+        }
+
+        function enrichirBlocFoot(footBase, communaute) {
+            const blocJson = communaute?.foot && typeof communaute.foot === 'object' ? communaute.foot : {};
+            const foot = { ...footBase };
+            foot.mises_cumulees = Number(blocJson.mises_cumulees ?? foot.mises_cumulees) || 0;
+            foot.profit_net = Number(blocJson.profit_net ?? foot.profit_net) || 0;
+            foot.roi_pct = Number(blocJson.roi_pct ?? foot.roi_pct) || 0;
+            foot.detail_par_type_pari = blocJson.detail_par_type_pari || {};
+            foot.historique_matchs = Array.isArray(blocJson.historique_matchs) ? blocJson.historique_matchs : [];
+            return foot;
+        }
+
+        function choisirHistoriquePmu(localList, jsonList) {
+            const local = Array.isArray(localList) ? localList : [];
+            const distant = Array.isArray(jsonList) ? jsonList : [];
+            if (local.length >= distant.length) return local.slice(0, 8);
+            if (distant.length > 0) return distant.slice(0, 8);
+            return local.slice(0, 8);
+        }
+
+        function extraireHistoriquePmuDepuisArchivesLocales() {
+            try {
+                const archives = lireArchivesLocal()
+                    .filter((a) => estArchiveTerminee(a) && (a.reunion || a.course))
+                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+                    .slice(0, 8);
+                return archives.map((a) => ({
+                    reunion: a.reunion || '?',
+                    course: a.course || '?',
+                    date_affiche: a.dateAffiche || '',
+                    type_pari_pmu: a.type_pari_pmu || '',
+                    reussi_pmu: a.reussi_pmu,
+                    badges: libellesBadges(a),
+                    est_quinte: !!a.est_quinte,
+                }));
+            } catch {
+                return [];
+            }
+        }
+
+        /**
+         * Remix PMU + Foot : compteur historique Supabase (prioritaire), finance JSON, détail Tiercé.
+         */
+        function resoudreStatsCommunaute(row, communaute, statsPubliques = null) {
+            const supabasePmu = pmuDepuisSupabase(row);
+            let pmu = supabasePmu || blocSportStats(0, 0);
+
+            if (!supabasePmu && communaute?.pmu) {
+                pmu = normaliserBlocSport(communaute.pmu, 'communaute');
+            } else if (!supabasePmu && statsPubliques) {
+                pmu = normaliserBlocSport(
+                    {
+                        taux: statsPubliques.taux_reussite_plateforme ?? statsPubliques.taux,
+                        victoires: statsPubliques.victoires_plateforme ?? statsPubliques.victoires,
+                        total: statsPubliques.courses_terminees_plateforme ?? statsPubliques.total,
+                        mises_cumulees: statsPubliques.mises_cumulees,
+                        profit_net: statsPubliques.profit_net,
+                        roi_pct: statsPubliques.roi_pct,
+                    },
+                    'api',
+                );
+            }
+
+            pmu = enrichirBlocPmu(pmu, {
+                communaute,
+                statsPubliques,
+                historiqueLocal: extraireHistoriquePmuDepuisArchivesLocales(),
+            });
+
+            let foot = blocSportStats(0, 0);
+            if (communaute?.foot) {
+                foot = normaliserBlocSport(communaute.foot, 'communaute');
+            } else if (row) {
                 foot = lireStatsFootDepuisRow(row);
+            }
+            foot = enrichirBlocFoot(foot, communaute);
+
+            let global;
+            if (communaute?.global) {
+                global = normaliserBlocSport(communaute.global, 'communaute');
+            } else {
                 global = normaliserBlocSport({
                     victoires: pmu.victoires + foot.victoires,
                     total: pmu.total + foot.total,
@@ -1455,7 +1617,8 @@
                         : 0,
                 }, 'calc');
             }
-            return { pmu, foot, global };
+
+            return { pmu, foot, global, source_pmu: pmu.source };
         }
 
         function formaterDetailPmu(stats) {
@@ -1480,6 +1643,103 @@
             return `${v} ${victLabel} / ${t} ${matchLabel} (Value Bets, BTTS, Buteurs)`;
         }
 
+        function formaterCompteurHistoriquePmu(pmu) {
+            const ch = pmu.compteur_historique || {};
+            const analyses = ch.courses_analysees ?? pmu.total ?? 0;
+            const terminees = ch.courses_terminees ?? pmu.total ?? 0;
+            if (analyses === 0 && terminees === 0) {
+                return 'Historique plateforme — en attente de données';
+            }
+            if (analyses === terminees) {
+                return `${analyses} course${analyses > 1 ? 's' : ''} analysée${analyses > 1 ? 's' : ''} (historique communauté)`;
+            }
+            return `${analyses} analysée${analyses > 1 ? 's' : ''} · ${terminees} validée${terminees > 1 ? 's' : ''} (historique)`;
+        }
+
+        function htmlVitrineBadgePmu(label) {
+            const text = String(label || '').trim();
+            if (!text) return '';
+            const lower = text.toLowerCase();
+            let cls = 'vitrine-pmu-badge--ok';
+            if (/perdu/i.test(lower)) cls = 'vitrine-pmu-badge--ko';
+            else if (/tiercé|tierce|super\s*4|multi/i.test(lower)) cls = 'vitrine-pmu-badge--tierce';
+            return `<span class="vitrine-pmu-badge ${cls}">${text}</span>`;
+        }
+
+        function htmlVitrineHistoriquePmuItem(course) {
+            const reunion = course.reunion || '?';
+            const numCourse = course.course || '?';
+            const date = course.date_affiche ? ` · ${course.date_affiche}` : '';
+            const badges = (course.badges || []).map(htmlVitrineBadgePmu).join(' ');
+            const type = course.type_pari_pmu && course.type_pari_pmu !== 'Perdu'
+                ? htmlVitrineBadgePmu(course.type_pari_pmu)
+                : '';
+            const quinte = course.est_quinte ? htmlVitrineBadgePmu('Quinté') : '';
+            return `
+                <li class="vitrine-pmu-historique-item">
+                    <span class="font-semibold text-gray-200">${reunion} ${numCourse}${date}</span>
+                    <span class="flex flex-wrap justify-end gap-1">${quinte}${type}${badges}</span>
+                </li>`;
+        }
+
+        function htmlVitrineParTypeChips(reussitesParType, variante = 'pmu') {
+            const entrees = Object.entries(reussitesParType || {})
+                .filter(([, n]) => Number(n) > 0)
+                .sort((a, b) => Number(b[1]) - Number(a[1]));
+            if (entrees.length === 0) return '';
+            const accent = variante === 'foot' ? 'text-cyan-300' : 'text-emerald-300';
+            return entrees.map(([label, count]) => {
+                const isTierce = /tiercé|tierce|super\s*4|multi/i.test(label);
+                const cls = isTierce ? 'vitrine-pmu-badge--tierce' : (variante === 'foot' ? 'text-cyan-200' : 'text-emerald-200');
+                return `<span class="vitrine-par-type-chip"><span class="font-semibold ${cls}">${label}</span><span class="${accent}">×${count}</span></span>`;
+            }).join('');
+        }
+
+        function htmlVitrineHistoriqueFootItem(match) {
+            const titre = `${match.equipe_domicile || '?'} – ${match.equipe_exterieur || '?'}`;
+            const score = match.score_final ? ` · ${match.score_final}` : '';
+            const type = match.type_pari_foot || match.marche || '';
+            const badge = type && type !== 'Perdu' ? htmlVitrineBadgePmu(type) : htmlVitrineBadgePmu('Perdu');
+            return `
+                <li class="vitrine-pmu-historique-item">
+                    <span class="font-semibold text-gray-200">${titre}${score}</span>
+                    <span>${badge}</span>
+                </li>`;
+        }
+
+        function rendreVitrinePmuDetail(pmu) {
+            const blocParType = document.getElementById('vitrinePmuParType');
+            const listeParType = document.getElementById('vitrinePmuParTypeListe');
+            const blocHist = document.getElementById('vitrinePmuHistorique');
+            const listeHist = document.getElementById('vitrinePmuHistoriqueListe');
+            const chips = htmlVitrineParTypeChips(pmu.reussites_par_type, 'pmu');
+            if (listeParType) listeParType.innerHTML = chips;
+            if (blocParType) blocParType.classList.toggle('hidden', !chips);
+
+            const hist = (pmu.historique_courses || []).map(htmlVitrineHistoriquePmuItem).join('');
+            if (listeHist) listeHist.innerHTML = hist;
+            if (blocHist) blocHist.classList.toggle('hidden', !hist);
+        }
+
+        function rendreVitrineFootDetail(foot) {
+            const blocParType = document.getElementById('vitrineFootParType');
+            const listeParType = document.getElementById('vitrineFootParTypeListe');
+            const blocHist = document.getElementById('vitrineFootHistorique');
+            const listeHist = document.getElementById('vitrineFootHistoriqueListe');
+            const detail = foot.detail_par_type_pari || {};
+            const reussites = {};
+            Object.entries(detail).forEach(([label, v]) => {
+                if (v && v.succes > 0) reussites[label] = v.succes;
+            });
+            const chips = htmlVitrineParTypeChips(reussites, 'foot');
+            if (listeParType) listeParType.innerHTML = chips;
+            if (blocParType) blocParType.classList.toggle('hidden', !chips);
+
+            const hist = (foot.historique_matchs || []).map(htmlVitrineHistoriqueFootItem).join('');
+            if (listeHist) listeHist.innerHTML = hist;
+            if (blocHist) blocHist.classList.toggle('hidden', !hist);
+        }
+
         function pulseVitrineTaux(elements) {
             elements.forEach((el) => {
                 if (!el) return;
@@ -1499,6 +1759,7 @@
             const globalFinance = document.getElementById('vitrineGlobalFinance');
             const pmuTaux = document.getElementById('vitrinePmuTaux');
             const pmuDetail = document.getElementById('vitrinePmuDetail');
+            const pmuCompteur = document.getElementById('vitrinePmuCompteur');
             const pmuFinance = document.getElementById('vitrinePmuFinance');
             const footTaux = document.getElementById('vitrineFootTaux');
             const footDetail = document.getElementById('vitrineFootDetail');
@@ -1514,13 +1775,16 @@
             if (globalFinance) globalFinance.textContent = formaterLigneFinance(global);
             if (pmuTaux) pmuTaux.textContent = pmu.total > 0 ? String(pmu.taux) : '—';
             if (pmuDetail) pmuDetail.textContent = formaterDetailPmu(pmu);
+            if (pmuCompteur) pmuCompteur.textContent = formaterCompteurHistoriquePmu(pmu);
             if (pmuFinance) pmuFinance.textContent = formaterLigneFinance(pmu);
+            rendreVitrinePmuDetail(pmu);
             if (footTaux) footTaux.textContent = foot.total > 0 ? String(foot.taux) : '—';
             if (footDetail) footDetail.textContent = formaterDetailFoot(foot);
             if (footFinance) footFinance.textContent = formaterLigneFinance(foot);
             if (footApercu) {
                 footApercu.classList.toggle('hidden', foot.total > 0);
             }
+            rendreVitrineFootDetail(foot);
 
             if (animer) {
                 pulseVitrineTaux([globalTaux, pmuTaux, footTaux]);
@@ -1646,23 +1910,26 @@
             injecterStatsCommunauteUI({ pmu, foot, global }, options);
         }
 
-        /** Charge Supabase + api_velora_communaute.json pour le widget Communauté Velora. */
+        /** Charge Supabase + JSON communauté + API publiques (remix PMU / Foot). */
         async function chargerStatsPlateforme(options = {}) {
             const section = document.getElementById('sectionVitrine');
             if (section) section.classList.remove('hidden');
 
             masquerErreurSync('vitrineSyncErreur');
-            const [{ row, erreur }, communaute] = await Promise.all([
+            const [{ row, erreur }, communaute, statsPub] = await Promise.all([
                 lireVeloraStatsSupabase(),
                 lireCommunauteJson(),
+                lireStatsPubliques(),
             ]);
-            const stats = resoudreStatsCommunaute(row, communaute);
+            const stats = resoudreStatsCommunaute(row, communaute, statsPub?.stats);
             injecterStatsCommunauteUI(stats, options);
-            if (erreur && !communaute) {
+            if (erreur && !communaute && !statsPub?.stats) {
                 afficherErreurSync(
                     'vitrineSyncErreur',
                     erreur || 'Statistiques communautaires indisponibles.',
                 );
+            } else if (erreur && (communaute || statsPub?.stats)) {
+                masquerErreurSync('vitrineSyncErreur');
             }
         }
 

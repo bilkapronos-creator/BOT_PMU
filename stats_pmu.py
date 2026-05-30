@@ -105,6 +105,42 @@ def get_stats_publiques() -> dict:
     }
 
 
+def extraire_historique_communaute_pmu(
+    archives: list | None = None,
+    limit: int = 8,
+) -> list[dict]:
+    """Dernières courses PMU terminées pour le widget Communauté (sans user_id)."""
+    source = archives if archives is not None else lister_toutes_archives()
+    terminees = [
+        a
+        for a in source
+        if _est_terminee(a)
+        and (a.get("reunion") or a.get("course"))
+    ]
+    terminees.sort(key=lambda a: a.get("timestamp") or 0, reverse=True)
+    historique = []
+    for archive in terminees[:limit]:
+        badges = archive.get("badges_pmu") or []
+        labels = [
+            str(b.get("label") or b).strip()
+            for b in badges
+            if isinstance(b, dict) or isinstance(b, str)
+        ]
+        labels = [x for x in labels if x]
+        historique.append(
+            {
+                "reunion": archive.get("reunion") or "?",
+                "course": archive.get("course") or "?",
+                "date_affiche": archive.get("dateAffiche") or archive.get("date_affiche") or "",
+                "type_pari_pmu": archive.get("type_pari_pmu") or "",
+                "reussi_pmu": archive.get("reussi_pmu"),
+                "badges": labels,
+                "est_quinte": bool(archive.get("est_quinte")),
+            }
+        )
+    return historique
+
+
 def _agreger_reussites_par_type(archives: list) -> dict:
     """Comptage anonymisé des types de paris gagnants (sans user_id)."""
     compteur: dict[str, int] = {}
