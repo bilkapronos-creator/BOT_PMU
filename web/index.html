@@ -584,6 +584,21 @@
             transform: translateY(8px);
             pointer-events: none;
         }
+        #zoneConnexionAnalyseHaut {
+            scroll-margin-top: 5.5rem;
+        }
+        @media (max-width: 1023px) {
+            #dashboardLayout.layout-invite-analyse {
+                display: flex;
+                flex-direction: column;
+            }
+            #dashboardLayout.layout-invite-analyse #colonneDroite {
+                order: -1;
+            }
+            #dashboardLayout.layout-invite-analyse #colonneGauche {
+                order: 0;
+            }
+        }
         #blocFootGauche.foot-sidebar-opp-mode {
             border-color: rgba(251, 191, 36, 0.35);
             background: rgba(251, 191, 36, 0.04);
@@ -1342,7 +1357,7 @@
     </header>
 
     <nav class="mb-6 flex rounded-xl border border-white/10 glass-card p-1 shadow-lg shadow-black/20 lg:mb-8" aria-label="Navigation principale">
-        <button type="button" id="tabPronostic" onclick="afficherSection('pronostic')"
+        <button type="button" id="tabPronostic"
             class="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2.5 text-sm font-bold text-white shadow transition">
             Analyse
         </button>
@@ -1547,6 +1562,7 @@
 
         <!-- Colonne droite : résultats live ou archives -->
         <main id="colonneDroite" class="min-h-[280px] lg:col-span-8 lg:min-h-[min(75vh,800px)]">
+            <div id="zoneConnexionAnalyseHaut" class="hidden" role="region" aria-label="Connexion requise pour analyser"></div>
             <section id="sectionPronostic" class="flex h-full min-h-[280px] flex-col gap-4">
                 <div id="loading" class="hidden flex-1 flex-col" role="status" aria-live="polite" aria-busy="true">
                     <div class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-emerald-500/25 bg-gray-900/50 px-6 py-14 shadow-inner shadow-black/20 lg:min-h-[420px]">
@@ -2594,7 +2610,7 @@
         const USER_ID_BACKUP_KEY = 'velora_user_id_backup';
         const ARCHIVES_LIMIT = 200;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
-        const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
+        const MSG_CONNEXION_REQUISE = 'Connectez-vous ou créez un compte gratuit pour lancer une analyse PMU ou Foot.';
         const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour. Revenez demain pour de nouvelles analyses, ou passez Premium pour débloquer un accès illimité immédiat !';
         const QUOTA_JOURNALIER_UI = 3;
 
@@ -2904,14 +2920,48 @@
 
         function genererHtmlConnexionRequise() {
             return `
-                <div class="glass-card rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-6 text-center shadow-lg">
+                <div class="glass-card rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-6 text-center shadow-lg shadow-cyan-500/10">
                     <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400/90">Espace Parieur</p>
-                    <p class="mt-3 text-base font-semibold text-white">${MSG_CONNEXION_REQUISE}</p>
-                    <button type="button" id="btnConnexionDepuisAnalyse"
-                        class="mt-5 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-emerald-400 hover:to-cyan-400">
+                    <p class="mt-3 text-base font-semibold leading-relaxed text-white">${MSG_CONNEXION_REQUISE}</p>
+                    <p class="mt-2 text-xs text-gray-400">Compte gratuit — 3 analyses PMU par jour, moteur Foot et archives incluses.</p>
+                    <button type="button" class="velora-btn-connexion-analyse mt-5 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-emerald-400 hover:to-cyan-400 sm:w-auto">
                         Connexion / Inscription
                     </button>
                 </div>`;
+        }
+
+        function masquerBandeauConnexionAnalyse() {
+            const bandeau = document.getElementById('zoneConnexionAnalyseHaut');
+            const layout = document.getElementById('dashboardLayout');
+            if (bandeau) bandeau.classList.add('hidden');
+            if (layout) layout.classList.remove('layout-invite-analyse');
+        }
+
+        function afficherBandeauConnexionAnalyse(options = {}) {
+            const { scroll = true } = options;
+            afficherSection('pronostic');
+            const bandeau = document.getElementById('zoneConnexionAnalyseHaut');
+            const layout = document.getElementById('dashboardLayout');
+            if (bandeau) {
+                bandeau.innerHTML = genererHtmlConnexionRequise();
+                bandeau.classList.remove('hidden');
+                bandeau.querySelector('.velora-btn-connexion-analyse')
+                    ?.addEventListener('click', () => ouvrirModalAuth('login'), { once: true });
+            }
+            if (layout) layout.classList.add('layout-invite-analyse');
+            footAnalyseAffichee = false;
+            if (sportActif === 'foot') renderFootMatchs();
+            const zoneResultats = document.getElementById('resultats');
+            const titre = document.getElementById('titreResultats');
+            const zoneVide = document.getElementById('zoneVidePronostic');
+            if (zoneResultats) zoneResultats.innerHTML = '';
+            if (titre) titre.classList.add('hidden');
+            if (zoneVide) zoneVide.classList.add('hidden');
+            if (scroll) {
+                requestAnimationFrame(() => {
+                    bandeau?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
         }
 
         function htmlPanneauVideAnalyse() {
@@ -2922,25 +2972,26 @@
         }
 
         function afficherMessageConnexionRequise(zoneResultats, ouvrirModal = false) {
-            afficherSection('pronostic');
-            const zone = zoneResultats || document.getElementById('resultats');
-            const titre = document.getElementById('titreResultats');
-            if (titre) titre.classList.add('hidden');
-            if (zone) {
-                zone.innerHTML = genererHtmlConnexionRequise();
-                document.getElementById('btnConnexionDepuisAnalyse')
-                    ?.addEventListener('click', () => ouvrirModalAuth('login'), { once: true });
-            }
-            const zoneVide = document.getElementById('zoneVidePronostic');
-            if (zoneVide) zoneVide.classList.add('hidden');
+            afficherBandeauConnexionAnalyse({ scroll: true });
             if (ouvrirModal) ouvrirModalAuth('login');
-            mettreAJourZoneVidePronostic();
         }
 
-        function exigerConnexionPourAnalyser(zoneResultats) {
-            if (estMembreConnecte()) return true;
-            afficherMessageConnexionRequise(zoneResultats);
+        function exigerConnexionPourAnalyser() {
+            if (estMembreConnecte()) {
+                masquerBandeauConnexionAnalyse();
+                return true;
+            }
+            afficherBandeauConnexionAnalyse({ scroll: true });
             return false;
+        }
+
+        function onTabPronosticClick() {
+            afficherSection('pronostic');
+            if (!estMembreConnecte()) {
+                afficherBandeauConnexionAnalyse({ scroll: true });
+            } else {
+                masquerBandeauConnexionAnalyse();
+            }
         }
 
         function mettreAJourUiAnalyseAuth() {
@@ -2957,12 +3008,17 @@
             if (guide) {
                 guide.innerHTML = connecte
                     ? 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.'
-                    : 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis cliquez sur <span class="font-medium text-emerald-400">Analyser</span>. <span class="block mt-2 text-emerald-400/90">Mode invité — connectez-vous pour lancer une analyse (3 gratuites/jour).</span>';
+                    : 'Choisissez <span class="font-medium text-emerald-400">PMU</span> ou <span class="font-medium text-cyan-400">Foot</span>, puis connectez-vous pour lancer une analyse.';
             }
 
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.title = connecte ? '' : MSG_CONNEXION_REQUISE;
+            }
+            const btnFoot = document.getElementById('btnFootAnalyser');
+            if (btnFoot) btnFoot.title = connecte ? '' : MSG_CONNEXION_REQUISE;
+            if (connecte) {
+                masquerBandeauConnexionAnalyse();
             }
         }
 
@@ -3611,6 +3667,7 @@
             appliquerPaywallDeviceSiBloque();
             quitterFootOppSiNonPremium();
             syncFootModeUi();
+            mettreAJourUiAnalyseAuth();
         }
 
         function initialiserAuthUi() {
@@ -4151,6 +4208,9 @@
                 }
             }
             afficherSection(sectionActive);
+            if (sectionActive === 'pronostic' && !estMembreConnecte()) {
+                afficherBandeauConnexionAnalyse({ scroll: false });
+            }
         }
 
         function mettreAJourGuideFoot() {
@@ -4236,6 +4296,7 @@
         }
 
         function getFootRecherchesRestantes() {
+            if (!estMembreConnecte()) return null;
             if (estVeloraPremiumFoot()) return null;
             return Math.max(0, FOOT_SEARCH_QUOTA_FREE - getFootSearchCount());
         }
@@ -4245,6 +4306,7 @@
          * @returns {{ allowed: boolean, reason?: string }}
          */
         function consommerTentativeRechercheFoot(queryNorm) {
+            if (!estMembreConnecte()) return { allowed: false, reason: 'auth' };
             reinitialiserQuotaRechercheFootSiNouveauJour();
             if (estVeloraPremiumFoot()) return { allowed: true };
             const count = getFootSearchCount();
@@ -4406,6 +4468,8 @@
 
         async function lancerAnalyseFoot() {
             if (footModeOpportunites) return;
+            if (!exigerConnexionPourAnalyser()) return;
+
             const input = document.getElementById('footSearchInput');
             const btn = document.getElementById('btnFootAnalyser');
             const raw = input?.value || '';
@@ -4432,7 +4496,11 @@
             const attempt = consommerTentativeRechercheFoot(trimmed);
             if (!attempt.allowed) {
                 if (input) input.value = footFiltre;
-                showPaywallModal('search_limit');
+                if (attempt.reason === 'auth') {
+                    exigerConnexionPourAnalyser();
+                } else {
+                    showPaywallModal('search_limit');
+                }
                 return;
             }
 
@@ -5882,6 +5950,10 @@
                         ? ` · ${rest} recherche${rest > 1 ? 's' : ''} gratuite${rest > 1 ? 's' : ''} restante${rest > 1 ? 's' : ''} aujourd'hui`
                         : '';
                 })();
+            if (!estMembreConnecte()) {
+                meta.textContent = 'Connectez-vous pour générer une analyse Foot';
+                return;
+            }
             if (!footAnalyseAffichee || !q) {
                 meta.textContent = `${actifs.length} match${actifs.length > 1 ? 's' : ''} en base — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
@@ -6106,6 +6178,7 @@
                 </article>`;
         }
 
+        document.getElementById('tabPronostic')?.addEventListener('click', onTabPronosticClick);
         navSportPmu?.addEventListener('click', () => changerSport('pmu'));
         navSportFoot?.addEventListener('click', () => changerSport('foot'));
         document.getElementById('btnVitrineDetail')?.addEventListener('click', () => {
@@ -6145,6 +6218,7 @@
         reinitialiserQuotaRechercheFootSiNouveauJour();
         syncVeloraPremiumLocalFlag();
         syncFootModeUi();
+        mettreAJourUiAnalyseAuth();
 
         const dateInputEl = document.getElementById('dateInput');
         if (dateInputEl) dateInputEl.valueAsDate = new Date();
@@ -6716,7 +6790,7 @@
             titreResultats.classList.add('hidden');
             mettreAJourZoneVidePronostic();
 
-            if (!exigerConnexionPourAnalyser(zoneResultats)) {
+            if (!exigerConnexionPourAnalyser()) {
                 return;
             }
 
