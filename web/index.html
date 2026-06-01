@@ -2833,40 +2833,70 @@
                 btn.dataset.veloraPremiumBound = '1';
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    lancerCheckoutPremium();
+                    ouvrirPaywallPremium();
                 });
             });
         }
 
+        /** Ouvre le modal deux offres (comme quota épuisé) — Stripe uniquement depuis le modal. */
+        function ouvrirPaywallPremium() {
+            if (!estMembreConnecte()) {
+                ouvrirModalAuth('signin');
+                return;
+            }
+            if (estVeloraPremiumPmu() && estVeloraPremiumFoot()) {
+                afficherToastVelora('Vous avez déjà accès Premium complet (Pack Intégral).');
+                return;
+            }
+            const sport = typeof sportActif !== 'undefined' ? sportActif : 'pmu';
+            let context = sport === 'foot' ? 'premium_offer_foot' : 'premium_offer_pmu';
+            if (sport === 'pmu' && estVeloraPremiumPmu() && !estVeloraPremiumFoot()) {
+                context = 'premium_offer_foot';
+            } else if (sport === 'foot' && estVeloraPremiumFoot() && !estVeloraPremiumPmu()) {
+                context = 'premium_offer_pmu';
+            }
+            if (typeof showPaywallModal === 'function') {
+                showPaywallModal(context);
+            }
+        }
+
         async function lancerCheckoutPremium() {
-            const errEl = document.getElementById('premiumCheckoutErreur');
-            const btnPaywall = document.getElementById('btnPasserPremium');
-            const btnHeader = document.getElementById('btnPasserPremiumHeader');
-            const boutons = [btnPaywall, btnHeader].filter(Boolean);
+            const errEl = document.getElementById('veloraPaywallCheckoutErreur')
+                || document.getElementById('premiumCheckoutErreur');
+            const btn = document.getElementById('btnVeloraPaywallSimple');
 
             if (!estMembreConnecte()) {
-                notifierErreurPremium('Connectez-vous pour souscrire à Premium.');
+                if (errEl) {
+                    errEl.textContent = 'Connectez-vous pour souscrire à Premium.';
+                    errEl.classList.remove('hidden');
+                }
                 ouvrirModalAuth('signin');
                 return;
             }
 
             if (estVeloraPremiumPmu()) {
-                notifierErreurPremium('Vous avez déjà le Pass Premium PMU.');
+                if (errEl) {
+                    errEl.textContent = 'Vous avez déjà le Pass Premium PMU.';
+                    errEl.classList.remove('hidden');
+                }
                 return;
             }
 
             const userId = getVeloraUserId();
             if (!userId) {
-                notifierErreurPremium('Session invalide — reconnectez-vous.');
+                if (errEl) {
+                    errEl.textContent = 'Session invalide — reconnectez-vous.';
+                    errEl.classList.remove('hidden');
+                }
                 ouvrirModalAuth('signin');
                 return;
             }
 
-            boutons.forEach((btn) => {
+            if (btn) {
                 btn.disabled = true;
                 btn.dataset.veloraLabel = btn.textContent;
                 btn.textContent = 'Redirection Stripe…';
-            });
+            }
             if (errEl) errEl.classList.add('hidden');
 
             const origin = window.location.origin.replace(/\/$/, '');
@@ -2882,19 +2912,23 @@
                 }),
             });
 
-            boutons.forEach((btn) => {
+            if (btn) {
                 btn.disabled = false;
-                btn.textContent = btn.dataset.veloraLabel || '⭐ Passer Premium';
-            });
+                btn.textContent = btn.dataset.veloraLabel || 'Prendre le Pass Simple';
+            }
 
             if (result.ok && result.data?.url) {
                 window.location.href = result.data.url;
                 return;
             }
 
-            notifierErreurPremium(
-                result.erreur || 'Impossible d’ouvrir le paiement Stripe. Réessayez ou contactez le support.',
-            );
+            const msg = result.erreur || 'Impossible d’ouvrir le paiement Stripe. Réessayez ou contactez le support.';
+            if (errEl) {
+                errEl.textContent = msg;
+                errEl.classList.remove('hidden');
+            } else {
+                afficherToastVelora(msg, 8000, 'error');
+            }
         }
 
         async function lancerPortailAbonnement() {
@@ -3757,6 +3791,18 @@
                 texte: 'Vous avez épuisé vos analyses gratuites du jour. Revenez demain ou débloquez le Pass PMU — ou le Pack Intégral pour tout le site.',
                 showWait: true,
                 produit: 'pmu',
+            },
+            premium_offer_pmu: {
+                titre: '⭐ Passez Premium Velora',
+                texte: 'Débloquez analyses illimitées, archives complètes et l\'indice Velora. Choisissez le Pass PMU ou le Pack Intégral Foot + PMU à -25 %.',
+                showWait: false,
+                produit: 'pmu',
+            },
+            premium_offer_foot: {
+                titre: '⭐ Passez Premium Velora',
+                texte: 'Débloquez recherches illimitées, le radar Value Bets et les archives Foot. Choisissez le Pass Foot ou le Pack Intégral à -25 %.',
+                showWait: false,
+                produit: 'foot',
             },
         };
         let veloraPaywallProduitActif = 'foot';
