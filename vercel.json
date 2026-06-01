@@ -8,20 +8,32 @@
     {
       "source": "/sitemap.xml",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     },
     {
       "source": "/robots.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
       ]
     },
     {
       "source": "/(.*\\.json)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=60, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=60, must-revalidate"
+        }
       ]
     }
   ],
@@ -33,10 +45,22 @@
     }
   ],
   "rewrites": [
-    { "source": "/landing", "destination": "/landing.html" },
-    { "source": "/landing/", "destination": "/landing.html" },
-    { "source": "/legales", "destination": "/legales.html" },
-    { "source": "/legales/", "destination": "/legales.html" },
+    {
+      "source": "/landing",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/landing/",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/legales",
+      "destination": "/legales.html"
+    },
+    {
+      "source": "/legales/",
+      "destination": "/legales.html"
+    },
     {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
