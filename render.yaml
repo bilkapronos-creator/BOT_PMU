@@ -1,0 +1,12 @@
+# Blueprint Render — API FastAPI (dossier web/)
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: velora-engine
+    runtime: python
+    rootDir: web
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn api_pmu:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.0"
