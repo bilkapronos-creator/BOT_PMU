@@ -35,5 +35,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Installer Chromium (Playwright)
+        run: playwright install --with-deps chromium
+
       - name: Exécuter run_all.py
         run: python run_all.py
