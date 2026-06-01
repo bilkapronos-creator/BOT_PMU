@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 DB_PATH = Path(os.environ.get("VELORA_DB_PATH", "velora_engine.db"))
-ARCHIVES_MAX_PER_USER = int(os.environ.get("ARCHIVES_MAX_PER_USER", "50"))
+ARCHIVES_MAX_PER_USER = int(os.environ.get("ARCHIVES_MAX_PER_USER", "500"))
 
 
 def course_key(archive: dict) -> str:

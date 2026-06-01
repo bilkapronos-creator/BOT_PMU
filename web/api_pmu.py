@@ -988,7 +988,7 @@ def evaluation_archive(
 @app.get("/archives")
 def get_archives_utilisateur(
     user_id: str = Depends(auth_membre),
-    limit: int = Query(default=10, ge=1, le=50),
+    limit: int = Query(default=200, ge=1, le=500),
     user_id_query: Optional[str] = Query(default=None, alias="user_id"),
 ):
     """Archives privées : uniquement celles du X-User-Id authentifié."""

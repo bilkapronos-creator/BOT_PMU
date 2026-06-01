@@ -54,6 +54,27 @@ def est_archive_terminee_finance(archive: dict, champ_reussi: str) -> bool:
     return val is not None
 
 
+def _cote_pmu_archive(archive: dict) -> float | None:
+    """Cote du favori Velora (pronosticNumero) ou du premier du top."""
+    for cheval in archive.get("pronostic_velora") or archive.get("top3") or []:
+        if not isinstance(cheval, dict):
+            continue
+        fav = archive.get("pronosticNumero")
+        if fav is not None and str(cheval.get("numero")) == str(fav):
+            try:
+                return float(cheval.get("cote"))
+            except (TypeError, ValueError):
+                pass
+            break
+    top = (archive.get("pronostic_velora") or archive.get("top3") or [None])[0]
+    if isinstance(top, dict):
+        try:
+            return float(top.get("cote"))
+        except (TypeError, ValueError):
+            pass
+    return None
+
+
 def est_victoire_archive(archive: dict, champ_reussi: str) -> bool:
     if not est_archive_terminee_finance(archive, champ_reussi):
         return False
@@ -87,10 +108,9 @@ def agreger_stats_archives(
             profit_net += float(fin.get("profit") or 0)
         else:
             mises_cumulees += MISE_UNITAIRE
-            if est_victoire_archive(a, champ_reussi):
-                profit_net += 0.0
-            else:
-                profit_net -= MISE_UNITAIRE
+            gagne = est_victoire_archive(a, champ_reussi)
+            fin_calc = calculer_resultat_financier(gagne, _cote_pmu_archive(a))
+            profit_net += float(fin_calc.get("profit") or 0)
 
     roi_pct = round((profit_net / mises_cumulees) * 100, 1) if mises_cumulees > 0 else 0.0
 
@@ -104,29 +124,34 @@ def agreger_stats_archives(
     }
 
 
-def enrichir_archive_pmu_financier(archive: dict, evaluation: dict) -> dict:
-    """Ajoute le bloc financier PMU après évaluation (cote favori si disponible)."""
-    gagne = evaluation.get("reussi_pmu") is True
-    cote = None
-    for cheval in archive.get("pronostic_velora") or archive.get("top3") or []:
-        if not isinstance(cheval, dict):
-            continue
-        fav = archive.get("pronosticNumero")
-        if fav is not None and str(cheval.get("numero")) == str(fav):
-            try:
-                cote = float(cheval.get("cote"))
-            except (TypeError, ValueError):
-                pass
-            break
-    if cote is None:
-        top = (archive.get("pronostic_velora") or archive.get("top3") or [None])[0]
-        if isinstance(top, dict):
-            try:
-                cote = float(top.get("cote"))
-            except (TypeError, ValueError):
-                pass
-    archive["financier"] = calculer_resultat_financier(gagne, cote)
+def enrichir_archive_pmu_financier(archive: dict, evaluation: dict | None = None) -> dict:
+    """Ajoute ou recalcule le bloc financier PMU (cote favori si disponible)."""
+    evaluation = evaluation or {}
+    gagne = evaluation.get("reussi_pmu")
+    if gagne is None:
+        gagne = archive.get("reussi_pmu") is True
+    archive["financier"] = calculer_resultat_financier(gagne, _cote_pmu_archive(archive))
+    archive["profit"] = archive["financier"].get("profit")
     return archive
+
+
+def recalculer_financier_archives_pmu(archives: list[dict]) -> tuple[int, int]:
+    """
+    Recalcule financier + profit sur les archives PMU déjà évaluées.
+    Retourne (nb_mises_a_jour, nb_ignorees).
+    """
+    maj = 0
+    ignorees = 0
+    for arch in archives:
+        if arch.get("reussi_pmu") is None:
+            ignorees += 1
+            continue
+        if str(arch.get("statut") or "") == "En attente":
+            ignorees += 1
+            continue
+        enrichir_archive_pmu_financier(arch)
+        maj += 1
+    return maj, ignorees
 
 
 def bloc_communaute_depuis_stats(stats: dict[str, Any]) -> dict[str, Any]:

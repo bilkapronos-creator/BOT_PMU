@@ -1785,9 +1785,12 @@
             const c = lireCompteursPlateforme(row);
             return normaliserBlocSport(
                 {
-                    taux: c.courses > 0 ? Math.round((c.victoires / c.courses) * 100) : 0,
-                    victoires: c.victoires,
-                    total: c.courses,
+                    /* velora_stats = compteur « courses comptabilisées » (vitrine historique) */
+                    compteur_analyses: c.courses,
+                    compteur_victoires: c.victoires,
+                    taux: 0,
+                    victoires: 0,
+                    total: 0,
                     mises_cumulees: row.pmu_mises_cumulees,
                     profit_net: row.pmu_profit_net,
                     roi_pct: row.pmu_roi_pct,
@@ -1803,19 +1806,39 @@
             const ch = blocJson.compteur_historique || {};
 
             const pmu = { ...pmuBase };
+            const financeTotal = Number(
+                pub.total ?? pub.courses_terminees_plateforme ?? blocJson.total ?? 0,
+            ) || 0;
+            const financeVictoires = Number(
+                pub.victoires ?? pub.victoires_plateforme ?? blocJson.victoires ?? 0,
+            ) || 0;
+            pmu.total = financeTotal;
+            pmu.victoires = financeVictoires;
+            pmu.taux = financeTotal > 0
+                ? Math.round((financeVictoires / financeTotal) * 100)
+                : Number(pub.taux ?? pub.taux_reussite_plateforme ?? blocJson.taux ?? pmu.taux) || 0;
             pmu.mises_cumulees = Number(blocJson.mises_cumulees ?? pub.mises_cumulees ?? pmu.mises_cumulees) || 0;
-            pmu.profit_net = Number(blocJson.profit_net ?? pub.profit_net ?? pmu.profit_net) || 0;
+            pmu.profit_net = Number(blocJson.profit_net ?? pub.profit_net ?? pmu.profit_net);
+            if (!Number.isFinite(pmu.profit_net)) pmu.profit_net = 0;
             pmu.roi_pct = Number(blocJson.roi_pct ?? pub.roi_pct ?? pmu.roi_pct) || 0;
+            if (pmu.mises_cumulees > 0 && pmu.roi_pct === 0 && pmu.profit_net !== 0) {
+                pmu.roi_pct = Math.round((pmu.profit_net / pmu.mises_cumulees) * 1000) / 10;
+            }
+
+            const analysesPlateforme = Number(
+                pub.total_courses_plateforme ?? ch.courses_analysees ?? financeTotal,
+            ) || 0;
+            const resoluesPlateforme = Number(
+                pub.courses_terminees_plateforme ?? ch.courses_terminees ?? financeTotal,
+            ) || 0;
+            const enAttentePlateforme = Number(pub.courses_en_attente_arrivee ?? 0) || 0;
 
             pmu.compteur_historique = {
-                courses_analysees: Number(
-                    ch.courses_analysees ?? pub.total_courses_plateforme ?? pub.total_courses_analysees ?? pmu.total,
-                ) || 0,
-                courses_terminees: Number(
-                    ch.courses_terminees ?? pub.courses_terminees_plateforme ?? pub.courses_terminees ?? pmu.total,
-                ) || 0,
-                victoires: Number(ch.victoires ?? pub.victoires_plateforme ?? pub.victoires ?? pmu.victoires) || 0,
-                taux_reussite: Number(ch.taux_reussite ?? pub.taux_reussite_plateforme ?? pub.taux ?? pmu.taux) || 0,
+                courses_analysees: analysesPlateforme,
+                courses_terminees: resoluesPlateforme,
+                courses_en_attente: enAttentePlateforme,
+                victoires: financeVictoires,
+                taux_reussite: pmu.taux,
             };
 
             pmu.gains_par_famille = blocJson.gains_par_famille || pub.gains_par_famille || {};
@@ -1943,10 +1966,13 @@
 
         function formaterCompteurHistoriquePmu(pmu) {
             const ch = pmu.compteur_historique || {};
-            const analyses = ch.courses_analysees ?? pmu.total ?? 0;
-            const terminees = ch.courses_terminees ?? pmu.total ?? 0;
-            if (analyses === 0 && terminees === 0) return '—';
-            return `${analyses} analysées · ${terminees} validées`;
+            const analyses = ch.courses_analysees ?? 0;
+            const resolues = ch.courses_terminees ?? pmu.total ?? 0;
+            const enAttente = ch.courses_en_attente ?? 0;
+            if (analyses === 0 && resolues === 0) return '—';
+            let txt = `${analyses} analysées · ${resolues} résolues`;
+            if (enAttente > 0) txt += ` · ${enAttente} en attente PMU`;
+            return txt;
         }
 
         function formaterCompteurFoot(foot) {
@@ -2323,7 +2349,7 @@
         ).replace(/\/+$/, '');
         const USER_ID_KEY = 'velora_user_id';
         const USER_ID_BACKUP_KEY = 'velora_user_id_backup';
-        const ARCHIVES_LIMIT = 50;
+        const ARCHIVES_LIMIT = 200;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
         const MSG_CONNEXION_REQUISE = 'Vous devez vous connecter ou créer un compte gratuit pour analyser une course.';
         const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour. Revenez demain pour de nouvelles analyses, ou passez Premium pour débloquer un accès illimité immédiat !';
@@ -5673,11 +5699,13 @@
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             const taux = statsServeur?.taux_reussite_global ?? calculerTauxReussite(archives);
-            const terminees = statsServeur?.courses_terminees ?? archives.filter((a) => a.statut !== 'En attente').length;
+            const resolues = statsServeur?.courses_terminees
+                ?? archives.filter((a) => a.statut !== 'En attente' && a.reussi_pmu != null).length;
+            const enAttente = archives.filter((a) => a.statut === 'En attente' || a.reussi_pmu == null).length;
             const victoires = statsServeur?.victoires ?? archives.filter((a) => a.reussi_pmu === true).length;
             const total = statsServeur?.total_courses_analysees ?? archives.length;
             tauxEl.textContent = String(taux);
-            statsEl.textContent = `${total} course${total > 1 ? 's' : ''} · ${terminees} terminée${terminees > 1 ? 's' : ''} · ${victoires} validée${victoires > 1 ? 's' : ''}`;
+            statsEl.textContent = `${total} course${total > 1 ? 's' : ''} · ${resolues} résolue${resolues > 1 ? 's' : ''} · ${enAttente} en attente · ${victoires} gagnante${victoires > 1 ? 's' : ''}`;
             afficherDashboardPrive(statsServeur);
 
             liste.innerHTML = archives.map((a) => `

@@ -7,9 +7,27 @@ from velora_finance import MISE_UNITAIRE, agreger_stats_archives
 
 
 def _est_terminee(archive: dict) -> bool:
-    return archive.get("statut") not in (None, "En attente") and archive.get(
-        "reussi_pmu"
-    ) is not None
+    """Course résolue : arrivée PMU intégrée (reussi_pmu renseigné)."""
+    if archive.get("reussi_pmu") is None:
+        return False
+    statut = str(archive.get("statut") or "").strip()
+    if statut in ("", "En attente"):
+        return False
+    return True
+
+
+def _est_en_attente_arrivee(archive: dict) -> bool:
+    """Analysée mais sans arrivée officielle (en attente PMU)."""
+    if archive.get("reussi_pmu") is not None:
+        return False
+    statut = str(archive.get("statut") or "").strip()
+    return statut in ("", "En attente")
+
+
+def _est_statut_orphelin(archive: dict) -> bool:
+    """Statut marqué terminé sans évaluation (donnée incohérente)."""
+    statut = str(archive.get("statut") or "").strip()
+    return statut not in ("", "En attente") and archive.get("reussi_pmu") is None
 
 
 def _est_victoire(archive: dict) -> bool:
@@ -70,6 +88,8 @@ def get_stats_publiques() -> dict:
     archives = lister_toutes_archives()
     total_courses = len(archives)
     terminees = sum(1 for a in archives if _est_terminee(a))
+    en_attente = sum(1 for a in archives if _est_en_attente_arrivee(a))
+    orphelines = sum(1 for a in archives if _est_statut_orphelin(a))
     victoires = sum(1 for a in archives if _est_victoire(a))
     membres_actifs = len({a.get("user_id") for a in archives if a.get("user_id")})
 
@@ -91,6 +111,8 @@ def get_stats_publiques() -> dict:
         "mise_unitaire": MISE_UNITAIRE,
         "total_courses_plateforme": total_courses,
         "courses_terminees_plateforme": terminees,
+        "courses_en_attente_arrivee": en_attente,
+        "courses_statut_orphelin": orphelines,
         "victoires_plateforme": victoires,
         "taux_reussite_plateforme": taux_plateforme,
         "taux": finance["taux"],
