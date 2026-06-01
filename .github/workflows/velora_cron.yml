@@ -56,5 +56,7 @@ jobs:
           print("[CI] Playwright Chromium OK (headless=False + xvfb)")
           PY
 
-      - name: Exécuter run_all.py
+      - name: Exécuter run_all.py (xvfb + Chromium classique)
+        env:
+          VELORA_HEADLESS: "0"
         run: xvfb-run -a python run_all.py

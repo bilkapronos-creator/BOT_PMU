@@ -48,9 +48,9 @@ def _chromium_headless() -> bool:
         return False
     if force in ("1", "true", "yes"):
         return True
-    return os.environ.get("CI", "").strip().lower() in ("1", "true") or os.environ.get(
-        "GITHUB_ACTIONS"
-    ) == "true"
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
+        return False
+    return os.environ.get("CI", "").strip().lower() in ("1", "true")
 
 
 def _launch_browser(playwright):

@@ -184,19 +184,27 @@ def wait_for_internet() -> None:
     log("Connexion internet OK.")
 
 
+def _env_sous_processus(extra: dict | None = None) -> dict[str, str]:
+    """Copie l'environnement ; sur GitHub Actions force Chromium classique (pas headless-shell)."""
+    env = {k: str(v) for k, v in os.environ.items()}
+    env["VELORA_ROOT"] = str(ROOT)
+    env["VELORA_SCRAPER_DIR"] = str(ROOT)
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["PYTHONUNBUFFERED"] = "1"
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
+        env["VELORA_HEADLESS"] = "0"
+    if extra:
+        env.update({k: str(v) for k, v in extra.items()})
+    return env
+
+
 def run_step(script: str, label: str, extra_env: dict | None = None) -> bool:
     path = (ROOT / script).resolve()
     if not path.is_file():
         log_error(label, f"Script introuvable : {path}")
         return False
 
-    env = os.environ.copy()
-    env["VELORA_ROOT"] = str(ROOT)
-    env["VELORA_SCRAPER_DIR"] = str(ROOT)
-    env["PYTHONIOENCODING"] = "utf-8"
-    env["PYTHONUNBUFFERED"] = "1"
-    if extra_env:
-        env.update(extra_env)
+    env = _env_sous_processus(extra_env)
 
     log(f"--- {label} ---")
     log(f"Commande : {PYTHON} {path.name}")
@@ -435,7 +443,11 @@ def main() -> int:
     log("=== Velora Engine — pipeline complet (scraper + résultats + déploiement) ===")
     log(f"Racine scraper     : {ROOT}")
     log(f"Projet web (cible) : {WEB_ROOT}")
-    log(f"  index.html       : {(WEB_ROOT / 'index.html').resolve()}\n")
+    log(f"  index.html       : {(WEB_ROOT / 'index.html').resolve()}")
+    log(
+        f"  CI / headless    : GITHUB_ACTIONS={os.environ.get('GITHUB_ACTIONS', '')!r} "
+        f"VELORA_HEADLESS={os.environ.get('VELORA_HEADLESS', '(auto)')!r}\n"
+    )
 
     wait_for_internet()
 
