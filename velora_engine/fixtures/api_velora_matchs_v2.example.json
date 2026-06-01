@@ -1,0 +1,296 @@
+{
+  "schema_version": 2,
+  "meta": {
+    "generated_at": "2026-06-01T21:18:45.396095+02:00",
+    "engine": "velora-pro-2",
+    "match_count": 2,
+    "note": "Fixture B1 — exemple schema v2"
+  },
+  "matchs": [
+    {
+      "id_match": "EXAMPLE_MEKNES_001",
+      "date_match": "01/06/2026 à 20:00",
+      "match_start_ts": 1780341600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "CODM Meknès",
+      "equipe_exterieur": "Olympique Dcheira",
+      "meta_match": {
+        "competition": {
+          "name": "Botola Pro",
+          "type": "league",
+          "stakes_tier": "medium"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.72,
+        "adjusted_confidence": 0.72,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.96,
+          "N": 3.2,
+          "2": 4.1
+        },
+        "probabilites": {
+          "1": 81,
+          "N": 15,
+          "2": 4
+        },
+        "markets_raw": {
+          "over_under_total": {
+            "1.5": {
+              "plus_cote": 1.28,
+              "moins_cote": 3.5,
+              "plus_prob": 72,
+              "moins_prob": 28
+            },
+            "2.5": {
+              "plus_cote": 1.85,
+              "moins_cote": 1.95,
+              "plus_prob": 54,
+              "moins_prob": 46
+            },
+            "3.5": {
+              "plus_cote": 2.9,
+              "moins_cote": 1.4
+            }
+          },
+          "team_goals": {
+            "home": {
+              "team_name": "CODM Meknès",
+              "lines": {
+                "1.5": {
+                  "plus_cote": 2.1,
+                  "moins_cote": 1.65,
+                  "plus_prob": 42
+                }
+              }
+            },
+            "away": {
+              "team_name": "Olympique Dcheira",
+              "lines": {
+                "0.5": {
+                  "plus_cote": 1.55,
+                  "moins_cote": 2.35
+                }
+              }
+            }
+          },
+          "btts": {
+            "oui": 1.7,
+            "non": 2.1
+          }
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "1",
+            "label": "Victoire CODM Meknès",
+            "cote": 1.96,
+            "edge": 1.59,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire CODM Meknès",
+          "cote": 1.96,
+          "conseil_short": "Value Bet — Victoire domicile"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": [
+            {
+              "score": "2-1",
+              "prob": 14,
+              "cote": 9.5
+            },
+            {
+              "score": "1-0",
+              "prob": 11,
+              "cote": 7.2
+            },
+            {
+              "score": "1-1",
+              "prob": 9,
+              "cote": 6.8
+            }
+          ],
+          "value_bet": {
+            "market": "score_exact",
+            "pick": "2-1",
+            "label": "Score exact 2-1",
+            "cote": 9.5,
+            "edge": 1.18,
+            "stars": 4,
+            "is_primary": false
+          }
+        },
+        "buteur_match": {
+          "top": [
+            {
+              "joueur": "A. Diallo",
+              "cote": 4.5
+            },
+            {
+              "joueur": "M. El Amrani",
+              "cote": 5.2
+            }
+          ]
+        },
+        "buteur_mi_temps": {
+          "top": [
+            {
+              "joueur": "A. Diallo",
+              "cote": 6.0
+            }
+          ]
+        },
+        "buteur_double": {
+          "top": [
+            {
+              "joueur": "Diallo + El Amrani",
+              "cote": 12.0
+            }
+          ]
+        },
+        "value_bets": [
+          {
+            "market": "score_exact",
+            "pick": "2-1",
+            "label": "Score exact 2-1",
+            "cote": 9.5,
+            "edge": 1.18,
+            "stars": 4,
+            "is_primary": false
+          }
+        ]
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {
+          "plus_moins_buts": {
+            "2.5": {
+              "plus_cote": 1.85,
+              "moins_cote": 1.95,
+              "plus_prob": 54,
+              "moins_prob": 46
+            }
+          }
+        }
+      }
+    },
+    {
+      "id_match": "EXAMPLE_FRIENDLY_002",
+      "date_match": "02/06/2026 à 18:00",
+      "match_start_ts": 1780428000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "PSG",
+      "equipe_exterieur": "Amiens SC",
+      "meta_match": {
+        "competition": {
+          "name": "Club Friendlies",
+          "type": "friendly",
+          "stakes_tier": "low"
+        }
+      },
+      "confidence": {
+        "velora_score": 78.0,
+        "indice_velora": 4,
+        "base_confidence": 0.85,
+        "adjusted_confidence": 0.55,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [
+        {
+          "type": "rotation_risk",
+          "severity": "high",
+          "message": "Ligue des Champions dans 4 jours — risque de rotation sur le favori",
+          "team": "PSG",
+          "suggested_pick": {
+            "market": "1n2",
+            "pick": "dc_x2"
+          }
+        }
+      ],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.22,
+          "N": 6.5,
+          "2": 11.0
+        },
+        "probabilites": {
+          "1": 88,
+          "N": 8,
+          "2": 4
+        },
+        "markets_raw": {
+          "over_under_total": {
+            "2.5": {
+              "plus_cote": 1.45,
+              "moins_cote": 2.65
+            }
+          },
+          "team_goals": {},
+          "btts": {
+            "oui": 1.55,
+            "non": 2.35
+          }
+        },
+        "value_bets": [
+          {
+            "market": "ou_total",
+            "pick": "plus",
+            "label": "Plus de 2,5 buts",
+            "cote": 1.45,
+            "edge": 1.08,
+            "stars": 4,
+            "is_primary": true,
+            "line": "2.5",
+            "side": "plus"
+          }
+        ],
+        "primary_pick": {
+          "market": "ou_total",
+          "pick": "plus",
+          "label": "Plus de 2,5 buts",
+          "cote": 1.45,
+          "conseil_short": "Value Bet — Over 2,5 buts"
+        },
+        "display_badges": [
+          "Plus de 2,5 buts"
+        ]
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      }
+    }
+  ]
+}

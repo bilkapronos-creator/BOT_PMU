@@ -1,0 +1,20 @@
+# Scraper local (hors déploiement Vercel)
+parser_winamax.py
+winamax_dump.py
+winamax_sniper.py
+winamax_foot_results.py
+velora_intel.py
+run_all.py
+error_log.txt
+dump_winamax_html.json
+docs/
+terminals/
+api_velora_matchs.json
+api_velora_premium.json
+requirements.txt
+
+# Build / cache
+__pycache__/
+*.pyc
+.venv/
+venv/

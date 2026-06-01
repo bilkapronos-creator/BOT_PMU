@@ -1,0 +1,151 @@
+{
+  "schema_version": 2,
+  "meta": {
+    "generated_at": "2026-06-01T21:26:36.263494+02:00",
+    "engine": "velora-pro-2",
+    "match_count": 2
+  },
+  "matchs": [
+    {
+      "id_match": "100",
+      "date_match": "01/06/2026 à 21:20",
+      "match_start_ts": 1780341600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "CODM Meknès",
+      "equipe_exterieur": "Olympique Dcheira",
+      "meta_match": {
+        "competition": {
+          "name": "CODM Meknès — Olympique Dcheira",
+          "type": "other",
+          "stakes_tier": "medium"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.22,
+          "N": 6.5,
+          "2": 11.0
+        },
+        "probabilites": {
+          "1": 77,
+          "N": 14,
+          "2": 9
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Privilégier le +2.5 buts",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      }
+    },
+    {
+      "id_match": "200",
+      "date_match": "01/06/2026 à 21:20",
+      "match_start_ts": 1780341600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "PSG",
+      "equipe_exterieur": "Amiens SC",
+      "meta_match": {
+        "competition": {
+          "name": "Ligue 1",
+          "type": "league",
+          "stakes_tier": "medium"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.35,
+        "modifiers": [
+          {
+            "code": "rotation_risk",
+            "delta": -0.15,
+            "label": "Ligue des Champions dans 4 j — risque de rotation sur PS"
+          }
+        ]
+      },
+      "pro_alerts": [
+        {
+          "type": "rotation_risk",
+          "severity": "high",
+          "message": "Ligue des Champions dans 4 j — risque de rotation sur PSG",
+          "team": "PSG",
+          "suggested_pick": {
+            "market": "1n2",
+            "pick": "dc_x2"
+          }
+        }
+      ],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.22,
+          "N": 6.5,
+          "2": 11.0
+        },
+        "probabilites": {
+          "1": 77,
+          "N": 14,
+          "2": 9
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Privilégier le +2.5 buts",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      }
+    }
+  ]
+}

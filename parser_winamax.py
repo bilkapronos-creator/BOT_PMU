@@ -618,16 +618,10 @@ def build_conseil(
                 body = "DC 1X" if fav_side == "1" else "DC X2"
             else:
                 body = vlabel
-            if offensive:
-                cand = f"{VALUE_PREFIX} {body} +2.5"
-                if len(cand) <= MAX_CONSEIL_LEN:
-                    return cand
             return _truncate_conseil(f"{VALUE_PREFIX} {body}")
 
         if dc_tight:
             dc = "DC 1X" if fav_side == "1" else "DC X2"
-            if offensive:
-                return _truncate_conseil(f"{dc} +2.5 buts")
             return _truncate_conseil(f"Double Chance {dc}")
 
         if offensive:
@@ -1455,9 +1449,49 @@ def main() -> None:
     if not data:
         return
 
+    use_v2 = os.environ.get("VELORA_API_V1", "").strip().lower() not in (
+        "1",
+        "true",
+        "yes",
+    )
+    if use_v2:
+        try:
+            from velora_engine.analysis.pipeline import build_api_document_from_state
+            from velora_engine.models import document_to_json
+
+            doc = build_api_document_from_state(data)
+            n = len(doc.matchs)
+            print(f"[parser] {n} match(s) football — schema v{doc.schema_version}.")
+            if not n:
+                OUT_API.write_text(
+                    json.dumps(doc.to_dict(), ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+                print("[parser] ECHEC: aucun match exporte.")
+                return
+            OUT_API.write_text(document_to_json(doc), encoding="utf-8")
+            print(f"[parser] Export v2 -> {OUT_API} ({OUT_API.stat().st_size // 1024} Ko)\n")
+            for m in doc.matchs[:DISPLAY_LIMIT]:
+                fa = m.free_analysis
+                c = fa.cotes_1n2
+                p = fa.probabilites
+                conseil = fa.primary_pick.conseil_short if fa.primary_pick else "—"
+                line = (
+                    f"[Match] {m.date_match} | {m.equipe_domicile} - {m.equipe_exterieur} | "
+                    f"Cotes : 1:{c.get('1')} N:{c.get('N')} 2:{c.get('2')} | "
+                    f"Probas : {p['1']}%/{p['N']}%/{p['2']}% | "
+                    f"{m.confidence.indice_velora}* | {conseil}"
+                )
+                print(line)
+            if n > DISPLAY_LIMIT:
+                print(f"... +{n - DISPLAY_LIMIT} matchs")
+            return
+        except Exception as e:
+            print(f"[parser] Export v2 echoue ({e}), repli schema v1…")
+
     parsed = parse_football_matches(data)
     api_list = [m["api"] for m in parsed]
-    print(f"[parser] {len(api_list)} match(s) football enrichis.")
+    print(f"[parser] {len(api_list)} match(s) football enrichis (v1).")
 
     if not api_list:
         OUT_API.write_text("[]", encoding="utf-8")
@@ -1465,7 +1499,7 @@ def main() -> None:
         return
 
     OUT_API.write_text(json.dumps(api_list, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[parser] Export -> {OUT_API} ({OUT_API.stat().st_size // 1024} Ko)\n")
+    print(f"[parser] Export v1 -> {OUT_API} ({OUT_API.stat().st_size // 1024} Ko)\n")
 
     for m in parsed[:DISPLAY_LIMIT]:
         a = m["api"]
