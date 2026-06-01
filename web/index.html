@@ -157,9 +157,16 @@
             display: inline-block;
             animation: vitrine-taux-pop 0.55s ease-out;
         }
+        #sectionVitrine,
+        .vitrine-kpi-wrap {
+            min-width: 0;
+            max-width: 100%;
+        }
         .vitrine-kpi-wrap {
             border-radius: 1.25rem;
-            padding: 1.25rem 1rem 1rem;
+            padding: 1.25rem 0.75rem 1rem;
+            overflow: hidden;
+            box-sizing: border-box;
             background: linear-gradient(160deg, rgba(6, 78, 99, 0.12) 0%, rgba(15, 23, 42, 0.92) 45%, rgba(17, 24, 39, 0.98) 100%);
             border: 1px solid rgba(34, 211, 238, 0.18);
             box-shadow:
@@ -182,13 +189,16 @@
         }
         @media (min-width: 520px) {
             .vitrine-kpi-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.75rem;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.5rem;
             }
         }
         .vitrine-kpi-card {
+            min-width: 0;
+            overflow: hidden;
+            box-sizing: border-box;
             border-radius: 1rem;
-            padding: 1rem 0.85rem;
+            padding: 0.85rem 0.45rem;
             text-align: center;
             background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.07);
@@ -208,16 +218,40 @@
         }
         .vitrine-kpi-value {
             margin-top: 0.35rem;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            line-height: 1;
+            line-height: 1.15;
             letter-spacing: -0.02em;
             font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
         .vitrine-kpi-card--taux .vitrine-kpi-value {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: rgb(253, 224, 71);
             text-shadow: 0 0 24px rgba(253, 224, 71, 0.2);
+        }
+        .vitrine-kpi-card--roi .vitrine-kpi-value,
+        .vitrine-kpi-card--profit .vitrine-kpi-value {
+            font-size: 1.05rem;
+        }
+        @media (min-width: 520px) {
+            .vitrine-kpi-card--taux .vitrine-kpi-value {
+                font-size: 1.85rem;
+            }
+            .vitrine-kpi-card--roi .vitrine-kpi-value,
+            .vitrine-kpi-card--profit .vitrine-kpi-value {
+                font-size: 0.95rem;
+            }
+        }
+        @media (min-width: 1280px) {
+            .vitrine-kpi-card--taux .vitrine-kpi-value {
+                font-size: 2.25rem;
+            }
+            .vitrine-kpi-card--roi .vitrine-kpi-value,
+            .vitrine-kpi-card--profit .vitrine-kpi-value {
+                font-size: 1.2rem;
+            }
         }
         .vitrine-kpi-unit {
             font-size: 1.1rem;
@@ -297,20 +331,30 @@
         .vitrine-detail-row {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            gap: 0.5rem;
+            align-items: flex-start;
+            gap: 0.35rem 0.5rem;
             margin-top: 0.45rem;
             font-size: 0.7rem;
         }
         .vitrine-detail-row dt {
+            flex-shrink: 0;
             color: rgb(156, 163, 175);
             font-weight: 500;
         }
         .vitrine-detail-row dd {
             margin: 0;
+            min-width: 0;
+            flex: 1;
+            text-align: right;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             color: rgb(243, 244, 246);
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .vitrine-detail-row--long dd {
+            font-size: 0.62rem;
         }
         .vitrine-sport--pmu .vitrine-sport-taux { color: rgb(52 211 153); }
         .vitrine-sport--foot .vitrine-sport-taux { color: rgb(103 232 249); }
@@ -1152,7 +1196,7 @@
 
     <div id="dashboardLayout" class="flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-8">
         <!-- Colonne gauche : contrôles & communauté (mobile : au-dessus du panneau droit) -->
-        <aside id="colonneGauche" class="flex flex-col gap-6 lg:col-span-4 lg:sticky lg:top-6">
+        <aside id="colonneGauche" class="flex min-w-0 flex-col gap-6 lg:col-span-4 lg:sticky lg:top-6">
             <div id="blocFootGauche" class="hidden glass-card rounded-2xl border border-cyan-500/25 p-5 shadow-lg shadow-black/20 lg:p-6">
                 <p class="mb-3 text-[10px] font-semibold uppercase tracking-widest text-cyan-400/80">Football Winamax</p>
                 <button type="button" id="footToggleOpp" role="switch" aria-checked="false"
@@ -1274,7 +1318,7 @@
                                         <dt>Bénéfice</dt>
                                         <dd id="vitrinePmuProfit">—</dd>
                                     </div>
-                                    <div class="vitrine-detail-row">
+                                    <div class="vitrine-detail-row vitrine-detail-row--long">
                                         <dt>Analyses</dt>
                                         <dd id="vitrinePmuCompteur">—</dd>
                                     </div>
