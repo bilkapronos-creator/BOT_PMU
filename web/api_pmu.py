@@ -259,6 +259,7 @@ def valider_user_id_archive(archive: dict, user_id: str) -> None:
 
 def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, meta: dict) -> dict:
     """Assemble l'objet archive persisté (évaluation PMU + bloc financier)."""
+    from pmu_rapports_definitifs import injecter_rapport_definitif_archive
     from velora_finance import enrichir_archive_pmu_financier
 
     gagnant = evaluation.get("gagnant")
@@ -283,7 +284,12 @@ def construire_archive_complete(user_id: str, archive: dict, evaluation: dict, m
         "resultats_pmu_detectes": evaluation.get("resultats_pmu_detectes") or [],
     }
     if evaluation.get("terminee"):
+        injecter_rapport_definitif_archive(out, evaluation)
         enrichir_archive_pmu_financier(out, evaluation)
+        fin = out.get("financier") or {}
+        if fin.get("cote") is None and out.get("cote_jouee") is not None:
+            fin["cote"] = out["cote_jouee"]
+            out["financier"] = fin
     return out
 
 
@@ -348,22 +354,11 @@ HEADERS_PMU = {
 
 
 def _extraire_rapport_nombre(valeur: Any) -> Optional[float]:
-    """Extrait un rapport PMU depuis un nombre ou un objet {rapport: x}."""
-    if valeur is None or valeur == "" or valeur == "-":
-        return None
+    """Extrait un rapport PMU (nombre, dict API, texte « 4,20 € »)."""
+    from pmu_rapports_definitifs import parse_rapport_pmu_valeur
 
-    if isinstance(valeur, dict):
-        valeur = valeur.get("rapport")
-
-    if valeur is None or valeur == "" or valeur == "-":
-        return None
-
-    try:
-        cote = float(str(valeur).replace(",", "."))
-    except (TypeError, ValueError):
-        return None
-
-    return round(cote, 1) if cote > 0 else None
+    parsed = parse_rapport_pmu_valeur(valeur)
+    return round(parsed, 1) if parsed is not None else None
 
 
 STATUT_PARTANT_PMU = "PARTANT"

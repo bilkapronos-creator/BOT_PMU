@@ -59,13 +59,18 @@ def est_archive_terminee_finance(archive: dict, champ_reussi: str) -> bool:
 
 
 def _parse_cote(val) -> float | None:
-    try:
-        if val is None or val in ("-", "—", ""):
-            return None
-        c = float(str(val).replace(",", "."))
-        return c if c >= 1.01 else None
-    except (TypeError, ValueError):
+    if val is None or val in ("-", "—", ""):
         return None
+    try:
+        from pmu_rapports_definitifs import parse_rapport_pmu_valeur
+
+        return parse_rapport_pmu_valeur(val)
+    except Exception:
+        try:
+            c = float(str(val).replace(",", "."))
+            return c if c >= 1.01 else None
+        except (TypeError, ValueError):
+            return None
 
 
 def _cote_pmu_archive(archive: dict) -> float | None:
@@ -89,8 +94,17 @@ def _cote_pmu_archive(archive: dict) -> float | None:
 
 def _cote_pmu_effective(archive: dict) -> float:
     """
-    Cote utilisée pour le financier : favori, sinon min du top, sinon repli algo (2.5).
+    Cote utilisée pour le financier : rapport définitif PMU, cote archivée, repli algo.
     """
+    for cle in ("cote_jouee", "rapport_pmu"):
+        c = _parse_cote(archive.get(cle))
+        if c is not None:
+            return c
+    fin = archive.get("financier")
+    if isinstance(fin, dict):
+        c = _parse_cote(fin.get("cote"))
+        if c is not None:
+            return c
     cote = _cote_pmu_archive(archive)
     if cote is not None:
         return cote
@@ -157,17 +171,26 @@ def enrichir_archive_pmu_financier(archive: dict, evaluation: dict | None = None
     gagne = evaluation.get("reussi_pmu")
     if gagne is None:
         gagne = archive.get("reussi_pmu") is True
-    archive["financier"] = calculer_resultat_financier(gagne, _cote_pmu_effective(archive))
+    cote = _cote_pmu_effective(archive)
+    archive["financier"] = calculer_resultat_financier(gagne, cote)
+    archive["financier"]["cote"] = cote if gagne else None
     archive["profit"] = archive["financier"].get("profit")
     return archive
 
 
-def recalculer_financier_archives_pmu(archives: list[dict]) -> tuple[int, int]:
+def recalculer_financier_archives_pmu(
+    archives: list[dict],
+    *,
+    refetch_rapports: bool = True,
+) -> tuple[int, int, int]:
     """
     Recalcule financier + profit sur les archives PMU déjà évaluées.
-    Retourne (nb_mises_a_jour, nb_ignorees).
+    Retourne (nb_mises_a_jour, nb_rapports_injectes, nb_ignorees).
     """
+    from pmu_rapports_definitifs import injecter_rapport_definitif_archive
+
     maj = 0
+    rapports_ok = 0
     ignorees = 0
     for arch in archives:
         if arch.get("reussi_pmu") is None:
@@ -176,9 +199,11 @@ def recalculer_financier_archives_pmu(archives: list[dict]) -> tuple[int, int]:
         if str(arch.get("statut") or "") == "En attente":
             ignorees += 1
             continue
+        if refetch_rapports and injecter_rapport_definitif_archive(arch):
+            rapports_ok += 1
         enrichir_archive_pmu_financier(arch)
         maj += 1
-    return maj, ignorees
+    return maj, rapports_ok, ignorees
 
 
 def bloc_communaute_depuis_stats(stats: dict[str, Any]) -> dict[str, Any]:

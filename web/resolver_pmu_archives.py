@@ -26,6 +26,7 @@ from stats_pmu import (
     _est_statut_orphelin,
     _est_terminee,
 )
+from pmu_rapports_definitifs import injecter_rapport_definitif_archive
 from velora_finance import recalculer_financier_archives_pmu
 from velora_resilience import ErreurReseauExterne, pmu_get
 
@@ -72,9 +73,6 @@ def resoudre_une_archive(archive: dict, *, dry_run: bool = False) -> str:
     if not user_id or not date_api or not reunion or not course:
         return "skip"
 
-    if _est_terminee(archive) and archive.get("financier"):
-        return "skip"
-
     arrivee, meta = _fetch_arrivee_pmu(str(date_api), str(reunion), str(course))
     if meta.get("erreur"):
         print(f"  · {reunion}/{course} ({date_api}) : {meta['erreur']}")
@@ -97,12 +95,20 @@ def resoudre_une_archive(archive: dict, *, dry_run: bool = False) -> str:
     evaluation["arrivee_officielle"] = arrivee
     evaluation["gagnant"] = arrivee[0]
 
-    complete = construire_archive_complete(user_id, archive_enrichie, evaluation, meta)
+    archive_pour_fin = {
+        **archive_enrichie,
+        **evaluation,
+        "arrivee_officielle": arrivee,
+    }
+    injecter_rapport_definitif_archive(archive_pour_fin, evaluation)
+
+    complete = construire_archive_complete(user_id, archive_pour_fin, evaluation, meta)
     sauvegarder_archive(user_id, complete)
     label = complete.get("type_pari_pmu") or "?"
     print(
         f"  · {reunion}/{course} ({date_api}) → {arrivee[0]}-{arrivee[1] if len(arrivee) > 1 else '?'}-… "
-        f"| {label} | profit={complete.get('financier', {}).get('profit')}"
+        f"| {label} | rapport={complete.get('rapport_pmu')} "
+        f"| profit={complete.get('financier', {}).get('profit')}"
     )
     return "resolu"
 
@@ -136,7 +142,7 @@ def main() -> int:
             archives = lister_archives(args.user_id, limit=500)
         else:
             archives = lister_toutes_archives()
-        maj, ignorees = recalculer_financier_archives_pmu(archives)
+        maj, rapports_ok, ignorees = recalculer_financier_archives_pmu(archives)
         if not args.dry_run:
             for arch in archives:
                 if arch.get("reussi_pmu") is None or arch.get("statut") == "En attente":
@@ -144,7 +150,10 @@ def main() -> int:
                 uid = str(arch.get("user_id") or "").strip()
                 if uid:
                     sauvegarder_archive(uid, arch)
-        print(f"[resolver-pmu] Financier recalculé : {maj} archive(s), {ignorees} ignorée(s)")
+        print(
+            f"[resolver-pmu] Financier recalculé : {maj} archive(s), "
+            f"{rapports_ok} rapport(s) définitif(s), {ignorees} ignorée(s)"
+        )
         return 0
 
     if args.user_id:
