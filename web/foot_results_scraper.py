@@ -12,7 +12,7 @@ from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from foot_team_fuzzy import normalize_team, text_mentions_both_teams
+from foot_team_fuzzy import normalize_team, score_foot_plausible, text_mentions_both_teams
 
 TZ_PARIS = ZoneInfo("Europe/Paris")
 SCORE_RE = re.compile(
@@ -61,7 +61,7 @@ def _date_short(kickoff: datetime | None) -> str:
 
 
 def _score_valide(dom: int, ext: int) -> bool:
-    return 0 <= dom <= 20 and 0 <= ext <= 20
+    return score_foot_plausible(dom, ext)
 
 
 def _extraire_score_du_texte(
@@ -73,17 +73,25 @@ def _extraire_score_du_texte(
     if not text or not text_mentions_both_teams(text, home, away, threshold=0.55):
         return None
 
+    candidats: list[tuple[int, int, int]] = []  # (dom, ext, priorité — plus bas = mieux)
+
+    def _ajouter(dom: int, ext: int, prio: int) -> None:
+        if _score_valide(dom, ext):
+            candidats.append((dom, ext, prio))
+
     lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
     for i, line in enumerate(lines):
         if not text_mentions_both_teams(line, home, away, threshold=0.55):
             continue
         window = "\n".join(lines[max(0, i - 2) : i + 4])
+        low = window.lower()
+        prio = 0 if any(k in low for k in ("ft", "termin", "final", "fin ")) else 2
         for m in SCORE_RE.finditer(window):
-            dom, ext = int(m.group(1)), int(m.group(2))
-            if _score_valide(dom, ext):
-                return {"domicile": dom, "exterieur": ext}
+            _ajouter(int(m.group(1)), int(m.group(2)), prio)
 
     h_norm, a_norm = normalize_team(home), normalize_team(away)
+    h_keys = [p for p in h_norm.split() if len(p) >= 4] or [h_norm[:5]]
+    a_keys = [p for p in a_norm.split() if len(p) >= 4] or [a_norm[:5]]
     for m in SCORE_RE.finditer(text):
         dom, ext = int(m.group(1)), int(m.group(2))
         if not _score_valide(dom, ext):
@@ -91,9 +99,16 @@ def _extraire_score_du_texte(
         start = max(0, m.start() - 400)
         end = min(len(text), m.end() + 400)
         ctx = text[start:end].lower()
-        if h_norm[:4] in ctx and a_norm[:4] in ctx:
-            return {"domicile": dom, "exterieur": ext}
-    return None
+        if any(k in ctx for k in h_keys) and any(k in ctx for k in a_keys):
+            prio = 1 if any(k in ctx for k in ("ft", "termin", "final")) else 3
+            _ajouter(dom, ext, prio)
+
+    if not candidats:
+        return None
+    # Priorité FT, puis total de buts le plus bas (évite 19-15, 2-12)
+    candidats.sort(key=lambda t: (t[2], t[0] + t[1]))
+    dom, ext, _ = candidats[0]
+    return {"domicile": dom, "exterieur": ext}
 
 
 def _goto_safe(page, url: str) -> bool:

@@ -49,6 +49,7 @@ def main() -> int:
     if cascade:
         print(
             f"[resolver-foot] Sources : Winamax {cascade.get('winamax', 0)}, "
+            f"Référence {cascade.get('reference', 0)}, "
             f"TheSportsDB {cascade.get('thesportsdb', 0)}, "
             f"Scraper {cascade.get('scraper', 0)}"
         )

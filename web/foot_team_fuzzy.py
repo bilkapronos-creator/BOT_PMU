@@ -19,6 +19,49 @@ except ImportError:
     except ImportError:
         _HAS_THEFUZZ = False
 
+# Alias canoniques (clé = normalize_team sans stop words agressifs)
+_TEAM_ALIASES: dict[str, list[str]] = {
+    "etats unis": ["usa", "united states", "usmnt", "u s a", "america"],
+    "bresil": ["brazil", "brasil", "selecao"],
+    "senegal": ["senegal", "sénégal"],
+    "panama": ["panama"],
+    "cordoue": ["cordoba", "córdoba", "cordoba cf"],
+    "huesca": ["sd huesca", "huesca"],
+    "leganes": ["cd leganes", "leganés"],
+    "mirandes": ["cd mirandes", "mirandés"],
+    "sao paulo": ["são paulo", "sao paulo fc"],
+    "atletico mineiro": ["atlético mineiro", "atletico mg", "galo"],
+    "vasco da gama": ["vasco", "vasco gama"],
+    "chapecoense": ["chapecoense sc", "chape"],
+    "palmeiras": ["se palmeiras", "palmeiras sp"],
+    "universidad catolica": [
+        "u catolica",
+        "universidad católica",
+        "uc chile",
+        "universidad catolica chile",
+    ],
+    "universidad catolica equ": [
+        "u catolica ecu",
+        "universidad católica ecu",
+        "catolica ecuador",
+    ],
+    "independiente del valle": ["ind del valle", "independiente del valle"],
+    "forge": ["forge fc", "hamilton forge"],
+    "cavalry": ["cavalry fc"],
+    "valur reykjavik": ["valur", "valur reykjavík"],
+    "vikingur reykjavik": ["vikingur", "víkingur reykjavík", "vikingur reykjavik"],
+    "everton": ["everton viña", "everton vina", "cd everton"],
+    "ohiggins": ["o higgins", "o'higgins", "cd ohiggins"],
+    "guayaquil city fc": ["guayaquil city"],
+    "emelec": ["cs emelec"],
+    "palestino": ["cd palestino"],
+    "audax italiano": ["audax"],
+    "huachipato": ["cd huachipato"],
+}
+
+_MAX_BUTS_PAR_EQUIPE = int(__import__("os").environ.get("VELORA_FOOT_MAX_GOALS", "9"))
+_MAX_TOTAL_BUTS = int(__import__("os").environ.get("VELORA_FOOT_MAX_TOTAL", "14"))
+
 _STOP_WORDS = frozenset(
     {
         "fc",
@@ -55,7 +98,39 @@ def normalize_team(name: str) -> str:
     s = s.replace("ù", "u").replace("ô", "o").replace("î", "i").replace("ç", "c")
     s = re.sub(r"[^a-z0-9\s]", " ", s)
     tokens = [t for t in s.split() if t and t not in _STOP_WORDS]
-    return " ".join(tokens) if tokens else s
+    base = " ".join(tokens) if tokens else s
+    for canon, aliases in _TEAM_ALIASES.items():
+        if base == canon or base in aliases:
+            return canon
+        for alias in aliases:
+            if alias in base or base in alias:
+                return canon
+    return base
+
+
+def score_foot_plausible(dom: int, ext: int) -> bool:
+    """Rejette les scores aberrants (ex. 19-15 parsés depuis Google)."""
+    if dom < 0 or ext < 0:
+        return False
+    if dom > _MAX_BUTS_PAR_EQUIPE or ext > _MAX_BUTS_PAR_EQUIPE:
+        return False
+    if dom + ext > _MAX_TOTAL_BUTS:
+        return False
+    return True
+
+
+def _alias_match(a: str, b: str) -> bool:
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    if a in b or b in a:
+        return True
+    aliases_a = _TEAM_ALIASES.get(a, [])
+    aliases_b = _TEAM_ALIASES.get(b, [])
+    if b in aliases_a or a in aliases_b:
+        return True
+    return any(x in b or b in x for x in aliases_a) or any(x in a or a in x for x in aliases_b)
 
 
 def _ratio(a: str, b: str) -> float:
@@ -98,6 +173,10 @@ def teams_pair_match(
 
     direct = _ratio(h1, h2) + _ratio(a1, a2)
     croise = _ratio(h1, a2) + _ratio(a1, h2)
+    if _alias_match(h1, h2) and _alias_match(a1, a2):
+        direct = max(direct, threshold * 2)
+    if _alias_match(h1, a2) and _alias_match(a1, h2):
+        croise = max(croise, threshold * 2)
     best = max(direct, croise)
     ok = best >= threshold * 2
     return ok, best

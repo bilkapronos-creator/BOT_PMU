@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from foot_team_fuzzy import score_foot_plausible
 from velora_finance import MISE_UNITAIRE, calculer_resultat_financier
 
 TZ_PARIS = ZoneInfo("Europe/Paris")
@@ -72,8 +73,12 @@ def parse_score_reel(resultat_reel) -> tuple[int, int] | None:
     if resultat_reel is None:
         return None
     if isinstance(resultat_reel, dict):
-        dom = resultat_reel.get("domicile") or resultat_reel.get("dom") or resultat_reel.get("home")
-        ext = resultat_reel.get("exterieur") or resultat_reel.get("ext") or resultat_reel.get("away")
+        dom = resultat_reel.get("domicile")
+        if dom is None:
+            dom = resultat_reel.get("dom", resultat_reel.get("home"))
+        ext = resultat_reel.get("exterieur")
+        if ext is None:
+            ext = resultat_reel.get("ext", resultat_reel.get("away"))
         try:
             return int(dom), int(ext)
         except (TypeError, ValueError):
@@ -289,6 +294,49 @@ def _marche_effectif(match: dict) -> str:
     return "1n2"
 
 
+def _archive_score_invalide(archive: dict) -> bool:
+    """True si score_final présent mais aberrant (ex. 19-15 via Google)."""
+    parsed = parse_score_reel(archive.get("score_final"))
+    if parsed is None:
+        return False
+    dom, ext = parsed
+    return not score_foot_plausible(dom, ext)
+
+
+def _archive_doit_etre_revalidee(archive: dict) -> bool:
+    """Score aberrant ou différent de la table de référence (correction batch)."""
+    if _archive_score_invalide(archive):
+        return True
+    try:
+        from foot_scores_reference import REFERENCE_BY_ID  # noqa: PLC0415
+    except ImportError:
+        return False
+    mid = str(archive.get("id_match") or "").strip()
+    ref = REFERENCE_BY_ID.get(mid)
+    if not ref:
+        return False
+    cur = parse_score_reel(archive.get("score_final"))
+    if cur is None:
+        return False
+    attendu = (int(ref["domicile"]), int(ref["exterieur"]))
+    return cur != attendu
+
+
+def _reinitialiser_archive_en_attente(archive: dict) -> dict:
+    """Remet une entrée en EN_ATTENTE pour re-fetch / re-validation."""
+    out = dict(archive)
+    out["score_final"] = None
+    out["statut"] = "EN_ATTENTE"
+    out["statut_pari"] = "EN_ATTENTE"
+    out["reussi_foot"] = None
+    out["type_pari_foot"] = None
+    out["cote_jouee"] = None
+    out["financier"] = None
+    out["profit"] = None
+    out.pop("valide_at", None)
+    return out
+
+
 def valider_foot(match: dict, resultat_reel) -> dict | None:
     """
     Valide un pronostic Foot vs résultat réel.
@@ -299,6 +347,12 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
         return None
 
     dom, ext = score
+    if not score_foot_plausible(dom, ext):
+        print(
+            f"[resolver-foot] Score ignoré (aberrant) : "
+            f"{match.get('equipe_domicile')} {dom}-{ext} {match.get('equipe_exterieur')}"
+        )
+        return None
     total_buts = dom + ext
     marche = _marche_effectif(match)
 
@@ -472,6 +526,8 @@ def _est_en_attente(archive: dict) -> bool:
     """True si le pari n'a pas encore été résolu (statut explicite ou sans score validé)."""
     if not isinstance(archive, dict):
         return False
+    if _archive_score_invalide(archive):
+        return True
     sp_fin = _normaliser_statut_pari(archive.get("statut_pari"))
     if (
         sp_fin in ("GAGNE", "PERDU", "GAGNANT", "PERDANT")
@@ -568,7 +624,11 @@ def _lire_resultat_pour_match(resultats: dict, mid: str):
     res = resultats.get(mid) or (resultats.get(int(mid)) if mid.isdigit() else None)
     if res is None and isinstance(resultats.get("matchs"), dict):
         res = resultats["matchs"].get(mid)
-    if parse_score_reel(res) is None:
+    parsed = parse_score_reel(res)
+    if parsed is None:
+        return None
+    dom, ext = parsed
+    if not score_foot_plausible(dom, ext):
         return None
     return res
 
@@ -738,19 +798,57 @@ def _fetch_scores_cascade(
     Cascade : Winamax → TheSportsDB (fuzzy) → Playwright (SofaScore / Flashscore / Google).
     Retourne (scores, stats par source).
     """
-    stats = {"winamax": 0, "thesportsdb": 0, "scraper": 0}
+    stats = {"winamax": 0, "reference": 0, "thesportsdb": 0, "scraper": 0}
     if not ids:
         return {}, stats
+
+    def _filtrer_scores(bruts: dict[str, dict[str, int]]) -> dict[str, dict[str, int]]:
+        ok: dict[str, dict[str, int]] = {}
+        for mid, sc in bruts.items():
+            try:
+                dom, ext = int(sc["domicile"]), int(sc["exterieur"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if score_foot_plausible(dom, ext):
+                ok[mid] = {"domicile": dom, "exterieur": ext}
+            else:
+                arch = archives_par_id.get(mid) or {}
+                print(
+                    f"[resolver-foot] Score rejeté {mid} "
+                    f"({arch.get('equipe_domicile')} {dom}-{ext} {arch.get('equipe_exterieur')})"
+                )
+        return ok
 
     scores: dict[str, dict[str, int]] = {}
     try:
         fetch_scores, _, _ = _importer_fetch_winamax()
-        scores = fetch_scores(ids) or {}
+        scores = _filtrer_scores(fetch_scores(ids) or {})
         stats["winamax"] = len(scores)
         if scores:
             print(f"[resolver-foot] Winamax : {len(scores)}/{len(ids)} score(s)")
     except Exception as exc:
         print(f"[resolver-foot] Winamax indisponible : {exc}")
+
+    manquants = [mid for mid in ids if mid not in scores]
+    if manquants:
+        try:
+            from foot_scores_reference import fetch_scores_reference_batch  # noqa: PLC0415
+
+            batch = [
+                {
+                    "id_match": mid,
+                    "equipe_domicile": (archives_par_id.get(mid) or {}).get("equipe_domicile"),
+                    "equipe_exterieur": (archives_par_id.get(mid) or {}).get("equipe_exterieur"),
+                    "kickoff": _kickoff_match(archives_par_id.get(mid) or {}),
+                }
+                for mid in manquants
+            ]
+            ref = fetch_scores_reference_batch(batch)
+            for mid, sc in ref.items():
+                scores[mid] = sc
+                stats["reference"] += 1
+        except ImportError as exc:
+            print(f"[resolver-foot] Référence scores indisponible : {exc}")
 
     manquants = [mid for mid in ids if mid not in scores]
     if manquants:
@@ -765,7 +863,7 @@ def _fetch_scores_cascade(
                     str(arch.get("equipe_exterieur") or ""),
                     kickoff,
                 )
-                if fb:
+                if fb and score_foot_plausible(fb["domicile"], fb["exterieur"]):
                     scores[mid] = fb
                     stats["thesportsdb"] += 1
             if stats["thesportsdb"]:
@@ -792,7 +890,7 @@ def _fetch_scores_cascade(
         try:
             from foot_results_scraper import fetch_scores_playwright_batch  # noqa: PLC0415
 
-            scraped = fetch_scores_playwright_batch(batch)
+            scraped = _filtrer_scores(fetch_scores_playwright_batch(batch))
             for mid, sc in scraped.items():
                 scores[mid] = sc
                 stats["scraper"] += 1
@@ -954,6 +1052,29 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
         catalogue = []
 
     par_id = _index_archives(archives)
+    reinitialises = 0
+    ids_a_purger: list[str] = []
+    for mid, arch in list(par_id.items()):
+        if _archive_doit_etre_revalidee(arch):
+            par_id[mid] = _reinitialiser_archive_en_attente(arch)
+            ids_a_purger.append(mid)
+            reinitialises += 1
+    if reinitialises:
+        print(f"[resolver-foot] {reinitialises} archive(s) réinitialisée(s) pour re-validation")
+
+    resultats = _lire_json(RESULTATS_PATH, {})
+    if not isinstance(resultats, dict):
+        resultats = {}
+    if ids_a_purger:
+        matchs_res = resultats.get("matchs")
+        if isinstance(matchs_res, dict):
+            for mid in ids_a_purger:
+                matchs_res.pop(mid, None)
+                matchs_res.pop(int(mid) if mid.isdigit() else mid, None)
+        for mid in ids_a_purger:
+            resultats.pop(mid, None)
+        _ecrire_json(RESULTATS_PATH, resultats)
+
     if assurer_premium:
         _assurer_archives_coup_envoi(snapshots, par_id, now_paris)
         purges = _purger_archives_non_velora(par_id, snapshots)
@@ -963,7 +1084,6 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
     en_attente = {k: v for k, v in par_id.items() if _est_en_attente(v)}
     stats["en_attente_avant"] = len(en_attente)
 
-    resultats = _lire_json(RESULTATS_PATH, {})
     if not isinstance(resultats, dict):
         resultats = {}
 

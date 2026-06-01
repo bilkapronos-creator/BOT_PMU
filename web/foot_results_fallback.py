@@ -6,13 +6,14 @@ from __future__ import annotations
 import json
 import re
 import ssl
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from foot_team_fuzzy import normalize_team, teams_pair_match
+from foot_team_fuzzy import normalize_team, score_foot_plausible, teams_pair_match
 
 TZ_PARIS = ZoneInfo("Europe/Paris")
 UA = (
@@ -20,6 +21,8 @@ UA = (
 )
 EVENTS_DAY_URL = "https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d={date}&s=Soccer"
 FUZZY_THRESHOLD = float(__import__("os").environ.get("VELORA_FUZZY_THRESHOLD", "0.68"))
+_EVENTS_CACHE: dict[str, list[dict]] = {}
+_THESPORTSDB_PAUSE = float(__import__("os").environ.get("VELORA_THESPORTSDB_PAUSE", "1.8"))
 
 
 def _http_get_json(url: str, timeout: int = 22) -> Any:
@@ -44,13 +47,19 @@ def _dates_a_tester(kickoff: datetime) -> list[str]:
 
 
 def _events_du_jour(date_str: str) -> list[dict]:
+    if date_str in _EVENTS_CACHE:
+        return _EVENTS_CACHE[date_str]
     try:
+        time.sleep(_THESPORTSDB_PAUSE)
         data = _http_get_json(EVENTS_DAY_URL.format(date=date_str))
     except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
         print(f"[foot-fallback] TheSportsDB {date_str} ignoré : {exc}")
+        _EVENTS_CACHE[date_str] = []
         return []
     events = (data or {}).get("events") or []
-    return [e for e in events if isinstance(e, dict)]
+    out = [e for e in events if isinstance(e, dict)]
+    _EVENTS_CACHE[date_str] = out
+    return out
 
 
 def _score_depuis_event(ev: dict) -> dict[str, int] | None:
@@ -59,7 +68,7 @@ def _score_depuis_event(ev: dict) -> dict[str, int] | None:
         ext = int(ev.get("intAwayScore"))
     except (TypeError, ValueError):
         return None
-    if dom < 0 or ext < 0 or dom > 25 or ext > 25:
+    if not score_foot_plausible(dom, ext):
         return None
     status = str(ev.get("strStatus") or "").lower()
     if status and status not in (
