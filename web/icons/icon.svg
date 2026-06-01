@@ -1,17 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Velora Engine">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Velora">
   <defs>
-    <linearGradient id="veloraGrad" x1="80" y1="64" x2="432" y2="448" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#34d399"/>
-      <stop offset="55%" stop-color="#10b981"/>
-      <stop offset="100%" stop-color="#22d3ee"/>
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#0891b2"/>
     </linearGradient>
-    <linearGradient id="ringGrad" x1="48" y1="48" x2="464" y2="464" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#6ee7b7"/>
-      <stop offset="100%" stop-color="#22d3ee"/>
+    <linearGradient id="v" x1="156" y1="128" x2="356" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="#030712"/>
-  <rect x="36" y="36" width="440" height="440" rx="88" fill="#0f172a"/>
-  <rect x="56" y="56" width="400" height="400" rx="72" fill="none" stroke="url(#ringGrad)" stroke-width="12"/>
-  <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#veloraGrad)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="28" y="28" width="456" height="456" rx="96" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="8"/>
+  <path
+    d="M148 132 L256 380 L364 132"
+    fill="none"
+    stroke="url(#v)"
+    stroke-width="72"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>
