@@ -677,14 +677,19 @@
             gap: 0.5rem;
         }
         .foot-premium-paywall-content--locked {
-            filter: blur(5px);
+            position: relative;
+            z-index: 1;
+            filter: blur(14px);
             user-select: none;
             pointer-events: none;
-            opacity: 0.72;
+            opacity: 0.28;
+            max-height: 9.5rem;
+            overflow: hidden;
         }
         .foot-premium-paywall-overlay {
             position: absolute;
             inset: 0;
+            z-index: 20;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -692,8 +697,50 @@
             gap: 0.5rem;
             padding: 0.85rem 1rem;
             text-align: center;
-            background: linear-gradient(180deg, rgba(3, 7, 18, 0.25), rgba(3, 7, 18, 0.88));
-            backdrop-filter: blur(2px);
+            background: rgba(3, 7, 18, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            pointer-events: auto;
+        }
+        .foot-premium-skeleton {
+            display: grid;
+            gap: 0.5rem;
+            min-height: 6.5rem;
+        }
+        .foot-premium-skeleton-panel {
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.65rem 0.75rem;
+        }
+        .foot-premium-skeleton-title {
+            width: 42%;
+            height: 0.5rem;
+            margin-bottom: 0.55rem;
+            border-radius: 9999px;
+            background: rgba(34, 211, 238, 0.18);
+        }
+        .foot-premium-skeleton-bar {
+            height: 0.55rem;
+            margin-bottom: 0.4rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .foot-premium-skeleton-bar:last-child {
+            margin-bottom: 0;
+            width: 72%;
+        }
+        .foot-premium-unavailable {
+            border-radius: 0.75rem;
+            border: 1px dashed rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.55);
+            padding: 1rem 1.1rem;
+            text-align: center;
+        }
+        .foot-premium-unavailable-text {
+            font-size: 12px;
+            line-height: 1.5;
+            color: rgba(203, 213, 225, 0.92);
         }
         .foot-premium-paywall-lock {
             font-size: 1.35rem;
@@ -5520,18 +5567,23 @@
         }
 
         function htmlFootPremiumAnalysisSection(m) {
-            const isPremiumUser = estVeloraPremiumFoot();
-            const data = extractPremiumAnalysisData(m);
-            const scoresPanel = htmlPremiumScoresPanel(data.topScores, 'foot');
-            const buteursPanel = htmlPremiumButeursPanel(data.buteurs, 'Buteurs match', 'foot');
-            const doublesPanel = htmlPremiumButeursPanel(data.doubles, 'Doublés buteurs', 'foot');
-            const cols = [scoresPanel, buteursPanel, doublesPanel].filter(Boolean).length > 1
-                ? 'sm:grid-cols-2 lg:grid-cols-3'
-                : 'grid-cols-1';
-            const gridPanels = `${scoresPanel}${buteursPanel}${doublesPanel}`;
-            const gridInner = `<div class="grid gap-2 ${cols}">${gridPanels}</div>`;
+            const isPremiumUser = estVeloraPremiumFoot() === true;
 
             if (isPremiumUser) {
+                const data = readPremiumAnalysisRaw(m, { enrich: true });
+                if (!data.hasAny) {
+                    return `
+                        <div class="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-3" role="region" aria-label="Analyse premium">
+                            <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Analyse Premium</p>
+                            ${htmlPremiumUnavailableMessage()}
+                        </div>`;
+                }
+                const scoresPanel = htmlPremiumScoresPanel(data.topScores, 'foot');
+                const buteursPanel = htmlPremiumButeursPanel(data.buteurs, 'Buteurs match', 'foot');
+                const doublesPanel = htmlPremiumButeursPanel(data.doubles, 'Doublés buteurs', 'foot');
+                const cols = [scoresPanel, buteursPanel, doublesPanel].filter(Boolean).length > 1
+                    ? 'sm:grid-cols-2 lg:grid-cols-3'
+                    : 'grid-cols-1';
                 const vb = data.valueBets.length
                     ? `<div class="mb-2 flex flex-wrap gap-1">${data.valueBets.slice(0, 2).map((vb) =>
                         `<span class="velora-marche-pill velora-marche-pill--highlight">💎 ${escHtml(vb.label || vb.pick || 'Value')}</span>`
@@ -5541,22 +5593,23 @@
                     <div class="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-3" role="region" aria-label="Analyse premium">
                         <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Analyse Premium</p>
                         ${vb}
-                        ${gridInner}
+                        <div class="grid gap-2 ${cols}">${scoresPanel}${buteursPanel}${doublesPanel}</div>
                     </div>`;
             }
 
+            const counts = readPremiumAnalysisRaw(m, { enrich: false });
             const resumeParts = [];
-            if (data.topScores.length) resumeParts.push('scores exacts');
-            if (data.buteurs.length) resumeParts.push('buteurs');
-            if (data.doubles.length) resumeParts.push('doublés');
+            if (counts.hasScores) resumeParts.push('scores exacts');
+            if (counts.hasButeurs) resumeParts.push('buteurs');
+            if (counts.hasDoubles) resumeParts.push('doublés');
             const resume = resumeParts.length
-                ? `Moteur Velora : ${resumeParts.join(', ')} prêts`
-                : 'Analyse premium calculée par le moteur';
+                ? `Moteur Velora : ${resumeParts.join(', ')} analysés pour ce match`
+                : 'Analyse premium calculée par le moteur Velora';
 
             return `
-                <div class="foot-premium-paywall" role="region" aria-label="Analyse premium verrouillée">
-                    <div class="foot-premium-paywall-content foot-premium-paywall-content--locked">
-                        ${gridInner}
+                <div class="foot-premium-paywall" role="region" aria-label="Analyse premium verrouillée" data-foot-premium-locked="true">
+                    <div class="foot-premium-paywall-content foot-premium-paywall-content--locked" aria-hidden="true">
+                        ${htmlPremiumPaywallSkeleton()}
                     </div>
                     <div class="foot-premium-paywall-overlay">
                         <span class="foot-premium-paywall-lock" aria-hidden="true">🔒</span>
