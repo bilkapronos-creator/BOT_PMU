@@ -11,7 +11,6 @@ permissions:
   contents: write
 
 env:
-  VELORA_SKIP_GIT_PUSH: "1"
   PYTHONIOENCODING: utf-8
   VELORA_WEB_DIR: ${{ github.workspace }}/web
   VELORA_HEADLESS: "0"
@@ -59,9 +58,43 @@ jobs:
           print("[CI] Playwright Chromium OK (headless=False + xvfb)")
           PY
 
+      - name: Configurer Git (commit bot Actions)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Exécuter run_all.py (xvfb + Chromium classique)
         env:
           VELORA_HEADLESS: "0"
           # Secret repo (Settings → Secrets) : URL proxy France, ex. http://user:pass@host:port
           VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
         run: xvfb-run -a python run_all.py
+
+      - name: Commit et push JSON (web/ + racine → Vercel)
+        if: success()
+        run: |
+          set -e
+          added=0
+          for f in \
+            api_velora_matchs.json \
+            api_velora_premium.json \
+            web/api_velora_matchs.json \
+            web/api_velora_premium.json \
+            web/api_velora_communaute.json \
+            web/velora_archives_foot.json \
+            web/velora_foot_resultats.json; do
+            if [ -f "$f" ]; then
+              git add -f "$f"
+              added=1
+            fi
+          done
+          if [ "$added" -eq 0 ]; then
+            echo "Aucun fichier JSON trouvé après le pipeline."
+            exit 1
+          fi
+          if git diff --staged --quiet; then
+            echo "JSON inchangés — pas de push."
+            exit 0
+          fi
+          git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
+          git push origin HEAD:main

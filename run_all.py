@@ -325,11 +325,11 @@ def push_vercel_git() -> bool:
             log_success(label, "Aucun JSON présent — pipeline OK sans push")
             return True
 
-        r_add = run_git(["git", "add", *to_commit])
+        r_add = run_git(["git", "add", "-f", *to_commit])
         if r_add.returncode != 0:
-            log_error(label, "git add a échoué", f"{r_add.stdout}\n{r_add.stderr}")
+            log_error(label, "git add -f a échoué", f"{r_add.stdout}\n{r_add.stderr}")
             return False
-        log(f"  git add {' '.join(to_commit)}")
+        log(f"  git add -f {' '.join(to_commit)}")
 
         r_commit = run_git(["git", "commit", "-m", GIT_COMMIT_MSG])
         if r_commit.returncode != 0:

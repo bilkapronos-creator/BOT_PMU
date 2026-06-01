@@ -9,9 +9,8 @@ error_log.txt
 dump_winamax_html.json
 docs/
 terminals/
-api_velora_matchs.json
-api_velora_premium.json
 requirements.txt
+# Les JSON Foot/PMU vivent dans web/ et sont copiés vers public/ au build — ne pas les exclure.
 
 # Build / cache
 __pycache__/

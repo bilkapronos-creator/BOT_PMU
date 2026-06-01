@@ -8,4 +8,11 @@ socket_big.txt
 socket_best.json
 winamax_clean.json
 
+# JSON servis par Vercel (générés par run_all / CI) — toujours versionnés
+!api_velora_matchs.json
+!api_velora_premium.json
+!web/api_velora_matchs.json
+!web/api_velora_premium.json
+!web/api_velora_communaute.json
+
 .vercel
