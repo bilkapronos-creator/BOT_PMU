@@ -1464,9 +1464,9 @@
                         <p class="mt-2 text-center text-3xl font-black text-cyan-400">
                             <span id="archivesFootCount">0</span>
                         </p>
-                        <p class="text-center text-xs text-gray-400">Matchs football archivés</p>
+                        <p class="text-center text-xs text-gray-400">Matchs archivés</p>
                     </div>
-                    <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400">0 course analysée</p>
+                    <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400" data-libelle-pmu="0 course analysée" data-libelle-foot="0 match analysé">0 course analysée</p>
                 </div>
 
                 <div id="statsParType" class="hidden">
@@ -4394,6 +4394,7 @@
                 if (archiveFootEstEnAttente(a)) return 1;
                 return 0;
             };
+            /* local puis distant : à qualité égale, velora_archives_foot.json l'emporte */
             for (const a of [...local, ...distant]) {
                 const id = String(a?.id_match || '');
                 if (!id) continue;
@@ -4441,9 +4442,21 @@
             if (blocPmu) blocPmu.classList.toggle('hidden', isFoot);
             if (blocFoot) blocFoot.classList.toggle('hidden', !isFoot);
             if (statsParType) statsParType.classList.toggle('hidden', isFoot);
+            const statsEl = document.getElementById('statsArchives');
+            if (statsEl) {
+                const libelle = isFoot
+                    ? (statsEl.dataset.libelleFoot || '0 match analysé')
+                    : (statsEl.dataset.libellePmu || '0 course analysée');
+                statsEl.textContent = libelle;
+            }
             if (tabArch && estMembreConnecte() && sectionActive === 'archives') {
                 tabArch.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${isFoot ? 'bg-gradient-to-r from-cyan-500 to-blue-500 font-bold text-white shadow' : 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow'}`;
             }
+        }
+
+        function libelleMatchsAnalysesFoot(n) {
+            if (!n) return '0 match analysé';
+            return `${n} match${n > 1 ? 's' : ''} analysé${n > 1 ? 's' : ''}`;
         }
 
         function htmlCarteArchiveFoot(a) {
@@ -5640,9 +5653,12 @@
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Chargement des archives Foot…</p>';
 
             synchroniserArchivesFootDepuisMatchs(footMatchs);
-            const [archivesServeur] = await Promise.all([chargerArchivesFootServeur()]);
-            const archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
-            ecrireArchivesFootLocal(archives);
+            const archivesServeur = await chargerArchivesFootServeur();
+            const archivesLocal = lireArchivesFootLocal();
+            const archives = fusionnerArchivesFoot(archivesLocal, archivesServeur);
+            if (archives.length > 0) {
+                ecrireArchivesFootLocal(archives);
+            }
             const n = archives.length;
             const nbValides = archives.filter((a) => archiveFootEstValidee(a)).length;
             const nbAttente = archives.filter((a) => archiveFootEstEnAttente(a)).length;
@@ -5653,8 +5669,8 @@
             if (countEl) countEl.textContent = String(n);
             if (statsEl) {
                 statsEl.textContent = n
-                    ? `${n} match${n > 1 ? 's' : ''} · ${nbValides} validé${nbValides > 1 ? 's' : ''} · ${nbAttente} en attente · ${nbGagnes} gagnant${nbGagnes > 1 ? 's' : ''}`
-                    : 'Aucun match Foot archivé pour le moment';
+                    ? `${libelleMatchsAnalysesFoot(n)} · ${nbValides} validé${nbValides > 1 ? 's' : ''} · ${nbAttente} en attente · ${nbGagnes} gagnant${nbGagnes > 1 ? 's' : ''}`
+                    : '0 match analysé';
             }
 
             liste.innerHTML = '';
