@@ -121,9 +121,29 @@ def resolve_web_project_dir() -> Path:
     raise FileNotFoundError(msg)
 
 
+def _charger_variables_env_fichier(path: Path) -> None:
+    """Charge un .env local (gitignore) sans écraser les variables déjà définies."""
+    if not path.is_file():
+        return
+    try:
+        for raw in path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, val = line.partition("=")
+            key = key.strip()
+            val = val.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = val
+    except OSError:
+        pass
+
+
 def init_deploy_paths() -> None:
     global WEB_ROOT, MATCHS_DEPLOY, PREMIUM_DEPLOY, COMMUNAUTE_DEPLOY
     WEB_ROOT = resolve_web_project_dir()
+    for env_path in (ROOT / ".env", WEB_ROOT / ".env"):
+        _charger_variables_env_fichier(env_path)
     MATCHS_DEPLOY = (WEB_ROOT / "api_velora_matchs.json").resolve()
     PREMIUM_DEPLOY = (WEB_ROOT / "api_velora_premium.json").resolve()
     COMMUNAUTE_DEPLOY = (WEB_ROOT / "api_velora_communaute.json").resolve()
