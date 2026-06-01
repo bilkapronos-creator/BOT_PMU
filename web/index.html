@@ -2687,8 +2687,13 @@
                 }
                 const data = await reponse.json();
                 return { ok: true, status: reponse.status, data };
-            } catch {
-                return { ok: false, status: 0, erreur: MSG_SYNC_ERREUR };
+            } catch (err) {
+                console.warn('[Velora] API indisponible :', path, err);
+                return {
+                    ok: false,
+                    status: 0,
+                    erreur: 'Connexion à l’API impossible (réseau ou CORS). Réessayez dans un instant.',
+                };
             }
         }
 
@@ -2812,6 +2817,27 @@
             }
         }
 
+        function notifierErreurPremium(message) {
+            const errEl = document.getElementById('premiumCheckoutErreur');
+            if (errEl) {
+                errEl.textContent = message;
+                errEl.classList.remove('hidden');
+            }
+            afficherToastVelora(message, 8000, 'error');
+        }
+
+        function attacherBoutonsPremium() {
+            ['btnPasserPremiumHeader', 'btnPasserPremium'].forEach((id) => {
+                const btn = document.getElementById(id);
+                if (!btn || btn.dataset.veloraPremiumBound === '1') return;
+                btn.dataset.veloraPremiumBound = '1';
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    lancerCheckoutPremium();
+                });
+            });
+        }
+
         async function lancerCheckoutPremium() {
             const errEl = document.getElementById('premiumCheckoutErreur');
             const btnPaywall = document.getElementById('btnPasserPremium');
@@ -2819,24 +2845,22 @@
             const boutons = [btnPaywall, btnHeader].filter(Boolean);
 
             if (!estMembreConnecte()) {
-                if (errEl) {
-                    errEl.textContent = 'Connectez-vous pour souscrire à Premium.';
-                    errEl.classList.remove('hidden');
-                }
+                notifierErreurPremium('Connectez-vous pour souscrire à Premium.');
                 ouvrirModalAuth('signin');
                 return;
             }
 
             if (estVeloraPremiumPmu()) {
-                if (errEl) {
-                    errEl.textContent = 'Vous avez déjà le Pass Premium PMU.';
-                    errEl.classList.remove('hidden');
-                }
+                notifierErreurPremium('Vous avez déjà le Pass Premium PMU.');
                 return;
             }
 
             const userId = getVeloraUserId();
-            if (!userId) return;
+            if (!userId) {
+                notifierErreurPremium('Session invalide — reconnectez-vous.');
+                ouvrirModalAuth('signin');
+                return;
+            }
 
             boutons.forEach((btn) => {
                 btn.disabled = true;
@@ -2868,10 +2892,9 @@
                 return;
             }
 
-            if (errEl) {
-                errEl.textContent = result.erreur || 'Impossible de lancer le paiement.';
-                errEl.classList.remove('hidden');
-            }
+            notifierErreurPremium(
+                result.erreur || 'Impossible d’ouvrir le paiement Stripe. Réessayez ou contactez le support.',
+            );
         }
 
         async function lancerPortailAbonnement() {
@@ -3524,13 +3547,7 @@
                 }
             });
 
-            document.getElementById('btnPasserPremiumHeader')?.addEventListener('click', () => {
-                lancerCheckoutPremium();
-            });
-
-            document.getElementById('btnPasserPremium')?.addEventListener('click', () => {
-                lancerCheckoutPremium();
-            });
+            attacherBoutonsPremium();
 
             document.getElementById('btnGererAbonnement')?.addEventListener('click', () => {
                 lancerPortailAbonnement();
@@ -3674,6 +3691,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            attacherBoutonsPremium();
             demarrerVeloraApp();
         }, { once: true });
 
@@ -5715,10 +5733,7 @@
                 lireArchives(),
             ]);
 
-            let erreurSync = statsResult.erreur || archivesResult.erreur;
-            if (erreurSync) {
-                afficherErreurSync('statsSyncErreur', erreurSync);
-            }
+            let erreurFetch = statsResult.erreur || archivesResult.erreur;
 
             const archivesLocal = lireArchivesLocal();
             const archivesServeur = archivesResult.archives || [];
@@ -5729,7 +5744,7 @@
             if (archivesLocal.length > archivesServeur.length) {
                 archivesResultFinal = await lireArchives();
                 if (archivesResultFinal.erreur) {
-                    erreurSync = erreurSync || archivesResultFinal.erreur;
+                    erreurFetch = erreurFetch || archivesResultFinal.erreur;
                 }
             }
 
@@ -5751,7 +5766,7 @@
                 liste.innerHTML = `
                     <p class="text-center text-sm text-gray-500 py-8">
                         Aucune course archivée pour ce compte.
-                        ${erreurSync ? '<br><span class="text-amber-300/90">Synchronisation indisponible — vos archives restent sur cet appareil. Évitez « Effacer les données du site ».</span>' : ''}
+                        ${erreurFetch ? '<br><span class="text-amber-300/90">Synchronisation indisponible — vos archives restent sur cet appareil. Évitez « Effacer les données du site ».</span>' : ''}
                         <br><span class="text-gray-500">Lance une analyse (onglet Analyse) pour en créer une nouvelle.</span>
                     </p>`;
                 return;
@@ -5768,10 +5783,9 @@
                 liste.innerHTML = `<p class="text-center text-sm text-gray-400 py-6">Vérification des résultats (${aVerifier.length}/${archives.length})…</p>`;
                 const evaluations = await Promise.all(aVerifier.map((a) => verifierResultatArchive(a)));
                 for (const ev of evaluations) {
-                    if (ev.erreur) erreurSync = ev.erreur;
-                }
-                if (erreurSync) {
-                    afficherErreurSync('statsSyncErreur', erreurSync);
+                    if (ev.erreur) {
+                        console.warn('[Velora] Évaluation archive en attente :', ev.erreur);
+                    }
                 }
 
                 const majParCle = new Map(evaluations.map((ev) => [cleCourseArchive(ev.archive), ev.archive]));
@@ -5782,6 +5796,21 @@
                 }
             }
             archives.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            if (archives.length > 0) {
+                if (!erreurFetch) {
+                    masquerErreurSync('statsSyncErreur');
+                } else {
+                    afficherErreurSync(
+                        'statsSyncErreur',
+                        'Synchronisation serveur limitée — vos archives sont affichées depuis cet appareil.',
+                    );
+                }
+            } else if (erreurFetch) {
+                afficherErreurSync('statsSyncErreur', erreurFetch);
+            } else {
+                masquerErreurSync('statsSyncErreur');
+            }
 
             const taux = statsServeur?.taux_reussite_global ?? calculerTauxReussite(archives);
             const resolues = statsServeur?.courses_terminees

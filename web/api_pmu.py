@@ -1,6 +1,9 @@
 import os
 import re
 import sys
+
+# Prévisualisations Vercel (*.vercel.app) — autorisées en CORS avec credentials
+_CORS_VERCEL_PREVIEW_RE = re.compile(r"^https://[\w-]+(?:-[\w]+)*\.vercel\.app$", re.I)
 from pathlib import Path
 from typing import Any, Callable, Optional, Tuple, TypeVar, Union
 
@@ -43,6 +46,9 @@ def _construire_origines_cors() -> tuple[list[str], bool]:
     """
     defaut = [
         "https://velora-pronos.com",
+        "https://www.velora-pronos.com",
+        "https://velora-engine.vercel.app",
+        "https://velora-scraper-winamax.vercel.app",
         "http://localhost:5500",
         "http://localhost:3000",
         "http://localhost:5173",
@@ -67,6 +73,16 @@ def _construire_origines_cors() -> tuple[list[str], bool]:
 _CORS_ORIGINS, _CORS_CREDENTIALS = _construire_origines_cors()
 
 
+def _origin_est_autorisee(origin: str | None) -> bool:
+    if not origin:
+        return False
+    if _CORS_ORIGINS == ["*"]:
+        return True
+    if origin in _CORS_ORIGINS:
+        return True
+    return bool(_CORS_VERCEL_PREVIEW_RE.match(origin))
+
+
 class VeloraCORSEnforcerMiddleware(BaseHTTPMiddleware):
     """Garantit Access-Control-Allow-Origin même sur erreurs 4xx/5xx (sinon le navigateur affiche une erreur CORS)."""
 
@@ -75,7 +91,7 @@ class VeloraCORSEnforcerMiddleware(BaseHTTPMiddleware):
         origin = request.headers.get("origin")
         if not origin:
             return response
-        if _CORS_ORIGINS != ["*"] and origin not in _CORS_ORIGINS:
+        if not _origin_est_autorisee(origin):
             return response
         if response.headers.get("access-control-allow-origin"):
             return response
@@ -90,6 +106,7 @@ app.add_middleware(VeloraCORSEnforcerMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=_CORS_CREDENTIALS,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
