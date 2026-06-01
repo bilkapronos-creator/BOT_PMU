@@ -1253,6 +1253,10 @@
                 </div>
             </div>
             <p id="veloraPaywallCheckoutErreur" class="mt-3 hidden text-center text-xs text-red-400" role="alert"></p>
+            <button type="button" id="btnVeloraPaywallPortal"
+                class="mt-3 hidden w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold text-gray-300 transition hover:border-amber-400/35 hover:text-amber-200">
+                Résilier ou modifier sur Stripe
+            </button>
             <button type="button" id="btnVeloraPaywallWait"
                 class="mt-3 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-gray-400 transition hover:border-white/20 hover:text-gray-200">
                 Attendre demain
@@ -2671,6 +2675,38 @@
             return localStorage.getItem(VELORA_PREMIUM_FOOT_LS_KEY) === 'true';
         }
 
+        const BADGE_PLAN_PREMIUM_CLASS = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
+
+        function aPackIntegralVelora() {
+            return estVeloraPremiumPmu() && estVeloraPremiumFoot();
+        }
+
+        /** Au moins un pass actif (PMU, Foot ou profil Stripe PMU). */
+        function aAccesPremiumVelora() {
+            if (!estMembreConnecte()) return false;
+            return estVeloraPremiumPmu() || estVeloraPremiumFoot();
+        }
+
+        function libelleBadgePlanVelora() {
+            if (aPackIntegralVelora()) {
+                return { text: '👑 Pack Intégral', className: BADGE_PLAN_PREMIUM_CLASS };
+            }
+            if (estVeloraPremiumPmu()) {
+                return { text: '👑 Pass PMU', className: BADGE_PLAN_PREMIUM_CLASS };
+            }
+            if (estVeloraPremiumFoot()) {
+                return { text: '👑 Pass Foot', className: BADGE_PLAN_PREMIUM_CLASS };
+            }
+            return null;
+        }
+
+        function peutOuvrirPortailStripeVelora() {
+            if (window.VeloraAuth?.estGodModeUtilisateur?.()) return false;
+            const cid = String(window.VeloraAuth?.getProfile?.()?.stripe_customer_id || '').trim();
+            if (!cid) return false;
+            return aAccesPremiumVelora();
+        }
+
         /** Radar Opportunités : membre connecté + Pass Foot Premium actif. */
         function peutUtiliserRadarFootOpp() {
             return estMembreConnecte() && estVeloraPremiumFoot() === true;
@@ -3043,7 +3079,7 @@
             if (!form || !paywall) return;
 
             const quotaAtteint = estMembreConnecte()
-                && !window.VeloraAuth?.isPremiumUser?.()
+                && !estVeloraPremiumPmu()
                 && Boolean(window.VeloraAuth?.isQuotaComplet?.());
 
             if (paywallTexte) paywallTexte.textContent = MSG_QUOTA_ATTEINT;
@@ -3105,8 +3141,8 @@
                 ouvrirModalAuth('signin');
                 return;
             }
-            if (estVeloraPremiumPmu() && estVeloraPremiumFoot()) {
-                afficherToastVelora('Vous avez déjà accès Premium complet (Pack Intégral).');
+            if (aPackIntegralVelora()) {
+                lancerPortailAbonnement();
                 return;
             }
             const sport = typeof sportActif !== 'undefined' ? sportActif : 'pmu';
@@ -3192,21 +3228,11 @@
             }
         }
 
-        async function lancerPortailAbonnement() {
-            const btn = document.getElementById('btnGererAbonnement');
-            if (!estMembreConnecte()) {
-                ouvrirModalAuth('signin');
-                return;
-            }
-            if (!window.VeloraAuth?.peutGererAbonnementStripe?.()) {
-                afficherToastVelora('Aucun abonnement Stripe actif sur ce compte.', 5000, 'error');
-                return;
-            }
-
-            const label = btn?.textContent || 'Gérer mon abonnement';
-            if (btn) {
-                btn.disabled = true;
-                btn.textContent = 'Redirection Stripe…';
+        async function ouvrirPortailStripeAbonnement(triggerBtn) {
+            const label = triggerBtn?.textContent || 'Gérer mon abonnement';
+            if (triggerBtn) {
+                triggerBtn.disabled = true;
+                triggerBtn.textContent = 'Redirection Stripe…';
             }
 
             const origin = window.location.origin.replace(/\/$/, '');
@@ -3216,17 +3242,49 @@
                 body: JSON.stringify({ return_url: origin }),
             });
 
-            if (btn) {
-                btn.disabled = false;
-                btn.textContent = label;
+            if (triggerBtn) {
+                triggerBtn.disabled = false;
+                triggerBtn.textContent = label;
             }
 
             if (result.ok && result.data?.url) {
                 window.location.href = result.data.url;
-                return;
+                return true;
             }
 
             afficherToastVelora(result.erreur || 'Impossible d\'ouvrir le portail d\'abonnement.', 6000, 'error');
+            return false;
+        }
+
+        async function lancerPortailAbonnement() {
+            if (!estMembreConnecte()) {
+                ouvrirModalAuth('signin');
+                return;
+            }
+
+            if (!aAccesPremiumVelora()) {
+                afficherToastVelora('Aucun abonnement actif sur ce compte.', 5000, 'error');
+                return;
+            }
+
+            const passPartiel = (estVeloraPremiumPmu() && !estVeloraPremiumFoot())
+                || (estVeloraPremiumFoot() && !estVeloraPremiumPmu());
+
+            if (passPartiel) {
+                const context = estVeloraPremiumPmu() ? 'premium_manage_pmu' : 'premium_manage_foot';
+                if (typeof showPaywallModal === 'function') {
+                    showPaywallModal(context);
+                }
+                return;
+            }
+
+            if (!peutOuvrirPortailStripeVelora()) {
+                afficherToastVelora('Pack Intégral actif. Contactez le support si vous devez modifier votre facturation.', 7000, 'info');
+                return;
+            }
+
+            const btn = document.getElementById('btnGererAbonnement');
+            await ouvrirPortailStripeAbonnement(btn);
         }
 
         function afficherErreurSync(elementId, message) {
@@ -3586,21 +3644,19 @@
             }
 
             bar.classList.remove('hidden');
-            const premium = Boolean(window.VeloraAuth?.isPremiumUser?.());
             const count = window.VeloraAuth?.getAnalysesCount?.() ?? 0;
             const limite = window.VeloraAuth?.getQuotaDailyLimit?.() ?? QUOTA_JOURNALIER_UI;
+            const libellePlan = libelleBadgePlanVelora();
 
             badge.classList.remove('hidden');
             quotaEl.classList.remove('hidden', 'text-red-400', 'text-orange-400', 'text-gray-400');
 
-            if (premium) {
-                badge.textContent = '👑 Premium';
-                badge.className = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
+            if (libellePlan) {
+                badge.textContent = libellePlan.text;
+                badge.className = libellePlan.className;
                 quotaEl.classList.add('hidden');
                 btnPremiumHeader.classList.add('hidden');
-                if (btnGererAbonnement && window.VeloraAuth?.peutGererAbonnementStripe?.()) {
-                    btnGererAbonnement.classList.remove('hidden');
-                }
+                if (btnGererAbonnement) btnGererAbonnement.classList.remove('hidden');
                 mettreAJourUiFormulaireAnalyse();
                 return;
             }
@@ -3621,7 +3677,7 @@
         }
 
         function incrementerCompteurUiApresAnalyse() {
-            if (window.VeloraAuth?.isPremiumUser?.()) return;
+            if (estVeloraPremiumPmu()) return;
             if (typeof window.VeloraAuth?.incrementerCompteurAnalysesLocal === 'function') {
                 window.VeloraAuth.incrementerCompteurAnalysesLocal();
             }
@@ -4071,6 +4127,20 @@
                 showWait: false,
                 produit: 'foot',
             },
+            premium_manage_pmu: {
+                titre: '👑 Pass PMU actif',
+                texte: 'Complétez avec le Pass Foot ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
+                showWait: false,
+                produit: 'foot',
+                showPortal: true,
+            },
+            premium_manage_foot: {
+                titre: '👑 Pass Foot actif',
+                texte: 'Complétez avec le Pass PMU ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
+                showWait: false,
+                produit: 'pmu',
+                showPortal: true,
+            },
         };
         let veloraPaywallProduitActif = 'foot';
         let oppMatchs = [];
@@ -4345,10 +4415,16 @@
             const titre = document.getElementById('veloraPaywallTitre');
             const texte = document.getElementById('veloraPaywallTexte');
             const btnWait = document.getElementById('btnVeloraPaywallWait');
+            const btnPortal = document.getElementById('btnVeloraPaywallPortal');
             const err = document.getElementById('veloraPaywallCheckoutErreur');
             if (titre) titre.textContent = cfg.titre;
             if (texte) texte.textContent = messageOverride || cfg.texte;
             if (btnWait) btnWait.classList.toggle('hidden', !cfg.showWait);
+            if (btnPortal) {
+                const afficherPortail = Boolean(cfg.showPortal) && peutOuvrirPortailStripeVelora();
+                btnPortal.classList.toggle('hidden', !afficherPortail);
+                if (!afficherPortail) btnPortal.classList.add('hidden');
+            }
             if (err) err.classList.add('hidden');
             if (!overlay) return;
             overlay.classList.remove('hidden');
@@ -6205,6 +6281,10 @@
         });
         document.getElementById('btnVeloraPaywallSimple')?.addEventListener('click', lancerCheckoutPassSimple);
         document.getElementById('btnVeloraPaywallBundle')?.addEventListener('click', lancerCheckoutBundle);
+        document.getElementById('btnVeloraPaywallPortal')?.addEventListener('click', () => {
+            const btn = document.getElementById('btnVeloraPaywallPortal');
+            ouvrirPortailStripeAbonnement(btn);
+        });
         document.getElementById('btnVeloraPaywallWait')?.addEventListener('click', closePaywallModal);
         document.getElementById('veloraPaywallOverlay')?.addEventListener('click', (ev) => {
             if (ev.target.id === 'veloraPaywallOverlay') closePaywallModal();
