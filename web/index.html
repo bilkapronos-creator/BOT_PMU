@@ -1596,7 +1596,7 @@
                     <p class="text-sm font-semibold text-gray-300">Aucun match pour cette recherche</p>
                     <p class="mt-2 max-w-sm text-xs text-gray-500">Essayez un autre nom d'équipe ou vérifiez l'orthographe.</p>
                 </div>
-                <div id="footOppZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-amber-500/25 bg-amber-500/5 px-6 py-16 text-center lg:min-h-[320px]">
+                <div id="footOppZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-amber-500/25 bg-amber-500/5 px-6 py-16 text-center lg:min-h-[320px]" data-foot-opp-empty-premium-only="true">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-500/40 bg-amber-500/15 text-2xl" aria-hidden="true">🔥</div>
                     <p class="text-sm font-semibold text-amber-100">Aucune opportunité majeure détectée pour le moment.</p>
                     <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Revenez plus tard !</p>
@@ -2649,8 +2649,21 @@
         function appliquerStatutPremiumGlobal() {
             const pmu = estVeloraPremiumPmu();
             const foot = estVeloraPremiumFoot();
+            if (!foot && footModeOpportunites) {
+                footModeOpportunites = false;
+            }
             if (typeof syncFootModeUi === 'function') syncFootModeUi();
             return { pmu, foot };
+        }
+
+        /** Le mode Opportunités (et son empty state) est réservé au Pass Foot Premium. */
+        function quitterFootOppSiNonPremium() {
+            if (footModeOpportunites && !estVeloraPremiumFoot()) {
+                footModeOpportunites = false;
+                syncFootModeUi();
+                return true;
+            }
+            return false;
         }
 
         function syncVeloraPremiumLocalFlag() {
@@ -4100,8 +4113,13 @@
             }
             mettreAJourGuideFoot();
             if (sportActif === 'foot') {
-                if (footModeOpportunites) chargerOppMatchs();
-                else chargerFootMatchs();
+                if (quitterFootOppSiNonPremium()) {
+                    chargerFootMatchs();
+                } else if (footModeOpportunites) {
+                    chargerOppMatchs();
+                } else {
+                    chargerFootMatchs();
+                }
             }
             afficherSection(sectionActive);
         }
@@ -4513,7 +4531,11 @@
             const loading = document.getElementById('footLoading');
             const erreur = document.getElementById('footErreur');
             if (footModeOpportunites) {
-                return chargerOppMatchs();
+                if (!estVeloraPremiumFoot()) {
+                    quitterFootOppSiNonPremium();
+                } else {
+                    return chargerOppMatchs();
+                }
             }
             if (footMatchsCharges) {
                 if (!options.skipRender) renderFootMatchs();
@@ -5790,6 +5812,10 @@
             const meta = document.getElementById('footSearchMeta');
             if (!meta) return;
             if (footModeOpportunites) {
+                if (!estVeloraPremiumFoot()) {
+                    meta.textContent = 'Radar Premium Foot — abonnement requis';
+                    return;
+                }
                 if (!oppMatchsCharges) {
                     meta.textContent = 'Chargement des opportunités…';
                     return;
@@ -5835,12 +5861,25 @@
             el.innerHTML = `${n} match${n > 1 ? 's' : ''} actif${n > 1 ? 's' : ''} en base. Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">PSG</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span>.`;
         }
 
+        /** Empty state « Aucune opportunité majeure » — Premium + mode Opp uniquement. */
+        function majFootOppZonesVides(listeLength) {
+            const videOpp = document.getElementById('footOppZoneVide');
+            if (!videOpp) return;
+            const showPremiumEmpty = footModeOpportunites
+                && estVeloraPremiumFoot() === true
+                && listeLength === 0;
+            videOpp.classList.toggle('hidden', !showPremiumEmpty);
+        }
+
         function renderFootMatchs() {
             const zone = document.getElementById('footResultats');
             const videClassique = document.getElementById('footZoneVide');
-            const videOpp = document.getElementById('footOppZoneVide');
             const accueil = document.getElementById('footZoneAccueil');
             if (!zone) return;
+
+            if (quitterFootOppSiNonPremium()) {
+                // Re-rendu en mode recherche après correction du mode
+            }
 
             if (footModeOpportunites) {
                 const liste = oppMatchsFiltres();
@@ -5849,7 +5888,7 @@
                 if (videClassique) videClassique.classList.add('hidden');
                 zone.className = 'foot-resultats-panel space-y-5';
                 zone.innerHTML = liste.map(carteAlerteOpportunite).join('');
-                if (videOpp) videOpp.classList.toggle('hidden', liste.length > 0);
+                majFootOppZonesVides(liste.length);
                 zone.classList.toggle('hidden', liste.length === 0);
                 return;
             }
@@ -5857,7 +5896,7 @@
             const q = footFiltre.trim();
             majFootMeta();
             majFootZoneAccueilTexte();
-            if (videOpp) videOpp.classList.add('hidden');
+            majFootOppZonesVides(-1);
 
             if (!footAnalyseAffichee || !q) {
                 zone.innerHTML = '';
@@ -5928,6 +5967,10 @@
         }
 
         async function chargerOppMatchs(options = {}) {
+            if (!estVeloraPremiumFoot()) {
+                quitterFootOppSiNonPremium();
+                return chargerFootMatchs(options);
+            }
             const force = options.force === true;
             const loading = document.getElementById('footLoading');
             const erreur = document.getElementById('footErreur');
