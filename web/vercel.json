@@ -1,0 +1,49 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "framework": null,
+  "buildCommand": "node scripts/generate-config.js",
+  "outputDirectory": ".",
+  "installCommand": "",
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/landing/sitemap.xml",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    { "source": "/landing", "destination": "/landing.html" },
+    { "source": "/landing/", "destination": "/landing.html" },
+    { "source": "/legales", "destination": "/legales.html" },
+    { "source": "/legales/", "destination": "/legales.html" },
+    {
+      "source": "/((?!landing/?$|legales/?$|landing\\.html|legales\\.html|admin\\.html|admin\\.js|config\\.js|auth\\.js|manifest\\.json|robots\\.txt|sitemap\\.xml|sw\\.js|icons/|vendor/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

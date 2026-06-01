@@ -1,0 +1,14 @@
+# Backend Python → Render uniquement (ne pas envoyer à Vercel)
+requirements.txt
+*.py
+__pycache__/
+*.pyc
+*.db
+.env
+.env.*
+
+# Scripts hors build frontend
+scripts/migrate_sqlite_to_supabase.py
+
+# SQL Supabase (exécuté manuellement, pas servi par Vercel)
+supabase/

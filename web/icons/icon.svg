@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Velora Engine">
+  <defs>
+    <linearGradient id="veloraGrad" x1="80" y1="64" x2="432" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="55%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="48" y1="48" x2="464" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#030712"/>
+  <rect x="36" y="36" width="440" height="440" rx="88" fill="#0f172a"/>
+  <rect x="56" y="56" width="400" height="400" rx="72" fill="none" stroke="url(#ringGrad)" stroke-width="12"/>
+  <path d="M148 148 L256 364 L364 148" fill="none" stroke="url(#veloraGrad)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
