@@ -1,12 +1,20 @@
 """
-Pipeline Velora Engine — exécution automatique (planificateur Windows).
+Pipeline Velora Engine — point d'entrée unique (planificateur Windows + GitHub Actions).
 
   python run_all.py
 
-Étape 4 : copie JSON vers BOT_PMU (index.html requis).
-Étape 5 : git add / commit / push depuis BOT_PMU → déploiement Vercel.
+Orchestration :
+  1–3  Scraper Winamax (dump → parser → sniper) → api_velora_premium.json
+  4    Copie JSON vers le projet web (web/ ou VELORA_WEB_DIR)
+  5a   Résolution archives PMU (API PMU ordreArrivee + rapports) → Supabase/SQLite
+  5b   Résolution Foot (scores Winamax + validation) → velora_archives_foot.json
+  5c   Publication vitrine → api_velora_communaute.json
+  6    git add / commit / push (sauf VELORA_SKIP_GIT_PUSH=1) → Vercel
 
-Surcharge : VELORA_WEB_DIR=C:\\chemin\\vers\\BOT_PMU
+Planificateur Windows : programmer uniquement ce script (pas resolver_pmu à part).
+CI : .github/workflows/velora_cron.yml (toutes les 2 h + 6 h UTC).
+
+Surcharge : VELORA_WEB_DIR=C:\\chemin\\vers\\web
 Désactiver le push : VELORA_SKIP_GIT_PUSH=1
 """
 from __future__ import annotations
@@ -397,12 +405,19 @@ def run_web_script(script: str, label: str) -> bool:
 
 
 def post_traitement_communaute() -> bool:
-    """Archives Foot + agrégat communauté (ROI / bénéfices)."""
+    """Résolution PMU + Foot + vitrine communauté (ROI / bénéfices)."""
+    ok = run_web_script(
+        "resolver_pmu_archives.py",
+        "Résolution archives PMU (arrivées officielles + rapports définitifs)",
+    )
     ok = run_web_script(
         "velora_archiver_foot.py",
-        "Archives Foot (résolution EN_ATTENTE + scores + ROI)",
-    )
-    ok = run_web_script("publish_communaute.py", "Publication api_velora_communaute.json") and ok
+        "Archives Foot (scores Winamax + résolution EN_ATTENTE + ROI)",
+    ) and ok
+    ok = run_web_script(
+        "publish_communaute.py",
+        "Publication api_velora_communaute.json (PMU + Foot)",
+    ) and ok
     return ok
 
 
@@ -417,7 +432,7 @@ def main() -> int:
         return 1
 
     assert WEB_ROOT is not None
-    log("=== Velora Engine — pipeline complet (5 étapes) ===")
+    log("=== Velora Engine — pipeline complet (scraper + résultats + déploiement) ===")
     log(f"Racine scraper     : {ROOT}")
     log(f"Projet web (cible) : {WEB_ROOT}")
     log(f"  index.html       : {(WEB_ROOT / 'index.html').resolve()}\n")
@@ -448,7 +463,10 @@ def main() -> int:
     log("Étape 4/5 — terminée.\n")
 
     if not post_traitement_communaute():
-        log("Attention : post-traitement communauté Foot partiel ou en échec (voir error_log.txt).")
+        log(
+            "Attention : post-traitement PMU/Foot/communauté partiel ou en échec "
+            "(voir error_log.txt — vérifier .env Supabase pour resolver_pmu_archives.py).",
+        )
     else:
         if COMMUNAUTE_DEPLOY and COMMUNAUTE_DEPLOY.is_file():
             log(f"Communauté : {_fmt_file_info(COMMUNAUTE_DEPLOY)}")
