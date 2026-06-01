@@ -1070,6 +1070,14 @@
         .foot-toggle-opp--vip-locked {
             border-color: rgba(255, 215, 0, 0.35) !important;
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.06), rgba(30, 27, 20, 0.4)) !important;
+            cursor: not-allowed;
+            opacity: 0.88;
+        }
+        .foot-toggle-opp--vip-locked.foot-toggle-opp-on {
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            box-shadow: none !important;
+            color: rgb(156, 163, 175) !important;
         }
         .velora-paywall-overlay {
             position: fixed;
@@ -1349,8 +1357,9 @@
         <aside id="colonneGauche" class="flex min-w-0 flex-col gap-6 lg:col-span-4 lg:sticky lg:top-6">
             <div id="blocFootGauche" class="hidden glass-card rounded-2xl border border-cyan-500/25 p-5 shadow-lg shadow-black/20 lg:p-6">
                 <p class="mb-3 text-[10px] font-semibold uppercase tracking-widest text-cyan-400/80">Football Winamax</p>
-                <button type="button" id="footToggleOpp" role="switch" aria-checked="false"
-                    class="foot-toggle-opp mb-4 flex w-full flex-wrap items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-bold text-gray-300 transition hover:border-amber-500/35 hover:bg-amber-500/10">
+                <button type="button" id="footToggleOpp" role="switch" aria-checked="false" aria-disabled="true"
+                    title="Connexion et Pass Premium Foot requis"
+                    class="foot-toggle-opp foot-toggle-opp--vip-locked mb-4 flex w-full flex-wrap items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-bold text-gray-300 transition hover:border-amber-500/35 hover:bg-amber-500/10">
                     <span aria-hidden="true">🔥</span>
                     <span>Mode Opportunités (Value Bets)</span>
                     <span class="foot-opp-pro-badge" title="Réservé Premium">PRO</span>
@@ -2646,21 +2655,39 @@
             return localStorage.getItem(VELORA_PREMIUM_FOOT_LS_KEY) === 'true';
         }
 
+        /** Radar Opportunités : membre connecté + Pass Foot Premium actif. */
+        function peutUtiliserRadarFootOpp() {
+            return estMembreConnecte() && estVeloraPremiumFoot() === true;
+        }
+
+        function demanderAccesRadarFootOpp() {
+            if (!estMembreConnecte()) {
+                ouvrirModalAuth('login');
+                return false;
+            }
+            if (!estVeloraPremiumFoot()) {
+                showPaywallModal('opp_radar');
+                return false;
+            }
+            return true;
+        }
+
         function appliquerStatutPremiumGlobal() {
             const pmu = estVeloraPremiumPmu();
             const foot = estVeloraPremiumFoot();
-            if (!foot && footModeOpportunites) {
+            if (!peutUtiliserRadarFootOpp() && footModeOpportunites) {
                 footModeOpportunites = false;
             }
             if (typeof syncFootModeUi === 'function') syncFootModeUi();
             return { pmu, foot };
         }
 
-        /** Le mode Opportunités (et son empty state) est réservé au Pass Foot Premium. */
+        /** Le mode Opportunités est réservé aux membres connectés avec Pass Foot Premium. */
         function quitterFootOppSiNonPremium() {
-            if (footModeOpportunites && !estVeloraPremiumFoot()) {
+            if (footModeOpportunites && !peutUtiliserRadarFootOpp()) {
                 footModeOpportunites = false;
                 syncFootModeUi();
+                if (sportActif === 'foot') renderFootMatchs();
                 return true;
             }
             return false;
@@ -3582,6 +3609,8 @@
             mettreAJourUiAnalyseAuth();
             mettreAJourUiPlanUtilisateur();
             appliquerPaywallDeviceSiBloque();
+            quitterFootOppSiNonPremium();
+            syncFootModeUi();
         }
 
         function initialiserAuthUi() {
@@ -4128,8 +4157,10 @@
             const guide = document.getElementById('guideRapideTexte');
             if (!guide) return;
             if (sportActif === 'foot') {
-                if (footModeOpportunites) {
+                if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
                     guide.innerHTML = 'Mode <span class="font-semibold text-amber-300">Opportunités</span> : le site affiche automatiquement les pépites premium (value bets &amp; 4–5★). Désactivez le toggle pour revenir au moteur de recherche.';
+                } else if (!peutUtiliserRadarFootOpp()) {
+                    guide.innerHTML = 'Le <span class="font-semibold text-amber-300">Mode Opportunités</span> est réservé aux membres connectés avec le <span class="font-semibold text-amber-300">Pass Premium Foot</span>. Utilisez le moteur de recherche ci-dessous pour l\'analyse gratuite.';
                 } else {
                     guide.innerHTML = 'Mode <span class="font-semibold text-cyan-300">recherche</span> : saisissez une équipe à gauche puis cliquez sur <span class="font-semibold text-cyan-300">Générer l\'analyse</span>. Une seule carte match s\'affiche avec le pronostic Velora. Activez <span class="font-semibold text-amber-300">Mode Opportunités</span> pour le radar premium.';
                 }
@@ -4139,36 +4170,43 @@
         }
 
         function syncFootModeUi() {
+            if (footModeOpportunites && !peutUtiliserRadarFootOpp()) {
+                footModeOpportunites = false;
+            }
+            const oppAutorise = peutUtiliserRadarFootOpp();
+            const oppActif = oppAutorise && footModeOpportunites;
             const toggle = document.getElementById('footToggleOpp');
             const toolbar = document.getElementById('footOppToolbar');
             const loading = document.getElementById('footLoading');
             const searchBloc = document.getElementById('footSearchBloc');
             const searchInput = document.getElementById('footSearchInput');
             if (toggle) {
-                toggle.setAttribute('aria-checked', footModeOpportunites ? 'true' : 'false');
-                toggle.classList.toggle('foot-toggle-opp-on', footModeOpportunites);
+                toggle.setAttribute('aria-checked', oppActif ? 'true' : 'false');
+                toggle.setAttribute('aria-disabled', oppAutorise ? 'false' : 'true');
+                toggle.classList.toggle('foot-toggle-opp-on', oppActif);
+                toggle.classList.toggle('foot-toggle-opp--vip-locked', !oppAutorise);
+                toggle.title = oppAutorise
+                    ? 'Activer le radar Value Bets (Premium Foot)'
+                    : 'Connexion et Pass Premium Foot requis';
             }
-            if (toolbar) toolbar.classList.toggle('hidden', !footModeOpportunites);
-            if (blocFootGauche) blocFootGauche.classList.toggle('foot-sidebar-opp-mode', footModeOpportunites);
+            if (toolbar) toolbar.classList.toggle('hidden', !oppActif);
+            if (blocFootGauche) blocFootGauche.classList.toggle('foot-sidebar-opp-mode', oppActif);
             if (searchBloc) {
-                searchBloc.classList.toggle('hidden', footModeOpportunites);
-                searchBloc.setAttribute('aria-hidden', footModeOpportunites ? 'true' : 'false');
+                searchBloc.classList.toggle('hidden', oppActif);
+                searchBloc.setAttribute('aria-hidden', oppActif ? 'true' : 'false');
             }
             if (searchInput) {
-                searchInput.disabled = footModeOpportunites;
-                searchInput.tabIndex = footModeOpportunites ? -1 : 0;
+                searchInput.disabled = oppActif;
+                searchInput.tabIndex = oppActif ? -1 : 0;
             }
             const meta = document.getElementById('footSearchMeta');
             if (meta) {
-                meta.classList.toggle('text-amber-300/90', footModeOpportunites);
-                meta.classList.toggle('text-gray-500', !footModeOpportunites);
+                meta.classList.toggle('text-amber-300/90', oppActif);
+                meta.classList.toggle('text-gray-500', !oppActif);
             }
             if (loading) {
-                loading.classList.toggle('border-amber-500/25', footModeOpportunites);
-                loading.classList.toggle('border-cyan-500/25', !footModeOpportunites);
-            }
-            if (toggle) {
-                toggle.classList.toggle('foot-toggle-opp--vip-locked', !estVeloraPremiumFoot());
+                loading.classList.toggle('border-amber-500/25', oppActif);
+                loading.classList.toggle('border-cyan-500/25', !oppActif);
             }
             mettreAJourGuideFoot();
         }
@@ -4334,8 +4372,7 @@
         }
 
         async function setFootModeOpportunites(actif) {
-            if (actif && !estVeloraPremiumFoot()) {
-                showPaywallModal('opp_radar');
+            if (actif && !demanderAccesRadarFootOpp()) {
                 return;
             }
             if (footModeOpportunites === actif) return;
@@ -4424,10 +4461,12 @@
         }
         window.lancerAnalyseFoot = lancerAnalyseFoot;
 
-        async function onFootToggleOppClick() {
+        async function onFootToggleOppClick(ev) {
+            ev?.preventDefault();
             const wantOn = !footModeOpportunites;
-            if (wantOn && !estVeloraPremiumFoot()) {
-                showPaywallModal('opp_radar');
+            if (wantOn) {
+                if (!demanderAccesRadarFootOpp()) return;
+            } else if (!peutUtiliserRadarFootOpp()) {
                 return;
             }
             await setFootModeOpportunites(wantOn);
@@ -4531,7 +4570,7 @@
             const loading = document.getElementById('footLoading');
             const erreur = document.getElementById('footErreur');
             if (footModeOpportunites) {
-                if (!estVeloraPremiumFoot()) {
+                if (!peutUtiliserRadarFootOpp()) {
                     quitterFootOppSiNonPremium();
                 } else {
                     return chargerOppMatchs();
@@ -5812,8 +5851,10 @@
             const meta = document.getElementById('footSearchMeta');
             if (!meta) return;
             if (footModeOpportunites) {
-                if (!estVeloraPremiumFoot()) {
-                    meta.textContent = 'Radar Premium Foot — abonnement requis';
+                if (!peutUtiliserRadarFootOpp()) {
+                    meta.textContent = estMembreConnecte()
+                        ? 'Pass Premium Foot requis pour le radar'
+                        : 'Connectez-vous pour accéder au radar Premium';
                     return;
                 }
                 if (!oppMatchsCharges) {
@@ -5866,7 +5907,7 @@
             const videOpp = document.getElementById('footOppZoneVide');
             if (!videOpp) return;
             const showPremiumEmpty = footModeOpportunites
-                && estVeloraPremiumFoot() === true
+                && peutUtiliserRadarFootOpp()
                 && listeLength === 0;
             videOpp.classList.toggle('hidden', !showPremiumEmpty);
         }
@@ -5967,7 +6008,7 @@
         }
 
         async function chargerOppMatchs(options = {}) {
-            if (!estVeloraPremiumFoot()) {
+            if (!peutUtiliserRadarFootOpp()) {
                 quitterFootOppSiNonPremium();
                 return chargerFootMatchs(options);
             }
@@ -6072,10 +6113,7 @@
         });
         document.getElementById('footToggleOpp')?.addEventListener('click', onFootToggleOppClick);
         document.getElementById('btnOppRefresh')?.addEventListener('click', () => {
-            if (!estVeloraPremiumFoot()) {
-                showPaywallModal('opp_radar');
-                return;
-            }
+            if (!demanderAccesRadarFootOpp()) return;
             chargerOppMatchs({ force: true });
         });
         document.getElementById('footSearchInput')?.addEventListener('input', onFootSearchInput);
