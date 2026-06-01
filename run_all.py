@@ -12,7 +12,7 @@ Orchestration :
   6    git add / commit / push (sauf VELORA_SKIP_GIT_PUSH=1) → Vercel
 
 Planificateur Windows : programmer uniquement ce script (pas resolver_pmu à part).
-CI : .github/workflows/velora_cron.yml (toutes les 2 h + 6 h UTC).
+CI : .github/workflows/velora_cron.yml (toutes les 15 min).
 
 Surcharge : VELORA_WEB_DIR=C:\\chemin\\vers\\web
 Désactiver le push : VELORA_SKIP_GIT_PUSH=1
