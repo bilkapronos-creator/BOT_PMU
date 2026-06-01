@@ -3,8 +3,8 @@ name: Velora Auto-Sniper & Archiver
 
 on:
   schedule:
-    # Toutes les 15 min (résolution PMU/Foot rapide après les courses / matchs)
-    - cron: "*/15 * * * *"
+    # Toutes les 30 min (équilibre réactivité / quota minutes GitHub Actions)
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
