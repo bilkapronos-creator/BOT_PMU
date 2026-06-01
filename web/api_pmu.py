@@ -1,6 +1,13 @@
 import os
 import re
+import sys
+from pathlib import Path
 from typing import Any, Callable, Optional, Tuple, TypeVar, Union
+
+# Vercel charge web.api_pmu:app — les imports locaux (database, stats_pmu…) exigent web/ dans sys.path
+_WEB_DIR = Path(__file__).resolve().parent
+if str(_WEB_DIR) not in sys.path:
+    sys.path.insert(0, str(_WEB_DIR))
 
 from dotenv import load_dotenv
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request

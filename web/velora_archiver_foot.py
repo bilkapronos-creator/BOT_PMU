@@ -108,23 +108,96 @@ def _est_pronostic_velora(match: dict) -> bool:
             return True
     except (TypeError, ValueError):
         pass
+    blob = _blob_conseil(match)
+    if "value bet" in blob or "privilégier le +2.5" in blob or "privilegier le +2.5" in blob:
+        return True
     return False
 
 
+def _normaliser_archive_importee(archive: dict) -> dict:
+    """Complète marche / opportunite_type pour les imports localStorage."""
+    if not isinstance(archive, dict):
+        return archive
+    out = dict(archive)
+    marche = _marche_effectif(out)
+    out["marche"] = marche
+    if not out.get("opportunite_type"):
+        out["opportunite_type"] = marche
+    ts = out.get("match_start_ts")
+    if ts is not None:
+        try:
+            t = float(ts)
+            if t > 1e12:
+                out["match_start_ts"] = int(t)
+            else:
+                out["match_start_ts"] = int(t)
+        except (TypeError, ValueError):
+            pass
+    if out.get("match_start_ts") is None:
+        kickoff = _kickoff_match(out)
+        if kickoff is not None:
+            out["match_start_ts"] = int(kickoff.timestamp())
+    return out
+
+
+def _blob_conseil(match: dict) -> str:
+    return str(
+        match.get("opportunite_detail") or match.get("conseil") or ""
+    ).lower()
+
+
+def _pick_ou25(match: dict) -> str | None:
+    """plus | moins — aligné inferVeloraOu25Pick (index.html)."""
+    opp = str(match.get("opportunite_type") or match.get("value_bet_type") or "").lower()
+    if opp == "over_25":
+        return "plus"
+    blob = _blob_conseil(match)
+    if "under" in blob or "moins de 2.5" in blob or "-2.5" in blob or "−2.5" in blob:
+        return "moins"
+    if (
+        "+2.5" in blob
+        or "+2,5" in blob
+        or "over 2.5" in blob
+        or "privilégier le +2.5" in blob
+        or "privilegier le +2.5" in blob
+    ):
+        return "plus"
+    return None
+
+
 def _pick_1n2(match: dict) -> str | None:
+    """1 | N | 2 | dc_1x | dc_x2 — aligné inferVelora1n2Pick."""
     pick = match.get("velora_pick_1n2")
-    if pick in ("1", "N", "2"):
+    if pick in ("1", "N", "2", "dc_1x", "dc_x2"):
         return pick
-    cotes = match.get("cotes") or {}
+
+    opp = str(match.get("opportunite_type") or match.get("value_bet_type") or "").lower()
+    if opp in ("buteur", "score_exact", "btts", "over_25"):
+        return None
+
+    blob = _blob_conseil(match)
+    if "dc 1x" in blob or ("double chance" in blob and "1x" in blob):
+        return "dc_1x"
+    if "dc x2" in blob or ("double chance" in blob and "x2" in blob):
+        return "dc_x2"
+
+    if "value bet" in blob:
+        if re.search(r"\bext\b", blob) or "ext +" in blob:
+            return "2"
+        if re.search(r"\bdom\b", blob):
+            return "1"
+        if re.search(r"\bnul\b", blob):
+            return "N"
+
     conseil = str(match.get("conseil") or "").lower()
-    if "match nul" in conseil or "value bet nul" in conseil:
+    if "nul" in conseil and "+2.5" not in conseil and "+2,5" not in conseil:
         return "N"
-    if "dom" in conseil or "favori domicile" in conseil or "value bet domicile" in conseil:
+    if re.search(r"\bdom\b", blob) and "+2.5" not in blob and "+2,5" not in blob:
         return "1"
-    if "ext" in conseil or "extérieur" in conseil or "exterieur" in conseil or "value bet ext" in conseil:
+    if re.search(r"\bext\b", blob) and "+2.5" not in blob and "+2,5" not in blob:
         return "2"
-    if "nul" in conseil:
-        return "N"
+
+    cotes = match.get("cotes") or {}
     c1 = _safe_float(cotes.get("1"))
     c2 = _safe_float(cotes.get("2"))
     if c1 is not None and c2 is not None:
@@ -202,7 +275,12 @@ def _marche_effectif(match: dict) -> str:
     ).lower()
     if "btts" in blob or "les deux équipes" in blob or "les deux equipes" in blob:
         return "btts"
-    if re.search(r"[+-]\s*2[\.,]5|over\s*2[,\.]?5|under\s*2[,\.]?5|plus de 2[,\.]?5|moins de 2[,\.]?5", blob):
+    if re.search(
+        r"[+-]\s*2[\.,]5|over\s*2[,\.]?5|under\s*2[,\.]?5|plus de 2[,\.]?5|moins de 2[,\.]?5|privil.gier le \+2",
+        blob,
+    ):
+        return "over_25"
+    if re.search(r"\b(dom|ext)\s*\+\s*2[\.,]5", blob):
         return "over_25"
     if "score exact" in blob or re.search(r"\d+\s*[-:]\s*\d+", blob):
         return "score_exact"
@@ -239,8 +317,10 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
         selection = type_pari
 
     elif marche == "over_25":
-        detail = str(match.get("opportunite_detail") or "").lower()
-        pick_plus = "moins" not in detail and ("+" in detail or "over" in detail or "plus" in detail)
+        pick_ou = _pick_ou25(match)
+        if pick_ou is None:
+            pick_ou = "plus"
+        pick_plus = pick_ou == "plus"
         gagne = (total_buts > 2) if pick_plus else (total_buts < 3)
         cote = _cote_over25(match, pick_plus)
         type_pari = "Over 2.5" if pick_plus else "Under 2.5"
@@ -264,10 +344,19 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
         pick = _pick_1n2(match)
         if not pick:
             return None
-        gagne = pick == issue
-        cote = _safe_float((match.get("cotes") or {}).get(pick))
-        labels = {"1": "Domicile", "N": "Nul", "2": "Extérieur"}
-        type_pari = f"1N2 {labels.get(pick, pick)}"
+        if pick == "dc_1x":
+            gagne = issue in ("1", "N")
+            cote = _safe_float((match.get("cotes") or {}).get("1"))
+            type_pari = "Double chance 1X"
+        elif pick == "dc_x2":
+            gagne = issue in ("N", "2")
+            cote = _safe_float((match.get("cotes") or {}).get("2"))
+            type_pari = "Double chance X2"
+        else:
+            gagne = pick == issue
+            cote = _safe_float((match.get("cotes") or {}).get(pick))
+            labels = {"1": "Domicile", "N": "Nul", "2": "Extérieur"}
+            type_pari = f"1N2 {labels.get(pick, pick)}"
         selection = type_pari
         marche = "1n2"
 
@@ -306,6 +395,31 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
 def _normaliser_statut_pari(val: Any) -> str:
     s = str(val or "").strip().upper().replace("É", "E")
     return s
+
+
+def _normaliser_statut_brut(val: Any) -> str:
+    """Unifie EN_ATTENTE / EN ATTENTE / en attente / En attente du résultat…"""
+    s = str(val or "").strip().upper().replace("É", "E")
+    s = re.sub(r"\s+", "_", s)
+    if s in ("EN_ATTENTE_DU_RESULTAT", "EN_ATTENTE_RESULTAT", "ATTENTE", "ATTENTE_DU_RESULTAT"):
+        return "EN_ATTENTE"
+    if s.startswith("EN_ATTENTE"):
+        return "EN_ATTENTE"
+    return s
+
+
+def _archive_pret_pour_score(record: dict, now: datetime | None = None) -> bool:
+    """Match terminé (coup d'envoi + marge) — utilise date_match si match_start_ts est null."""
+    now = now or datetime.now(tz=TZ_PARIS)
+    kickoff = _kickoff_match(record)
+    if kickoff is None:
+        return False
+    try:
+        from parser_winamax import MATCH_FINISHED_GRACE_MINUTES  # noqa: PLC0415
+    except Exception:
+        MATCH_FINISHED_GRACE_MINUTES = 120
+    grace = kickoff + timedelta(minutes=MATCH_FINISHED_GRACE_MINUTES)
+    return now >= grace
 
 
 def _parse_date_match_paris(date_str: str) -> datetime | None:
@@ -351,31 +465,39 @@ def _kickoff_match(record: dict) -> datetime | None:
 
 def _match_deja_joue(record: dict, now: datetime | None = None) -> bool:
     """True si le coup d'envoi + marge de fin est passé (pas un match futur)."""
-    now = now or datetime.now(tz=TZ_PARIS)
-    try:
-        _, _, match_devrait_avoir_score = _importer_fetch_winamax()
-        return match_devrait_avoir_score(record, veille_uniquement=False)
-    except Exception:
-        kickoff = _kickoff_match(record)
-        if kickoff is None:
-            return False
-        try:
-            from parser_winamax import MATCH_FINISHED_GRACE_MINUTES  # noqa: PLC0415
-        except Exception:
-            MATCH_FINISHED_GRACE_MINUTES = 120
-        grace = kickoff + timedelta(minutes=MATCH_FINISHED_GRACE_MINUTES)
-        return now >= grace
+    return _archive_pret_pour_score(record, now)
 
 
 def _est_en_attente(archive: dict) -> bool:
-    """True si le match n'est pas terminé / pas de score final (exclu de velora_archives_foot.json)."""
-    st = str(archive.get("statut") or "").strip().upper().replace(" ", "_")
-    sp = _normaliser_statut_pari(archive.get("statut_pari"))
-    if st in ("EN_ATTENTE", "EN_ATTENTE_DU_RESULTAT", "EN ATTENTE") or sp == "EN_ATTENTE":
+    """True si le pari n'a pas encore été résolu (statut explicite ou sans score validé)."""
+    if not isinstance(archive, dict):
+        return False
+    sp_fin = _normaliser_statut_pari(archive.get("statut_pari"))
+    if (
+        sp_fin in ("GAGNE", "PERDU", "GAGNANT", "PERDANT")
+        and parse_score_reel(archive.get("score_final")) is not None
+        and archive.get("reussi_foot") is not None
+    ):
+        return False
+    st = _normaliser_statut_brut(archive.get("statut"))
+    sp = _normaliser_statut_brut(archive.get("statut_pari"))
+    if st == "EN_ATTENTE" or sp == "EN_ATTENTE":
         return True
-    if str(archive.get("statut") or "").strip() == "En attente":
+    raw_st = str(archive.get("statut") or "").strip().lower()
+    raw_sp = str(archive.get("statut_pari") or "").strip().lower()
+    if raw_st in ("en attente", "en attente du resultat", "en attente du résultat"):
         return True
-    return parse_score_reel(archive.get("score_final")) is None
+    if raw_sp in ("en attente", "en attente du resultat", "en attente du résultat"):
+        return True
+    if archive.get("reussi_foot") is not None and parse_score_reel(archive.get("score_final")):
+        return False
+    if parse_score_reel(archive.get("score_final")) is not None:
+        sp2 = _normaliser_statut_pari(archive.get("statut_pari"))
+        if sp2 in ("GAGNE", "PERDU", "GAGNANT", "PERDANT"):
+            return False
+    if archive.get("reussi_foot") is None and parse_score_reel(archive.get("score_final")) is None:
+        return True
+    return False
 
 
 def _est_archive_terminee_validee(archive: dict) -> bool:
@@ -537,6 +659,9 @@ def _collecter_ids_matchs_sans_score(
         mid = str(archive.get("id_match") or "").strip()
         if not mid or _score_deja_enregistre(resultats, mid):
             continue
+        if _archive_pret_pour_score(archive):
+            ids.add(mid)
+            continue
         if match_devrait_avoir_score(archive, veille_uniquement=VEILLE_SCORES_UNIQUEMENT):
             ids.add(mid)
 
@@ -643,17 +768,108 @@ def _fetch_scores_avec_repli(
 
 
 def _purger_archives_non_velora(par_id: dict[str, dict], snapshots: list[dict]) -> int:
-    """Retire les EN_ATTENTE qui ne sont plus des pronos Velora dans le snapshot premium."""
-    snap_by_id = {str(m.get("id_match")): m for m in snapshots if m.get("id_match")}
-    purges = 0
-    for mid, arch in list(par_id.items()):
-        if not _est_en_attente(arch):
+    """
+    Désactivé : ne supprime plus les EN_ATTENTE du JSON (ex. Palmeiras hors premium actuel).
+    Les entrées restent jusqu'à résolution par le resolver.
+    """
+    return 0
+
+
+def _chemins_archives_foot() -> list[Path]:
+    """Fichiers archives à lire (web/ prioritaire, pas la racine scraper sauf si identique)."""
+    chemins = [ARCHIVES_FOOT_PATH.resolve()]
+    scraper = _scraper_root()
+    if scraper:
+        alt = (scraper / "web" / "velora_archives_foot.json").resolve()
+        if alt.is_file() and alt not in chemins:
+            chemins.append(alt)
+        racine = (scraper / "velora_archives_foot.json").resolve()
+        if racine.is_file() and racine not in chemins:
+            print(
+                f"[resolver-foot] Attention : {racine.name} à la racine scraper ignoré "
+                f"(utiliser {ARCHIVES_FOOT_PATH.resolve()})"
+            )
+    env = os.environ.get("VELORA_ARCHIVES_FOOT_PATH", "").strip()
+    if env:
+        p = Path(env).expanduser().resolve()
+        if p.is_file() and p not in chemins:
+            chemins.append(p)
+    return chemins
+
+
+def _charger_archives_foot() -> list[dict]:
+    if not ARCHIVES_FOOT_PATH.is_file():
+        print(f"[resolver-foot] Fichier absent : {ARCHIVES_FOOT_PATH.resolve()}")
+        return []
+    data = _lire_json(ARCHIVES_FOOT_PATH, [])
+    if not isinstance(data, list):
+        return []
+    return [_normaliser_archive_importee(a) for a in data if isinstance(a, dict)]
+
+
+def debug_etat_archives_foot() -> dict[str, Any]:
+    """Diagnostic : totaux, EN_ATTENTE, prêts pour score, chemins."""
+    archives = _charger_archives_foot()
+    resultats = _lire_json(RESULTATS_PATH, {})
+    now = datetime.now(tz=TZ_PARIS)
+    en_attente: list[dict] = []
+    prets: list[dict] = []
+    sans_kickoff: list[dict] = []
+    for a in archives:
+        if not isinstance(a, dict):
             continue
-        snap = snap_by_id.get(mid)
-        if snap is None or not _est_pronostic_velora(snap):
-            del par_id[mid]
-            purges += 1
-    return purges
+        if _est_en_attente(a):
+            en_attente.append(a)
+            if _archive_pret_pour_score(a, now):
+                prets.append(a)
+            elif _kickoff_match(a) is None:
+                sans_kickoff.append(a)
+    info = {
+        "fichier": str(ARCHIVES_FOOT_PATH.resolve()),
+        "total": len(archives),
+        "en_attente": len(en_attente),
+        "pret_pour_score": len(prets),
+        "sans_date_kickoff": len(sans_kickoff),
+        "ids_pret": [str(a.get("id_match")) for a in prets],
+        "equipes_pret": [
+            f"{a.get('equipe_domicile')} — {a.get('equipe_exterieur')}"
+            for a in prets
+        ],
+        "equipes_attente": [
+            f"{a.get('equipe_domicile')} — {a.get('equipe_exterieur')} "
+            f"(statut={a.get('statut')!r}, pari={a.get('statut_pari')!r})"
+            for a in en_attente
+        ],
+    }
+    print(f"[resolver-foot] Fichier archives : {info['fichier']}")
+    print(f"[resolver-foot] Matchs dans le JSON : {info['total']}")
+    print(f"[resolver-foot] EN_ATTENTE détectés : {info['en_attente']}")
+    print(f"[resolver-foot] Prêts pour récupération score : {info['pret_pour_score']}")
+    if info["sans_date_kickoff"]:
+        print(
+            f"[resolver-foot] Sans date/kickoff parseable : {info['sans_date_kickoff']} "
+            "(ajoutez date_match ou match_start_ts)"
+        )
+    if info["equipes_attente"]:
+        for ligne in info["equipes_attente"][:15]:
+            print(f"  · en attente : {ligne}")
+        if len(info["equipes_attente"]) > 15:
+            print(f"  … et {len(info['equipes_attente']) - 15} autre(s)")
+    if info["pret_pour_score"] and info["ids_pret"]:
+        print(f"[resolver-foot] IDs à interroger : {', '.join(info['ids_pret'][:20])}")
+    if info["en_attente"] and not info["pret_pour_score"]:
+        print(
+            "[resolver-foot] Les EN_ATTENTE ne sont pas encore « prêts » "
+            "(match pas fini + 2h) ou date_match absente."
+        )
+    if info["total"] == 0:
+        print(
+            "[resolver-foot] Le JSON serveur est vide — les cartes « En attente » "
+            "viennent peut‑être du localStorage du navigateur. Rechargez Foot puis "
+            "relancez le pipeline, ou copiez le contenu de velora_archives_foot "
+            "dans web/velora_archives_foot.json."
+        )
+    return info
 
 
 def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
@@ -668,9 +884,8 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
         "erreur": None,
     }
     now_paris = datetime.now(tz=TZ_PARIS)
-    archives = _lire_json(ARCHIVES_FOOT_PATH, [])
-    if not isinstance(archives, list):
-        archives = []
+    debug_etat_archives_foot()
+    archives = _charger_archives_foot()
 
     snapshots = _lire_json(SNAPSHOT_PREMIUM_PATH, [])
     if not isinstance(snapshots, list):
@@ -695,10 +910,17 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
 
     ids_fetch: list[str] = []
     for mid, arch in en_attente.items():
-        if not _match_deja_joue(arch, now_paris):
+        if not _archive_pret_pour_score(arch, now_paris):
+            print(
+                f"[resolver-foot] Skip fetch {mid} "
+                f"({arch.get('equipe_domicile')} — {arch.get('equipe_exterieur')}) : "
+                "match pas encore éligible (date/kickoff)"
+            )
             continue
         if _lire_resultat_pour_match(resultats, mid) is None:
             ids_fetch.append(mid)
+
+    print(f"[resolver-foot] IDs envoyés à Winamax/TheSportsDB : {len(ids_fetch)}")
 
     if ids_fetch:
         try:
@@ -714,7 +936,7 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
 
     resolus = 0
     for mid, arch in list(en_attente.items()):
-        if not _match_deja_joue(arch, now_paris):
+        if not _archive_pret_pour_score(arch, now_paris):
             continue
         res = _lire_resultat_pour_match(resultats, mid)
         if res is None:
@@ -769,7 +991,12 @@ def fetch_winamax_results() -> dict[str, Any]:
     stats["ids_interroges"] = ids
 
     if not ids:
-        print("[archiver-foot] Aucun match Foot en attente de score Winamax.")
+        dbg = debug_etat_archives_foot()
+        print(
+            "[archiver-foot] Aucun match Foot en attente de score Winamax "
+            f"(archives={dbg['total']}, EN_ATTENTE={dbg['en_attente']}, "
+            f"prêts={dbg['pret_pour_score']})."
+        )
         return stats
 
     print(f"[archiver-foot] Winamax : {len(ids)} match(s) à interroger…")

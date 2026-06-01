@@ -4213,6 +4213,18 @@
             ecrireArchivesFootLocal([...parId.values()]);
         }
 
+        /** Exporte les archives Foot (dont EN_ATTENTE) pour web/velora_archives_foot.json */
+        function telechargerArchivesFootPourPipeline() {
+            const archives = lireArchivesFootLocal();
+            const blob = new Blob([JSON.stringify(archives, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'velora_archives_foot.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
         function extraireScoreArchiveFoot(m) {
             const ts = m.top_scores;
             if (Array.isArray(ts) && ts.length && ts[0]?.score) {
@@ -4224,10 +4236,21 @@
             return null;
         }
 
+        function normaliserStatutArchiveFoot(val) {
+            let s = String(val || '').trim().toUpperCase().replace(/É/g, 'E');
+            s = s.replace(/\s+/g, '_');
+            if (s.startsWith('EN_ATTENTE') || s === 'ATTENTE') return 'EN_ATTENTE';
+            return s;
+        }
+
         function archiveFootEstEnAttente(a) {
-            const st = String(a?.statut || '').toUpperCase().replace(/\s/g, '_');
-            const sp = String(a?.statut_pari || '').toUpperCase();
+            const st = normaliserStatutArchiveFoot(a?.statut);
+            const sp = normaliserStatutArchiveFoot(a?.statut_pari);
             if (st === 'EN_ATTENTE' || sp === 'EN_ATTENTE') return true;
+            const rawSt = String(a?.statut || '').trim().toLowerCase();
+            const rawSp = String(a?.statut_pari || '').trim().toLowerCase();
+            if (/^en attente/.test(rawSt) || /^en attente/.test(rawSp)) return true;
+            if (archiveFootEstValidee(a)) return false;
             if (a?.score_final) return false;
             return a?.reussi_foot == null && !a?.financier;
         }
@@ -5542,7 +5565,8 @@
                 liste.innerHTML = `
                     <p class="text-center text-sm text-gray-500 py-8">
                         Aucun match football archivé.
-                        <br><span class="text-gray-500">Au coup d'envoi, le match passe en « En attente ». Lancez <code class="text-cyan-400/90">python web/resolver_scores_foot.py</code> ou <code class="text-cyan-400/90">run_all.py</code> pour récupérer le score et afficher GAGNANT / PERDANT.</span>
+                        <br><span class="text-gray-500">Au coup d'envoi, le match passe en « En attente ». Placez vos archives dans <code class="text-cyan-400/90">web/velora_archives_foot.json</code> puis lancez <code class="text-cyan-400/90">python resolver_scores_foot.py</code>.</span>
+                        <br><button type="button" onclick="telechargerArchivesFootPourPipeline()" class="mt-3 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-cyan-500/20">Exporter mes archives (JSON) pour le pipeline</button>
                     </p>`;
                 return;
             }

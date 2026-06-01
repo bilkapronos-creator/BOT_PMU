@@ -1,5 +1,5 @@
 """
-Repli gratuit pour scores foot (TheSportsDB) quand Winamax ne renvoie pas le score final.
+Repli TheSportsDB (API gratuite) avec fuzzy matching des noms d'équipes.
 """
 from __future__ import annotations
 
@@ -8,32 +8,18 @@ import re
 import ssl
 import urllib.error
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
+
+from foot_team_fuzzy import normalize_team, teams_pair_match
 
 TZ_PARIS = ZoneInfo("Europe/Paris")
 UA = (
     "Mozilla/5.0 (compatible; VeloraFootResolver/1.0; +https://velora.local)"
 )
 EVENTS_DAY_URL = "https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d={date}&s=Soccer"
-
-
-def _norm_team(name: str) -> str:
-    s = str(name or "").lower().strip()
-    s = re.sub(r"[^a-z0-9\s]", " ", s)
-    for tok in ("fc", "cf", "sc", "ac", "as", "us", "ud", "cd", "rc", "real", "de", "la", "le", "les"):
-        s = re.sub(rf"\b{tok}\b", " ", s)
-    return " ".join(s.split())
-
-
-def _teams_match(a: str, b: str, c: str, d: str) -> bool:
-    na, nb, nc, nd = _norm_team(a), _norm_team(b), _norm_team(c), _norm_team(d)
-    if not na or not nb or not nc or not nd:
-        return False
-    direct = (na in nc or nc in na) and (nb in nd or nd in nb)
-    croise = (na in nd or nd in na) and (nb in nc or nc in nb)
-    return direct or croise
+FUZZY_THRESHOLD = float(__import__("os").environ.get("VELORA_FUZZY_THRESHOLD", "0.68"))
 
 
 def _http_get_json(url: str, timeout: int = 22) -> Any:
@@ -43,50 +29,115 @@ def _http_get_json(url: str, timeout: int = 22) -> Any:
         return json.loads(resp.read().decode("utf-8", errors="replace"))
 
 
+def _dates_a_tester(kickoff: datetime) -> list[str]:
+    """Jour du match ± 1 (fuseaux / reports)."""
+    if kickoff.tzinfo is None:
+        kickoff = kickoff.replace(tzinfo=TZ_PARIS)
+    base = kickoff.astimezone(TZ_PARIS).date()
+    out: list[str] = []
+    for delta in (0, -1, 1):
+        d = base + timedelta(days=delta)
+        s = d.strftime("%Y-%m-%d")
+        if s not in out:
+            out.append(s)
+    return out
+
+
+def _events_du_jour(date_str: str) -> list[dict]:
+    try:
+        data = _http_get_json(EVENTS_DAY_URL.format(date=date_str))
+    except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        print(f"[foot-fallback] TheSportsDB {date_str} ignoré : {exc}")
+        return []
+    events = (data or {}).get("events") or []
+    return [e for e in events if isinstance(e, dict)]
+
+
+def _score_depuis_event(ev: dict) -> dict[str, int] | None:
+    try:
+        dom = int(ev.get("intHomeScore"))
+        ext = int(ev.get("intAwayScore"))
+    except (TypeError, ValueError):
+        return None
+    if dom < 0 or ext < 0 or dom > 25 or ext > 25:
+        return None
+    status = str(ev.get("strStatus") or "").lower()
+    if status and status not in (
+        "match finished",
+        "finished",
+        "ft",
+        "full time",
+        "after penalties",
+        "after extra time",
+        "aet",
+        "ap",
+    ):
+        if ev.get("intHomeScore") in (None, "") or ev.get("intAwayScore") in (None, ""):
+            return None
+    return {"domicile": dom, "exterieur": ext}
+
+
+def _meilleur_event_fuzzy(
+    events: list[dict],
+    equipe_domicile: str,
+    equipe_exterieur: str,
+) -> tuple[dict | None, float]:
+    meilleur: dict | None = None
+    meilleur_score = 0.0
+    for ev in events:
+        home = str(ev.get("strHomeTeam") or "")
+        away = str(ev.get("strAwayTeam") or "")
+        ok, conf = teams_pair_match(
+            equipe_domicile,
+            equipe_exterieur,
+            home,
+            away,
+            threshold=FUZZY_THRESHOLD,
+        )
+        if not ok:
+            continue
+        score_ev = _score_depuis_event(ev)
+        if score_ev is None:
+            continue
+        if conf > meilleur_score:
+            meilleur_score = conf
+            meilleur = ev
+    return meilleur, meilleur_score
+
+
 def fetch_score_thesportsdb(
     equipe_domicile: str,
     equipe_exterieur: str,
     kickoff: datetime | None = None,
 ) -> dict[str, int] | None:
     """
-    Cherche le score du jour (Soccer) par noms d'équipes.
+    Cherche le score via TheSportsDB (eventsday) + fuzzy matching.
     Retourne { domicile, exterieur } ou None.
     """
     kickoff = kickoff or datetime.now(tz=TZ_PARIS)
     if kickoff.tzinfo is None:
         kickoff = kickoff.replace(tzinfo=TZ_PARIS)
-    date_str = kickoff.astimezone(TZ_PARIS).strftime("%Y-%m-%d")
-    url = EVENTS_DAY_URL.format(date=date_str)
-    try:
-        data = _http_get_json(url)
-    except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
-        print(f"[foot-fallback] TheSportsDB ignoré ({date_str}) : {exc}")
+
+    tous_events: list[dict] = []
+    for date_str in _dates_a_tester(kickoff):
+        tous_events.extend(_events_du_jour(date_str))
+
+    if not tous_events:
         return None
 
-    events = (data or {}).get("events") or []
-    if not isinstance(events, list):
-        return None
-
-    for ev in events:
-        if not isinstance(ev, dict):
-            continue
-        home = str(ev.get("strHomeTeam") or "")
-        away = str(ev.get("strAwayTeam") or "")
-        if not _teams_match(equipe_domicile, equipe_exterieur, home, away):
-            continue
-        status = str(ev.get("strStatus") or "").lower()
-        if status and status not in ("match finished", "finished", "ft", "full time"):
-            hs = ev.get("intHomeScore")
-            aws = ev.get("intAwayScore")
-            if hs in (None, "") or aws in (None, ""):
-                continue
-        try:
-            dom = int(ev.get("intHomeScore"))
-            ext = int(ev.get("intAwayScore"))
-        except (TypeError, ValueError):
-            continue
+    ev, conf = _meilleur_event_fuzzy(tous_events, equipe_domicile, equipe_exterieur)
+    if not ev:
         print(
-            f"[foot-fallback] Score TheSportsDB : {equipe_domicile} {dom}-{ext} {equipe_exterieur}"
+            f"[foot-fallback] TheSportsDB : aucune correspondance fuzzy "
+            f"({normalize_team(equipe_domicile)} vs {normalize_team(equipe_exterieur)})"
         )
-        return {"domicile": dom, "exterieur": ext}
-    return None
+        return None
+
+    score = _score_depuis_event(ev)
+    if score:
+        print(
+            f"[foot-fallback] TheSportsDB (fuzzy {conf:.2f}) : "
+            f"{equipe_domicile} {score['domicile']}-{score['exterieur']} {equipe_exterieur} "
+            f"← {ev.get('strHomeTeam')} / {ev.get('strAwayTeam')}"
+        )
+    return score
