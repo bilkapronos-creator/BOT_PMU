@@ -31,6 +31,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 ERROR_LOG = ROOT / "error_log.txt"
+DUMP_HTML = ROOT / "dump_winamax_html.json"
 MATCHS_JSON = ROOT / "api_velora_matchs.json"
 PREMIUM_SRC = ROOT / "api_velora_premium.json"
 GIT_COMMIT_MSG = "Mise à jour automatique Velora Data"
@@ -412,6 +413,122 @@ def run_web_script(script: str, label: str) -> bool:
     return True
 
 
+def _ci_scraper_optionnel() -> bool:
+    return os.environ.get("VELORA_CI_SCRAPER_OPTIONAL", "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
+
+def _fichier_json_recent(path: Path, max_heures: float) -> bool:
+    if not path.is_file() or path.stat().st_size < 80:
+        return False
+    age_h = (time.time() - path.stat().st_mtime) / 3600.0
+    return age_h <= max_heures
+
+
+def _synchroniser_premium_depuis_web() -> bool:
+    """Copie web/api_velora_premium.json → racine si le dépôt n'a pas été régénéré."""
+    assert WEB_ROOT is not None
+    src = (WEB_ROOT / "api_velora_premium.json").resolve()
+    if not src.is_file():
+        return False
+    if PREMIUM_SRC.resolve() != src:
+        shutil.copy2(src, PREMIUM_SRC)
+    if MATCHS_JSON.resolve() != (WEB_ROOT / "api_velora_matchs.json").resolve():
+        matchs_web = WEB_ROOT / "api_velora_matchs.json"
+        if matchs_web.is_file():
+            shutil.copy2(matchs_web, MATCHS_JSON)
+    return PREMIUM_SRC.is_file()
+
+
+def _mode_repli_scraper_ci() -> str | None:
+    """premium | dump | matchs | None — données déjà présentes dans le dépôt."""
+    max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "72"))
+    if _fichier_json_recent(PREMIUM_SRC, max_h):
+        return "premium"
+    assert WEB_ROOT is not None
+    if _fichier_json_recent(WEB_ROOT / "api_velora_premium.json", max_h):
+        return "premium_web"
+    if _fichier_json_recent(DUMP_HTML, max_h):
+        return "dump"
+    if _fichier_json_recent(MATCHS_JSON, max_h):
+        return "matchs"
+    return None
+
+
+def executer_phase_scraper() -> bool:
+    """Étapes 1–3 : dump → parser → sniper (repli CI si géoblocage Winamax)."""
+    etapes = [
+        ("winamax_dump.py", "Étape 1/5 : extraction SSR Winamax", None),
+        ("parser_winamax.py", "Étape 2/5 : structuration JSON", None),
+        (
+            "winamax_sniper.py",
+            f"Étape 3/5 : enrichissement sniper (max {SNIPER_LIMIT})",
+            {"SNIPER_LIMIT": SNIPER_LIMIT},
+        ),
+    ]
+
+    debut = 0
+    if _ci_scraper_optionnel():
+        mode = _mode_repli_scraper_ci()
+        if mode in ("premium", "premium_web"):
+            if mode == "premium_web":
+                _synchroniser_premium_depuis_web()
+            log(
+                "CI : scraper Winamax ignoré — JSON premium récent conservé "
+                f"({PREMIUM_SRC.name}, < {os.environ.get('VELORA_CI_SCRAPER_MAX_AGE_H', '72')} h). "
+                "Résolution PMU/Foot et publication communauté continuent.",
+            )
+            return True
+        if mode == "dump":
+            log(
+                "CI : dump HTML récent — reprise à l'étape parser (sans re-scraper Winamax).",
+            )
+            debut = 1
+        elif mode == "matchs":
+            log("CI : matchs JSON récents — reprise au sniper uniquement.")
+            debut = 2
+
+    for script, label, extra in etapes[debut:]:
+        if run_step(script, label, extra):
+            log(f"{label} — terminée.\n")
+            continue
+
+        if not _ci_scraper_optionnel():
+            return False
+
+        mode = _mode_repli_scraper_ci()
+        if script == "winamax_dump.py" and mode in ("premium", "premium_web"):
+            if mode == "premium_web":
+                _synchroniser_premium_depuis_web()
+            log(
+                "CI : géoblocage Winamax — conservation du premium existant, "
+                "suite du pipeline (résultats + communauté).",
+            )
+            return True
+        if script == "winamax_dump.py" and mode == "dump":
+            log("CI : échec dump mais dump_winamax_html.json récent — étape parser.")
+            if not run_step("parser_winamax.py", etapes[1][1], etapes[1][2]):
+                return False
+            log(f"{etapes[1][1]} — terminée.\n")
+            if not run_step("winamax_sniper.py", etapes[2][1], etapes[2][2]):
+                return False
+            log(f"{etapes[2][1]} — terminée.\n")
+            return True
+
+        log_error(
+            label,
+            "Scraper Winamax en échec et aucun JSON récent pour le repli CI. "
+            "Ajoutez le secret GitHub VELORA_PROXY_URL (proxy France) ou relancez "
+            "run_all.py en local.",
+        )
+        return False
+
+    return True
+
+
 def post_traitement_communaute() -> bool:
     """Résolution PMU + Foot + vitrine communauté (ROI / bénéfices)."""
     ok = run_web_script(
@@ -451,22 +568,10 @@ def main() -> int:
 
     wait_for_internet()
 
-    steps = [
-        ("winamax_dump.py", "Étape 1/5 : extraction SSR Winamax", None),
-        ("parser_winamax.py", "Étape 2/5 : structuration JSON", None),
-        (
-            "winamax_sniper.py",
-            f"Étape 3/5 : enrichissement sniper (max {SNIPER_LIMIT})",
-            {"SNIPER_LIMIT": SNIPER_LIMIT},
-        ),
-    ]
-
-    for script, label, extra in steps:
-        if not run_step(script, label, extra):
-            log(f"\nPipeline interrompu après : {label}")
-            log(f"Consultez {ERROR_LOG} pour le détail.")
-            return 1
-        log(f"{label} — terminée.\n")
+    if not executer_phase_scraper():
+        log(f"\nPipeline interrompu — phase scraper Winamax")
+        log(f"Consultez {ERROR_LOG} pour le détail.")
+        return 1
 
     log("Étape 4/5 : déploiement local vers projet web")
     if not deploy_json():

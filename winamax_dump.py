@@ -28,6 +28,7 @@ WAIT_STATE_MS = int(os.environ.get("VELORA_DUMP_WAIT_MS", "45000"))
 EVALUATE_TIMEOUT_MS = int(os.environ.get("VELORA_DUMP_EVAL_MS", "20000"))
 REGEX_MAX_SECONDS = int(os.environ.get("VELORA_DUMP_REGEX_SEC", "25"))
 GOTO_TIMEOUT_MS = int(os.environ.get("VELORA_DUMP_GOTO_MS", "90000"))
+HTTP_TIMEOUT_SEC = int(os.environ.get("VELORA_DUMP_HTTP_TIMEOUT", "35"))
 
 
 class WinamaxDumpError(Exception):
@@ -75,7 +76,10 @@ def _strict_on_wait_timeout() -> bool:
         return False
     if v in ("1", "true", "yes"):
         return True
-    return os.environ.get("GITHUB_ACTIONS") == "true"
+    # Sur GitHub Actions : laisser evaluate + regex après timeout (géoblocage fréquent)
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
+        return False
+    return os.environ.get("CI", "").strip().lower() in ("1", "true")
 
 
 def _find_sport_state(data: object, depth: int = 0) -> dict | None:
@@ -213,7 +217,10 @@ def _dismiss_cookie_banner(page) -> None:
     for sel in (
         "button:has-text('Accepter')",
         "button:has-text('Tout accepter')",
+        'button:has-text("J\'accepte")',
         "#tarteaucitronAllAllowed",
+        "#didomi-notice-agree-button",
+        "[data-testid='accept-all']",
     ):
         try:
             loc = page.locator(sel).first
@@ -352,7 +359,61 @@ def _fail(msg: str, code: int = 1) -> None:
     sys.exit(code)
 
 
+def _try_http_regex() -> tuple[dict | None, str]:
+    """Tentative sans navigateur (utile avec proxy FR ou IP locale)."""
+    import urllib.error
+    import urllib.request
+
+    headers = {
+        "User-Agent": UA,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+        "Referer": "https://www.winamax.fr/",
+    }
+    proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
+    handlers: list = []
+    if proxy_url:
+        handlers.append(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+    opener = urllib.request.build_opener(*handlers)
+
+    for url in URLS:
+        print(f"[winamax_dump] HTTP GET -> {url}")
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with opener.open(req, timeout=HTTP_TIMEOUT_SEC) as resp:
+                html = resp.read().decode("utf-8", errors="replace")
+        except urllib.error.URLError as e:
+            print(f"[winamax_dump] HTTP échec {url}: {e}", file=sys.stderr)
+            continue
+        print(f"[winamax_dump] HTTP {len(html):,} octets")
+        deadline = time.monotonic() + REGEX_MAX_SECONDS
+        data, source = _extract_via_regex(html, deadline)
+        if data is None:
+            continue
+        norm, label = _normalize_state(data)
+        if norm is not None:
+            return norm, f"HTTP {url} ({source} {label})"
+    return None, ""
+
+
 def main() -> None:
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
+        if not os.environ.get("VELORA_PROXY_URL", "").strip():
+            print(
+                "[winamax_dump] CI sans VELORA_PROXY_URL : risque de géoblocage Winamax "
+                "(runner hors France). Ajoutez un proxy FR en secret GitHub.",
+                file=sys.stderr,
+            )
+
+    data, source = _try_http_regex()
+    if data is not None:
+        OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        n_matches = len(data.get("matches", {}))
+        print("[winamax_dump] SUCCES (HTTP, sans Chromium)")
+        print(f"  Source  : {source}")
+        print(f"  Matchs  : {n_matches}")
+        return
+
     print("[winamax_dump] Demarrage Chromium (SSR)...")
     headless = _chromium_headless()
     proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()

@@ -14,8 +14,11 @@ env:
   VELORA_SKIP_GIT_PUSH: "1"
   PYTHONIOENCODING: utf-8
   VELORA_WEB_DIR: ${{ github.workspace }}/web
-  # Évite chromium-headless-shell (souvent absent sur le runner) → Chromium + Xvfb
   VELORA_HEADLESS: "0"
+  # Runners GitHub = IP hors France → géoblocage Winamax sans proxy
+  VELORA_CI_SCRAPER_OPTIONAL: "1"
+  VELORA_CI_SCRAPER_MAX_AGE_H: "72"
+  VELORA_DUMP_WAIT_MS: "90000"
 
 jobs:
   velora-pipeline:
@@ -59,4 +62,6 @@ jobs:
       - name: Exécuter run_all.py (xvfb + Chromium classique)
         env:
           VELORA_HEADLESS: "0"
+          # Secret repo (Settings → Secrets) : URL proxy France, ex. http://user:pass@host:port
+          VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
         run: xvfb-run -a python run_all.py
