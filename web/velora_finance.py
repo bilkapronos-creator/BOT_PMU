@@ -8,6 +8,10 @@ from __future__ import annotations
 from typing import Any
 
 MISE_UNITAIRE = float(__import__("os").environ.get("VELORA_MISE_UNITAIRE", "10"))
+# Cote de repli si PMU n'a pas renvoyé de rapport (affichage ROI / bénéfice)
+COTE_PMU_DEFAUT_GAGNANT = float(
+    __import__("os").environ.get("VELORA_COTE_PMU_DEFAUT", "2.5")
+)
 
 
 def calculer_resultat_financier(
@@ -54,6 +58,16 @@ def est_archive_terminee_finance(archive: dict, champ_reussi: str) -> bool:
     return val is not None
 
 
+def _parse_cote(val) -> float | None:
+    try:
+        if val is None or val in ("-", "—", ""):
+            return None
+        c = float(str(val).replace(",", "."))
+        return c if c >= 1.01 else None
+    except (TypeError, ValueError):
+        return None
+
+
 def _cote_pmu_archive(archive: dict) -> float | None:
     """Cote du favori Velora (pronosticNumero) ou du premier du top."""
     for cheval in archive.get("pronostic_velora") or archive.get("top3") or []:
@@ -61,18 +75,26 @@ def _cote_pmu_archive(archive: dict) -> float | None:
             continue
         fav = archive.get("pronosticNumero")
         if fav is not None and str(cheval.get("numero")) == str(fav):
-            try:
-                return float(cheval.get("cote"))
-            except (TypeError, ValueError):
-                pass
+            c = _parse_cote(cheval.get("cote"))
+            if c is not None:
+                return c
             break
-    top = (archive.get("pronostic_velora") or archive.get("top3") or [None])[0]
-    if isinstance(top, dict):
-        try:
-            return float(top.get("cote"))
-        except (TypeError, ValueError):
-            pass
+    for cheval in archive.get("pronostic_velora") or archive.get("top3") or []:
+        if isinstance(cheval, dict):
+            c = _parse_cote(cheval.get("cote"))
+            if c is not None:
+                return c
     return None
+
+
+def _cote_pmu_effective(archive: dict) -> float:
+    """
+    Cote utilisée pour le financier : favori, sinon min du top, sinon repli algo (2.5).
+    """
+    cote = _cote_pmu_archive(archive)
+    if cote is not None:
+        return cote
+    return COTE_PMU_DEFAUT_GAGNANT if archive.get("reussi_pmu") is True else 1.01
 
 
 def est_victoire_archive(archive: dict, champ_reussi: str) -> bool:
@@ -103,13 +125,18 @@ def agreger_stats_archives(
     profit_net = 0.0
     for a in terminees:
         fin = _financier_archive(a)
+        gagne = est_victoire_archive(a, champ_reussi)
         if fin:
             mises_cumulees += float(fin.get("mise") or MISE_UNITAIRE)
-            profit_net += float(fin.get("profit") or 0)
+            profit_val = float(fin.get("profit") or 0)
+            if gagne and profit_val <= 0:
+                profit_val = float(
+                    calculer_resultat_financier(True, _cote_pmu_effective(a)).get("profit") or 0
+                )
+            profit_net += profit_val
         else:
             mises_cumulees += MISE_UNITAIRE
-            gagne = est_victoire_archive(a, champ_reussi)
-            fin_calc = calculer_resultat_financier(gagne, _cote_pmu_archive(a))
+            fin_calc = calculer_resultat_financier(gagne, _cote_pmu_effective(a))
             profit_net += float(fin_calc.get("profit") or 0)
 
     roi_pct = round((profit_net / mises_cumulees) * 100, 1) if mises_cumulees > 0 else 0.0
@@ -130,7 +157,7 @@ def enrichir_archive_pmu_financier(archive: dict, evaluation: dict | None = None
     gagne = evaluation.get("reussi_pmu")
     if gagne is None:
         gagne = archive.get("reussi_pmu") is True
-    archive["financier"] = calculer_resultat_financier(gagne, _cote_pmu_archive(archive))
+    archive["financier"] = calculer_resultat_financier(gagne, _cote_pmu_effective(archive))
     archive["profit"] = archive["financier"].get("profit")
     return archive
 
@@ -166,13 +193,29 @@ def bloc_communaute_depuis_stats(stats: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def fusionner_blocs_sports(pmu: dict, foot: dict) -> dict[str, Any]:
-    """Score global pondéré (mises + victoires)."""
-    vict = int(pmu.get("victoires") or 0) + int(foot.get("victoires") or 0)
-    tot = int(pmu.get("total") or 0) + int(foot.get("total") or 0)
-    mises = float(pmu.get("mises_cumulees") or 0) + float(foot.get("mises_cumulees") or 0)
-    profit = float(pmu.get("profit_net") or 0) + float(foot.get("profit_net") or 0)
-    global_bloc = {
+def _fusionner_blocs_actifs(pmu: dict, foot: dict) -> dict[str, Any]:
+    """Agrégat global : uniquement les sports avec au moins une résolution."""
+    blocs: list[tuple[str, dict]] = []
+    if int(pmu.get("total") or 0) > 0:
+        blocs.append(("pmu", pmu))
+    if int(foot.get("total") or 0) > 0:
+        blocs.append(("foot", foot))
+    if not blocs:
+        return {
+            "taux": 0,
+            "victoires": 0,
+            "total": 0,
+            "mises_cumulees": 0.0,
+            "profit_net": 0.0,
+            "roi_pct": 0.0,
+        }
+    if len(blocs) == 1:
+        return dict(blocs[0][1])
+    vict = sum(int(b.get("victoires") or 0) for _, b in blocs)
+    tot = sum(int(b.get("total") or 0) for _, b in blocs)
+    mises = sum(float(b.get("mises_cumulees") or 0) for _, b in blocs)
+    profit = sum(float(b.get("profit_net") or 0) for _, b in blocs)
+    return {
         "taux": round(vict / tot * 100) if tot else 0,
         "victoires": vict,
         "total": tot,
@@ -180,6 +223,11 @@ def fusionner_blocs_sports(pmu: dict, foot: dict) -> dict[str, Any]:
         "profit_net": round(profit, 2),
         "roi_pct": round((profit / mises) * 100, 1) if mises > 0 else 0.0,
     }
+
+
+def fusionner_blocs_sports(pmu: dict, foot: dict) -> dict[str, Any]:
+    """Score global : sports actifs uniquement (évite 100 % Foot vide + PMU réel)."""
+    global_bloc = _fusionner_blocs_actifs(pmu, foot)
     return {
         "pmu": bloc_communaute_depuis_stats(pmu),
         "foot": bloc_communaute_depuis_stats(foot),

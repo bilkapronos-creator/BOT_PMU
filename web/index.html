@@ -1706,6 +1706,40 @@
             };
         }
 
+        function nombreFin(val, defaut = 0) {
+            const n = Number(val);
+            return Number.isFinite(n) ? n : defaut;
+        }
+
+        /**
+         * KPI global : moyenne pondérée des sports avec matchs/courses résolus.
+         * Si Foot est vide → reflète uniquement le PMU (évite un 100 % fantôme du JSON).
+         */
+        function fusionnerStatsGlobales(pmu, foot) {
+            const sports = [];
+            if ((pmu?.total ?? 0) > 0) sports.push(pmu);
+            if ((foot?.total ?? 0) > 0) sports.push(foot);
+            if (sports.length === 0) return blocSportStats(0, 0);
+            if (sports.length === 1) {
+                const s = sports[0];
+                return normaliserBlocSport({ ...s }, 'calc');
+            }
+            const victoires = sports.reduce((acc, s) => acc + (s.victoires ?? 0), 0);
+            const total = sports.reduce((acc, s) => acc + (s.total ?? 0), 0);
+            const mises = sports.reduce((acc, s) => acc + (s.mises_cumulees ?? 0), 0);
+            const profit = sports.reduce((acc, s) => acc + nombreFin(s.profit_net, 0), 0);
+            const taux = total > 0 ? Math.round((victoires / total) * 100) : 0;
+            const roi = mises > 0 ? Math.round((profit / mises) * 1000) / 10 : 0;
+            return normaliserBlocSport({
+                taux,
+                victoires,
+                total,
+                mises_cumulees: mises,
+                profit_net: profit,
+                roi_pct: roi,
+            }, 'calc');
+        }
+
         function normaliserBlocSport(raw, source = 'api') {
             if (!raw || typeof raw !== 'object') {
                 return blocSportStats(0, 0);
@@ -1818,10 +1852,9 @@
                 ? Math.round((financeVictoires / financeTotal) * 100)
                 : Number(pub.taux ?? pub.taux_reussite_plateforme ?? blocJson.taux ?? pmu.taux) || 0;
             pmu.mises_cumulees = Number(blocJson.mises_cumulees ?? pub.mises_cumulees ?? pmu.mises_cumulees) || 0;
-            pmu.profit_net = Number(blocJson.profit_net ?? pub.profit_net ?? pmu.profit_net);
-            if (!Number.isFinite(pmu.profit_net)) pmu.profit_net = 0;
-            pmu.roi_pct = Number(blocJson.roi_pct ?? pub.roi_pct ?? pmu.roi_pct) || 0;
-            if (pmu.mises_cumulees > 0 && pmu.roi_pct === 0 && pmu.profit_net !== 0) {
+            pmu.profit_net = nombreFin(blocJson.profit_net ?? pub.profit_net ?? pmu.profit_net, 0);
+            pmu.roi_pct = nombreFin(blocJson.roi_pct ?? pub.roi_pct ?? pmu.roi_pct, 0);
+            if (pmu.mises_cumulees > 0 && (pmu.roi_pct === 0 || !Number.isFinite(Number(pub.roi_pct)))) {
                 pmu.roi_pct = Math.round((pmu.profit_net / pmu.mises_cumulees) * 1000) / 10;
             }
 
@@ -1927,20 +1960,7 @@
             }
             foot = enrichirBlocFoot(foot, communaute);
 
-            let global;
-            if (communaute?.global) {
-                global = normaliserBlocSport(communaute.global, 'communaute');
-            } else {
-                global = normaliserBlocSport({
-                    victoires: pmu.victoires + foot.victoires,
-                    total: pmu.total + foot.total,
-                    mises_cumulees: pmu.mises_cumulees + foot.mises_cumulees,
-                    profit_net: pmu.profit_net + foot.profit_net,
-                    roi_pct: (pmu.mises_cumulees + foot.mises_cumulees) > 0
-                        ? ((pmu.profit_net + foot.profit_net) / (pmu.mises_cumulees + foot.mises_cumulees)) * 100
-                        : 0,
-                }, 'calc');
-            }
+            const global = fusionnerStatsGlobales(pmu, foot);
 
             return { pmu, foot, global, source_pmu: pmu.source };
         }
@@ -2105,15 +2125,20 @@
             const footApercu = document.getElementById('vitrineFootApercu');
 
             const hasGlobal = global.total > 0;
+            const kpiTauxAffiche = hasGlobal
+                ? global.taux
+                : (pmu.total > 0 ? pmu.taux : '—');
 
-            if (kpiTaux) kpiTaux.textContent = hasGlobal ? String(global.taux) : '—';
+            if (kpiTaux) kpiTaux.textContent = hasGlobal || pmu.total > 0 ? String(kpiTauxAffiche) : '—';
+            const kpiRoiVal = hasGlobal ? global.roi_pct : (pmu.total > 0 ? pmu.roi_pct : null);
+            const kpiProfitVal = hasGlobal ? global.profit_net : (pmu.total > 0 ? pmu.profit_net : null);
             if (kpiRoi) {
-                kpiRoi.textContent = hasGlobal ? formatVeloraRoi(global.roi_pct) : '—';
-                appliquerClasseFinanciere(kpiRoi, global.roi_pct, 'kpi-roi');
+                kpiRoi.textContent = kpiRoiVal != null ? formatVeloraRoi(kpiRoiVal) : '—';
+                appliquerClasseFinanciere(kpiRoi, kpiRoiVal, 'kpi-roi');
             }
             if (kpiProfit) {
-                kpiProfit.textContent = hasGlobal ? formatVeloraEuro(global.profit_net) : '—';
-                appliquerClasseFinanciere(kpiProfit, global.profit_net, 'kpi-profit');
+                kpiProfit.textContent = kpiProfitVal != null ? formatVeloraEuro(kpiProfitVal) : '—';
+                appliquerClasseFinanciere(kpiProfit, kpiProfitVal, 'kpi-profit');
             }
 
             if (pmuTaux) pmuTaux.textContent = pmu.total > 0 ? String(pmu.taux) : '—';
