@@ -42,7 +42,7 @@
     <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192">
     <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
-    <link rel="preload" as="image" href="/icons/splash-mobile.png">
+    <link rel="preload" as="image" href="/icons/splash-pmu-foot.svg" type="image/svg+xml">
     <script>
         (function () {
             var path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
@@ -1092,15 +1092,20 @@
         <div class="velora-splash-wrap">
             <div class="velora-splash-ring" aria-hidden="true"></div>
             <img
-                src="/icons/splash-mobile.png"
-                alt="Velora Engine — Analyses Premium"
+                src="/icons/splash-pmu-foot.svg"
+                alt="Velora Engine — Moteur PMU et Football"
                 class="velora-splash-image relative z-10"
                 width="540"
                 height="960"
                 fetchpriority="high"
             >
         </div>
-        <p class="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-400/90">Initialisation du moteur...</p>
+        <p class="mt-5 text-center text-xs font-semibold uppercase tracking-widest text-emerald-400/90">
+            <span class="text-emerald-300">PMU</span>
+            <span class="mx-1.5 text-gray-500" aria-hidden="true">·</span>
+            <span class="text-cyan-300">Foot</span>
+            <span class="mt-1 block text-[10px] font-medium normal-case tracking-wide text-gray-500">Initialisation du moteur…</span>
+        </p>
     </div>
     <div class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.14)_0%,transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.08)_0%,transparent_45%)]"></div>
     <div class="mx-auto max-w-2xl px-4 py-6 pb-12 lg:max-w-7xl lg:px-8">
@@ -1392,10 +1397,14 @@
             <section id="sectionPronostic" class="flex h-full min-h-[280px] flex-col gap-4">
                 <div id="loading" class="hidden flex-1 flex-col" role="status" aria-live="polite" aria-busy="true">
                     <div class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-emerald-500/25 bg-gray-900/50 px-6 py-14 shadow-inner shadow-black/20 lg:min-h-[420px]">
-                        <div class="relative flex h-14 w-14 items-center justify-center" aria-hidden="true">
-                            <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20"></div>
-                            <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
-                            <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
+                        <div class="flex items-center gap-3" aria-hidden="true">
+                            <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-2xl">🐎</span>
+                            <div class="relative flex h-14 w-14 items-center justify-center">
+                                <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20"></div>
+                                <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
+                                <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
+                            </div>
+                            <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-500/40 bg-cyan-500/15 text-2xl">⚽</span>
                         </div>
                         <p class="mt-8 text-center text-base font-semibold text-white">Analyse en cours…</p>
                         <p id="loadingSubtext" class="mt-2 hidden text-center text-sm text-gray-400" aria-hidden="true"></p>
@@ -1409,9 +1418,12 @@
                 <div id="panneauResultatsPronostic" class="flex flex-col gap-4">
                     <h2 id="titreResultats" class="hidden text-lg font-bold text-emerald-400 lg:text-xl"></h2>
                     <div id="zoneVidePronostic" class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[420px]">
-                        <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-2xl" aria-hidden="true">🐎</div>
-                        <p class="text-sm font-semibold text-gray-300">Panneau d'analyse</p>
-                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Saisissez une course à gauche et cliquez sur <span class="text-emerald-400">Analyser</span> pour afficher le classement Velora ici.</p>
+                        <div class="mb-4 flex items-center gap-2" aria-hidden="true">
+                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-xl">🐎</span>
+                            <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-xl">⚽</span>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-300">Panneau d'analyse PMU &amp; Foot</p>
+                        <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Choisissez <span class="text-emerald-400">PMU</span> ou <span class="text-cyan-400">Foot</span> en haut, puis lancez une analyse pour afficher les résultats ici.</p>
                     </div>
                     <div id="resultats" class="space-y-4"></div>
                 </div>
@@ -1419,7 +1431,15 @@
 
             <section id="sectionFootball" class="hidden flex h-full min-h-[280px] flex-col gap-4">
                 <div id="footLoading" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-cyan-500/25 px-6 py-14 lg:min-h-[420px]">
-                    <p id="footLoadingLabel" class="text-sm font-semibold text-cyan-300">Chargement des analyses football…</p>
+                    <div class="flex items-center gap-3" aria-hidden="true">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-xl opacity-80">🐎</span>
+                        <div class="relative flex h-12 w-12 items-center justify-center">
+                            <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-cyan-400 border-r-emerald-400"></div>
+                            <span class="text-xl">⚽</span>
+                        </div>
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl border border-cyan-500/40 bg-cyan-500/15 text-xl">⚽</span>
+                    </div>
+                    <p id="footLoadingLabel" class="mt-6 text-sm font-semibold text-cyan-300">Chargement des analyses football…</p>
                 </div>
                 <div id="footErreur" class="hidden glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300" role="alert"></div>
                 <div id="footZoneAccueil" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-500/25 bg-cyan-500/5 px-6 py-16 text-center lg:min-h-[320px]">
