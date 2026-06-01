@@ -44,6 +44,14 @@ const anonKey = (
   || ''
 ).trim();
 
+const apiBaseUrl = String(
+  process.env.VELORA_API_BASE_URL
+  || process.env.RENDER_EXTERNAL_URL
+  || 'https://velora-engine.onrender.com',
+)
+  .trim()
+  .replace(/\/+$/, '');
+
 const adminPassword = (process.env.VELORA_ADMIN_PASSWORD || '').trim();
 const adminPasswordHash = (process.env.VELORA_ADMIN_PASSWORD_HASH || '').trim();
 const mtechApiKey = (process.env.MTECH_API_KEY || '').trim();
@@ -58,6 +66,7 @@ const content = `/* Généré par scripts/generate-config.js — ne pas modifier
 window.VELORA_ENV = Object.freeze({
   SUPABASE_URL: ${JSON.stringify(url)},
   SUPABASE_ANON_KEY: ${JSON.stringify(anonKey)},
+  API_BASE_URL: ${JSON.stringify(apiBaseUrl)},
   MTECH_API_KEY: ${JSON.stringify(mtechApiKey)},
   MTECH_PUBLIC_API_KEY: ${JSON.stringify(mtechPublicKey)},
   VELORA_ADMIN_PASSWORD: ${JSON.stringify(adminPassword)},

@@ -134,6 +134,11 @@ def _http_get(url: str) -> str:
         return resp.read().decode("utf-8", errors="replace")
 
 
+def _parse_preloaded(html: str) -> tuple[object | None, str]:
+    deadline = time.monotonic() + float(REQUEST_TIMEOUT)
+    return _extract_via_regex(html, deadline)
+
+
 def _fetch_preloaded_matches() -> dict[str, dict]:
     """Charge l'état Winamax (pages sports + live) indexé par id match."""
     merged: dict[str, dict] = {}
@@ -143,7 +148,7 @@ def _fetch_preloaded_matches() -> dict[str, dict]:
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             print(f"[winamax-results] Bulk ignoré ({url}) : {exc}")
             continue
-        data, _src = _extract_via_regex(html)
+        data, _src = _parse_preloaded(html)
         if not isinstance(data, dict):
             continue
         for mid, m in (data.get("matches") or {}).items():
@@ -160,7 +165,7 @@ def _fetch_match_raw(match_id: str) -> dict | None:
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         print(f"[winamax-results] Match {match_id} : {exc}")
         return None
-    data, _ = _extract_via_regex(html)
+    data, _ = _parse_preloaded(html)
     if not isinstance(data, dict):
         return None
     matches = data.get("matches") or {}
@@ -215,6 +220,31 @@ def fetch_winamax_results(match_ids: list[str] | set[str]) -> dict[str, dict[str
     return out
 
 
+def _kickoff_from_match_record(match: dict) -> datetime | None:
+    """Coup d'envoi Paris : match_start_ts ou date_match « JJ/MM/AAAA à HH:MM »."""
+    ts = match.get("match_start_ts")
+    if ts is not None:
+        try:
+            t = float(ts)
+            if t > 1e12:
+                t /= 1000.0
+            return datetime.fromtimestamp(t, tz=TZ_PARIS)
+        except (TypeError, ValueError, OSError, OverflowError):
+            pass
+    dm = str(match.get("date_match") or "").strip()
+    m = re.match(
+        r"^(\d{2})/(\d{2})/(\d{4})\s+à\s+(\d{2}):(\d{2})$",
+        dm,
+    )
+    if not m:
+        return None
+    d, mo, y, h, mi = (int(x) for x in m.groups())
+    try:
+        return datetime(y, mo, d, h, mi, tzinfo=TZ_PARIS)
+    except ValueError:
+        return None
+
+
 def match_devrait_avoir_score(
     match: dict,
     now: datetime | None = None,
@@ -222,17 +252,7 @@ def match_devrait_avoir_score(
 ) -> bool:
     """True si le coup d'envoi est passé (grace 2 h) — option veille = jour précédent (Paris)."""
     now = now or datetime.now(tz=TZ_PARIS)
-    ts = match.get("match_start_ts")
-    kickoff: datetime | None = None
-    if ts is not None:
-        try:
-            t = float(ts)
-            if t > 1e12:
-                t /= 1000.0
-            kickoff = datetime.fromtimestamp(t, tz=TZ_PARIS)
-        except (TypeError, ValueError, OSError, OverflowError):
-            kickoff = None
-
+    kickoff = _kickoff_from_match_record(match)
     if kickoff is None:
         return False
 

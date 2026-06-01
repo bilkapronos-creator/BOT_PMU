@@ -97,7 +97,7 @@ def teams_pair_match(
         return False, 0.0
 
     direct = _ratio(h1, h2) + _ratio(a1, a2)
-    croise = _ratio(h1, a2) + _ratio(a2, h1)
+    croise = _ratio(h1, a2) + _ratio(a1, h2)
     best = max(direct, croise)
     ok = best >= threshold * 2
     return ok, best

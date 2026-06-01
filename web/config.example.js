@@ -5,6 +5,8 @@
 window.VELORA_ENV = Object.freeze({
   SUPABASE_URL: 'https://VOTRE_REF.supabase.co',
   SUPABASE_ANON_KEY: 'VOTRE_CLE_ANON_PUBLIQUE',
+  /** API FastAPI hébergée sur Render (sans slash final) */
+  API_BASE_URL: 'https://velora-engine.onrender.com',
   /** Même valeur que MTECH_API_KEY sur Render (sync archives API) */
   MTECH_API_KEY: '',
   MTECH_PUBLIC_API_KEY: '',

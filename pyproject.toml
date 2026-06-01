@@ -1,8 +1,0 @@
-[project]
-name = "velora-app"
-version = "0.1.0"
-description = "Interface Velora"
-dependencies = []
-
-[tool.vercel]
-entrypoint = "web.api_pmu:app"

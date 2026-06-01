@@ -730,40 +730,99 @@ def _enrichir_match_pour_validation(archive: dict, snapshots: list, catalogue: l
     return out
 
 
+def _fetch_scores_cascade(
+    ids: list[str],
+    archives_par_id: dict[str, dict],
+) -> tuple[dict[str, dict[str, int]], dict[str, int]]:
+    """
+    Cascade : Winamax → TheSportsDB (fuzzy) → Playwright (SofaScore / Flashscore / Google).
+    Retourne (scores, stats par source).
+    """
+    stats = {"winamax": 0, "thesportsdb": 0, "scraper": 0}
+    if not ids:
+        return {}, stats
+
+    scores: dict[str, dict[str, int]] = {}
+    try:
+        fetch_scores, _, _ = _importer_fetch_winamax()
+        scores = fetch_scores(ids) or {}
+        stats["winamax"] = len(scores)
+        if scores:
+            print(f"[resolver-foot] Winamax : {len(scores)}/{len(ids)} score(s)")
+    except Exception as exc:
+        print(f"[resolver-foot] Winamax indisponible : {exc}")
+
+    manquants = [mid for mid in ids if mid not in scores]
+    if manquants:
+        try:
+            from foot_results_fallback import fetch_score_thesportsdb  # noqa: PLC0415
+
+            for mid in manquants:
+                arch = archives_par_id.get(mid) or {}
+                kickoff = _kickoff_match(arch)
+                fb = fetch_score_thesportsdb(
+                    str(arch.get("equipe_domicile") or ""),
+                    str(arch.get("equipe_exterieur") or ""),
+                    kickoff,
+                )
+                if fb:
+                    scores[mid] = fb
+                    stats["thesportsdb"] += 1
+            if stats["thesportsdb"]:
+                print(
+                    f"[resolver-foot] TheSportsDB (fuzzy) : "
+                    f"{stats['thesportsdb']}/{len(manquants)} score(s)"
+                )
+        except ImportError as exc:
+            print(f"[resolver-foot] TheSportsDB indisponible : {exc}")
+
+    manquants = [mid for mid in ids if mid not in scores]
+    if manquants:
+        batch: list[dict] = []
+        for mid in manquants:
+            arch = archives_par_id.get(mid) or {}
+            batch.append(
+                {
+                    "id_match": mid,
+                    "equipe_domicile": arch.get("equipe_domicile"),
+                    "equipe_exterieur": arch.get("equipe_exterieur"),
+                    "kickoff": _kickoff_match(arch),
+                }
+            )
+        try:
+            from foot_results_scraper import fetch_scores_playwright_batch  # noqa: PLC0415
+
+            scraped = fetch_scores_playwright_batch(batch)
+            for mid, sc in scraped.items():
+                scores[mid] = sc
+                stats["scraper"] += 1
+        except ImportError as exc:
+            print(f"[resolver-foot] Scraper Playwright indisponible : {exc}")
+        except Exception as exc:
+            print(f"[resolver-foot] Scraper Playwright échoué : {exc}")
+
+    total = len(scores)
+    if total < len(ids):
+        print(
+            f"[resolver-foot] {len(ids) - total} match(s) sans score après cascade "
+            f"(Winamax {stats['winamax']}, TheSportsDB {stats['thesportsdb']}, "
+            f"Scraper {stats['scraper']})"
+        )
+    else:
+        print(
+            f"[resolver-foot] Cascade OK : {total}/{len(ids)} "
+            f"(Winamax {stats['winamax']}, TheSportsDB {stats['thesportsdb']}, "
+            f"Scraper {stats['scraper']})"
+        )
+    return scores, stats
+
+
 def _fetch_scores_avec_repli(
     ids: list[str],
     archives_par_id: dict[str, dict],
 ) -> dict[str, dict[str, int]]:
-    """Winamax puis TheSportsDB pour les id encore sans score."""
-    if not ids:
-        return {}
-    try:
-        fetch_scores, _, _ = _importer_fetch_winamax()
-        scores = fetch_scores(ids)
-    except Exception as exc:
-        print(f"[resolver-foot] Winamax indisponible : {exc}")
-        scores = {}
-
-    try:
-        from foot_results_fallback import fetch_score_thesportsdb  # noqa: PLC0415
-    except ImportError:
-        fetch_score_thesportsdb = None  # type: ignore[assignment]
-
-    if fetch_score_thesportsdb is None:
-        return scores
-
-    for mid in ids:
-        if mid in scores:
-            continue
-        arch = archives_par_id.get(mid) or {}
-        kickoff = _kickoff_match(arch)
-        fb = fetch_score_thesportsdb(
-            str(arch.get("equipe_domicile") or ""),
-            str(arch.get("equipe_exterieur") or ""),
-            kickoff,
-        )
-        if fb:
-            scores[mid] = fb
+    """Alias — cascade complète."""
+    scores, _ = _fetch_scores_cascade(ids, archives_par_id)
     return scores
 
 
@@ -925,8 +984,9 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
     if ids_fetch:
         try:
             _, fusionner_fichier, _ = _importer_fetch_winamax()
-            nouveaux = _fetch_scores_avec_repli(ids_fetch, en_attente)
+            nouveaux, cascade_stats = _fetch_scores_cascade(ids_fetch, en_attente)
             stats["scores_recuperes"] = len(nouveaux)
+            stats["cascade"] = cascade_stats
             if nouveaux:
                 fusionner_fichier(RESULTATS_PATH, nouveaux)
                 resultats = _lire_json(RESULTATS_PATH, {})

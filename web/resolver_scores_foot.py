@@ -40,11 +40,18 @@ def main() -> int:
     )
 
     stats = resoudre_matchs_en_attente()
+    cascade = stats.get("cascade") or {}
     print(
         f"[resolver-foot] Résultat : {stats.get('resolus', 0)} résolu(s), "
         f"{stats.get('encore_attente', 0)} encore en attente, "
         f"{stats.get('scores_recuperes', 0)} score(s) récupéré(s)"
     )
+    if cascade:
+        print(
+            f"[resolver-foot] Sources : Winamax {cascade.get('winamax', 0)}, "
+            f"TheSportsDB {cascade.get('thesportsdb', 0)}, "
+            f"Scraper {cascade.get('scraper', 0)}"
+        )
     if stats.get("erreur"):
         print(f"[resolver-foot] Erreur : {stats['erreur']}")
         return 1

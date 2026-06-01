@@ -2,3 +2,6 @@ playwright>=1.40.0
 requests
 beautifulsoup4
 supabase>=2.4.0
+# Optionnel : matching noms d'équipes plus robuste (sinon difflib)
+# thefuzz>=0.22.0
+# python-Levenshtein>=0.25.0

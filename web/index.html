@@ -2318,7 +2318,9 @@
             return true;
         }
 
-        const API_BASE_URL = 'https://velora-engine.onrender.com';
+        const API_BASE_URL = String(
+            (window.VELORA_ENV && window.VELORA_ENV.API_BASE_URL) || 'https://velora-engine.onrender.com',
+        ).replace(/\/+$/, '');
         const USER_ID_KEY = 'velora_user_id';
         const USER_ID_BACKUP_KEY = 'velora_user_id_backup';
         const ARCHIVES_LIMIT = 50;
