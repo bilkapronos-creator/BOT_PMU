@@ -624,6 +624,105 @@
             font-weight: 600;
             line-height: 1.2;
         }
+        .foot-marches-teaser {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px dashed rgba(251, 191, 36, 0.35);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.06), rgba(34, 211, 238, 0.04));
+            padding: 0.75rem 0.85rem;
+        }
+        .foot-marches-teaser-fake {
+            filter: blur(7px);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+        .foot-marches-teaser-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            padding: 0.85rem 1rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(3, 7, 18, 0.35), rgba(3, 7, 18, 0.82));
+        }
+        .foot-marches-teaser-cta {
+            border-radius: 0.5rem;
+            border: 1px solid rgba(251, 191, 36, 0.45);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.22), rgba(16, 185, 129, 0.14));
+            padding: 0.45rem 0.85rem;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fef3c7;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .foot-marches-teaser-cta:hover {
+            border-color: rgba(251, 191, 36, 0.65);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.32), rgba(16, 185, 129, 0.22));
+        }
+        .foot-premium-paywall {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px dashed rgba(34, 211, 238, 0.32);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.06), rgba(251, 191, 36, 0.05));
+            padding: 0.75rem 0.85rem;
+        }
+        .foot-premium-paywall-content {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .foot-premium-paywall-content--locked {
+            filter: blur(5px);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.72;
+        }
+        .foot-premium-paywall-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(3, 7, 18, 0.25), rgba(3, 7, 18, 0.88));
+            backdrop-filter: blur(2px);
+        }
+        .foot-premium-paywall-lock {
+            font-size: 1.35rem;
+            line-height: 1;
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.45));
+        }
+        .foot-premium-paywall-cta {
+            border-radius: 0.5rem;
+            border: 1px solid rgba(34, 211, 238, 0.45);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(251, 191, 36, 0.16));
+            padding: 0.5rem 1rem;
+            font-size: 11px;
+            font-weight: 700;
+            color: #cffafe;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+        }
+        .foot-premium-paywall-cta:hover {
+            border-color: rgba(34, 211, 238, 0.7);
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.32), rgba(251, 191, 36, 0.24));
+            transform: translateY(-1px);
+        }
+        .foot-premium-section-title {
+            margin-bottom: 0.5rem;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(34, 211, 238, 0.85);
+        }
         .velora-match-badges-row {
             display: flex;
             flex-wrap: wrap;
@@ -3761,6 +3860,9 @@
         let sectionActive = 'pronostic';
         let footMatchs = [];
         let footMatchsCharges = false;
+        /** Index id_match → fiche premium (aperçu verrouillé analyse gratuite). */
+        let footPremiumIndex = null;
+        let footPremiumIndexPromise = null;
         const MATCH_FINISHED_GRACE_MS = 120 * 60 * 1000;
         const MATCH_ENDED_STATUSES = new Set(['ENDED', 'CLOSED', 'FINISHED', 'CANCELLED', 'CANCELED']);
         const MATCH_LIVE_STATUSES = new Set(['LIVE', 'RUNNING', 'INPLAY', 'IN_PLAY']);
@@ -4243,6 +4345,11 @@
                 footFiltre = raw;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
+                if (!estVeloraPremiumFoot()) {
+                    ensureFootPremiumIndex().then(() => {
+                        if (footAnalyseAffichee && !footModeOpportunites) renderFootMatchs();
+                    });
+                }
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -4272,8 +4379,87 @@
         async function fetchVeloraJson(jsonPath) {
             const res = await fetch(veloraDataUrl(jsonPath), { cache: 'no-store' });
             if (!res.ok) throw new Error('Fichier introuvable');
-            const data = await res.json();
-            return Array.isArray(data) ? data : [];
+            return res.json();
+        }
+
+        function marketsRawToLegacyMarches(marketsRaw) {
+            if (!marketsRaw || typeof marketsRaw !== 'object') return null;
+            const ou = marketsRaw.over_under_total;
+            if (!ou || typeof ou !== 'object') return null;
+            const pm = {};
+            for (const [line, val] of Object.entries(ou)) {
+                if (val && typeof val === 'object') pm[line] = val;
+            }
+            return Object.keys(pm).length ? { plus_moins_buts: pm } : null;
+        }
+
+        function normalizeFootMatch(raw) {
+            if (!raw || typeof raw !== 'object') return raw;
+            if (raw.__veloraNormalized) return raw;
+            const free = raw.free_analysis;
+            const prem = raw.premium_analysis;
+            if (!free && !prem) {
+                return { ...raw, __veloraNormalized: true, __veloraV2: false };
+            }
+            try {
+                const leg = raw._legacy && typeof raw._legacy === 'object' ? raw._legacy : {};
+                const conf = raw.confidence && typeof raw.confidence === 'object' ? raw.confidence : {};
+                const marketsRaw = free.markets_raw || {};
+                const msLeg = leg.marches_supplementaires;
+                const msFree = marketsRawToLegacyMarches(marketsRaw);
+                const ouLine = marketsRaw.over_under_total?.['2.5'];
+                const ou25 = ouLine
+                    ? { plus: ouLine.plus_cote, moins: ouLine.moins_cote }
+                    : raw.over_under_25;
+                const primary = free.primary_pick;
+                const displayBadges = Array.isArray(free.display_badges) ? free.display_badges : [];
+                return {
+                    ...raw,
+                    __veloraNormalized: true,
+                    __veloraV2: true,
+                    free_analysis: free,
+                    premium_analysis: prem || {},
+                    probabilites: free.probabilites ?? raw.probabilites,
+                    cotes: free.cotes_1n2 ?? raw.cotes,
+                    conseil: primary?.conseil_short || leg.conseil || raw.conseil || '',
+                    tendance_buts: leg.tendance_buts || raw.tendance_buts || 'Match Tactique',
+                    indice_velora: conf.indice_velora ?? raw.indice_velora,
+                    indice_velora_label: conf.indice_label ?? raw.indice_velora_label,
+                    velora_score: conf.velora_score ?? raw.velora_score,
+                    marches_supplementaires: msLeg || msFree || raw.marches_supplementaires,
+                    btts: marketsRaw.btts || raw.btts,
+                    over_under_25: ou25,
+                    display_badges: displayBadges,
+                    primary_pick: primary,
+                    free_value_bets: free.value_bets || [],
+                    opportunite_type: leg.opportunite_type || primary?.market || raw.opportunite_type,
+                    is_opportunite: leg.is_opportunite != null
+                        ? leg.is_opportunite
+                        : !!(free.value_bets && free.value_bets.length),
+                };
+            } catch (e) {
+                console.warn('[Velora] normalizeFootMatch', raw?.id_match, e);
+                return { ...raw, __veloraNormalized: true, __veloraV2: false };
+            }
+        }
+
+        function parseVeloraMatchsPayload(data) {
+            try {
+                if (Array.isArray(data)) return data.map(normalizeFootMatch);
+                if (data && typeof data === 'object') {
+                    if (Number(data.schema_version) === 2 || Array.isArray(data.matchs)) {
+                        return (data.matchs || []).map(normalizeFootMatch);
+                    }
+                }
+            } catch (e) {
+                console.warn('[Velora] parseVeloraMatchsPayload', e);
+            }
+            return [];
+        }
+
+        async function fetchVeloraMatchsList(jsonPath) {
+            const data = await fetchVeloraJson(jsonPath);
+            return parseVeloraMatchsPayload(data);
         }
 
         async function chargerFootMatchs() {
@@ -4290,7 +4476,7 @@
             if (loading) loading.classList.remove('hidden');
             if (erreur) erreur.classList.add('hidden');
             try {
-                footMatchs = await fetchVeloraJson(VELORA_JSON_MATCHS);
+                footMatchs = await fetchVeloraMatchsList(VELORA_JSON_MATCHS);
                 footMatchsCharges = true;
             } catch (e) {
                 footMatchs = [];
@@ -4768,9 +4954,17 @@
             return '⭐'.repeat(v);
         }
 
+        function conseilParleOver25Buts(conseil) {
+            const t = String(conseil || '').toLowerCase();
+            if (t.includes('over 2.5') || t.includes('over 2,5')) return true;
+            if (t.includes('privilégier le +2.5') || t.includes('privilegier le +2.5')) return true;
+            if (t.includes('under 2.5') || t.includes('moins de 2.5')) return true;
+            return false;
+        }
+
         function classifyConseilAlert(conseil) {
             const t = String(conseil || '').toLowerCase();
-            if (t.includes('over 2.5') || t.includes('+2.5') || t.includes('over 2,5')) {
+            if (conseilParleOver25Buts(conseil)) {
                 return OPP_TYPE_META.over_25;
             }
             if (t.includes('score exact')) {
@@ -4890,7 +5084,18 @@
             return null;
         }
 
+        function premiumScorersList(prem, key) {
+            const block = prem && prem[key];
+            const top = block && Array.isArray(block.top) ? block.top : [];
+            return top.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
+        }
+
         function buteursFromMatch(m) {
+            const prem = m?.premium_analysis;
+            if (prem) {
+                const fromPrem = premiumScorersList(prem, 'buteur_match');
+                if (fromPrem.length) return fromPrem;
+            }
             if (Array.isArray(m?.buteurs) && m.buteurs.length) {
                 return m.buteurs.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
             }
@@ -4900,6 +5105,10 @@
         }
 
         function scoresExactFromMatch(m) {
+            const premTop = m?.premium_analysis?.score_exact?.top3;
+            if (Array.isArray(premTop) && premTop.length) {
+                return premTop.filter((s) => s && String(s.score || '').trim());
+            }
             if (Array.isArray(m?.score_exact) && m.score_exact.length) {
                 return m.score_exact.filter((s) => s && s.score);
             }
@@ -4911,8 +5120,18 @@
                 .slice(0, 4);
         }
 
+        function primaryPickFromMatch(m) {
+            return m?.primary_pick || m?.free_analysis?.primary_pick || null;
+        }
+
         /** Choix Velora BTTS (oui | non), aligné velora_archiver_foot / detect_value_btts_expert. */
         function inferVeloraBttsPick(m) {
+            const pp = primaryPickFromMatch(m);
+            if (pp && pp.market === 'btts') {
+                const side = String(pp.pick || pp.side || '').toLowerCase();
+                if (side === 'non') return 'non';
+                if (side === 'oui') return 'oui';
+            }
             const oppType = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
             const blob = `${m?.opportunite_detail || ''} ${m?.conseil || ''}`.toLowerCase();
             if (oppType === 'btts' || (blob.includes('btts') || blob.includes('2 équipes marquent') || blob.includes('2 equipes marquent'))) {
@@ -4932,20 +5151,21 @@
 
         /** Choix Velora Over/Under 2.5 (plus | moins). */
         function inferVeloraOu25Pick(m) {
+            const pp = primaryPickFromMatch(m);
+            if (pp && (pp.market === 'ou_total' || pp.market === 'over_25')) {
+                const side = String(pp.pick || pp.side || '').toLowerCase();
+                if (side === 'moins' || side === 'minus') return 'moins';
+                if (side === 'plus') return 'plus';
+            }
             const oppType = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
             if (oppType === 'over_25') return 'plus';
             const blob = `${m?.opportunite_detail || ''} ${m?.conseil || ''}`.toLowerCase();
             if (blob.includes('under') || blob.includes('moins de 2.5') || blob.includes('-2.5') || blob.includes('−2.5')) {
                 return 'moins';
             }
-            if (
-                blob.includes('+2.5') || blob.includes('+2,5')
-                || blob.includes('over 2.5') || blob.includes('over 2,5')
-                || blob.includes('privilégier le +2.5') || blob.includes('privilegier le +2.5')
-            ) {
+            if (conseilParleOver25Buts(blob)) {
                 return 'plus';
             }
-            if (m?.tendance_buts === 'Match Offensif') return 'plus';
             return null;
         }
 
@@ -4953,7 +5173,7 @@
             const t = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
             if (marche === '1n2') {
                 if (t === '1n2' || t === '1n2_stats') return true;
-                if (estOpportunitePremium(m) && !['btts', 'over_25', 'buteur', 'score_exact'].includes(t)) {
+                if (estOpportunitePremium(m) && !['btts', 'over_25', 'ou_total', 'buteur', 'score_exact'].includes(t)) {
                     return true;
                 }
             }
@@ -4966,8 +5186,13 @@
 
         /** Choix Velora 1N2 (1 | N | 2 | dc_1x | dc_x2), aligné velora_archiver_foot. */
         function inferVelora1n2Pick(m) {
+            const pp = primaryPickFromMatch(m);
+            if (pp && (pp.market === '1n2' || pp.market === '1n2_stats')) {
+                const p = String(pp.pick || '').trim();
+                if (p === '1' || p === 'N' || p === '2' || p === 'dc_1x' || p === 'dc_x2') return p;
+            }
             const oppType = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
-            if (['buteur', 'score_exact', 'btts', 'over_25'].includes(oppType)) {
+            if (['buteur', 'score_exact', 'btts', 'over_25', 'ou_total'].includes(oppType)) {
                 return null;
             }
 
@@ -5156,6 +5381,194 @@
                 </div>`;
         }
 
+        async function ensureFootPremiumIndex() {
+            if (footPremiumIndex) return footPremiumIndex;
+            if (!footPremiumIndexPromise) {
+                footPremiumIndexPromise = fetchVeloraMatchsList(VELORA_JSON_PREMIUM)
+                    .then((list) => {
+                        const map = new Map();
+                        if (Array.isArray(list)) {
+                            for (const row of list) {
+                                const id = String(row?.id_match || '').trim();
+                                if (id) map.set(id, row);
+                            }
+                        }
+                        footPremiumIndex = map;
+                        return map;
+                    })
+                    .catch(() => {
+                        footPremiumIndex = new Map();
+                        return footPremiumIndex;
+                    });
+            }
+            return footPremiumIndexPromise;
+        }
+
+        /** Fusionne premium_analysis v2 ou api_velora_premium.json (transition). */
+        function footMatchEnrichiPremium(m) {
+            if (m?.premium_analysis && typeof m.premium_analysis === 'object') {
+                const prem = m.premium_analysis;
+                const msBase = m.marches_supplementaires || {};
+                const buteurLegacy = premiumScorersList(prem, 'buteur_match');
+                return {
+                    ...m,
+                    premium_analysis: prem,
+                    buteurs: buteurLegacy.length ? buteurLegacy : m.buteurs,
+                };
+            }
+            const id = String(m?.id_match || '').trim();
+            if (!id || !footPremiumIndex) return m;
+            const prem = footPremiumIndex.get(id);
+            if (!prem) return m;
+            const normPrem = normalizeFootMatch(prem);
+            const msBase = m.marches_supplementaires || {};
+            const msPrem = normPrem.marches_supplementaires || {};
+            return {
+                ...m,
+                premium_analysis: normPrem.premium_analysis || prem.premium_analysis,
+                score_exact: normPrem.score_exact ?? prem.score_exact,
+                buteurs: normPrem.buteurs ?? prem.buteurs,
+                btts: normPrem.btts ?? prem.btts,
+                over_under_25: normPrem.over_under_25 ?? prem.over_under_25,
+                les_deux_marquent: normPrem.les_deux_marquent ?? prem.les_deux_marquent,
+                top_scores: (Array.isArray(normPrem.top_scores) && normPrem.top_scores.length)
+                    ? normPrem.top_scores
+                    : m.top_scores,
+                marches_supplementaires: {
+                    ...msBase,
+                    ...msPrem,
+                    plus_moins_buts: msPrem.plus_moins_buts || msBase.plus_moins_buts,
+                    buteur_match: msPrem.buteur_match ?? msBase.buteur_match,
+                },
+            };
+        }
+
+        function extractPremiumAnalysisData(m) {
+            const enr = footMatchEnrichiPremium(m);
+            const prem = enr.premium_analysis;
+            const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
+            let topScores = scoresExactFromMatch(enr).slice(0, 3);
+            let buteurs = buteursFromMatch(enr).slice(0, 4);
+            let doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
+            if (!topScores.length) {
+                topScores = [
+                    { score: '2 - 1', cote: 9.5 },
+                    { score: '1 - 0', cote: 7.2 },
+                    { score: '0 - 0', cote: 6.1 },
+                ];
+            }
+            if (!buteurs.length) {
+                buteurs = [
+                    { joueur: 'Buteur A', cote: 4.5 },
+                    { joueur: 'Buteur B', cote: 5.2 },
+                    { joueur: 'Buteur C', cote: 6.0 },
+                ];
+            }
+            if (!doubles.length) {
+                doubles = [{ joueur: 'Doublé A + B', cote: 12.0 }];
+            }
+            return { topScores, buteurs, doubles, valueBets, hasRealPremium: !!(prem && (m.__veloraV2 || prem.score_exact)) };
+        }
+
+        function htmlPremiumScoresPanel(scores, theme) {
+            const items = (scores || []).slice(0, 3).map((s) => {
+                const cote = fmtCoteMarche(s.cote);
+                const prob = s.prob != null ? `<span class="text-gray-500">${escHtml(s.prob)}%</span>` : '';
+                const coteHtml = cote != null
+                    ? `<span class="font-bold text-cyan-300/90">${cote}</span>`
+                    : prob;
+                return `<li class="flex justify-between gap-2 text-xs text-gray-300"><span>${escHtml(String(s.score || '').replace(/-/g, ' - '))}</span>${coteHtml || prob}</li>`;
+            }).join('');
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="foot-premium-section-title ${titleCls}">Top 3 scores exacts</p>
+                    <ul class="space-y-1">${items}</ul>
+                </div>`;
+        }
+
+        function htmlPremiumButeursPanel(buteurs, title, theme) {
+            const list = (buteurs || []).slice(0, 4);
+            if (!list.length) return '';
+            const badgeCls = theme === 'opp'
+                ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
+                : 'velora-buteur-badge border-cyan-500/20 text-gray-200';
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="foot-premium-section-title ${titleCls}">${escHtml(title)}</p>
+                    <div class="flex flex-wrap gap-1.5">${list.map((b) =>
+                        `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`
+                    ).join('')}</div>
+                </div>`;
+        }
+
+        function htmlFootFreeBadgesRow(m, theme = 'foot') {
+            if (m && Object.prototype.hasOwnProperty.call(m, 'display_badges')) {
+                const badges = Array.isArray(m.display_badges) ? m.display_badges : [];
+                if (!badges.length) return '';
+                return `<div class="velora-match-badges-row">${badges.map((label) =>
+                    htmlVeloraPickPill('✨', label, theme, false)
+                ).join('')}</div>`;
+            }
+            const tendance = m.tendance_buts || 'Match Tactique';
+            const offensif = tendance === 'Match Offensif';
+            const pillsMarches = htmlMarchesPillsRow(m, theme, false);
+            if (!offensif && !pillsMarches) return '';
+            const tendancePill = `<span class="velora-marche-pill inline-flex items-center gap-1 ${offensif ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-300' : 'border-white/15 bg-white/5 text-gray-300'}">${offensif ? '📈' : '🛡️'} ${escHtml(tendance)}</span>`;
+            return `<div class="velora-match-badges-row">${tendancePill}${pillsMarches}</div>`;
+        }
+
+        function htmlFootPremiumAnalysisSection(m) {
+            const isPremiumUser = estVeloraPremiumFoot();
+            const data = extractPremiumAnalysisData(m);
+            const scoresPanel = htmlPremiumScoresPanel(data.topScores, 'foot');
+            const buteursPanel = htmlPremiumButeursPanel(data.buteurs, 'Buteurs match', 'foot');
+            const doublesPanel = htmlPremiumButeursPanel(data.doubles, 'Doublés buteurs', 'foot');
+            const cols = [scoresPanel, buteursPanel, doublesPanel].filter(Boolean).length > 1
+                ? 'sm:grid-cols-2 lg:grid-cols-3'
+                : 'grid-cols-1';
+            const gridPanels = `${scoresPanel}${buteursPanel}${doublesPanel}`;
+            const gridInner = `<div class="grid gap-2 ${cols}">${gridPanels}</div>`;
+
+            if (isPremiumUser) {
+                const vb = data.valueBets.length
+                    ? `<div class="mb-2 flex flex-wrap gap-1">${data.valueBets.slice(0, 2).map((vb) =>
+                        `<span class="velora-marche-pill velora-marche-pill--highlight">💎 ${escHtml(vb.label || vb.pick || 'Value')}</span>`
+                    ).join('')}</div>`
+                    : '';
+                return `
+                    <div class="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-3" role="region" aria-label="Analyse premium">
+                        <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Analyse Premium</p>
+                        ${vb}
+                        ${gridInner}
+                    </div>`;
+            }
+
+            const resumeParts = [];
+            if (data.topScores.length) resumeParts.push('scores exacts');
+            if (data.buteurs.length) resumeParts.push('buteurs');
+            if (data.doubles.length) resumeParts.push('doublés');
+            const resume = resumeParts.length
+                ? `Moteur Velora : ${resumeParts.join(', ')} prêts`
+                : 'Analyse premium calculée par le moteur';
+
+            return `
+                <div class="foot-premium-paywall" role="region" aria-label="Analyse premium verrouillée">
+                    <div class="foot-premium-paywall-content foot-premium-paywall-content--locked">
+                        ${gridInner}
+                    </div>
+                    <div class="foot-premium-paywall-overlay">
+                        <span class="foot-premium-paywall-lock" aria-hidden="true">🔒</span>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-cyan-300/95">Analyse Premium</p>
+                        <p class="max-w-sm text-xs leading-relaxed text-gray-300">${escHtml(resume)}. Débloquez les cotes et picks détaillés.</p>
+                        <button type="button" class="foot-premium-paywall-cta" data-foot-premium-cta>
+                            Débloquer l'analyse Premium
+                        </button>
+                    </div>
+                </div>`;
+        }
+
         function htmlVoirPlusParis(m, theme = 'foot') {
             const buteurs = buteursFromMatch(m);
             const scores = scoresExactFromMatch(m);
@@ -5270,16 +5683,17 @@
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
-            const tendance = m.tendance_buts || 'Match Tactique';
             const topScores = m.top_scores;
             const scoresMoteurHtml = typeof topScores === 'string'
                 ? `<li class="text-xs text-gray-500">${escHtml(topScores)}</li>`
                 : Array.isArray(topScores) && topScores.length
                     ? topScores.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
                     : '';
-            const offensif = tendance === 'Match Offensif';
-            const pillsMarches = htmlMarchesPillsRow(m, 'foot', false);
-            const plusParis = htmlVoirPlusParis(m, 'foot');
+            const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
+            const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
+            const plusParis = estVeloraPremiumFoot()
+                ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
+                : htmlFootPremiumAnalysisSection(m);
             const alertMeta = classifyConseilAlert(m.conseil);
             const footCardExtra = alertMeta ? alertMeta.footCardClass : '';
 
@@ -5307,10 +5721,7 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${htmlConseilVelora(m.conseil, 'foot')}
-                        <div class="velora-match-badges-row">
-                            <span class="velora-marche-pill inline-flex items-center gap-1 ${offensif ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-300' : 'border-white/15 bg-white/5 text-gray-300'}">${offensif ? '📈' : '🛡️'} ${escHtml(tendance)}</span>
-                            ${pillsMarches}
-                        </div>
+                        ${badgesRow}
                         ${plusParis}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
@@ -5459,7 +5870,8 @@
         }
 
         async function fetchOppPremiumJson() {
-            return fetchVeloraJson(VELORA_JSON_PREMIUM);
+            const data = await fetchVeloraJson(VELORA_JSON_PREMIUM);
+            return parseVeloraMatchsPayload(data);
         }
 
         async function chargerOppMatchs(options = {}) {
@@ -5576,6 +5988,12 @@
             if (ev.key === 'Enter') {
                 ev.preventDefault();
                 lancerAnalyseFoot();
+            }
+        });
+        document.getElementById('footResultats')?.addEventListener('click', (ev) => {
+            if (ev.target.closest('[data-foot-premium-cta]')) {
+                ev.preventDefault();
+                showPaywallModal('premium_offer_foot');
             }
         });
         document.getElementById('btnVeloraPaywallSimple')?.addEventListener('click', lancerCheckoutPassSimple);
