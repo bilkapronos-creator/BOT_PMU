@@ -1398,7 +1398,7 @@
                 <div id="footSearchBloc" class="grid grid-cols-1 gap-3">
                     <label class="block">
                         <span class="mb-1 block text-xs text-gray-500">Moteur de recherche — équipe ou club</span>
-                        <input type="search" id="footSearchInput" autocomplete="off" placeholder="Ex. PSG, Lyon, Marseille…"
+                        <input type="search" id="footSearchInput" autocomplete="off" placeholder="Ex. Croatie, Canada, Barcelona…"
                             class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white transition">
                     </label>
                     <button type="button" id="btnFootAnalyser"
@@ -1618,7 +1618,7 @@
                 <div id="footZoneAccueil" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-500/25 bg-cyan-500/5 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔎</div>
                     <p class="text-sm font-semibold text-cyan-100">Moteur de recherche Velora</p>
-                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">PSG</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span> pour afficher la carte du match et son pronostic Velora.</p>
+                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">Croatie</span>, <span class="font-medium text-gray-300">Canada</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span> pour afficher la carte du match et son pronostic Velora.</p>
                 </div>
                 <div id="footZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">⚽</div>
@@ -4564,7 +4564,7 @@
             if (trimmed.length < FOOT_SEARCH_MIN_LEN) {
                 const meta = document.getElementById('footSearchMeta');
                 if (meta) {
-                    meta.textContent = `Au moins ${FOOT_SEARCH_MIN_LEN} caractères requis (ex. « PSG », « Lyon »).`;
+                    meta.textContent = `Au moins ${FOOT_SEARCH_MIN_LEN} caractères requis (ex. « Croatie », « Canada »).`;
                 }
                 return;
             }
@@ -4710,14 +4710,14 @@
             return parseVeloraMatchsPayload(data);
         }
 
-        async function chargerFootMatchs() {
+        async function chargerFootMatchs(options = {}) {
             const loading = document.getElementById('footLoading');
             const erreur = document.getElementById('footErreur');
             if (footModeOpportunites) {
                 if (!peutUtiliserRadarFootOpp()) {
                     quitterFootOppSiNonPremium();
                 } else {
-                    return chargerOppMatchs();
+                    return chargerOppMatchs(options);
                 }
             }
             if (footMatchsCharges) {
@@ -5073,13 +5073,23 @@
             return '<span class="foot-live-badge" aria-label="Match en direct">🔴 LIVE</span>';
         }
 
+        function normaliserTexteRechercheFoot(texte) {
+            return String(texte || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .trim();
+        }
+
         /** Mode recherche : résultats uniquement si l'utilisateur a saisi une requête. */
         function footMatchsFiltres() {
-            const q = footFiltre.trim().toLowerCase();
+            const q = normaliserTexteRechercheFoot(footFiltre);
             if (!q) return [];
             const actifs = footMatchsActifs();
             return actifs.filter((m) => {
-                const blob = `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`.toLowerCase();
+                const blob = normaliserTexteRechercheFoot(
+                    `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
+                );
                 return blob.includes(q);
             });
         }
@@ -5089,10 +5099,10 @@
             const liste = footMatchsFiltres();
             if (!liste.length) return [];
             if (liste.length === 1) return liste;
-            const q = footFiltre.trim().toLowerCase();
+            const q = normaliserTexteRechercheFoot(footFiltre);
             const exact = liste.filter((m) => {
-                const dom = String(m.equipe_domicile || '').toLowerCase();
-                const ext = String(m.equipe_exterieur || '').toLowerCase();
+                const dom = normaliserTexteRechercheFoot(m.equipe_domicile);
+                const ext = normaliserTexteRechercheFoot(m.equipe_exterieur);
                 return dom === q || ext === q || dom.includes(q) && q.length >= 3 || ext.includes(q) && q.length >= 3;
             });
             const pool = exact.length ? exact : liste;
@@ -5104,17 +5114,21 @@
             return [pool[0]];
         }
 
+        const OPP_VELORA_SCORE_MIN = 58;
+
         function estOpportunitePremium(m) {
             if (m?.is_opportunite === true) return true;
             const oppType = String(m?.opportunite_type || '').trim();
             if (oppType && oppType !== '—') return true;
             const vbt = String(m?.value_bet_type || '').trim();
             if (vbt && vbt !== '—' && vbt.toLowerCase() !== 'none') return true;
-            if (String(m?.indice_velora_label || '') === 'Non calculable' || Number(m.indice_velora) === 0) {
+            if (Array.isArray(m?.free_value_bets) && m.free_value_bets.length) return true;
+            if (/value\s*bet/i.test(String(m?.conseil || ''))) return true;
+            if (String(m?.indice_velora_label || '') === 'Non calculable' && Number(m.indice_velora) === 0) {
                 return false;
             }
             const score = Number(m?.velora_score);
-            return Number.isFinite(score) && score >= 68;
+            return Number.isFinite(score) && score >= OPP_VELORA_SCORE_MIN;
         }
 
         const OPP_TYPE_META = {
@@ -6047,7 +6061,7 @@
             const el = document.getElementById('footZoneAccueilTexte');
             if (!el || footModeOpportunites || !footMatchsCharges) return;
             const n = footMatchsActifs().length;
-            el.innerHTML = `${n} match${n > 1 ? 's' : ''} actif${n > 1 ? 's' : ''} en base. Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">PSG</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span>.`;
+            el.innerHTML = `${n} match${n > 1 ? 's' : ''} actif${n > 1 ? 's' : ''} en base. Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">Croatie</span>, <span class="font-medium text-gray-300">Barcelona</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span>.`;
         }
 
         /** Empty state « Aucune opportunité majeure » — Premium + mode Opp uniquement. */
