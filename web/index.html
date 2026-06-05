@@ -5068,6 +5068,35 @@
             return footMatchs.filter((m) => !estMatchTermine(m) && !estMatchEnDirect(m));
         }
 
+        /** Mode recherche normal : à venir + en direct (hors matchs terminés). */
+        function footMatchsRecherchables() {
+            return footMatchs.filter((m) => !estMatchTermine(m));
+        }
+
+        function equipesFootRecherchables() {
+            const seen = new Set();
+            const names = [];
+            for (const m of footMatchsRecherchables()) {
+                for (const eq of [m.equipe_domicile, m.equipe_exterieur]) {
+                    const n = String(eq || '').trim();
+                    const key = normaliserTexteRechercheFoot(n);
+                    if (!n || seen.has(key)) continue;
+                    seen.add(key);
+                    names.push(n);
+                }
+            }
+            return names.sort((a, b) => a.localeCompare(b, 'fr'));
+        }
+
+        function htmlFootEquipesAccueilChips() {
+            const teams = equipesFootRecherchables();
+            if (!teams.length) return '';
+            const chips = teams.slice(0, 14).map((name) =>
+                `<button type="button" class="foot-equipe-chip rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-medium text-cyan-200 transition hover:border-cyan-400/50 hover:bg-cyan-500/20">${escHtml(name)}</button>`,
+            ).join('');
+            return `<div class="mt-4 flex flex-wrap justify-center gap-1.5">${chips}</div>`;
+        }
+
         function htmlFootLiveBadge(m) {
             if (!estMatchEnDirect(m)) return '';
             return '<span class="foot-live-badge" aria-label="Match en direct">🔴 LIVE</span>';
@@ -5085,7 +5114,7 @@
         function footMatchsFiltres() {
             const q = normaliserTexteRechercheFoot(footFiltre);
             if (!q) return [];
-            const actifs = footMatchsActifs();
+            const actifs = footMatchsRecherchables();
             return actifs.filter((m) => {
                 const blob = normaliserTexteRechercheFoot(
                     `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
@@ -6030,7 +6059,7 @@
                 meta.textContent = 'Chargement de la base matchs…';
                 return;
             }
-            const actifs = footMatchsActifs();
+            const actifs = footMatchsRecherchables();
             const q = footFiltre.trim();
             const quotaHint = estVeloraPremiumFoot()
                 ? ' · Pass Foot — recherches illimitées'
@@ -6060,8 +6089,8 @@
         function majFootZoneAccueilTexte() {
             const el = document.getElementById('footZoneAccueilTexte');
             if (!el || footModeOpportunites || !footMatchsCharges) return;
-            const n = footMatchsActifs().length;
-            el.innerHTML = `${n} match${n > 1 ? 's' : ''} actif${n > 1 ? 's' : ''} en base. Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">Croatie</span>, <span class="font-medium text-gray-300">Barcelona</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span>.`;
+            const n = footMatchsRecherchables().length;
+            el.innerHTML = `${n} match${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}`;
         }
 
         /** Empty state « Aucune opportunité majeure » — Premium + mode Opp uniquement. */
@@ -6281,6 +6310,14 @@
         });
         document.getElementById('footSearchInput')?.addEventListener('input', onFootSearchInput);
         document.getElementById('btnFootAnalyser')?.addEventListener('click', lancerAnalyseFoot);
+        document.getElementById('footZoneAccueil')?.addEventListener('click', (ev) => {
+            const chip = ev.target.closest('.foot-equipe-chip');
+            if (!chip || footModeOpportunites) return;
+            const input = document.getElementById('footSearchInput');
+            const name = chip.textContent?.trim() || '';
+            if (input && name) input.value = name;
+            if (name) lancerAnalyseFoot();
+        });
         document.getElementById('footSearchInput')?.addEventListener('keydown', (ev) => {
             if (ev.key === 'Enter') {
                 ev.preventDefault();
