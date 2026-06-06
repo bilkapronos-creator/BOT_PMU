@@ -1,108 +1,11 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-06T18:49:22.609699+02:00",
+    "generated_at": "2026-06-06T22:48:09.812421+02:00",
     "engine": "velora-pro-2",
-    "match_count": 3
+    "match_count": 2
   },
   "matchs": [
-    {
-      "id_match": "66416080",
-      "date_match": "06/06/2026 à 20:30",
-      "match_start_ts": 1780770600,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "États-Unis",
-      "equipe_exterieur": "Allemagne",
-      "meta_match": {
-        "competition": {
-          "name": "International — Matchs Amicaux",
-          "type": "friendly",
-          "stakes_tier": "low",
-          "category_id": "4",
-          "tournament_id": "66"
-        }
-      },
-      "confidence": {
-        "velora_score": 63.4,
-        "indice_velora": 3,
-        "base_confidence": 0.634,
-        "adjusted_confidence": 0.334,
-        "modifiers": [
-          {
-            "code": "friendly_match",
-            "delta": -0.3,
-            "label": "Match amical — confiance réduite"
-          }
-        ]
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 4.2,
-          "N": 3.85,
-          "2": 1.7
-        },
-        "probabilites": {
-          "1": 33,
-          "N": 34,
-          "2": 33
-        },
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "1",
-            "label": "Victoire États-Unis",
-            "cote": 4.2,
-            "edge": 1.386,
-            "stars": 5,
-            "is_primary": true
-          },
-          {
-            "market": "1n2",
-            "pick": "N",
-            "label": "Match nul",
-            "cote": 3.85,
-            "edge": 1.309,
-            "stars": 5,
-            "is_primary": false
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "1",
-          "label": "Victoire États-Unis",
-          "cote": 4.2,
-          "conseil_short": "🔥 Value Bet — Victoire États-Unis @ 4.20"
-        },
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Allemagne — forme favorable Allemagne",
-        "tendance_buts": "Match Tactique",
-        "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
-      }
-    },
     {
       "id_match": "71853280",
       "date_match": "07/06/2026 à 16:00",
