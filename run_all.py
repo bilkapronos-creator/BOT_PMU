@@ -19,6 +19,7 @@ Désactiver le push : VELORA_SKIP_GIT_PUSH=1
 """
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import socket
@@ -448,6 +449,53 @@ def _fichier_json_recent(path: Path, max_heures: float) -> bool:
     return age_h <= max_heures
 
 
+def _match_start_ts_unix(match: dict) -> float | None:
+    raw = match.get("match_start_ts")
+    if raw is not None:
+        try:
+            ts = float(raw)
+            if ts > 1e12:
+                ts /= 1000.0
+            if ts > 0:
+                return ts
+        except (TypeError, ValueError):
+            pass
+    dm = str(match.get("date_match") or "").strip()
+    parts = dm.split(" à ")
+    if len(parts) != 2:
+        return None
+    try:
+        d, mo, y = parts[0].split("/")
+        h, mi = parts[1].split(":")
+        from datetime import datetime as _dt
+
+        return _dt(int(y), int(mo), int(d), int(h), int(mi)).timestamp()
+    except (ValueError, TypeError):
+        return None
+
+
+def _json_matchs_semantiquement_frais(path: Path, max_heures: float) -> bool:
+    """Vrai si au moins un match du JSON est futur ou récent (évite repli CI sur vieux JSON checkout)."""
+    if not path.is_file() or path.stat().st_size < 80:
+        return False
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    matchs = data if isinstance(data, list) else data.get("matchs") or []
+    if not matchs:
+        return False
+    now = time.time()
+    horizon = max_heures * 3600.0
+    for m in matchs:
+        if not isinstance(m, dict):
+            continue
+        ts = _match_start_ts_unix(m)
+        if ts is not None and ts >= now - horizon:
+            return True
+    return False
+
+
 def _synchroniser_premium_depuis_web() -> bool:
     """Copie web/api_velora_premium.json → racine si le dépôt n'a pas été régénéré."""
     assert WEB_ROOT is not None
@@ -466,15 +514,19 @@ def _synchroniser_premium_depuis_web() -> bool:
 def _mode_repli_scraper_ci() -> str | None:
     """premium | dump | matchs | None — données déjà présentes dans le dépôt."""
     max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "72"))
-    if _fichier_json_recent(PREMIUM_SRC, max_h):
+    if _json_matchs_semantiquement_frais(PREMIUM_SRC, max_h):
         return "premium"
     assert WEB_ROOT is not None
-    if _fichier_json_recent(WEB_ROOT / "api_velora_premium.json", max_h):
+    premium_web = WEB_ROOT / "api_velora_premium.json"
+    if _json_matchs_semantiquement_frais(premium_web, max_h):
         return "premium_web"
     if _fichier_json_recent(DUMP_HTML, max_h):
         return "dump"
-    if _fichier_json_recent(MATCHS_JSON, max_h):
+    if _json_matchs_semantiquement_frais(MATCHS_JSON, max_h):
         return "matchs"
+    matchs_web = WEB_ROOT / "api_velora_matchs.json"
+    if _json_matchs_semantiquement_frais(matchs_web, max_h):
+        return "matchs_web"
     return None
 
 
@@ -507,7 +559,9 @@ def executer_phase_scraper() -> bool:
                 "CI : dump HTML récent — reprise à l'étape parser (sans re-scraper Winamax).",
             )
             debut = 1
-        elif mode == "matchs":
+        elif mode in ("matchs", "matchs_web"):
+            if mode == "matchs_web":
+                _synchroniser_premium_depuis_web()
             log("CI : matchs JSON récents — reprise au sniper uniquement.")
             debut = 2
 

@@ -1615,6 +1615,7 @@
                     <p id="footLoadingLabel" class="mt-6 text-sm font-semibold text-cyan-300">Chargement des analyses football…</p>
                 </div>
                 <div id="footErreur" class="hidden glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300" role="alert"></div>
+                <div id="footAlerteDonnees" class="hidden glass-card rounded-xl border border-amber-500/30 bg-amber-950/30 px-4 py-3 text-center text-xs leading-relaxed text-amber-100" role="status"></div>
                 <div id="footZoneAccueil" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-500/25 bg-cyan-500/5 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔎</div>
                     <p class="text-sm font-semibold text-cyan-100">Moteur de recherche Velora</p>
@@ -4066,8 +4067,10 @@
         let footPremiumIndex = null;
         let footPremiumIndexPromise = null;
         const MATCH_FINISHED_GRACE_MS = 120 * 60 * 1000;
+        const MATCH_DONNEES_PERIMEES_MS = 36 * 60 * 60 * 1000;
         const MATCH_ENDED_STATUSES = new Set(['ENDED', 'CLOSED', 'FINISHED', 'CANCELLED', 'CANCELED']);
         const MATCH_LIVE_STATUSES = new Set(['LIVE', 'RUNNING', 'INPLAY', 'IN_PLAY']);
+        const MATCH_PREMATCH_STATUSES = new Set(['PREMATCH', 'NOT_STARTED', 'SCHEDULED', 'UPCOMING']);
         const WINAMAX_MATCH_STATUS_ENDED_NUM = 3;
         let footFiltre = '';
         /** True uniquement après clic sur « Générer l'analyse » (comme PMU). */
@@ -5059,9 +5062,35 @@
             if (MATCH_ENDED_STATUSES.has(status)) return true;
             if (Number(m?.matchStatus) === WINAMAX_MATCH_STATUS_ENDED_NUM) return true;
             if (MATCH_LIVE_STATUSES.has(status)) return false;
+            if (MATCH_PREMATCH_STATUSES.has(status)) return false;
             const startMs = parseMatchStartMs(m);
             if (startMs == null) return false;
             return Date.now() > startMs + MATCH_FINISHED_GRACE_MS;
+        }
+
+        function footMetaDonneesMatchs() {
+            let maxMs = 0;
+            let minMs = Infinity;
+            for (const m of footMatchs) {
+                const ms = parseMatchStartMs(m);
+                if (ms == null) continue;
+                maxMs = Math.max(maxMs, ms);
+                minMs = Math.min(minMs, ms);
+            }
+            const perime = footMatchs.length > 0
+                && maxMs > 0
+                && Date.now() - maxMs > MATCH_DONNEES_PERIMEES_MS;
+            const derniereDate = maxMs > 0
+                ? new Date(maxMs).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                : null;
+            return { perime, derniereDate, count: footMatchs.length };
+        }
+
+        function htmlFootAlerteDonneesPerimees() {
+            const meta = footMetaDonneesMatchs();
+            if (!meta.perime) return '';
+            const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
+            return `<p class="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/95">⚠️ Base matchs non actualisée${quand}. Les analyses restent consultables ; le scraper Winamax met à jour la liste automatiquement.</p>`;
         }
 
         function footMatchsActifs() {
@@ -6074,23 +6103,51 @@
                 return;
             }
             if (!footAnalyseAffichee || !q) {
-                meta.textContent = `${actifs.length} match${actifs.length > 1 ? 's' : ''} en base — saisissez une équipe puis Générer l'analyse${quotaHint}`;
+                const totalBase = footMatchs.length;
+                const baseInfo = actifs.length > 0
+                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} en base`
+                    : (totalBase > 0
+                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base (données à actualiser)`
+                        : '0 match en base');
+                meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
             }
             const liste = footMatchAnalyseUnique();
             const total = footMatchsFiltres().length;
+            const totalBase = footMatchs.length;
             meta.textContent = liste.length
                 ? (total > 1
                     ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
                     : `Analyse pour « ${q} »`)
-                : `Aucun résultat pour « ${q} » (${actifs.length} matchs en base)`;
+                : `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`;
+        }
+
+        function majFootAlerteDonneesUi() {
+            const el = document.getElementById('footAlerteDonnees');
+            if (!el) return;
+            const meta = footMetaDonneesMatchs();
+            if (!footMatchsCharges || footModeOpportunites || !meta.perime) {
+                el.classList.add('hidden');
+                el.innerHTML = '';
+                return;
+            }
+            const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
+            el.innerHTML = `⚠️ Base matchs non actualisée${quand}. Les recherches utilisent la dernière extraction Winamax — mise à jour automatique toutes les 30&nbsp;min.`;
+            el.classList.remove('hidden');
         }
 
         function majFootZoneAccueilTexte() {
             const el = document.getElementById('footZoneAccueilTexte');
             if (!el || footModeOpportunites || !footMatchsCharges) return;
             const n = footMatchsRecherchables().length;
-            el.innerHTML = `${n} match${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}`;
+            const total = footMatchs.length;
+            const baseLabel = n > 0
+                ? `${n} match${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}`
+                : (total > 0
+                    ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
+                    : 'Aucun match en base');
+            el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
+            majFootAlerteDonneesUi();
         }
 
         /** Empty state « Aucune opportunité majeure » — Premium + mode Opp uniquement. */
@@ -6128,6 +6185,7 @@
             const q = footFiltre.trim();
             majFootMeta();
             majFootZoneAccueilTexte();
+            majFootAlerteDonneesUi();
             majFootOppZonesVides(-1);
 
             if (!footAnalyseAffichee || !q) {
