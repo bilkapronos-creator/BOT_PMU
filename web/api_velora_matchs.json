@@ -1,410 +1,351 @@
-[
-  {
-    "id_match": "71585570",
-    "date_match": "01/06/2026 à 18:00",
-    "match_start_ts": 1780329600,
-    "equipe_domicile": "Union Touarga",
-    "equipe_exterieur": "KAC Marrakech",
-    "cotes": {
-      "1": 2.45,
-      "N": 2.9,
-      "2": 2.6
-    },
-    "probabilites": {
-      "1": 9,
-      "N": 32,
-      "2": 59
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
+{
+  "schema_version": 2,
+  "meta": {
+    "generated_at": "2026-06-06T14:54:17.457009+02:00",
+    "engine": "velora-pro-2",
+    "match_count": 4
   },
-  {
-    "id_match": "69829658",
-    "date_match": "01/06/2026 à 19:00",
-    "match_start_ts": 1780333200,
-    "equipe_domicile": "Norvège",
-    "equipe_exterieur": "Suède",
-    "cotes": {
-      "1": 1.72,
-      "N": 3.8,
-      "2": 4.1
-    },
-    "probabilites": {
-      "1": 91,
-      "N": 6,
-      "2": 3
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+  "matchs": [
+    {
+      "id_match": "71853258",
+      "date_match": "06/06/2026 à 16:00",
+      "match_start_ts": 1780754400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Castellon",
+      "equipe_exterieur": "Almeria",
+      "meta_match": {
+        "competition": {
+          "name": "Espagne — LaLiga2",
+          "type": "league",
+          "round": "1/2 aller",
+          "stakes_tier": "medium",
+          "category_id": "32",
+          "tournament_id": "16255"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "71604168",
-    "date_match": "01/06/2026 à 19:30",
-    "match_start_ts": 1780335000,
-    "equipe_domicile": "FC Voluntari",
-    "equipe_exterieur": "FC Hermannstadt",
-    "cotes": {
-      "1": 2.45,
-      "N": 3.0,
-      "2": 2.5
-    },
-    "probabilites": {
-      "1": 18,
-      "N": 36,
-      "2": 46
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.85,
+        "adjusted_confidence": 0.85,
+        "modifiers": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "71585572",
-    "date_match": "01/06/2026 à 20:00",
-    "match_start_ts": 1780336800,
-    "equipe_domicile": "OC Safi",
-    "equipe_exterieur": "MAS Fès",
-    "cotes": {
-      "1": 3.1,
-      "N": 2.4,
-      "2": 2.5
-    },
-    "probabilites": {
-      "1": 3,
-      "N": 28,
-      "2": 69
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.62,
+          "N": 3.7,
+          "2": 3.45
+        },
+        "probabilites": {
+          "1": 2,
+          "N": 45,
+          "2": 53
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Almeria",
+            "cote": 3.45,
+            "edge": 1.829,
+            "stars": 5,
+            "is_primary": true
+          },
+          {
+            "market": "dc_x2",
+            "pick": "dc_x2",
+            "label": "Double chance X2",
+            "edge": 1.829,
+            "stars": 5,
+            "is_primary": false
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Almeria",
+          "cote": 3.45,
+          "conseil_short": "🔥 Value Bet — Victoire Almeria @ 3.45"
+        },
+        "display_badges": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "68269904",
-    "date_match": "01/06/2026 à 20:45",
-    "match_start_ts": 1780339500,
-    "equipe_domicile": "Autriche",
-    "equipe_exterieur": "Tunisie",
-    "cotes": {
-      "1": 1.44,
-      "N": 4.3,
-      "2": 6.0
-    },
-    "probabilites": {
-      "1": 91,
-      "N": 3,
-      "2": 6
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : DC X2",
+        "tendance_buts": "Match Tactique",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "71585574",
-    "date_match": "01/06/2026 à 22:00",
-    "match_start_ts": 1780344000,
-    "equipe_domicile": "CODM Meknes",
-    "equipe_exterieur": "Olympique Dcheira",
-    "cotes": {
-      "1": 1.96,
-      "N": 2.85,
-      "2": 3.6
-    },
-    "probabilites": {
-      "1": 81,
-      "N": 15,
-      "2": 4
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+    {
+      "id_match": "66416080",
+      "date_match": "06/06/2026 à 20:30",
+      "match_start_ts": 1780770600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "États-Unis",
+      "equipe_exterieur": "Allemagne",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "68687682",
-    "date_match": "02/06/2026 à 00:00",
-    "match_start_ts": 1780351200,
-    "equipe_domicile": "Club Leones Del Norte",
-    "equipe_exterieur": "CSD Macará",
-    "cotes": {
-      "1": 2.5,
-      "N": 2.9,
-      "2": 2.55
-    },
-    "probabilites": {
-      "1": 17,
-      "N": 51,
-      "2": 32
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "velora_score": 63.4,
+        "indice_velora": 3,
+        "base_confidence": 0.634,
+        "adjusted_confidence": 0.334,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Nul"
-  },
-  {
-    "id_match": "68687674",
-    "date_match": "02/06/2026 à 02:30",
-    "match_start_ts": 1780360200,
-    "equipe_domicile": "Técnico Universitario",
-    "equipe_exterieur": "Barcelona SC",
-    "cotes": {
-      "1": 2.65,
-      "N": 2.9,
-      "2": 2.4
-    },
-    "probabilites": {
-      "1": 4,
-      "N": 17,
-      "2": 79
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 4.2,
+          "N": 3.85,
+          "2": 1.7
+        },
+        "probabilites": {
+          "1": 33,
+          "N": 34,
+          "2": 33
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "1",
+            "label": "Victoire États-Unis",
+            "cote": 4.2,
+            "edge": 1.386,
+            "stars": 5,
+            "is_primary": true
+          },
+          {
+            "market": "1n2",
+            "pick": "N",
+            "label": "Match nul",
+            "cote": 3.85,
+            "edge": 1.309,
+            "stars": 5,
+            "is_primary": false
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire États-Unis",
+          "cote": 4.2,
+          "conseil_short": "🔥 Value Bet — Victoire États-Unis @ 4.20"
+        },
+        "display_badges": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "68880438",
-    "date_match": "02/06/2026 à 03:00",
-    "match_start_ts": 1780362000,
-    "equipe_domicile": "Canada",
-    "equipe_exterieur": "Ouzbékistan",
-    "cotes": {
-      "1": 1.6,
-      "N": 3.85,
-      "2": 4.8
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 50,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "_legacy": {
+        "conseil": "Victoire Allemagne — forme favorable Allemagne",
+        "tendance_buts": "Match Tactique",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : DC 1X"
-  },
-  {
-    "id_match": "68093892",
-    "date_match": "02/06/2026 à 18:00",
-    "match_start_ts": 1780416000,
-    "equipe_domicile": "Croatie",
-    "equipe_exterieur": "Belgique",
-    "cotes": {
-      "1": 2.45,
-      "N": 3.5,
-      "2": 2.55
-    },
-    "probabilites": {
-      "1": 16,
-      "N": 19,
-      "2": 65
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+    {
+      "id_match": "71853280",
+      "date_match": "07/06/2026 à 16:00",
+      "match_start_ts": 1780840800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Las Palmas",
+      "equipe_exterieur": "Malaga",
+      "meta_match": {
+        "competition": {
+          "name": "Espagne — LaLiga2",
+          "type": "league",
+          "round": "1/2 aller",
+          "stakes_tier": "medium",
+          "category_id": "32",
+          "tournament_id": "16255"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "71652274",
-    "date_match": "02/06/2026 à 21:00",
-    "match_start_ts": 1780426800,
-    "equipe_domicile": "USM Alger",
-    "equipe_exterieur": "Belouizdad",
-    "cotes": {
-      "1": 4.0,
-      "N": 3.2,
-      "2": 1.68
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 100
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "71702728",
-    "date_match": "03/06/2026 à 02:30",
-    "match_start_ts": 1780446600,
-    "equipe_domicile": "Junior De Barranquilla",
-    "equipe_exterieur": "Atletico Nacional",
-    "cotes": {
-      "1": 2.25,
-      "N": 2.85,
-      "2": 2.6
-    },
-    "probabilites": {
-      "1": 26,
-      "N": 42,
-      "2": 32
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.86,
+          "N": 3.15,
+          "2": 2.95
+        },
+        "probabilites": {
+          "1": 50,
+          "N": 23,
+          "2": 27
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Privilégier le +2.5 buts",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      }
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Nul"
-  }
-]
+    {
+      "id_match": "71170368",
+      "date_match": "07/06/2026 à 21:00",
+      "match_start_ts": 1780858800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Maroc",
+      "equipe_exterieur": "Norvège",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
+      },
+      "confidence": {
+        "velora_score": 61.1,
+        "indice_velora": 3,
+        "base_confidence": 0.611,
+        "adjusted_confidence": 0.311,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.8,
+          "N": 3.3,
+          "2": 2.25
+        },
+        "probabilites": {
+          "1": 72,
+          "N": 13,
+          "2": 15
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "1",
+            "label": "Victoire Maroc",
+            "cote": 2.8,
+            "edge": 2.016,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire Maroc",
+          "cote": 2.8,
+          "conseil_short": "🔥 Value Bet — Victoire Maroc @ 2.80"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Maroc — forme favorable Maroc",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    }
+  ]
+}
