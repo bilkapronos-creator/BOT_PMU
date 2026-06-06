@@ -1,102 +1,11 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-06T14:54:17.457009+02:00",
+    "generated_at": "2026-06-06T18:49:22.609699+02:00",
     "engine": "velora-pro-2",
-    "match_count": 4
+    "match_count": 3
   },
   "matchs": [
-    {
-      "id_match": "71853258",
-      "date_match": "06/06/2026 à 16:00",
-      "match_start_ts": 1780754400,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Castellon",
-      "equipe_exterieur": "Almeria",
-      "meta_match": {
-        "competition": {
-          "name": "Espagne — LaLiga2",
-          "type": "league",
-          "round": "1/2 aller",
-          "stakes_tier": "medium",
-          "category_id": "32",
-          "tournament_id": "16255"
-        }
-      },
-      "confidence": {
-        "indice_velora": 0,
-        "indice_label": "Non calculable",
-        "base_confidence": 0.85,
-        "adjusted_confidence": 0.85,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.62,
-          "N": 3.7,
-          "2": 3.45
-        },
-        "probabilites": {
-          "1": 2,
-          "N": 45,
-          "2": 53
-        },
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Almeria",
-            "cote": 3.45,
-            "edge": 1.829,
-            "stars": 5,
-            "is_primary": true
-          },
-          {
-            "market": "dc_x2",
-            "pick": "dc_x2",
-            "label": "Double chance X2",
-            "edge": 1.829,
-            "stars": 5,
-            "is_primary": false
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Almeria",
-          "cote": 3.45,
-          "conseil_short": "🔥 Value Bet — Victoire Almeria @ 3.45"
-        },
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "🔥 Value Bet Détecté : DC X2",
-        "tendance_buts": "Match Tactique",
-        "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
-      }
-    },
     {
       "id_match": "66416080",
       "date_match": "06/06/2026 à 20:30",
