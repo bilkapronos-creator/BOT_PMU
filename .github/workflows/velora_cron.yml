@@ -70,6 +70,8 @@ jobs:
           VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
           # football-data.org — en-tête X-Auth-Token (plan gratuit)
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+          VELORA_PARSER_HORIZON_HOURS: "24"
+          SNIPER_WINDOW_HOURS: "24"
         run: xvfb-run -a python run_all.py
 
       - name: Commit et push JSON (web/ + racine → Vercel)

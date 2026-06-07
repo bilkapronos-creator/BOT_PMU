@@ -6511,10 +6511,10 @@
             if (!footAnalyseAffichee || !q) {
                 const totalBase = footMatchs.length;
                 const baseInfo = actifs.length > 0
-                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} en base`
+                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (24 h)`
                     : (totalBase > 0
                         ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base (données à actualiser)`
-                        : '0 match en base');
+                        : '0 match sur les 24 h');
                 meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
             }
@@ -6548,10 +6548,10 @@
             const n = footMatchsRecherchables().length;
             const total = footMatchs.length;
             const baseLabel = n > 0
-                ? `${n} match${n > 1 ? 's' : ''} disponible${n > 1 ? 's' : ''}`
+                ? `${n} match${n > 1 ? 's' : ''} Winamax (24 h)`
                 : (total > 0
                     ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
-                    : 'Aucun match en base');
+                    : 'Aucun match sur les 24 h');
             el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
             majFootAlerteDonneesUi();
         }

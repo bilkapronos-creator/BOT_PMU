@@ -1198,7 +1198,7 @@ def extract_btts_oui(match_bets: list, outcomes: dict) -> int | None:
 MATCH_ENDED_STATUSES = frozenset({"ENDED", "CLOSED", "FINISHED", "CANCELLED", "CANCELED"})
 WINAMAX_MATCH_STATUS_ENDED_NUM = 3
 MATCH_FINISHED_GRACE_MINUTES = 120
-MATCH_PARSER_HORIZON_HOURS = int(os.environ.get("VELORA_PARSER_HORIZON_HOURS", "48"))
+MATCH_PARSER_HORIZON_HOURS = int(os.environ.get("VELORA_PARSER_HORIZON_HOURS", "24"))
 
 
 def is_winamax_match_finished(
@@ -1250,7 +1250,7 @@ def is_match_within_parser_horizon(
     hours: int | None = None,
 ) -> bool:
     """
-    True si le coup d'envoi est dans les N prochaines heures (défaut 48 h).
+    True si le coup d'envoi est dans les N prochaines heures (défaut 24 h).
     Exclut les matchs lointains (ex. août) et ceux déjà terminés.
     """
     horizon = hours if hours is not None else MATCH_PARSER_HORIZON_HOURS

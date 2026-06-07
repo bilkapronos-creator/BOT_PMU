@@ -81,7 +81,7 @@ INDISPONIBLE = "Indisponible"
 GOAL_LINES = ("1.5", "2.5", "3.5")
 SNIPER_LIMIT = int(os.environ.get("SNIPER_LIMIT", "25"))
 PAUSE_SECONDS = int(os.environ.get("SNIPER_PAUSE", "4"))
-SNIPER_WINDOW_HOURS = int(os.environ.get("SNIPER_WINDOW_HOURS", "48"))
+SNIPER_WINDOW_HOURS = int(os.environ.get("SNIPER_WINDOW_HOURS", "24"))
 SNIPER_PAST_GRACE_HOURS = int(os.environ.get("SNIPER_PAST_GRACE_HOURS", "2"))
 TZ_PARIS = ZoneInfo("Europe/Paris")
 DATE_MATCH_FMT = "%d/%m/%Y à %H:%M"
@@ -164,7 +164,7 @@ def match_start_datetime(match: dict) -> datetime | None:
 def is_within_sniper_window(
     match: dict, now: datetime | None = None
 ) -> bool:
-    """True si le match est imminent (≤ 48 h) ou vient de démarrer (grâce 2 h)."""
+    """True si le match est imminent (≤ 24 h) ou vient de démarrer (grâce 2 h)."""
     kickoff = match_start_datetime(match)
     if kickoff is None:
         return False
@@ -634,7 +634,7 @@ def _has_velora_intel(match: dict) -> bool:
 def select_sniper_batch(
     all_matches: list[dict], now: datetime | None = None
 ) -> list[dict]:
-    """Matchs dans les 48 h : priorité sans intel, puis les plus proches (limite SNIPER_LIMIT)."""
+    """Matchs dans les 24 h : priorité sans intel, puis les plus proches (limite SNIPER_LIMIT)."""
     now = now or datetime.now(tz=TZ_PARIS)
     in_window = [m for m in all_matches if is_within_sniper_window(m, now)]
     in_window.sort(

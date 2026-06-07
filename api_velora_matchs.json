@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-07T04:17:47.977117+02:00",
+    "generated_at": "2026-06-07T04:36:29.368245+02:00",
     "engine": "velora-pro-2",
-    "match_count": 8
+    "match_count": 5
   },
   "matchs": [
     {
@@ -165,8 +165,8 @@
         },
         "probabilites": {
           "1": 23,
-          "N": 24,
-          "2": 53
+          "N": 23,
+          "2": 54
         },
         "probabilites_marche": {
           "1": 29,
@@ -178,39 +178,56 @@
         "confiance_niveau": "haute",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.634,
-          "away": 2.013
+          "home": 1.834,
+          "away": 2.259
         },
         "top_scores_modele": [
           {
             "score": "1-2",
-            "prob": 9
-          },
-          {
-            "score": "1-1",
-            "prob": 9
+            "prob": 8
           },
           {
             "score": "2-2",
             "prob": 7
           },
           {
-            "score": "2-1",
+            "score": "1-1",
             "prob": 7
+          },
+          {
+            "score": "2-1",
+            "prob": 6
           },
           {
             "score": "1-3",
             "prob": 6
           }
         ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 69,
-        "football_data_enriched": false,
+        "prob_over_25_modele": 76,
+        "prob_btts_modele": 74,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [],
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Forge",
+            "cote": 1.96,
+            "edge": 1.058,
+            "stars": 2,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Forge",
+          "cote": 1.96,
+          "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
+        },
         "display_badges": []
       },
       "premium_analysis": {
@@ -232,7 +249,8 @@
         "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "is_opportunite": false
+        "opportunite_type": "1n2",
+        "is_opportunite": true
       }
     },
     {
@@ -519,9 +537,9 @@
           "2": 3.3
         },
         "probabilites": {
-          "1": 34,
-          "N": 27,
-          "2": 39
+          "1": 33,
+          "N": 29,
+          "2": 38
         },
         "probabilites_marche": {
           "1": 44,
@@ -533,34 +551,34 @@
         "confiance_niveau": "haute",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 2.017,
-          "away": 1.58
+          "home": 1.326,
+          "away": 1.039
         },
         "top_scores_modele": [
           {
+            "score": "1-1",
+            "prob": 13
+          },
+          {
+            "score": "1-0",
+            "prob": 12
+          },
+          {
+            "score": "0-1",
+            "prob": 10
+          },
+          {
+            "score": "0-0",
+            "prob": 9
+          },
+          {
             "score": "2-1",
             "prob": 9
-          },
-          {
-            "score": "1-1",
-            "prob": 9
-          },
-          {
-            "score": "2-2",
-            "prob": 7
-          },
-          {
-            "score": "1-2",
-            "prob": 7
-          },
-          {
-            "score": "3-1",
-            "prob": 6
           }
         ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 68,
-        "football_data_enriched": false,
+        "prob_over_25_modele": 42,
+        "prob_btts_modele": 47,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -571,9 +589,17 @@
             "pick": "2",
             "label": "Victoire Malaga",
             "cote": 3.3,
-            "edge": 1.287,
+            "edge": 1.254,
             "stars": 5,
             "is_primary": true
+          },
+          {
+            "market": "dc_x2",
+            "pick": "dc_x2",
+            "label": "Double chance X2",
+            "edge": 1.254,
+            "stars": 5,
+            "is_primary": false
           }
         ],
         "primary_pick": {
@@ -606,325 +632,6 @@
         "marches_supplementaires": {},
         "opportunite_type": "1n2",
         "is_opportunite": true
-      }
-    },
-    {
-      "id_match": "71601488",
-      "date_match": "08/06/2026 à 20:45",
-      "match_start_ts": 1780944300,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Pays-Bas",
-      "equipe_exterieur": "Ouzbékistan",
-      "meta_match": {
-        "competition": {
-          "name": "International — Matchs Amicaux",
-          "type": "friendly",
-          "stakes_tier": "low",
-          "category_id": "4",
-          "tournament_id": "66"
-        }
-      },
-      "confidence": {
-        "velora_score": 58.8,
-        "indice_velora": 3,
-        "base_confidence": 0.588,
-        "adjusted_confidence": 0.288,
-        "modifiers": [
-          {
-            "code": "friendly_match",
-            "delta": -0.3,
-            "label": "Match amical — confiance réduite"
-          }
-        ]
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.23,
-          "N": 5.8,
-          "2": 8.0
-        },
-        "probabilites": {
-          "1": 56,
-          "N": 19,
-          "2": 25
-        },
-        "probabilites_marche": {
-          "1": 73,
-          "N": 16,
-          "2": 11
-        },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Ouzbékistan",
-        "confiance_niveau": "faible",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.601,
-          "away": 1.01
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "2-0",
-            "prob": 9
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "3-0",
-            "prob": 8
-          },
-          {
-            "score": "1-1",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 68,
-        "prob_btts_modele": 58,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      }
-    },
-    {
-      "id_match": "71307342",
-      "date_match": "08/06/2026 à 21:10",
-      "match_start_ts": 1780945800,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "France",
-      "equipe_exterieur": "Irlande du Nord",
-      "meta_match": {
-        "competition": {
-          "name": "International — Matchs Amicaux",
-          "type": "friendly",
-          "stakes_tier": "low",
-          "category_id": "4",
-          "tournament_id": "66"
-        }
-      },
-      "confidence": {
-        "velora_score": 61.1,
-        "indice_velora": 3,
-        "base_confidence": 0.611,
-        "adjusted_confidence": 0.311,
-        "modifiers": [
-          {
-            "code": "friendly_match",
-            "delta": -0.3,
-            "label": "Match amical — confiance réduite"
-          }
-        ]
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.11,
-          "N": 8.0,
-          "2": 15.0
-        },
-        "probabilites": {
-          "1": 81,
-          "N": 14,
-          "2": 5
-        },
-        "probabilites_marche": {
-          "1": 83,
-          "N": 11,
-          "2": 6
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire France",
-        "confiance_niveau": "faible",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.941,
-          "away": 0.791
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-0",
-            "prob": 10
-          },
-          {
-            "score": "3-0",
-            "prob": 10
-          },
-          {
-            "score": "2-1",
-            "prob": 8
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "4-0",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 50,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire France — forme favorable France",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      }
-    },
-    {
-      "id_match": "71702730",
-      "date_match": "09/06/2026 à 00:00",
-      "match_start_ts": 1780956000,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Atletico Nacional",
-      "equipe_exterieur": "Junior De Barranquilla",
-      "meta_match": {
-        "competition": {
-          "name": "Colombie — Primera A",
-          "type": "other",
-          "round": "Finale retour",
-          "stakes_tier": "medium",
-          "category_id": "274",
-          "tournament_id": "19232"
-        }
-      },
-      "confidence": {
-        "velora_score": 54.1,
-        "indice_velora": 3,
-        "base_confidence": 0.541,
-        "adjusted_confidence": 0.541,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.41,
-          "N": 4.0,
-          "2": 5.0
-        },
-        "probabilites": {
-          "1": 63,
-          "N": 23,
-          "2": 14
-        },
-        "probabilites_marche": {
-          "1": 61,
-          "N": 22,
-          "2": 17
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Atletico Nacional",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.413,
-          "away": 1.274
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "1-1",
-            "prob": 8
-          },
-          {
-            "score": "3-1",
-            "prob": 7
-          },
-          {
-            "score": "2-0",
-            "prob": 7
-          },
-          {
-            "score": "1-0",
-            "prob": 6
-          }
-        ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 65,
-        "football_data_enriched": false,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
       }
     }
   ]
