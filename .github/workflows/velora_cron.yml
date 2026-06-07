@@ -84,7 +84,9 @@ jobs:
             web/api_velora_premium.json \
             web/api_velora_communaute.json \
             web/velora_archives_foot.json \
-            web/velora_foot_resultats.json; do
+            web/velora_foot_resultats.json \
+            web/velora_odds_history.json \
+            web/velora_foot_calibration.json; do
             if [ -f "$f" ]; then
               git add -f "$f"
               added=1
