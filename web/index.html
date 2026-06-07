@@ -5942,9 +5942,6 @@
             } else if (lineSig === 'cote_hausse') {
                 chips.push(`<span class="velora-chip velora-chip-line-up" title="La cote du pronostic monte">📈 Cote en hausse</span>`);
             }
-            if (m?.football_data_enriched || m?.free_analysis?.football_data_enriched) {
-                chips.push(`<span class="velora-chip velora-chip-pronostic" title="Forme et buts enrichis via football-data.org">📡 Stats API</span>`);
-            }
             if (!chips.length) return '';
             const mt = theme === 'opp' ? 'mt-1' : 'mt-0';
             return `<div class="velora-analyse-badges-row ${mt}">${chips.join('')}</div>`;
