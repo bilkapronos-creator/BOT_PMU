@@ -163,12 +163,22 @@ class FreeAnalysis:
     value_bets: list[ValueBet] = field(default_factory=list)
     primary_pick: PrimaryPick | None = None
     display_badges: list[str] = field(default_factory=list)
+    probabilites_marche: dict[str, int] | None = None
+    pronostic_1n2: str | None = None
+    pronostic_label: str | None = None
+    confiance_niveau: str | None = None
+    line_signal: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return _drop_none(
             {
                 "cotes_1n2": self.cotes_1n2,
                 "probabilites": self.probabilites,
+                "probabilites_marche": self.probabilites_marche,
+                "pronostic_1n2": self.pronostic_1n2,
+                "pronostic_label": self.pronostic_label,
+                "confiance_niveau": self.confiance_niveau,
+                "line_signal": self.line_signal,
                 "markets_raw": self.markets_raw.to_dict(),
                 "value_bets": [v.to_dict() for v in self.value_bets],
                 "primary_pick": self.primary_pick.to_dict()

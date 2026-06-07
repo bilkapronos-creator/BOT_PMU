@@ -28,7 +28,11 @@ def legacy_shim_from_v2(
     extra: dict[str, Any] | None = None,
 ) -> LegacyShim:
     conseil = None
-    if free.primary_pick:
+    if extra and extra.get("conseil"):
+        conseil = extra["conseil"]
+    elif free.pronostic_label:
+        conseil = free.pronostic_label
+    elif free.primary_pick:
         conseil = free.primary_pick.conseil_short
     tendance = "Match Tactique"
     ou = free.markets_raw.over_under_total.get("2.5")

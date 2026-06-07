@@ -5,6 +5,7 @@ Pipeline Velora v2 — remplit free_analysis / premium_analysis (B3).
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from velora_engine.analysis.pro_context import build_confidence
@@ -12,7 +13,17 @@ from velora_engine.analysis.schedule_risk import (
     build_schedule_index,
     check_upcoming_schedule_risk,
 )
+from velora_engine.analysis.model_1n2 import (
+    build_1n2_analysis_context,
+    confiance_niveau_from_context,
+    pronostic_label_for_pick,
+)
 from velora_engine.analysis.value_detectors import detect_all_free_values
+from velora_engine.odds_snapshots import (
+    default_history_path,
+    line_signal_for_pick,
+    load_odds_history,
+)
 from velora_engine.config import ENGINE_ID, SCHEMA_VERSION
 from velora_engine.models import (
     ApiVeloraDocument,
@@ -97,6 +108,7 @@ def build_match_v2(
         match_status=raw_match.get("status"),
     )
     legacy = _apply_intel_overlay(legacy, state, mid)
+    intel = extract_intel_from_state(state, mid)
 
     extracted = extract_all_markets(
         mbets,
@@ -108,28 +120,30 @@ def build_match_v2(
         state=state,
     )
 
+    friendly = (extracted.competition.type or "") == "friendly"
+    ctx = build_1n2_analysis_context(
+        cotes=cotes_out,
+        intel=intel,
+        home=home,
+        away=away,
+        indice_velora=int(legacy.get("indice_velora") or 0),
+        adjusted_confidence=None,
+        friendly=friendly,
+    )
+
     free_values = detect_all_free_values(
         cotes_1n2=cotes_out,
-        probs=probs_out,
+        probs=ctx.probabilites_modele,
         markets=extracted.markets_raw,
         les_deux_marquent=legacy.get("les_deux_marquent"),
         home=home,
         away=away,
     )
 
-    free = FreeAnalysis(
-        cotes_1n2=cotes_out,
-        probabilites=probs_out,
-        markets_raw=extracted.markets_raw,
-        value_bets=free_values.value_bets,
-        primary_pick=free_values.primary_pick,
-        display_badges=free_values.display_badges,
-    )
-
     premium = premium_from_extracted(
         extracted,
         cotes_1n2=cotes_out,
-        probs=probs_out,
+        probs=ctx.probabilites_modele,
     )
 
     pro_alerts: list = []
@@ -145,7 +159,7 @@ def build_match_v2(
     if rotation:
         pro_alerts.append(rotation)
 
-    best_edge = max((v.edge for v in free.value_bets), default=None)
+    best_edge = max((v.edge for v in free_values.value_bets), default=None)
     confidence = build_confidence(
         velora_score=legacy.get("velora_score"),
         indice_velora=int(legacy.get("indice_velora") or 0),
@@ -153,6 +167,34 @@ def build_match_v2(
         competition=extracted.competition,
         pro_alerts=pro_alerts,
         best_edge=best_edge,
+    )
+
+    pronostic_pick = str(legacy.get("velora_pick_1n2") or ctx.pronostic_1n2 or "")
+    history = load_odds_history(default_history_path())
+    line_sig = line_signal_for_pick(history, mid, pronostic_pick)
+    confiance = confiance_niveau_from_context(
+        intel,
+        indice_velora=int(legacy.get("indice_velora") or 0),
+        adjusted_confidence=confidence.adjusted_confidence,
+        friendly=friendly,
+    )
+    pronostic_label = (
+        str(legacy.get("conseil") or "").split("—")[0].strip()
+        or pronostic_label_for_pick(pronostic_pick, home, away)
+    )
+
+    free = FreeAnalysis(
+        cotes_1n2=cotes_out,
+        probabilites=ctx.probabilites_modele,
+        probabilites_marche=ctx.probabilites_marche,
+        markets_raw=extracted.markets_raw,
+        value_bets=free_values.value_bets,
+        primary_pick=free_values.primary_pick,
+        display_badges=free_values.display_badges,
+        pronostic_1n2=pronostic_pick or None,
+        pronostic_label=pronostic_label or None,
+        confiance_niveau=confiance,
+        line_signal=line_sig,
     )
 
     record = MatchRecordV2(

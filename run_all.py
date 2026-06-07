@@ -392,6 +392,15 @@ def deploy_json() -> bool:
             shutil.copy2(communaute, COMMUNAUTE_DEPLOY)
             _verify_copy(communaute, COMMUNAUTE_DEPLOY)
 
+        try:
+            from velora_engine.odds_snapshots import snapshot_from_json_file
+
+            hist = (WEB_ROOT / "velora_odds_history.json").resolve()
+            snapshot_from_json_file(MATCHS_DEPLOY, hist)
+            log(f"  historique cotes : {_fmt_file_info(hist)}")
+        except Exception as snap_err:
+            log(f"  historique cotes : ignoré ({snap_err})")
+
         log_success(label, "Déploiement des JSON vers BOT_PMU réussi")
         print_deploy_summary()
         return True

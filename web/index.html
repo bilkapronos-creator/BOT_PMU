@@ -494,6 +494,48 @@
             color: #fecaca;
             animation: foot-live-pulse 1.15s ease-in-out infinite;
         }
+        .velora-analyse-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.5rem;
+        }
+        .velora-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            border: 1px solid transparent;
+        }
+        .velora-chip-pronostic {
+            border-color: rgba(56, 189, 248, 0.45);
+            background: rgba(14, 116, 144, 0.25);
+            color: #a5f3fc;
+        }
+        .velora-chip-value {
+            border-color: rgba(251, 191, 36, 0.5);
+            background: rgba(120, 53, 15, 0.35);
+            color: #fde68a;
+        }
+        .velora-chip-faible {
+            border-color: rgba(248, 113, 113, 0.45);
+            background: rgba(127, 29, 29, 0.3);
+            color: #fecaca;
+        }
+        .velora-chip-line {
+            border-color: rgba(52, 211, 153, 0.45);
+            background: rgba(6, 78, 59, 0.35);
+            color: #6ee7b7;
+        }
+        .velora-chip-line-up {
+            border-color: rgba(251, 146, 60, 0.45);
+            background: rgba(124, 45, 18, 0.3);
+            color: #fdba74;
+        }
         @keyframes foot-live-pulse {
             0%, 100% {
                 opacity: 1;
@@ -4672,7 +4714,12 @@
                     premium_analysis: prem || {},
                     probabilites: free.probabilites ?? raw.probabilites,
                     cotes: free.cotes_1n2 ?? raw.cotes,
-                    conseil: raw.conseil || leg.conseil || primary?.conseil_short || '',
+                    conseil: raw.conseil || leg.conseil || free.pronostic_label || primary?.conseil_short || '',
+                    pronostic_1n2: free.pronostic_1n2 ?? raw.pronostic_1n2,
+                    pronostic_label: free.pronostic_label ?? raw.pronostic_label,
+                    confiance_niveau: free.confiance_niveau ?? raw.confiance_niveau,
+                    line_signal: free.line_signal ?? raw.line_signal,
+                    probabilites_marche: free.probabilites_marche ?? raw.probabilites_marche,
                     tendance_buts: leg.tendance_buts || raw.tendance_buts || 'Match Tactique',
                     indice_velora: conf.indice_velora ?? raw.indice_velora,
                     indice_velora_label: conf.indice_label ?? raw.indice_velora_label,
@@ -5832,6 +5879,32 @@
                 </div>`;
         }
 
+        function htmlVeloraAnalyseBadges(m, theme = 'foot') {
+            const chips = [];
+            const pronostic = String(m?.pronostic_label || '').trim();
+            const confiance = String(m?.confiance_niveau || '').toLowerCase();
+            const hasValue = (Array.isArray(m?.free_value_bets) && m.free_value_bets.length > 0)
+                || !!(m?.primary_pick && m.primary_pick.market);
+            const lineSig = String(m?.line_signal || '').trim();
+            if (pronostic) {
+                chips.push(`<span class="velora-chip velora-chip-pronostic" title="Pronostic statistique Velora">🎯 ${escHtml(pronostic)}</span>`);
+            }
+            if (hasValue) {
+                chips.push(`<span class="velora-chip velora-chip-value" title="Value bet détecté sur ce match">💎 Value</span>`);
+            }
+            if (confiance === 'faible') {
+                chips.push(`<span class="velora-chip velora-chip-faible" title="Peu de données ou confiance réduite">⚠ Confiance faible</span>`);
+            }
+            if (lineSig === 'cote_baisse') {
+                chips.push(`<span class="velora-chip velora-chip-line" title="La cote du pronostic baisse">📉 Cote en baisse</span>`);
+            } else if (lineSig === 'cote_hausse') {
+                chips.push(`<span class="velora-chip velora-chip-line-up" title="La cote du pronostic monte">📈 Cote en hausse</span>`);
+            }
+            if (!chips.length) return '';
+            const mt = theme === 'opp' ? 'mt-1' : 'mt-0';
+            return `<div class="velora-analyse-badges-row ${mt}">${chips.join('')}</div>`;
+        }
+
         function htmlFootFreeBadgesRow(m, theme = 'foot') {
             if (m && Object.prototype.hasOwnProperty.call(m, 'display_badges')) {
                 const badges = Array.isArray(m.display_badges) ? m.display_badges : [];
@@ -6024,7 +6097,12 @@
                 : Array.isArray(topScores) && topScores.length
                     ? topScores.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
                     : '';
+            const analyseBadges = htmlVeloraAnalyseBadges(m, 'foot');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
+            const pm = m.probabilites_marche || {};
+            const marcheHint = (Number(pm['1']) || Number(pm.N) || Number(pm['2']))
+                ? `<p class="mt-1 text-[10px] text-gray-500">Marché implicite — Dom ${Number(pm['1']) || 0}% · Nul ${Number(pm.N) || 0}% · Ext ${Number(pm['2']) || 0}%</p>`
+                : '';
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
                 ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
@@ -6039,6 +6117,7 @@
                             <span class="block text-[10px] font-medium leading-tight tracking-wide text-slate-500">${escHtml(m.date_match || '')}</span>
                             ${htmlFootLiveBadge(m)}
                             <h3 class="foot-match-title mt-0.5 text-base font-bold text-white sm:text-lg">${escHtml(m.equipe_domicile)} <span class="font-normal text-gray-500">—</span> ${escHtml(m.equipe_exterieur)}</h3>
+                            ${analyseBadges}
                         </div>
                         <div class="shrink-0 text-right">
                             <p class="text-[10px] uppercase tracking-widest text-amber-400/80">Indice Velora (stats)</p>
@@ -6047,13 +6126,14 @@
                     </div>
                     <div class="foot-match-card-body space-y-4">
                         <div>
-                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition algorithme</p>
+                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probas modèle Velora</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
                                 <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
                                 <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
                                 <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
                             </div>
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
+                            ${marcheHint}
                         </div>
                         ${htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
@@ -6363,6 +6443,7 @@
             const cardTheme = alertMeta?.cardClass || '';
             const oppType = String(m.opportunite_type || m.value_bet_type || alertMeta?.type || 'standard');
             const hide1n2 = oppCacheMarcheSecondaire(m);
+            const analyseBadges = htmlVeloraAnalyseBadges(m, 'opp');
             const detail = String(m.opportunite_detail || m.conseil || '').trim();
             const scoresHtml = htmlTopScoresList(m.top_scores, m);
             const pariFocus = hide1n2 && detail
@@ -6372,7 +6453,7 @@
                 ? ''
                 : `
                         <div>
-                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probabilités algorithme</p>
+                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probas modèle Velora</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
                                 <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
                                 <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
@@ -6400,6 +6481,7 @@
                                 <span class="block text-[10px] font-medium text-slate-500">${escHtml(m.date_match || '')}</span>
                                 ${htmlFootLiveBadge(m)}
                                 <h3 class="foot-match-title mt-0.5 text-lg font-bold text-white">${escHtml(m.equipe_domicile)} <span class="text-amber-400/80">—</span> ${escHtml(m.equipe_exterieur)}</h3>
+                                ${analyseBadges}
                             </div>
                             <div class="shrink-0 text-right">
                                 <p class="text-[10px] uppercase tracking-widest text-amber-400">Indice Velora</p>

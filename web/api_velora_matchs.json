@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-07T02:43:12.797042+02:00",
+    "generated_at": "2026-06-07T03:21:17.173048+02:00",
     "engine": "velora-pro-2",
     "match_count": 8
   },
@@ -43,10 +43,18 @@
           "2": 4.4
         },
         "probabilites": {
-          "1": 86,
-          "N": 5,
-          "2": 9
+          "1": 33,
+          "N": 28,
+          "2": 39
         },
+        "probabilites_marche": {
+          "1": 54,
+          "N": 26,
+          "2": 20
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Ukraine",
+        "confiance_niveau": "faible",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -54,20 +62,20 @@
         "value_bets": [
           {
             "market": "1n2",
-            "pick": "1",
-            "label": "Victoire Danemark",
-            "cote": 1.66,
-            "edge": 1.428,
+            "pick": "2",
+            "label": "Victoire Ukraine",
+            "cote": 4.4,
+            "edge": 1.716,
             "stars": 5,
             "is_primary": true
           }
         ],
         "primary_pick": {
           "market": "1n2",
-          "pick": "1",
-          "label": "Victoire Danemark",
-          "cote": 1.66,
-          "conseil_short": "🔥 Value Bet — Victoire Danemark @ 1.66"
+          "pick": "2",
+          "label": "Victoire Ukraine",
+          "cote": 4.4,
+          "conseil_short": "🔥 Value Bet — Victoire Ukraine @ 4.40"
         },
         "display_badges": []
       },
@@ -126,10 +134,18 @@
           "2": 1.96
         },
         "probabilites": {
-          "1": 11,
-          "N": 14,
-          "2": 75
+          "1": 17,
+          "N": 25,
+          "2": 58
         },
+        "probabilites_marche": {
+          "1": 29,
+          "N": 27,
+          "2": 44
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Forge",
+        "confiance_niveau": "haute",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -140,8 +156,8 @@
             "pick": "2",
             "label": "Victoire Forge",
             "cote": 1.96,
-            "edge": 1.47,
-            "stars": 5,
+            "edge": 1.137,
+            "stars": 4,
             "is_primary": true
           }
         ],
@@ -214,10 +230,18 @@
           "2": 2.15
         },
         "probabilites": {
-          "1": 84,
-          "N": 5,
-          "2": 11
+          "1": 43,
+          "N": 29,
+          "2": 28
         },
+        "probabilites_marche": {
+          "1": 31,
+          "N": 27,
+          "2": 42
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire Maroc",
+        "confiance_niveau": "faible",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -228,7 +252,7 @@
             "pick": "1",
             "label": "Victoire Maroc",
             "cote": 3.0,
-            "edge": 2.52,
+            "edge": 1.29,
             "stars": 5,
             "is_primary": true
           }
@@ -302,10 +326,18 @@
           "2": 3.1
         },
         "probabilites": {
-          "1": 3,
-          "N": 4,
-          "2": 93
+          "1": 30,
+          "N": 28,
+          "2": 42
         },
+        "probabilites_marche": {
+          "1": 45,
+          "N": 26,
+          "2": 29
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Italie",
+        "confiance_niveau": "faible",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -316,7 +348,7 @@
             "pick": "2",
             "label": "Victoire Italie",
             "cote": 3.1,
-            "edge": 2.883,
+            "edge": 1.302,
             "stars": 5,
             "is_primary": true
           }
@@ -385,10 +417,18 @@
           "2": 3.3
         },
         "probabilites": {
-          "1": 21,
-          "N": 12,
-          "2": 67
+          "1": 26,
+          "N": 30,
+          "2": 44
         },
+        "probabilites_marche": {
+          "1": 44,
+          "N": 29,
+          "2": 27
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Malaga",
+        "confiance_niveau": "haute",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -399,7 +439,7 @@
             "pick": "2",
             "label": "Victoire Malaga",
             "cote": 3.3,
-            "edge": 2.211,
+            "edge": 1.452,
             "stars": 5,
             "is_primary": true
           }
@@ -473,32 +513,23 @@
           "2": 8.0
         },
         "probabilites": {
-          "1": 50,
-          "N": 0,
-          "2": 50
+          "1": 46,
+          "N": 21,
+          "2": 33
         },
+        "probabilites_marche": {
+          "1": 73,
+          "N": 16,
+          "2": 11
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Ouzbékistan",
+        "confiance_niveau": "faible",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Ouzbékistan",
-            "cote": 8.0,
-            "edge": 4.0,
-            "stars": 5,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Ouzbékistan",
-          "cote": 8.0,
-          "conseil_short": "🔥 Value Bet — Victoire Ouzbékistan @ 8.00"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -520,8 +551,7 @@
         "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       }
     },
     {
@@ -561,40 +591,23 @@
           "2": 15.0
         },
         "probabilites": {
-          "1": 33,
-          "N": 33,
-          "2": 34
+          "1": 81,
+          "N": 15,
+          "2": 4
         },
+        "probabilites_marche": {
+          "1": 83,
+          "N": 11,
+          "2": 6
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire France",
+        "confiance_niveau": "faible",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Irlande du Nord",
-            "cote": 15.0,
-            "edge": 5.1,
-            "stars": 5,
-            "is_primary": true
-          },
-          {
-            "market": "dc_x2",
-            "pick": "dc_x2",
-            "label": "Double chance X2",
-            "edge": 5.1,
-            "stars": 5,
-            "is_primary": false
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Irlande du Nord",
-          "cote": 15.0,
-          "conseil_short": "🔥 Value Bet — Victoire Irlande du Nord @ 15.00"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -614,10 +627,9 @@
       },
       "_legacy": {
         "conseil": "Victoire France — forme favorable France",
-        "tendance_buts": "Match Tactique",
+        "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       }
     },
     {
@@ -652,32 +664,23 @@
           "2": 5.0
         },
         "probabilites": {
-          "1": 56,
-          "N": 3,
-          "2": 41
+          "1": 63,
+          "N": 26,
+          "2": 11
         },
+        "probabilites_marche": {
+          "1": 61,
+          "N": 22,
+          "2": 17
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire Atletico Nacional",
+        "confiance_niveau": "haute",
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Junior De Barranquilla",
-            "cote": 5.0,
-            "edge": 2.05,
-            "stars": 5,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Junior De Barranquilla",
-          "cote": 5.0,
-          "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 5.00"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -699,8 +702,7 @@
         "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       }
     }
   ]
