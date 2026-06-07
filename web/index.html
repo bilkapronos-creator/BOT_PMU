@@ -4720,6 +4720,12 @@
                     confiance_niveau: free.confiance_niveau ?? raw.confiance_niveau,
                     line_signal: free.line_signal ?? raw.line_signal,
                     probabilites_marche: free.probabilites_marche ?? raw.probabilites_marche,
+                    poisson_lambdas: free.poisson_lambdas ?? raw.poisson_lambdas,
+                    prob_over_25_modele: free.prob_over_25_modele ?? raw.prob_over_25_modele,
+                    prob_btts_modele: free.prob_btts_modele ?? raw.prob_btts_modele,
+                    top_scores: (Array.isArray(free.top_scores_modele) && free.top_scores_modele.length)
+                        ? free.top_scores_modele
+                        : raw.top_scores,
                     tendance_buts: leg.tendance_buts || raw.tendance_buts || 'Match Tactique',
                     indice_velora: conf.indice_velora ?? raw.indice_velora,
                     indice_velora_label: conf.indice_label ?? raw.indice_velora_label,
@@ -6103,6 +6109,10 @@
             const marcheHint = (Number(pm['1']) || Number(pm.N) || Number(pm['2']))
                 ? `<p class="mt-1 text-[10px] text-gray-500">Marché implicite — Dom ${Number(pm['1']) || 0}% · Nul ${Number(pm.N) || 0}% · Ext ${Number(pm['2']) || 0}%</p>`
                 : '';
+            const pl = m.poisson_lambdas || {};
+            const poissonHint = (Number(pl.home) > 0 && Number(pl.away) > 0)
+                ? `<p class="mt-0.5 text-[10px] text-cyan-500/70">Poisson — λ dom ${Number(pl.home).toFixed(2)} · λ ext ${Number(pl.away).toFixed(2)}${m.prob_over_25_modele ? ` · O2.5 ${m.prob_over_25_modele}%` : ''}</p>`
+                : '';
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
                 ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
@@ -6140,7 +6150,7 @@
                         ${plusParis}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Top scores moteur (probas)</summary>
+                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Top scores Poisson (probas)</summary>
                             <ul class="mt-2 space-y-1 border-t border-white/10 pt-2">${scoresMoteurHtml}</ul>
                         </details>` : ''}
                         ${htmlVelora1n2PickRow(m, 'foot')}

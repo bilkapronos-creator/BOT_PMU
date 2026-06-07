@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-07T03:21:17.173048+02:00",
+    "generated_at": "2026-06-07T03:29:53.595504+02:00",
     "engine": "velora-pro-2",
     "match_count": 8
   },
@@ -43,9 +43,9 @@
           "2": 4.4
         },
         "probabilites": {
-          "1": 33,
-          "N": 28,
-          "2": 39
+          "1": 42,
+          "N": 25,
+          "2": 33
         },
         "probabilites_marche": {
           "1": 54,
@@ -55,6 +55,34 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Ukraine",
         "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 2.251,
+          "away": 1.37
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "1-1",
+            "prob": 8
+          },
+          {
+            "score": "3-1",
+            "prob": 7
+          },
+          {
+            "score": "2-0",
+            "prob": 7
+          },
+          {
+            "score": "2-2",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 66,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -65,7 +93,7 @@
             "pick": "2",
             "label": "Victoire Ukraine",
             "cote": 4.4,
-            "edge": 1.716,
+            "edge": 1.452,
             "stars": 5,
             "is_primary": true
           }
@@ -134,9 +162,9 @@
           "2": 1.96
         },
         "probabilites": {
-          "1": 17,
-          "N": 25,
-          "2": 58
+          "1": 23,
+          "N": 24,
+          "2": 53
         },
         "probabilites_marche": {
           "1": 29,
@@ -146,28 +174,39 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Forge",
         "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 1.634,
+          "away": 2.013
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 9
+          },
+          {
+            "score": "1-1",
+            "prob": 9
+          },
+          {
+            "score": "2-2",
+            "prob": 7
+          },
+          {
+            "score": "2-1",
+            "prob": 7
+          },
+          {
+            "score": "1-3",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 70,
+        "prob_btts_modele": 69,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Forge",
-            "cote": 1.96,
-            "edge": 1.137,
-            "stars": 4,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Forge",
-          "cote": 1.96,
-          "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -189,8 +228,7 @@
         "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       }
     },
     {
@@ -230,9 +268,9 @@
           "2": 2.15
         },
         "probabilites": {
-          "1": 43,
-          "N": 29,
-          "2": 28
+          "1": 40,
+          "N": 26,
+          "2": 34
         },
         "probabilites_marche": {
           "1": 31,
@@ -242,6 +280,34 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire Maroc",
         "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.688,
+          "away": 1.965
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 9
+          },
+          {
+            "score": "1-2",
+            "prob": 8
+          },
+          {
+            "score": "2-1",
+            "prob": 7
+          },
+          {
+            "score": "2-2",
+            "prob": 7
+          },
+          {
+            "score": "1-3",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 70,
+        "prob_btts_modele": 70,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -252,7 +318,7 @@
             "pick": "1",
             "label": "Victoire Maroc",
             "cote": 3.0,
-            "edge": 1.29,
+            "edge": 1.2,
             "stars": 5,
             "is_primary": true
           }
@@ -326,9 +392,9 @@
           "2": 3.1
         },
         "probabilites": {
-          "1": 30,
-          "N": 28,
-          "2": 42
+          "1": 37,
+          "N": 26,
+          "2": 37
         },
         "probabilites_marche": {
           "1": 45,
@@ -338,6 +404,34 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Italie",
         "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.991,
+          "away": 1.598
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 9
+          },
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "1-2",
+            "prob": 7
+          },
+          {
+            "score": "2-2",
+            "prob": 7
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 68,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -348,8 +442,8 @@
             "pick": "2",
             "label": "Victoire Italie",
             "cote": 3.1,
-            "edge": 1.302,
-            "stars": 5,
+            "edge": 1.147,
+            "stars": 4,
             "is_primary": true
           }
         ],
@@ -417,9 +511,9 @@
           "2": 3.3
         },
         "probabilites": {
-          "1": 26,
-          "N": 30,
-          "2": 44
+          "1": 34,
+          "N": 27,
+          "2": 39
         },
         "probabilites_marche": {
           "1": 44,
@@ -429,6 +523,34 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Malaga",
         "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 2.017,
+          "away": 1.58
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "1-1",
+            "prob": 9
+          },
+          {
+            "score": "2-2",
+            "prob": 7
+          },
+          {
+            "score": "1-2",
+            "prob": 7
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 68,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -439,7 +561,7 @@
             "pick": "2",
             "label": "Victoire Malaga",
             "cote": 3.3,
-            "edge": 1.452,
+            "edge": 1.287,
             "stars": 5,
             "is_primary": true
           }
@@ -513,9 +635,9 @@
           "2": 8.0
         },
         "probabilites": {
-          "1": 46,
-          "N": 21,
-          "2": 33
+          "1": 56,
+          "N": 19,
+          "2": 25
         },
         "probabilites_marche": {
           "1": 73,
@@ -525,6 +647,34 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Ouzbékistan",
         "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 2.601,
+          "away": 1.01
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "2-0",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "3-0",
+            "prob": 8
+          },
+          {
+            "score": "1-1",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 58,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -592,8 +742,8 @@
         },
         "probabilites": {
           "1": 81,
-          "N": 15,
-          "2": 4
+          "N": 14,
+          "2": 5
         },
         "probabilites_marche": {
           "1": 83,
@@ -603,6 +753,34 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire France",
         "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 2.941,
+          "away": 0.791
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-0",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 10
+          },
+          {
+            "score": "2-1",
+            "prob": 8
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "4-0",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 50,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -665,8 +843,8 @@
         },
         "probabilites": {
           "1": 63,
-          "N": 26,
-          "2": 11
+          "N": 23,
+          "2": 14
         },
         "probabilites_marche": {
           "1": 61,
@@ -676,6 +854,34 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire Atletico Nacional",
         "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 2.413,
+          "away": 1.274
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "1-1",
+            "prob": 8
+          },
+          {
+            "score": "3-1",
+            "prob": 7
+          },
+          {
+            "score": "2-0",
+            "prob": 7
+          },
+          {
+            "score": "1-0",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 70,
+        "prob_btts_modele": 65,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}

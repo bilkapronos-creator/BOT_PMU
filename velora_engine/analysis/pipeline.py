@@ -18,6 +18,10 @@ from velora_engine.analysis.model_1n2 import (
     confiance_niveau_from_context,
     pronostic_label_for_pick,
 )
+from velora_engine.analysis.model_poisson import (
+    blend_probability_dicts,
+    build_poisson_analysis,
+)
 from velora_engine.analysis.value_detectors import detect_all_free_values
 from velora_engine.odds_snapshots import (
     default_history_path,
@@ -130,10 +134,24 @@ def build_match_v2(
         adjusted_confidence=None,
         friendly=friendly,
     )
+    poisson = build_poisson_analysis(
+        cotes=cotes_out,
+        intel=intel,
+        markets=extracted.markets_raw,
+    )
+    probs_modele = blend_probability_dicts(
+        ctx.probabilites_modele,
+        poisson.probabilites_1n2,
+        poisson.blend_weight,
+    )
+    if poisson.top_scores:
+        legacy["top_scores"] = poisson.top_scores
+    if poisson.prob_over_25 > 55:
+        legacy["tendance_buts"] = "Match Offensif"
 
     free_values = detect_all_free_values(
         cotes_1n2=cotes_out,
-        probs=ctx.probabilites_modele,
+        probs=probs_modele,
         markets=extracted.markets_raw,
         les_deux_marquent=legacy.get("les_deux_marquent"),
         home=home,
@@ -143,7 +161,7 @@ def build_match_v2(
     premium = premium_from_extracted(
         extracted,
         cotes_1n2=cotes_out,
-        probs=ctx.probabilites_modele,
+        probs=probs_modele,
     )
 
     pro_alerts: list = []
@@ -185,7 +203,7 @@ def build_match_v2(
 
     free = FreeAnalysis(
         cotes_1n2=cotes_out,
-        probabilites=ctx.probabilites_modele,
+        probabilites=probs_modele,
         probabilites_marche=ctx.probabilites_marche,
         markets_raw=extracted.markets_raw,
         value_bets=free_values.value_bets,
@@ -195,6 +213,10 @@ def build_match_v2(
         pronostic_label=pronostic_label or None,
         confiance_niveau=confiance,
         line_signal=line_sig,
+        poisson_lambdas={"home": poisson.lambda_home, "away": poisson.lambda_away},
+        top_scores_modele=poisson.top_scores or None,
+        prob_over_25_modele=poisson.prob_over_25,
+        prob_btts_modele=poisson.prob_btts_oui,
     )
 
     record = MatchRecordV2(
