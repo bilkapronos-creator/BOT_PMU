@@ -424,17 +424,18 @@
     "score_exact": [
       {
         "score": "0 - 1",
-        "cote": 7.0
+        "cote": 7.0,
+        "prob": 37
       },
       {
         "score": "1 - 2",
         "cote": 7.75,
-        "prob": 2
+        "prob": 33
       },
       {
         "score": "0 - 2",
         "cote": 8.5,
-        "prob": 100
+        "prob": 30
       }
     ],
     "tendance_buts": "Match Offensif",
@@ -1154,22 +1155,22 @@
       {
         "score": "1 - 1",
         "cote": 5.3,
-        "prob": 66
+        "prob": 31
       },
       {
         "score": "1 - 0",
         "cote": 6.25,
-        "prob": 7
+        "prob": 26
       },
       {
         "score": "0 - 0",
         "cote": 7.25,
-        "prob": 10
+        "prob": 23
       },
       {
         "score": "2 - 0",
         "cote": 8.0,
-        "prob": 100
+        "prob": 20
       }
     ],
     "tendance_buts": "Match Offensif",
@@ -1255,9 +1256,9 @@
         "2": 8.0
       },
       "probabilites": {
-        "1": 50,
-        "N": 0,
-        "2": 50
+        "1": 71,
+        "N": 16,
+        "2": 13
       },
       "markets_raw": {
         "over_under_total": {},
@@ -1281,7 +1282,34 @@
         "cote": 8.0,
         "conseil_short": "🔥 Value Bet — Victoire Ouzbékistan @ 8.00"
       },
-      "display_badges": []
+      "display_badges": [],
+      "top_scores_modele": [
+        {
+          "score": "1-2",
+          "prob": 4
+        },
+        {
+          "score": "0-1",
+          "prob": 3
+        },
+        {
+          "score": "2-3",
+          "prob": 2
+        },
+        {
+          "score": "0-2",
+          "prob": 1
+        },
+        {
+          "score": "1-3",
+          "prob": 1
+        }
+      ],
+      "poisson_lambdas": {
+        "home": 2.601,
+        "away": 1.01
+      },
+      "pronostic_1n2": "2"
     },
     "premium_analysis": {
       "score_exact": {
@@ -1332,14 +1360,24 @@
     },
     "top_scores": [
       {
-        "score": "0 - 1",
-        "prob": 100,
-        "cote": 22.0
+        "score": "1-2",
+        "prob": 4
       },
       {
-        "score": "1 - 2",
-        "prob": 100,
-        "cote": 23.0
+        "score": "0-1",
+        "prob": 3
+      },
+      {
+        "score": "2-3",
+        "prob": 2
+      },
+      {
+        "score": "0-2",
+        "prob": 1
+      },
+      {
+        "score": "1-3",
+        "prob": 1
       }
     ],
     "les_deux_marquent": 78,
@@ -1417,7 +1455,12 @@
     },
     "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
     "velora_pick_1n2": "2",
-    "velora_confidence": 58.8
+    "velora_confidence": 58.8,
+    "probabilites": {
+      "1": 71,
+      "N": 16,
+      "2": 13
+    }
   },
   {
     "id_match": "71307342",
@@ -1490,7 +1533,34 @@
         "cote": 15.0,
         "conseil_short": "🔥 Value Bet — Victoire Irlande du Nord @ 15.00"
       },
-      "display_badges": []
+      "display_badges": [],
+      "top_scores_modele": [
+        {
+          "score": "2-0",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 10
+        },
+        {
+          "score": "2-1",
+          "prob": 8
+        },
+        {
+          "score": "3-1",
+          "prob": 8
+        },
+        {
+          "score": "4-0",
+          "prob": 7
+        }
+      ],
+      "poisson_lambdas": {
+        "home": 2.941,
+        "away": 0.791
+      },
+      "pronostic_1n2": "1"
     },
     "premium_analysis": {
       "score_exact": {
@@ -1541,14 +1611,24 @@
     },
     "top_scores": [
       {
-        "score": "5 - 1",
-        "prob": 100,
-        "cote": 20.0
+        "score": "2-0",
+        "prob": 10
       },
       {
-        "score": "3 - 0",
-        "prob": 37,
-        "cote": 5.6
+        "score": "3-0",
+        "prob": 10
+      },
+      {
+        "score": "2-1",
+        "prob": 8
+      },
+      {
+        "score": "3-1",
+        "prob": 8
+      },
+      {
+        "score": "4-0",
+        "prob": 7
       }
     ],
     "les_deux_marquent": 25,
@@ -1686,7 +1766,34 @@
         "cote": 5.0,
         "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 5.00"
       },
-      "display_badges": []
+      "display_badges": [],
+      "top_scores_modele": [
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 7
+        },
+        {
+          "score": "2-0",
+          "prob": 7
+        },
+        {
+          "score": "1-0",
+          "prob": 6
+        },
+        {
+          "score": "3-0",
+          "prob": 6
+        }
+      ],
+      "poisson_lambdas": {
+        "home": 2.413,
+        "away": 1.274
+      },
+      "pronostic_1n2": "1"
     },
     "premium_analysis": {
       "score_exact": {
@@ -1735,14 +1842,24 @@
     },
     "top_scores": [
       {
-        "score": "2 - 0",
-        "prob": 100,
-        "cote": 6.5
+        "score": "2-1",
+        "prob": 9
       },
       {
-        "score": "3 - 0",
-        "prob": 100,
-        "cote": 9.0
+        "score": "3-1",
+        "prob": 7
+      },
+      {
+        "score": "2-0",
+        "prob": 7
+      },
+      {
+        "score": "1-0",
+        "prob": 6
+      },
+      {
+        "score": "3-0",
+        "prob": 6
       }
     ],
     "les_deux_marquent": 82,
@@ -1758,17 +1875,17 @@
       {
         "score": "2 - 0",
         "cote": 6.5,
-        "prob": 100
+        "prob": 35
       },
       {
         "score": "1 - 0",
         "cote": 6.75,
-        "prob": 2
+        "prob": 34
       },
       {
         "score": "2 - 1",
         "cote": 7.25,
-        "prob": 3
+        "prob": 31
       }
     ],
     "tendance_buts": "Match Offensif",

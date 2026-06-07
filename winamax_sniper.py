@@ -19,6 +19,7 @@ from parser_winamax import (
     apply_annex_markets,
     apply_velora_analysis,
     bets_for_match,
+    finalize_score_rows_probs,
     is_match_live,
     lookup,
     lookup_odd,
@@ -238,8 +239,8 @@ def extract_score_exact(
                         row["cote"] = round(float(price), 2)
                 rows.append(row)
             if rows:
-                rows.sort(key=lambda x: x["prob"], reverse=True)
-                return rows[:3]
+                rows.sort(key=lambda x: x.get("prob", 0), reverse=True)
+                return finalize_score_rows_probs(rows)[:3]
     except Exception:
         pass
     return UNAVAILABLE
@@ -541,6 +542,62 @@ def extract_marches_supplementaires(
         return default_marches_supplementaires()
 
 
+def _probas_1n2_suspectes(probs: dict | None) -> bool:
+    if not isinstance(probs, dict):
+        return False
+    try:
+        n = int(probs.get("N") or 0)
+        p1 = int(probs.get("1") or 0)
+        p2 = int(probs.get("2") or 0)
+        if n == 0 and p1 + p2 >= 99 and abs(p1 - p2) <= 5:
+            return True
+        return False
+    except (TypeError, ValueError):
+        return False
+
+
+def _inject_poisson_model_scores(match: dict) -> dict:
+    """Scores & probas modèle si le pipeline v2 ou Winamax n'en fournit pas."""
+    updated = dict(match)
+    free = dict(updated.get("free_analysis") or {})
+    if isinstance(free.get("top_scores_modele"), list) and free["top_scores_modele"]:
+        return updated
+
+    cotes = free.get("cotes_1n2") or updated.get("cotes") or {}
+    if not any(cotes.get(k) for k in ("1", "N", "2")):
+        return updated
+
+    from velora_engine.analysis.model_poisson import build_poisson_analysis
+    from velora_engine.models import MarketsRaw
+
+    intel = updated.get("velora_intel")
+    poisson = build_poisson_analysis(cotes=cotes, intel=intel, markets=MarketsRaw())
+    pick = _pronostic_pick_from_match(updated)
+    scores = align_top_scores_for_pick(
+        poisson.top_scores,
+        pick,
+        matrix=poisson.matrix,
+        limit=5,
+    )
+    if not scores:
+        return updated
+
+    free["top_scores_modele"] = scores
+    free.setdefault(
+        "poisson_lambdas",
+        {"home": poisson.lambda_home, "away": poisson.lambda_away},
+    )
+    if pick:
+        free.setdefault("pronostic_1n2", pick)
+    cur_probs = free.get("probabilites") or updated.get("probabilites")
+    if _probas_1n2_suspectes(cur_probs):
+        free["probabilites"] = poisson.probabilites_1n2
+        updated["probabilites"] = poisson.probabilites_1n2
+    updated["free_analysis"] = free
+    updated["top_scores"] = scores
+    return updated
+
+
 def _pronostic_pick_from_match(match: dict) -> str:
     free = match.get("free_analysis") or {}
     pick = (
@@ -569,9 +626,18 @@ def _align_display_scores_for_pick(match: dict) -> dict:
 
     exact = updated.get("score_exact")
     if isinstance(exact, list) and exact:
-        aligned_exact = align_top_scores_for_pick(exact, pick, limit=5)
+        aligned_exact = align_top_scores_for_pick(
+            finalize_score_rows_probs(list(exact)),
+            pick,
+            limit=5,
+        )
         if aligned_exact:
             updated["score_exact"] = aligned_exact
+
+    for field in ("top_scores", "score_exact"):
+        val = updated.get(field)
+        if isinstance(val, list):
+            updated[field] = finalize_score_rows_probs(list(val))
     return updated
 
 
@@ -647,6 +713,7 @@ def enrich_from_state(match: dict, state: dict | None, page=None) -> dict:
             updated["tendance_buts"] = updated.get("tendance_buts") or "Match Tactique"
 
         updated = _apply_velora_engine(updated, state, page=page)
+        updated = _inject_poisson_model_scores(updated)
         updated = _align_display_scores_for_pick(updated)
     except Exception:
         if _top_scores_empty(updated.get("top_scores")):

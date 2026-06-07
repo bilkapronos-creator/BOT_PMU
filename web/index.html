@@ -6500,7 +6500,7 @@
         }
 
         function carteFootMatch(m) {
-            const p = m.probabilites || {};
+            const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
@@ -6508,7 +6508,7 @@
             const scoresMoteurHtml = typeof scoresAlignes === 'string'
                 ? `<li class="text-xs text-gray-500">${escHtml(scoresAlignes)}</li>`
                 : Array.isArray(scoresAlignes) && scoresAlignes.length
-                    ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
+                    ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span>${htmlScoreProbCell(s)}</li>`).join('')
                     : '';
             const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
@@ -6739,6 +6739,86 @@
             zone.classList.toggle('hidden', liste.length === 0);
         }
 
+        function impliedProbas1n2FromCotes(cotes) {
+            if (!cotes || typeof cotes !== 'object') return null;
+            const inv = {};
+            let total = 0;
+            for (const key of ['1', 'N', '2']) {
+                const c = Number(cotes[key]);
+                if (c > 1) {
+                    inv[key] = 1 / c;
+                    total += inv[key];
+                }
+            }
+            if (total <= 0) return null;
+            const out = {};
+            for (const key of ['1', 'N', '2']) {
+                out[key] = inv[key] ? Math.round((100 * inv[key]) / total) : 0;
+            }
+            const diff = 100 - (out['1'] + out.N + out['2']);
+            if (diff) {
+                const kmax = ['1', 'N', '2'].reduce((a, b) => (out[a] >= out[b] ? a : b));
+                out[kmax] += diff;
+            }
+            return out;
+        }
+
+        function probas1n2Suspectes(p) {
+            const n = Number(p?.N) || 0;
+            const p1 = Number(p?.['1']) || 0;
+            const p2 = Number(p?.['2']) || 0;
+            return n === 0 && p1 + p2 >= 99 && Math.abs(p1 - p2) <= 5;
+        }
+
+        function probasUiPourMatch(m) {
+            let p = m?.probabilites || {};
+            if (probas1n2Suspectes(p)) {
+                const alt = m?.probabilites_marche
+                    || impliedProbas1n2FromCotes(m?.cotes || m?.free_analysis?.cotes_1n2);
+                if (alt) p = alt;
+            }
+            return p;
+        }
+
+        function scoreProbEstFiable(prob) {
+            const p = Number(prob);
+            return Number.isFinite(p) && p > 0 && p < 90;
+        }
+
+        function enrichirScoresProbsImplicites(scores) {
+            if (!Array.isArray(scores) || !scores.length) return scores;
+            const rows = scores.map((s) => ({ ...s }));
+            const bogus = rows.filter((s) => !scoreProbEstFiable(s?.prob)).length;
+            if (!bogus) return rows;
+            const withCote = rows.filter((s) => Number(s?.cote) > 1);
+            if (!withCote.length) {
+                return rows.map((s) => {
+                    if (scoreProbEstFiable(s?.prob)) return s;
+                    const copy = { ...s };
+                    delete copy.prob;
+                    return copy;
+                });
+            }
+            const invSum = withCote.reduce((acc, s) => acc + (1 / Number(s.cote)), 0);
+            return rows.map((s) => {
+                if (scoreProbEstFiable(s?.prob)) return s;
+                const c = Number(s?.cote);
+                if (c > 1 && invSum > 0) {
+                    return { ...s, prob: Math.max(1, Math.round((100 / c) / invSum)) };
+                }
+                const copy = { ...s };
+                delete copy.prob;
+                return copy;
+            });
+        }
+
+        function htmlScoreProbCell(s) {
+            if (scoreProbEstFiable(s?.prob)) {
+                return `<span class="font-semibold text-amber-300/90">${escHtml(s.prob)}%</span>`;
+            }
+            return '<span class="text-[10px] text-gray-500">via cotes</span>';
+        }
+
         function parseScoreLabel1n2(scoreStr) {
             const raw = String(scoreStr || '').trim().replace(/\s+/g, '');
             const m = raw.match(/^(\d+)[\-–](\d+)$/);
@@ -6789,52 +6869,48 @@
             const pick = pronosticPick1n2PourScores(m);
             const modele = m?.free_analysis?.top_scores_modele;
             if (Array.isArray(modele) && modele.length) {
-                const alignee = filtrerScoresSelonPronostic(m, modele);
+                const alignee = enrichirScoresProbsImplicites(filtrerScoresSelonPronostic(m, modele));
                 if (alignee.length) return trierScoresParProbDesc(alignee).slice(0, 3);
             }
 
             const exact = m?.score_exact;
             if (Array.isArray(exact) && exact.length && pick) {
-                const alignee = trierScoresParProbDesc(filtrerScoresSelonPronostic(m, exact));
+                const alignee = enrichirScoresProbsImplicites(
+                    trierScoresParProbDesc(filtrerScoresSelonPronostic(m, exact)),
+                );
                 if (alignee.length) return alignee.slice(0, 3);
             }
 
             const top = m?.top_scores;
             if (Array.isArray(top) && top.length) {
                 const sansAutre = top.filter((s) => String(s?.score || '').trim().toLowerCase() !== 'autre');
-                const sane = sansAutre.filter((s) => {
-                    const p = Number(s?.prob);
-                    return Number.isFinite(p) && p > 0 && p < 95;
-                });
-                const centPourCent = sansAutre.filter((s) => Number(s?.prob) >= 95).length;
+                const sane = sansAutre.filter((s) => scoreProbEstFiable(s?.prob));
+                const centPourCent = sansAutre.filter((s) => Number(s?.prob) >= 90).length;
                 let liste = null;
                 if (sane.length >= 2) liste = sane;
-                else if (centPourCent > 1 && Array.isArray(exact) && exact.length) {
+                else if (centPourCent > 0 && Array.isArray(exact) && exact.length) {
                     liste = trierScoresParProbDesc(filtrerScoresSelonPronostic(m, exact));
                 } else if (sansAutre.length) liste = sansAutre;
                 if (Array.isArray(liste) && liste.length) {
-                    const alignee = filtrerScoresSelonPronostic(m, liste);
+                    const alignee = enrichirScoresProbsImplicites(filtrerScoresSelonPronostic(m, liste));
                     if (alignee.length) return trierScoresParProbDesc(alignee).slice(0, 3);
                 }
             }
 
             if (Array.isArray(modele) && modele.length) {
-                return trierScoresParProbDesc(modele).slice(0, 3);
+                return trierScoresParProbDesc(enrichirScoresProbsImplicites(modele)).slice(0, 3);
             }
-            if (Array.isArray(top) && top.length) {
-                return top.slice(0, 3);
-            }
-            return top;
+            return [];
         }
 
         function htmlTopScoresList(topScores, match) {
-            const liste = match ? scoresAffichablesPourMatch(match) : topScores;
+            const liste = match ? scoresAffichablesPourMatch(match) : enrichirScoresProbsImplicites(topScores);
             if (typeof liste === 'string') {
                 return `<li class="text-xs text-gray-500">${escHtml(liste)}</li>`;
             }
             if (Array.isArray(liste) && liste.length) {
                 return liste.slice(0, 3).map((s) =>
-                    `<li class="flex justify-between text-xs"><span class="text-gray-300">${escHtml(s.score)}</span><span class="font-bold text-amber-300/90">${escHtml(s.prob)}%</span></li>`,
+                    `<li class="flex justify-between text-xs"><span class="text-gray-300">${escHtml(s.score)}</span>${htmlScoreProbCell(s)}</li>`,
                 ).join('');
             }
             return '<li class="text-xs text-gray-500">Scores non disponibles</li>';
@@ -6874,12 +6950,39 @@
             btn.setAttribute('aria-busy', actif ? 'true' : 'false');
         }
 
+        function fusionnerOppAvecMatchsBase(premListe, baseListe) {
+            const parId = new Map((baseListe || []).map((m) => [String(m.id_match), m]));
+            return (premListe || []).map((m) => {
+                const src = parId.get(String(m.id_match));
+                if (!src) return m;
+                const faSrc = src.free_analysis || {};
+                const faPrem = m.free_analysis || {};
+                return normalizeFootMatch({
+                    ...src,
+                    ...m,
+                    probabilites: src.probabilites || m.probabilites,
+                    probabilites_marche: src.probabilites_marche || m.probabilites_marche,
+                    free_analysis: {
+                        ...faSrc,
+                        ...faPrem,
+                        top_scores_modele: faSrc.top_scores_modele || faPrem.top_scores_modele,
+                        pronostic_1n2: faSrc.pronostic_1n2 || faPrem.pronostic_1n2 || m.velora_pick_1n2,
+                        cotes_1n2: faPrem.cotes_1n2 || faSrc.cotes_1n2 || m.cotes,
+                    },
+                });
+            });
+        }
+
         async function fetchOppPremiumJson() {
             if (!peutUtiliserRadarFootOpp()) {
                 throw new Error('opp_access_denied');
             }
-            const data = await fetchVeloraJson(VELORA_JSON_PREMIUM);
-            return parseVeloraMatchsPayload(data);
+            const [premData, baseListe] = await Promise.all([
+                fetchVeloraJson(VELORA_JSON_PREMIUM),
+                fetchVeloraMatchsList(VELORA_JSON_MATCHS).catch(() => []),
+            ]);
+            const prem = parseVeloraMatchsPayload(premData);
+            return fusionnerOppAvecMatchsBase(prem, baseListe);
         }
 
         async function chargerOppMatchs(options = {}) {
@@ -6923,7 +7026,7 @@
         }
 
         function carteAlerteOpportunite(m) {
-            const p = m.probabilites || {};
+            const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;

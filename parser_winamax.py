@@ -282,25 +282,52 @@ def _ligne_ou_cote(marches: dict | None, line: str, side: str) -> float | None:
         return None
 
 
+def _score_prob_from_outcome(out: dict) -> int | None:
+    """Probabilité Winamax — ignore les placeholders 100 % (fréquents sur score exact)."""
+    pct = _outcome_pct(out)
+    if pct is None or pct >= 90:
+        return None
+    return pct
+
+
+def finalize_score_rows_probs(rows: list[dict]) -> list[dict]:
+    """Remplace les probas bookmaker aberrantes (souvent 100 % par ligne) par parts implicites cotes."""
+    if not rows:
+        return rows
+    bogus = sum(1 for r in rows if int(r.get("prob") or 0) >= 90)
+    if bogus == 0:
+        return rows
+    with_cote = [
+        r for r in rows if _safe_float(r.get("cote")) and float(r["cote"]) > 1.0
+    ]
+    if not with_cote:
+        for r in rows:
+            if int(r.get("prob") or 0) >= 90:
+                r.pop("prob", None)
+        return rows
+    inv_sum = sum(1.0 / float(r["cote"]) for r in with_cote)
+    for r in with_cote:
+        r["prob"] = max(1, int(round(100.0 / float(r["cote"]) / inv_sum)))
+    for r in rows:
+        if r not in with_cote and int(r.get("prob") or 0) >= 90:
+            r.pop("prob", None)
+    return rows
+
+
 def _append_score_row(rows: list, out: dict, oid, odds: dict | None) -> None:
     label = str(out.get("label") or "").strip()
-    prob = out.get("percentDistribution") or out.get("probability")
-    if prob is None or not label:
+    if not label:
         return
-    try:
-        p = float(prob)
-        if 0 < p <= 1:
-            p = int(round(p * 100))
-        else:
-            p = int(round(p))
-    except Exception:
-        return
-    item = {"score": label, "prob": p}
+    item: dict = {"score": label}
+    p = _score_prob_from_outcome(out)
+    if p is not None:
+        item["prob"] = p
     if odds:
         price = lookup_odd(odds, oid)
         if price is not None:
             item["cote"] = round(float(price), 2)
-    rows.append(item)
+    if "prob" in item or "cote" in item:
+        rows.append(item)
 
 
 def _match_1n2_serre(cotes: dict) -> bool:
@@ -673,7 +700,7 @@ def extract_top_scores(
                 _append_score_row(rows, out, oid, odds)
             if rows:
                 rows.sort(key=lambda x: x.get("prob", 0), reverse=True)
-                return rows[:3]
+                return finalize_score_rows_probs(rows)[:3]
     except Exception:
         pass
     return []
@@ -1102,13 +1129,13 @@ def extract_score_exact_par_cote(
                     "score": label,
                     "cote": round(float(price), 2),
                 }
-                pct = _outcome_pct(out)
+                pct = _score_prob_from_outcome(out)
                 if pct is not None:
                     item["prob"] = pct
                 rows.append(item)
             if rows:
                 rows.sort(key=lambda x: x.get("cote", 999))
-                return rows[:limit]
+                return finalize_score_rows_probs(rows)[:limit]
     except Exception:
         pass
     return None
