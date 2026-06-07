@@ -4672,7 +4672,7 @@
                     premium_analysis: prem || {},
                     probabilites: free.probabilites ?? raw.probabilites,
                     cotes: free.cotes_1n2 ?? raw.cotes,
-                    conseil: primary?.conseil_short || leg.conseil || raw.conseil || '',
+                    conseil: raw.conseil || leg.conseil || primary?.conseil_short || '',
                     tendance_buts: leg.tendance_buts || raw.tendance_buts || 'Match Tactique',
                     indice_velora: conf.indice_velora ?? raw.indice_velora,
                     indice_velora_label: conf.indice_label ?? raw.indice_velora_label,
@@ -6245,13 +6245,34 @@
             zone.classList.toggle('hidden', liste.length === 0);
         }
 
-        function htmlTopScoresList(topScores) {
-            if (typeof topScores === 'string') {
-                return `<li class="text-xs text-gray-500">${escHtml(topScores)}</li>`;
+        function scoresAffichablesPourMatch(m) {
+            const top = m?.top_scores;
+            const exact = m?.score_exact;
+            if (Array.isArray(top) && top.length) {
+                const sansAutre = top.filter((s) => String(s?.score || '').trim().toLowerCase() !== 'autre');
+                const sane = sansAutre.filter((s) => {
+                    const p = Number(s?.prob);
+                    return Number.isFinite(p) && p > 0 && p < 95;
+                });
+                const centPourCent = sansAutre.filter((s) => Number(s?.prob) >= 95).length;
+                if (sane.length >= 2) return sane;
+                if (centPourCent > 1 && Array.isArray(exact) && exact.length) {
+                    return exact.slice(0, 3);
+                }
+                if (sansAutre.length) return sansAutre.slice(0, 3);
             }
-            if (Array.isArray(topScores) && topScores.length) {
-                return topScores.slice(0, 3).map((s) =>
-                    `<li class="flex justify-between text-xs"><span class="text-gray-300">${escHtml(s.score)}</span><span class="font-bold text-amber-300/90">${escHtml(s.prob)}%</span></li>`
+            if (Array.isArray(exact) && exact.length) return exact.slice(0, 3);
+            return top;
+        }
+
+        function htmlTopScoresList(topScores, match) {
+            const liste = match ? scoresAffichablesPourMatch(match) : topScores;
+            if (typeof liste === 'string') {
+                return `<li class="text-xs text-gray-500">${escHtml(liste)}</li>`;
+            }
+            if (Array.isArray(liste) && liste.length) {
+                return liste.slice(0, 3).map((s) =>
+                    `<li class="flex justify-between text-xs"><span class="text-gray-300">${escHtml(s.score)}</span><span class="font-bold text-amber-300/90">${escHtml(s.prob)}%</span></li>`,
                 ).join('');
             }
             return '<li class="text-xs text-gray-500">Top scores non disponibles</li>';
@@ -6343,7 +6364,7 @@
             const oppType = String(m.opportunite_type || m.value_bet_type || alertMeta?.type || 'standard');
             const hide1n2 = oppCacheMarcheSecondaire(m);
             const detail = String(m.opportunite_detail || m.conseil || '').trim();
-            const scoresHtml = htmlTopScoresList(m.top_scores);
+            const scoresHtml = htmlTopScoresList(m.top_scores, m);
             const pariFocus = hide1n2 && detail
                 ? `<div class="opp-pari-focus velora-match-conseil-wrap"><p class="text-[10px] font-semibold uppercase tracking-wider text-amber-400/90">À jouer</p><p class="opp-pari-focus-value foot-match-conseil-text mt-1">${escHtml(detail)}</p></div>`
                 : '';

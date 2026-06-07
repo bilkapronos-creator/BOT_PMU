@@ -167,6 +167,17 @@ def implied_probabilities(cotes: dict[str, float | None]) -> dict[str, int]:
         return {"1": 0, "N": 0, "2": 0}
 
 
+def _probas_winamax_plates(probs: dict[str, int]) -> bool:
+    """Winamax renvoie parfois ~33/33/33 sans signal réel — on préfère les cotes."""
+    try:
+        vals = [int(probs.get(k) or 0) for k in ("1", "N", "2")]
+        if sum(vals) < 90:
+            return False
+        return max(vals) - min(vals) <= 8 and min(vals) >= 28
+    except (TypeError, ValueError):
+        return False
+
+
 def finalize_probabilities(raw_pct: dict, cotes: dict) -> dict[str, int]:
     probs: dict[str, int] = {}
     try:
@@ -178,6 +189,8 @@ def finalize_probabilities(raw_pct: dict, cotes: dict) -> dict[str, int]:
                 probs[key] = 0
         total = sum(probs.values())
         if total == 0:
+            return implied_probabilities(cotes)
+        if _probas_winamax_plates(probs):
             return implied_probabilities(cotes)
         if total != 100:
             factor = 100 / total

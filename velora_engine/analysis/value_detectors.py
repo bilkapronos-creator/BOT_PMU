@@ -66,6 +66,37 @@ def _make_vb(
     )
 
 
+def _favorite_1n2(cotes: dict[str, float | None]) -> tuple[str | None, float | None]:
+    best_k: str | None = None
+    best_c: float | None = None
+    for key in ("1", "N", "2"):
+        c = cotes.get(key)
+        if c is None or c <= 1.0:
+            continue
+        if best_c is None or c < best_c:
+            best_c = float(c)
+            best_k = key
+    return best_k, best_c
+
+
+def _outsider_value_trop_agressif(
+    pick: str,
+    cote: float | None,
+    cotes: dict[str, float | None],
+) -> bool:
+    """Évite Irlande @ 15 quand la France est à 1.11."""
+    fav_side, fav_cote = _favorite_1n2(cotes)
+    if not fav_side or fav_cote is None or pick == fav_side:
+        return False
+    if fav_cote >= 1.45:
+        return False
+    try:
+        c = float(cote) if cote is not None else 0.0
+    except (TypeError, ValueError):
+        return False
+    return c >= 5.0
+
+
 def detect_value_1n2(
     cotes: dict[str, float | None],
     probs: dict[str, int],
@@ -84,6 +115,8 @@ def detect_value_1n2(
         p = probs.get(key, 0)
         e = edge_score(p, c)
         if e is None or e < _threshold("1n2"):
+            continue
+        if _outsider_value_trop_agressif(key, c, cotes):
             continue
         hits.append(
             (
