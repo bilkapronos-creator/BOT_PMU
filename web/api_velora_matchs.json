@@ -1,52 +1,74 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-06T22:48:09.812421+02:00",
+    "generated_at": "2026-06-07T02:43:12.797042+02:00",
     "engine": "velora-pro-2",
-    "match_count": 2
+    "match_count": 8
   },
   "matchs": [
     {
-      "id_match": "71853280",
-      "date_match": "07/06/2026 à 16:00",
-      "match_start_ts": 1780840800,
+      "id_match": "71421980",
+      "date_match": "07/06/2026 à 18:30",
+      "match_start_ts": 1780849800,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Las Palmas",
-      "equipe_exterieur": "Malaga",
+      "equipe_domicile": "Danemark",
+      "equipe_exterieur": "Ukraine",
       "meta_match": {
         "competition": {
-          "name": "Espagne — LaLiga2",
-          "type": "league",
-          "round": "1/2 aller",
-          "stakes_tier": "medium",
-          "category_id": "32",
-          "tournament_id": "16255"
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
         }
       },
       "confidence": {
-        "indice_velora": 0,
-        "indice_label": "Non calculable",
-        "base_confidence": 0.5,
-        "adjusted_confidence": 0.5,
-        "modifiers": []
+        "velora_score": 52.0,
+        "indice_velora": 2,
+        "base_confidence": 0.52,
+        "adjusted_confidence": 0.22,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.86,
-          "N": 3.15,
-          "2": 2.95
+          "1": 1.66,
+          "N": 3.5,
+          "2": 4.4
         },
         "probabilites": {
-          "1": 50,
-          "N": 23,
-          "2": 27
+          "1": 86,
+          "N": 5,
+          "2": 9
         },
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [],
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "1",
+            "label": "Victoire Danemark",
+            "cote": 1.66,
+            "edge": 1.428,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire Danemark",
+          "cote": 1.66,
+          "conseil_short": "🔥 Value Bet — Victoire Danemark @ 1.66"
+        },
         "display_badges": []
       },
       "premium_analysis": {
@@ -65,10 +87,94 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Privilégier le +2.5 buts",
+        "conseil": "Victoire Ukraine — forme favorable Ukraine",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "is_opportunite": false
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "68686010",
+      "date_match": "07/06/2026 à 20:00",
+      "match_start_ts": 1780855200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Inter Toronto",
+      "equipe_exterieur": "Forge",
+      "meta_match": {
+        "competition": {
+          "name": "Canada — Canadian Premier League",
+          "type": "league",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "388",
+          "tournament_id": "80244"
+        }
+      },
+      "confidence": {
+        "velora_score": 67.2,
+        "indice_velora": 3,
+        "base_confidence": 0.672,
+        "adjusted_confidence": 0.672,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.95,
+          "N": 3.25,
+          "2": 1.96
+        },
+        "probabilites": {
+          "1": 11,
+          "N": 14,
+          "2": 75
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Forge",
+            "cote": 1.96,
+            "edge": 1.47,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Forge",
+          "cote": 1.96,
+          "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
       }
     },
     {
@@ -78,6 +184,353 @@
       "match_status": "PREMATCH",
       "equipe_domicile": "Maroc",
       "equipe_exterieur": "Norvège",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
+      },
+      "confidence": {
+        "velora_score": 56.4,
+        "indice_velora": 3,
+        "base_confidence": 0.564,
+        "adjusted_confidence": 0.264,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 3.0,
+          "N": 3.45,
+          "2": 2.15
+        },
+        "probabilites": {
+          "1": 84,
+          "N": 5,
+          "2": 11
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "1",
+            "label": "Victoire Maroc",
+            "cote": 3.0,
+            "edge": 2.52,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire Maroc",
+          "cote": 3.0,
+          "conseil_short": "🔥 Value Bet — Victoire Maroc @ 3.00"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Maroc — forme favorable Maroc",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "71422646",
+      "date_match": "07/06/2026 à 21:00",
+      "match_start_ts": 1780858800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Grèce",
+      "equipe_exterieur": "Italie",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
+      },
+      "confidence": {
+        "velora_score": 49.9,
+        "indice_velora": 2,
+        "base_confidence": 0.499,
+        "adjusted_confidence": 0.199,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.05,
+          "N": 3.45,
+          "2": 3.1
+        },
+        "probabilites": {
+          "1": 3,
+          "N": 4,
+          "2": 93
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Italie",
+            "cote": 3.1,
+            "edge": 2.883,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Italie",
+          "cote": 3.1,
+          "conseil_short": "🔥 Value Bet — Victoire Italie @ 3.10"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Italie — forme favorable Italie",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "71853280",
+      "date_match": "07/06/2026 à 21:00",
+      "match_start_ts": 1780858800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Las Palmas",
+      "equipe_exterieur": "Malaga",
+      "meta_match": {
+        "competition": {
+          "name": "Espagne — LaLiga2",
+          "type": "league",
+          "round": "1/2 aller",
+          "stakes_tier": "medium",
+          "category_id": "32",
+          "tournament_id": "16255"
+        }
+      },
+      "confidence": {
+        "velora_score": 56.4,
+        "indice_velora": 3,
+        "base_confidence": 0.564,
+        "adjusted_confidence": 0.564,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.98,
+          "N": 3.0,
+          "2": 3.3
+        },
+        "probabilites": {
+          "1": 21,
+          "N": 12,
+          "2": 67
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Malaga",
+            "cote": 3.3,
+            "edge": 2.211,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Malaga",
+          "cote": 3.3,
+          "conseil_short": "🔥 Value Bet — Victoire Malaga @ 3.30"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "71601488",
+      "date_match": "08/06/2026 à 20:45",
+      "match_start_ts": 1780944300,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Pays-Bas",
+      "equipe_exterieur": "Ouzbékistan",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
+      },
+      "confidence": {
+        "velora_score": 58.8,
+        "indice_velora": 3,
+        "base_confidence": 0.588,
+        "adjusted_confidence": 0.288,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.23,
+          "N": 5.8,
+          "2": 8.0
+        },
+        "probabilites": {
+          "1": 50,
+          "N": 0,
+          "2": 50
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Ouzbékistan",
+            "cote": 8.0,
+            "edge": 4.0,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Ouzbékistan",
+          "cote": 8.0,
+          "conseil_short": "🔥 Value Bet — Victoire Ouzbékistan @ 8.00"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "71307342",
+      "date_match": "08/06/2026 à 21:10",
+      "match_start_ts": 1780945800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "France",
+      "equipe_exterieur": "Irlande du Nord",
       "meta_match": {
         "competition": {
           "name": "International — Matchs Amicaux",
@@ -103,14 +556,14 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 2.8,
-          "N": 3.3,
-          "2": 2.25
+          "1": 1.11,
+          "N": 8.0,
+          "2": 15.0
         },
         "probabilites": {
-          "1": 72,
-          "N": 13,
-          "2": 15
+          "1": 33,
+          "N": 33,
+          "2": 34
         },
         "markets_raw": {
           "over_under_total": {},
@@ -119,20 +572,28 @@
         "value_bets": [
           {
             "market": "1n2",
-            "pick": "1",
-            "label": "Victoire Maroc",
-            "cote": 2.8,
-            "edge": 2.016,
+            "pick": "2",
+            "label": "Victoire Irlande du Nord",
+            "cote": 15.0,
+            "edge": 5.1,
             "stars": 5,
             "is_primary": true
+          },
+          {
+            "market": "dc_x2",
+            "pick": "dc_x2",
+            "label": "Double chance X2",
+            "edge": 5.1,
+            "stars": 5,
+            "is_primary": false
           }
         ],
         "primary_pick": {
           "market": "1n2",
-          "pick": "1",
-          "label": "Victoire Maroc",
-          "cote": 2.8,
-          "conseil_short": "🔥 Value Bet — Victoire Maroc @ 2.80"
+          "pick": "2",
+          "label": "Victoire Irlande du Nord",
+          "cote": 15.0,
+          "conseil_short": "🔥 Value Bet — Victoire Irlande du Nord @ 15.00"
         },
         "display_badges": []
       },
@@ -152,7 +613,90 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Maroc — forme favorable Maroc",
+        "conseil": "Victoire France — forme favorable France",
+        "tendance_buts": "Match Tactique",
+        "marches_supplementaires": {},
+        "opportunite_type": "1n2",
+        "is_opportunite": true
+      }
+    },
+    {
+      "id_match": "71702730",
+      "date_match": "09/06/2026 à 00:00",
+      "match_start_ts": 1780956000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Atletico Nacional",
+      "equipe_exterieur": "Junior De Barranquilla",
+      "meta_match": {
+        "competition": {
+          "name": "Colombie — Primera A",
+          "type": "other",
+          "round": "Finale retour",
+          "stakes_tier": "medium",
+          "category_id": "274",
+          "tournament_id": "19232"
+        }
+      },
+      "confidence": {
+        "velora_score": 54.1,
+        "indice_velora": 3,
+        "base_confidence": 0.541,
+        "adjusted_confidence": 0.541,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.41,
+          "N": 4.0,
+          "2": 5.0
+        },
+        "probabilites": {
+          "1": 56,
+          "N": 3,
+          "2": 41
+        },
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Junior De Barranquilla",
+            "cote": 5.0,
+            "edge": 2.05,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Junior De Barranquilla",
+          "cote": 5.0,
+          "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 5.00"
+        },
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "opportunite_type": "1n2",

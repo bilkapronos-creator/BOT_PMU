@@ -1,57 +1,108 @@
 [
   {
-    "id_match": "71585570",
-    "date_match": "01/06/2026 à 18:00",
-    "match_start_ts": 1780329600,
-    "equipe_domicile": "Union Touarga",
-    "equipe_exterieur": "KAC Marrakech",
-    "cotes": {
-      "1": 2.45,
-      "N": 2.9,
-      "2": 2.6
-    },
-    "probabilites": {
-      "1": 9,
-      "N": 32,
-      "2": 59
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "2 - 3",
-        "prob": 100,
-        "cote": 36.0
-      },
-      {
-        "score": "0 - 0",
-        "prob": 72,
-        "cote": 6.25
-      },
-      {
-        "score": "0 - 1",
-        "prob": 8,
-        "cote": 6.5
-      }
-    ],
+    "id_match": "71421980",
+    "date_match": "07/06/2026 à 18:30",
+    "match_start_ts": 1780849800,
     "match_status": "PREMATCH",
+    "equipe_domicile": "Danemark",
+    "equipe_exterieur": "Ukraine",
+    "meta_match": {
+      "competition": {
+        "name": "International — Matchs Amicaux",
+        "type": "friendly",
+        "stakes_tier": "low",
+        "category_id": "4",
+        "tournament_id": "66"
+      }
+    },
+    "confidence": {
+      "velora_score": 52.0,
+      "indice_velora": 2,
+      "base_confidence": 0.52,
+      "adjusted_confidence": 0.22,
+      "modifiers": [
+        {
+          "code": "friendly_match",
+          "delta": -0.3,
+          "label": "Match amical — confiance réduite"
+        }
+      ]
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.66,
+        "N": 3.5,
+        "2": 4.4
+      },
+      "probabilites": {
+        "1": 86,
+        "N": 5,
+        "2": 9
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire Danemark",
+          "cote": 1.66,
+          "edge": 1.428,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Danemark",
+        "cote": 1.66,
+        "conseil_short": "🔥 Value Bet — Victoire Danemark @ 1.66"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Ukraine — forme favorable Ukraine",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 2.0,
-          "plus_prob": 32,
-          "moins_cote": 3.55,
-          "moins_prob": 9
+          "plus_cote": 2.8,
+          "plus_prob": 31,
+          "moins_cote": 4.8
         },
         "2.5": {
+          "plus_cote": 2.3,
           "plus_prob": 100,
-          "moins_cote": 2.35,
-          "moins_prob": 100,
-          "plus_cote": 3.7
+          "moins_cote": 2.7,
+          "moins_prob": 2
         },
         "3.5": {
-          "plus_prob": 68,
-          "moins_cote": 1.66,
           "plus_cote": 4.0,
+          "plus_prob": 28,
+          "moins_cote": 2.3,
           "moins_prob": 100
         }
       },
@@ -59,596 +110,58 @@
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 3,
-    "indice_velora_label": null,
-    "velora_score": 59.9,
-    "conseil": "Victoire KAC Marrakech — forme favorable KAC Marrakech — Classement 14e vs 9e",
-    "les_deux_marquent": 91,
-    "btts": {
-      "oui": 1.86,
-      "non": 1.62
-    },
-    "over_under_25": {
-      "plus": 3.7,
-      "moins": 2.35
-    },
-    "score_exact": [
-      {
-        "score": "1 - 1",
-        "cote": 5.2,
-        "prob": 2
-      },
-      {
-        "score": "0 - 0",
-        "cote": 6.25,
-        "prob": 72
-      },
-      {
-        "score": "1 - 0",
-        "cote": 6.25
-      },
-      {
-        "score": "0 - 1",
-        "cote": 6.5,
-        "prob": 8
-      }
-    ],
-    "velora_intel": {
-      "home_form": {
-        "raw": "LLLWW",
-        "played": 5,
-        "wins": 2,
-        "draws": 0,
-        "losses": 3,
-        "points": 6,
-        "max_points": 15,
-        "pct": 40.0
-      },
-      "away_form": {
-        "raw": "WLLWW",
-        "played": 5,
-        "wins": 3,
-        "draws": 0,
-        "losses": 2,
-        "points": 9,
-        "max_points": 15,
-        "pct": 60.0
-      },
-      "home_rank": 14,
-      "away_rank": 9,
-      "h2h": null,
-      "form_edge": -3,
-      "rank_edge": -5
-    },
-    "velora_score_breakdown": {
-      "base": 43.4,
-      "multiplicateur": 1.38,
-      "facteurs": [
-        "forme_solide_+15%",
-        "classement_favorable_+20%"
-      ],
-      "forme_dom_pct": 40.0,
-      "forme_ext_pct": 60.0,
-      "classement_dom": 14,
-      "classement_ext": 9
-    },
-    "velora_pick_1n2": "2",
-    "velora_confidence": 59.9
-  },
-  {
-    "id_match": "69829658",
-    "date_match": "01/06/2026 à 19:00",
-    "match_start_ts": 1780333200,
-    "equipe_domicile": "Norvège",
-    "equipe_exterieur": "Suède",
-    "cotes": {
-      "1": 1.72,
-      "N": 3.8,
-      "2": 4.1
-    },
-    "probabilites": {
-      "1": 91,
-      "N": 6,
-      "2": 3
-    },
-    "tendance_buts": "Match Tactique",
     "top_scores": [
       {
-        "score": "3 - 0",
-        "prob": 100,
-        "cote": 11.5
-      },
-      {
         "score": "0 - 1",
         "prob": 100,
-        "cote": 11.0
+        "cote": 9.5
       },
       {
-        "score": "0 - 2",
+        "score": "4 - 1",
         "prob": 100,
-        "cote": 20.0
+        "cote": 28.0
+      },
+      {
+        "score": "4 - 5",
+        "prob": 100,
+        "cote": 500.0
       }
     ],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 2.5,
-          "plus_prob": 12,
-          "moins_cote": 4.6,
-          "moins_prob": 5
-        },
-        "2.5": {
-          "moins_cote": 3.05,
-          "moins_prob": 2,
-          "plus_cote": 4.1,
-          "plus_prob": 54
-        },
-        "3.5": {
-          "plus_prob": 100,
-          "moins_prob": 100,
-          "moins_cote": 2.45,
-          "plus_cote": 3.3
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 1,
-    "indice_velora_label": null,
-    "velora_score": 39.8,
-    "conseil": "Victoire Norvège — forme favorable Norvège",
     "les_deux_marquent": 100,
     "btts": {
-      "oui": 1.62,
-      "non": 1.88
+      "oui": 1.84,
+      "non": 1.64
     },
     "over_under_25": {
-      "plus": 4.1,
-      "moins": 3.05
+      "plus": 2.3,
+      "moins": 2.7
     },
     "score_exact": [
       {
-        "score": "1 - 1",
-        "cote": 6.25,
-        "prob": 7
+        "score": "1 - 0",
+        "cote": 5.6,
+        "prob": 30
       },
       {
-        "score": "1 - 0",
-        "cote": 7.0,
+        "score": "1 - 1",
+        "cote": 6.0,
         "prob": 9
       },
       {
-        "score": "2 - 1",
-        "cote": 7.25,
-        "prob": 38
-      },
-      {
         "score": "2 - 0",
-        "cote": 7.5,
-        "prob": 14
-      }
-    ],
-    "velora_intel": {
-      "home_form": {
-        "raw": "DWWLD",
-        "played": 5,
-        "wins": 2,
-        "draws": 2,
-        "losses": 1,
-        "points": 8,
-        "max_points": 15,
-        "pct": 53.3
-      },
-      "away_form": {
-        "raw": "LLDWW",
-        "played": 5,
-        "wins": 2,
-        "draws": 1,
-        "losses": 2,
-        "points": 7,
-        "max_points": 15,
-        "pct": 46.7
-      },
-      "home_rank": null,
-      "away_rank": null,
-      "h2h": null,
-      "form_edge": 1,
-      "rank_edge": 0
-    },
-    "velora_score_breakdown": {
-      "base": 39.8,
-      "multiplicateur": 1.0,
-      "facteurs": [],
-      "forme_dom_pct": 53.3,
-      "forme_ext_pct": 46.7,
-      "classement_dom": null,
-      "classement_ext": null
-    },
-    "velora_pick_1n2": "1",
-    "velora_confidence": 39.8
-  },
-  {
-    "id_match": "71604168",
-    "date_match": "01/06/2026 à 19:30",
-    "match_start_ts": 1780335000,
-    "equipe_domicile": "FC Voluntari",
-    "equipe_exterieur": "FC Hermannstadt",
-    "cotes": {
-      "1": 2.45,
-      "N": 3.0,
-      "2": 2.5
-    },
-    "probabilites": {
-      "1": 18,
-      "N": 36,
-      "2": 46
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "2 - 2",
-        "prob": 62,
-        "cote": 12.5
-      },
-      {
-        "score": "1 - 1",
-        "prob": 19,
-        "cote": 5.3
-      },
-      {
-        "score": "0 - 0",
-        "prob": 8,
-        "cote": 7.25
-      }
-    ],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 4.7,
-          "plus_prob": 94,
-          "moins_cote": 3.95,
-          "moins_prob": 100
-        },
-        "2.5": {
-          "moins_cote": 2.55,
-          "moins_prob": 6,
-          "plus_cote": 3.3,
-          "plus_prob": 94
-        },
-        "3.5": {
-          "moins_cote": 1.72,
-          "moins_prob": 100,
-          "plus_cote": 4.5,
-          "plus_prob": 34
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 2,
-    "indice_velora_label": null,
-    "velora_score": 43.7,
-    "conseil": "Match nul",
-    "les_deux_marquent": 98,
-    "btts": {
-      "oui": 1.72,
-      "non": 1.74
-    },
-    "over_under_25": {
-      "plus": 3.3,
-      "moins": 2.55
-    },
-    "score_exact": [
-      {
-        "score": "1 - 1",
-        "cote": 5.3,
-        "prob": 19
-      },
-      {
-        "score": "1 - 0",
-        "cote": 7.0,
-        "prob": 2
-      },
-      {
-        "score": "0 - 1",
-        "cote": 7.0,
-        "prob": 3
-      },
-      {
-        "score": "0 - 0",
-        "cote": 7.25,
-        "prob": 8
-      }
-    ],
-    "velora_intel": {
-      "home_form": {
-        "raw": "WLWWL",
-        "played": 5,
-        "wins": 3,
-        "draws": 0,
-        "losses": 2,
-        "points": 9,
-        "max_points": 15,
-        "pct": 60.0
-      },
-      "away_form": {
-        "raw": "DDDWW",
-        "played": 5,
-        "wins": 2,
-        "draws": 3,
-        "losses": 0,
-        "points": 9,
-        "max_points": 15,
-        "pct": 60.0
-      },
-      "home_rank": null,
-      "away_rank": null,
-      "h2h": null,
-      "form_edge": 0,
-      "rank_edge": 0
-    },
-    "velora_score_breakdown": {
-      "base": 38.0,
-      "multiplicateur": 1.15,
-      "facteurs": [
-        "forme_solide_+15%"
-      ],
-      "forme_dom_pct": 60.0,
-      "forme_ext_pct": 60.0,
-      "classement_dom": null,
-      "classement_ext": null
-    },
-    "velora_pick_1n2": "N",
-    "velora_confidence": 43.7
-  },
-  {
-    "id_match": "71585572",
-    "date_match": "01/06/2026 à 20:00",
-    "match_start_ts": 1780336800,
-    "equipe_domicile": "OC Safi",
-    "equipe_exterieur": "MAS Fès",
-    "cotes": {
-      "1": 3.1,
-      "N": 2.4,
-      "2": 2.5
-    },
-    "probabilites": {
-      "1": 3,
-      "N": 28,
-      "2": 69
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "2 - 0",
-        "prob": 100,
-        "cote": 12.5
-      },
-      {
-        "score": "2 - 1",
-        "prob": 100,
-        "cote": 11.0
-      },
-      {
-        "score": "0 - 0",
-        "prob": 21,
-        "cote": 4.9
-      }
-    ],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 2.1,
-          "plus_prob": 23,
-          "moins_cote": 3.65,
-          "moins_prob": 100
-        },
-        "2.5": {
-          "plus_prob": 63,
-          "moins_cote": 2.45,
-          "plus_cote": 4.3,
-          "moins_prob": 100
-        },
-        "3.5": {
-          "moins_cote": 1.7,
-          "plus_cote": 4.5,
-          "plus_prob": 5,
-          "moins_prob": 100
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 2,
-    "indice_velora_label": null,
-    "velora_score": 49.9,
-    "conseil": "Victoire MAS Fès — forme favorable OC Safi — Classement 16e vs 3e",
-    "les_deux_marquent": 99,
-    "btts": {
-      "oui": 1.92,
-      "non": 1.58
-    },
-    "over_under_25": {
-      "plus": 4.3,
-      "moins": 2.45
-    },
-    "score_exact": [
-      {
-        "score": "1 - 1",
-        "cote": 4.4,
-        "prob": 21
-      },
-      {
-        "score": "0 - 0",
-        "cote": 4.9,
-        "prob": 21
-      },
-      {
-        "score": "0 - 1",
-        "cote": 6.0,
-        "prob": 8
-      },
-      {
-        "score": "1 - 0",
-        "cote": 7.0,
-        "prob": 2
-      }
-    ],
-    "velora_intel": {
-      "home_form": {
-        "raw": "LDDWD",
-        "played": 5,
-        "wins": 1,
-        "draws": 3,
-        "losses": 1,
-        "points": 6,
-        "max_points": 15,
-        "pct": 40.0
-      },
-      "away_form": {
-        "raw": "DLWLL",
-        "played": 5,
-        "wins": 1,
-        "draws": 1,
-        "losses": 3,
-        "points": 4,
-        "max_points": 15,
-        "pct": 26.7
-      },
-      "home_rank": 16,
-      "away_rank": 3,
-      "h2h": null,
-      "form_edge": 2,
-      "rank_edge": -13
-    },
-    "velora_score_breakdown": {
-      "base": 41.6,
-      "multiplicateur": 1.2,
-      "facteurs": [
-        "classement_favorable_+20%"
-      ],
-      "forme_dom_pct": 40.0,
-      "forme_ext_pct": 26.7,
-      "classement_dom": 16,
-      "classement_ext": 3
-    },
-    "velora_pick_1n2": "2",
-    "velora_confidence": 49.9
-  },
-  {
-    "id_match": "68269904",
-    "date_match": "01/06/2026 à 20:45",
-    "match_start_ts": 1780339500,
-    "equipe_domicile": "Autriche",
-    "equipe_exterieur": "Tunisie",
-    "cotes": {
-      "1": 1.44,
-      "N": 4.3,
-      "2": 6.0
-    },
-    "probabilites": {
-      "1": 91,
-      "N": 3,
-      "2": 6
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "5 - 0",
-        "prob": 100,
-        "cote": 36.0
-      },
-      {
-        "score": "0 - 1",
-        "prob": 100,
-        "cote": 12.5
-      },
-      {
-        "score": "0 - 2",
-        "prob": 100,
-        "cote": 30.0
-      }
-    ],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 3.6,
-          "plus_prob": 36,
-          "moins_cote": 4.1,
-          "moins_prob": 3
-        },
-        "2.5": {
-          "plus_cote": 2.0,
-          "plus_prob": 100,
-          "moins_cote": 3.35,
-          "moins_prob": 87
-        },
-        "3.5": {
-          "plus_cote": 3.45,
-          "plus_prob": 100,
-          "moins_cote": 2.9,
-          "moins_prob": 100
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 3,
-    "indice_velora_label": null,
-    "velora_score": 54.0,
-    "conseil": "Victoire Autriche — forme favorable Autriche",
-    "les_deux_marquent": 98,
-    "btts": {
-      "oui": 1.94,
-      "non": 1.58
-    },
-    "over_under_25": {
-      "plus": 2.0,
-      "moins": 3.35
-    },
-    "score_exact": [
-      {
-        "score": "1 - 0",
-        "cote": 5.5,
-        "prob": 5
-      },
-      {
-        "score": "2 - 0",
-        "cote": 5.7,
-        "prob": 12
-      },
-      {
-        "score": "1 - 1",
-        "cote": 7.0,
-        "prob": 8
+        "cote": 6.5,
+        "prob": 6
       },
       {
         "score": "2 - 1",
         "cote": 7.5,
-        "prob": 47
+        "prob": 16
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
-        "raw": "LWDWW",
-        "played": 5,
-        "wins": 3,
-        "draws": 1,
-        "losses": 1,
-        "points": 10,
-        "max_points": 15,
-        "pct": 66.7
-      },
-      "away_form": {
-        "raw": "LDLWD",
+        "raw": "DLWLD",
         "played": 5,
         "wins": 1,
         "draws": 2,
@@ -657,256 +170,617 @@
         "max_points": 15,
         "pct": 33.3
       },
+      "away_form": {
+        "raw": "LWLWW",
+        "played": 5,
+        "wins": 3,
+        "draws": 0,
+        "losses": 2,
+        "points": 9,
+        "max_points": 15,
+        "pct": 60.0
+      },
       "home_rank": null,
       "away_rank": null,
       "h2h": null,
-      "form_edge": 5,
+      "form_edge": -4,
       "rank_edge": 0
     },
+    "indice_velora": 2,
+    "indice_velora_label": null,
+    "velora_score": 52.0,
     "velora_score_breakdown": {
-      "base": 47.0,
+      "base": 45.2,
       "multiplicateur": 1.15,
       "facteurs": [
         "forme_solide_+15%"
       ],
-      "forme_dom_pct": 66.7,
-      "forme_ext_pct": 33.3,
+      "forme_dom_pct": 33.3,
+      "forme_ext_pct": 60.0,
       "classement_dom": null,
       "classement_ext": null
     },
-    "velora_pick_1n2": "1",
-    "velora_confidence": 54.0
+    "conseil": "Victoire Ukraine — forme favorable Ukraine",
+    "velora_pick_1n2": "2",
+    "velora_confidence": 52.0
   },
   {
-    "id_match": "71585574",
-    "date_match": "01/06/2026 à 22:00",
-    "match_start_ts": 1780344000,
-    "equipe_domicile": "CODM Meknes",
-    "equipe_exterieur": "Olympique Dcheira",
-    "cotes": {
-      "1": 1.96,
-      "N": 2.85,
-      "2": 3.6
-    },
-    "probabilites": {
-      "1": 81,
-      "N": 15,
-      "2": 4
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "1 - 0",
-        "prob": 100,
-        "cote": 4.8
-      },
-      {
-        "score": "2 - 0",
-        "prob": 100,
-        "cote": 7.25
-      },
-      {
-        "score": "2 - 1",
-        "prob": 100,
-        "cote": 8.5
-      }
-    ],
+    "id_match": "68686010",
+    "date_match": "07/06/2026 à 20:00",
+    "match_start_ts": 1780855200,
     "match_status": "PREMATCH",
+    "equipe_domicile": "Inter Toronto",
+    "equipe_exterieur": "Forge",
+    "meta_match": {
+      "competition": {
+        "name": "Canada — Canadian Premier League",
+        "type": "league",
+        "round": "J1",
+        "stakes_tier": "medium",
+        "category_id": "388",
+        "tournament_id": "80244"
+      }
+    },
+    "confidence": {
+      "velora_score": 67.2,
+      "indice_velora": 3,
+      "base_confidence": 0.672,
+      "adjusted_confidence": 0.672,
+      "modifiers": []
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 2.95,
+        "N": 3.25,
+        "2": 1.96
+      },
+      "probabilites": {
+        "1": 11,
+        "N": 14,
+        "2": 75
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Forge",
+          "cote": 1.96,
+          "edge": 1.47,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Forge",
+        "cote": 1.96,
+        "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 2.7,
-          "moins_cote": 3.35,
-          "plus_prob": 32,
-          "moins_prob": 59
+          "plus_cote": 2.1,
+          "plus_prob": 100,
+          "moins_cote": 5.0
         },
         "2.5": {
-          "moins_cote": 2.15,
-          "plus_cote": 3.45,
-          "plus_prob": 77,
-          "moins_prob": 100
+          "plus_cote": 3.5,
+          "moins_cote": 2.8,
+          "plus_prob": 100
         },
         "3.5": {
-          "moins_cote": 1.8,
-          "plus_prob": 100,
-          "moins_prob": 52
+          "moins_cote": 2.1,
+          "plus_cote": 3.8,
+          "plus_prob": 2,
+          "moins_prob": 98
         }
       },
       "buteur_match": null,
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 2,
-    "indice_velora_label": null,
-    "velora_score": 49.9,
-    "conseil": "Victoire CODM Meknes — forme favorable CODM Meknes — Classement 7e vs 13e",
-    "les_deux_marquent": 99,
+    "top_scores": [
+      {
+        "score": "0 - 2",
+        "prob": 100,
+        "cote": 8.5
+      },
+      {
+        "score": "5 - 2",
+        "prob": 100,
+        "cote": 160.0
+      },
+      {
+        "score": "4 - 3",
+        "prob": 100,
+        "cote": 95.0
+      }
+    ],
+    "les_deux_marquent": 100,
     "btts": {
-      "oui": 2.15,
-      "non": 1.46
+      "oui": 1.6,
+      "non": 1.88
     },
     "over_under_25": {
-      "plus": 3.45,
-      "moins": 2.15
+      "plus": 3.5,
+      "moins": 2.8
     },
     "score_exact": [
       {
-        "score": "1 - 0",
-        "cote": 4.8,
-        "prob": 100
-      },
-      {
-        "score": "0 - 0",
-        "cote": 5.3,
-        "prob": 75
-      },
-      {
         "score": "1 - 1",
-        "cote": 5.4,
-        "prob": 16
+        "cote": 5.8,
+        "prob": 4
       },
       {
         "score": "0 - 1",
-        "cote": 7.0,
+        "cote": 7.0
+      },
+      {
+        "score": "1 - 2",
+        "cote": 7.75,
         "prob": 2
+      },
+      {
+        "score": "0 - 2",
+        "cote": 8.5,
+        "prob": 100
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
-        "raw": "DLLWL",
+        "raw": "WLWDL",
         "played": 5,
-        "wins": 1,
+        "wins": 2,
         "draws": 1,
-        "losses": 3,
-        "points": 4,
+        "losses": 2,
+        "points": 7,
         "max_points": 15,
-        "pct": 26.7
+        "pct": 46.7
       },
       "away_form": {
-        "raw": "LDDLL",
+        "raw": "WWWLW",
         "played": 5,
-        "wins": 0,
-        "draws": 2,
-        "losses": 3,
-        "points": 2,
+        "wins": 4,
+        "draws": 0,
+        "losses": 1,
+        "points": 12,
         "max_points": 15,
-        "pct": 13.3
+        "pct": 80.0
       },
-      "home_rank": 7,
-      "away_rank": 13,
+      "home_rank": 3,
+      "away_rank": 1,
       "h2h": null,
-      "form_edge": 2,
-      "rank_edge": 6
-    },
-    "velora_score_breakdown": {
-      "base": 41.6,
-      "multiplicateur": 1.2,
-      "facteurs": [
-        "classement_favorable_+20%"
-      ],
-      "forme_dom_pct": 26.7,
-      "forme_ext_pct": 13.3,
-      "classement_dom": 7,
-      "classement_ext": 13
-    },
-    "velora_pick_1n2": "1",
-    "velora_confidence": 49.9
-  },
-  {
-    "id_match": "68687682",
-    "date_match": "02/06/2026 à 00:00",
-    "match_start_ts": 1780351200,
-    "equipe_domicile": "Club Leones Del Norte",
-    "equipe_exterieur": "CSD Macará",
-    "cotes": {
-      "1": 2.5,
-      "N": 2.9,
-      "2": 2.55
-    },
-    "probabilites": {
-      "1": 17,
-      "N": 51,
-      "2": 32
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [
-      {
-        "score": "1 - 1",
-        "prob": 56,
-        "cote": 5.2
-      },
-      {
-        "score": "2 - 1",
-        "prob": 14,
-        "cote": 9.0
-      },
-      {
-        "score": "2 - 2",
-        "prob": 13,
-        "cote": 15.0
-      }
-    ],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 2.05,
-          "plus_prob": 100,
-          "moins_cote": 3.4
-        },
-        "2.5": {
-          "plus_cote": 3.85,
-          "plus_prob": 42,
-          "moins_cote": 2.25,
-          "moins_prob": 100
-        },
-        "3.5": {
-          "plus_cote": 4.4,
-          "moins_cote": 1.62,
-          "moins_prob": 15
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "form_edge": -5,
+      "rank_edge": -2
     },
     "indice_velora": 3,
     "indice_velora_label": null,
-    "velora_score": 62.4,
-    "conseil": "Match nul — forme favorable Club Leones Del Norte — Classement 14e vs 9e",
-    "les_deux_marquent": 98,
+    "velora_score": 67.2,
+    "velora_score_breakdown": {
+      "base": 47.0,
+      "multiplicateur": 1.43,
+      "facteurs": [
+        "forme_excellente_+30%",
+        "classement_leger_+10%"
+      ],
+      "forme_dom_pct": 46.7,
+      "forme_ext_pct": 80.0,
+      "classement_dom": 3,
+      "classement_ext": 1
+    },
+    "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
+    "velora_pick_1n2": "2",
+    "velora_confidence": 67.2
+  },
+  {
+    "id_match": "71170368",
+    "date_match": "07/06/2026 à 21:00",
+    "match_start_ts": 1780858800,
+    "match_status": "PREMATCH",
+    "equipe_domicile": "Maroc",
+    "equipe_exterieur": "Norvège",
+    "meta_match": {
+      "competition": {
+        "name": "International — Matchs Amicaux",
+        "type": "friendly",
+        "stakes_tier": "low",
+        "category_id": "4",
+        "tournament_id": "66"
+      }
+    },
+    "confidence": {
+      "velora_score": 56.4,
+      "indice_velora": 3,
+      "base_confidence": 0.564,
+      "adjusted_confidence": 0.264,
+      "modifiers": [
+        {
+          "code": "friendly_match",
+          "delta": -0.3,
+          "label": "Match amical — confiance réduite"
+        }
+      ]
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 3.0,
+        "N": 3.45,
+        "2": 2.15
+      },
+      "probabilites": {
+        "1": 84,
+        "N": 5,
+        "2": 11
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire Maroc",
+          "cote": 3.0,
+          "edge": 2.52,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Maroc",
+        "cote": 3.0,
+        "conseil_short": "🔥 Value Bet — Victoire Maroc @ 3.00"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Maroc — forme favorable Maroc",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": {
+          "plus_cote": 4.1,
+          "plus_prob": 100,
+          "moins_cote": 5.0
+        },
+        "2.5": {
+          "plus_cote": 3.3,
+          "plus_prob": 4,
+          "moins_cote": 2.85,
+          "moins_prob": 100
+        },
+        "3.5": {
+          "moins_cote": 2.05,
+          "moins_prob": 28,
+          "plus_prob": 13,
+          "plus_cote": 4.8
+        }
+      },
+      "buteur_match": null,
+      "buteur_mi_temps": null,
+      "buteur_multiple": null
+    },
+    "top_scores": [
+      {
+        "score": "4 - 1",
+        "prob": 100,
+        "cote": 50.0
+      },
+      {
+        "score": "3 - 2",
+        "prob": 100,
+        "cote": 27.0
+      },
+      {
+        "score": "0 - 3",
+        "prob": 100,
+        "cote": 17.0
+      }
+    ],
+    "les_deux_marquent": 99,
     "btts": {
-      "oui": 1.94,
-      "non": 1.58
+      "oui": 1.58,
+      "non": 1.92
     },
     "over_under_25": {
-      "plus": 3.85,
-      "moins": 2.25
+      "plus": 3.3,
+      "moins": 2.85
     },
     "score_exact": [
       {
         "score": "1 - 1",
-        "cote": 5.2,
-        "prob": 56
-      },
-      {
-        "score": "0 - 0",
-        "cote": 6.0,
-        "prob": 2
-      },
-      {
-        "score": "1 - 0",
-        "cote": 6.0,
-        "prob": 6
+        "cote": 5.7,
+        "prob": 5
       },
       {
         "score": "0 - 1",
-        "cote": 6.0,
+        "cote": 7.25,
+        "prob": 2
+      },
+      {
+        "score": "1 - 2",
+        "cote": 7.75,
+        "prob": 8
+      },
+      {
+        "score": "1 - 0",
+        "cote": 8.5,
+        "prob": 3
+      }
+    ],
+    "tendance_buts": "Match Tactique",
+    "velora_intel": {
+      "home_form": {
+        "raw": "WDWWW",
+        "played": 5,
+        "wins": 4,
+        "draws": 1,
+        "losses": 0,
+        "points": 13,
+        "max_points": 15,
+        "pct": 86.7
+      },
+      "away_form": {
+        "raw": "WWLDW",
+        "played": 5,
+        "wins": 3,
+        "draws": 1,
+        "losses": 1,
+        "points": 10,
+        "max_points": 15,
+        "pct": 66.7
+      },
+      "home_rank": null,
+      "away_rank": null,
+      "h2h": null,
+      "form_edge": 3,
+      "rank_edge": 0
+    },
+    "indice_velora": 3,
+    "indice_velora_label": null,
+    "velora_score": 56.4,
+    "velora_score_breakdown": {
+      "base": 43.4,
+      "multiplicateur": 1.3,
+      "facteurs": [
+        "forme_excellente_+30%"
+      ],
+      "forme_dom_pct": 86.7,
+      "forme_ext_pct": 66.7,
+      "classement_dom": null,
+      "classement_ext": null
+    },
+    "conseil": "Victoire Maroc — forme favorable Maroc",
+    "velora_pick_1n2": "1",
+    "velora_confidence": 56.4
+  },
+  {
+    "id_match": "71422646",
+    "date_match": "07/06/2026 à 21:00",
+    "match_start_ts": 1780858800,
+    "match_status": "PREMATCH",
+    "equipe_domicile": "Grèce",
+    "equipe_exterieur": "Italie",
+    "meta_match": {
+      "competition": {
+        "name": "International — Matchs Amicaux",
+        "type": "friendly",
+        "stakes_tier": "low",
+        "category_id": "4",
+        "tournament_id": "66"
+      }
+    },
+    "confidence": {
+      "velora_score": 49.9,
+      "indice_velora": 2,
+      "base_confidence": 0.499,
+      "adjusted_confidence": 0.199,
+      "modifiers": [
+        {
+          "code": "friendly_match",
+          "delta": -0.3,
+          "label": "Match amical — confiance réduite"
+        }
+      ]
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 2.05,
+        "N": 3.45,
+        "2": 3.1
+      },
+      "probabilites": {
+        "1": 3,
+        "N": 4,
+        "2": 93
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Italie",
+          "cote": 3.1,
+          "edge": 2.883,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Italie",
+        "cote": 3.1,
+        "conseil_short": "🔥 Value Bet — Victoire Italie @ 3.10"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Italie — forme favorable Italie",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": {
+          "plus_cote": 2.1,
+          "plus_prob": 47,
+          "moins_cote": 4.8,
+          "moins_prob": 35
+        },
+        "2.5": {
+          "plus_prob": 100,
+          "moins_cote": 2.7,
+          "moins_prob": 35,
+          "plus_cote": 3.55
+        },
+        "3.5": {
+          "plus_prob": 9,
+          "moins_cote": 2.05,
+          "moins_prob": 91,
+          "plus_cote": 3.95
+        }
+      },
+      "buteur_match": null,
+      "buteur_mi_temps": null,
+      "buteur_multiple": null
+    },
+    "top_scores": [
+      {
+        "score": "4 - 1",
+        "prob": 100,
+        "cote": 34.0
+      },
+      {
+        "score": "3 - 2",
+        "prob": 100,
+        "cote": 24.0
+      },
+      {
+        "score": "4 - 2",
+        "prob": 100,
+        "cote": 50.0
+      }
+    ],
+    "les_deux_marquent": 96,
+    "btts": {
+      "oui": 1.64,
+      "non": 1.84
+    },
+    "over_under_25": {
+      "plus": 3.55,
+      "moins": 2.7
+    },
+    "score_exact": [
+      {
+        "score": "1 - 1",
+        "cote": 5.8,
+        "prob": 13
+      },
+      {
+        "score": "1 - 0",
+        "cote": 6.75,
+        "prob": 2
+      },
+      {
+        "score": "2 - 1",
+        "cote": 7.75,
+        "prob": 2
+      },
+      {
+        "score": "0 - 0",
+        "cote": 8.5,
         "prob": 2
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
+        "raw": "WDLDD",
+        "played": 5,
+        "wins": 1,
+        "draws": 3,
+        "losses": 1,
+        "points": 6,
+        "max_points": 15,
+        "pct": 40.0
+      },
+      "away_form": {
         "raw": "WLWLW",
         "played": 5,
         "wins": 3,
@@ -916,277 +790,405 @@
         "max_points": 15,
         "pct": 60.0
       },
-      "away_form": {
-        "raw": "WLDLD",
-        "played": 5,
-        "wins": 1,
-        "draws": 2,
-        "losses": 2,
-        "points": 5,
-        "max_points": 15,
-        "pct": 33.3
-      },
-      "home_rank": 14,
-      "away_rank": 9,
+      "home_rank": null,
+      "away_rank": null,
       "h2h": null,
-      "form_edge": 4,
-      "rank_edge": -5
+      "form_edge": -3,
+      "rank_edge": 0
     },
+    "indice_velora": 2,
+    "indice_velora_label": null,
+    "velora_score": 49.9,
     "velora_score_breakdown": {
-      "base": 45.2,
-      "multiplicateur": 1.38,
+      "base": 43.4,
+      "multiplicateur": 1.15,
       "facteurs": [
-        "forme_solide_+15%",
-        "classement_favorable_+20%"
+        "forme_solide_+15%"
       ],
-      "forme_dom_pct": 60.0,
-      "forme_ext_pct": 33.3,
-      "classement_dom": 14,
-      "classement_ext": 9
+      "forme_dom_pct": 40.0,
+      "forme_ext_pct": 60.0,
+      "classement_dom": null,
+      "classement_ext": null
     },
-    "velora_pick_1n2": "N",
-    "velora_confidence": 62.4
+    "conseil": "Victoire Italie — forme favorable Italie",
+    "velora_pick_1n2": "2",
+    "velora_confidence": 49.9
   },
   {
-    "id_match": "68687674",
-    "date_match": "02/06/2026 à 02:30",
-    "match_start_ts": 1780360200,
-    "equipe_domicile": "Técnico Universitario",
-    "equipe_exterieur": "Barcelona SC",
-    "cotes": {
-      "1": 2.65,
-      "N": 2.9,
-      "2": 2.4
-    },
-    "probabilites": {
-      "1": 4,
-      "N": 17,
-      "2": 79
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "1 - 2",
-        "prob": 95,
-        "cote": 9.0
-      },
-      {
-        "score": "1 - 1",
-        "prob": 3,
-        "cote": 5.3
-      },
-      {
-        "score": "2 - 2",
-        "prob": 2,
-        "cote": 15.0
-      }
-    ],
+    "id_match": "71853280",
+    "date_match": "07/06/2026 à 21:00",
+    "match_start_ts": 1780858800,
     "match_status": "PREMATCH",
+    "equipe_domicile": "Las Palmas",
+    "equipe_exterieur": "Malaga",
+    "meta_match": {
+      "competition": {
+        "name": "Espagne — LaLiga2",
+        "type": "league",
+        "round": "1/2 aller",
+        "stakes_tier": "medium",
+        "category_id": "32",
+        "tournament_id": "16255"
+      }
+    },
+    "confidence": {
+      "velora_score": 56.4,
+      "indice_velora": 3,
+      "base_confidence": 0.564,
+      "adjusted_confidence": 0.564,
+      "modifiers": []
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.98,
+        "N": 3.0,
+        "2": 3.3
+      },
+      "probabilites": {
+        "1": 21,
+        "N": 12,
+        "2": 67
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Malaga",
+          "cote": 3.3,
+          "edge": 2.211,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Malaga",
+        "cote": 3.3,
+        "conseil_short": "🔥 Value Bet — Victoire Malaga @ 3.30"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 4.9,
+          "plus_cote": 4.5,
           "plus_prob": 100,
-          "moins_cote": 3.4
+          "moins_cote": 4.3,
+          "moins_prob": 2
         },
         "2.5": {
-          "moins_cote": 2.25,
-          "plus_cote": 4.0,
-          "plus_prob": 78,
-          "moins_prob": 100
+          "plus_prob": 100,
+          "moins_cote": 2.55,
+          "moins_prob": 13,
+          "plus_cote": 4.1
         },
         "3.5": {
-          "moins_cote": 1.64,
-          "moins_prob": 76,
-          "plus_cote": 4.4
+          "moins_prob": 100,
+          "moins_cote": 1.96,
+          "plus_cote": 4.4,
+          "plus_prob": 100
         }
       },
       "buteur_match": null,
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 3,
-    "indice_velora_label": null,
-    "velora_score": 59.9,
-    "conseil": "Victoire Barcelona SC — forme favorable Barcelona SC — Classement 12e vs 4e",
+    "top_scores": [
+      {
+        "score": "2 - 0",
+        "prob": 100,
+        "cote": 8.0
+      },
+      {
+        "score": "3 - 0",
+        "prob": 100,
+        "cote": 15.0
+      },
+      {
+        "score": "0 - 1",
+        "prob": 100,
+        "cote": 8.0
+      }
+    ],
     "les_deux_marquent": 99,
     "btts": {
-      "oui": 1.96,
-      "non": 1.56
+      "oui": 1.74,
+      "non": 1.72
     },
     "over_under_25": {
-      "plus": 4.0,
-      "moins": 2.25
+      "plus": 4.1,
+      "moins": 2.55
     },
     "score_exact": [
       {
         "score": "1 - 1",
         "cote": 5.3,
-        "prob": 3
-      },
-      {
-        "score": "0 - 1",
-        "cote": 5.8
-      },
-      {
-        "score": "0 - 0",
-        "cote": 5.9
+        "prob": 66
       },
       {
         "score": "1 - 0",
-        "cote": 6.0
+        "cote": 6.25,
+        "prob": 7
+      },
+      {
+        "score": "0 - 0",
+        "cote": 7.25,
+        "prob": 10
+      },
+      {
+        "score": "2 - 0",
+        "cote": 8.0,
+        "prob": 100
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
-        "raw": "LWLWL",
-        "played": 5,
-        "wins": 2,
-        "draws": 0,
-        "losses": 3,
-        "points": 6,
-        "max_points": 15,
-        "pct": 40.0
-      },
-      "away_form": {
-        "raw": "WWLWL",
+        "raw": "WLWDW",
         "played": 5,
         "wins": 3,
-        "draws": 0,
-        "losses": 2,
-        "points": 9,
+        "draws": 1,
+        "losses": 1,
+        "points": 10,
         "max_points": 15,
-        "pct": 60.0
+        "pct": 66.7
       },
-      "home_rank": 12,
+      "away_form": {
+        "raw": "WWWDW",
+        "played": 5,
+        "wins": 4,
+        "draws": 1,
+        "losses": 0,
+        "points": 13,
+        "max_points": 15,
+        "pct": 86.7
+      },
+      "home_rank": 5,
       "away_rank": 4,
       "h2h": null,
       "form_edge": -3,
-      "rank_edge": -8
+      "rank_edge": -1
     },
+    "indice_velora": 3,
+    "indice_velora_label": null,
+    "velora_score": 56.4,
     "velora_score_breakdown": {
       "base": 43.4,
-      "multiplicateur": 1.38,
+      "multiplicateur": 1.3,
       "facteurs": [
-        "forme_solide_+15%",
-        "classement_favorable_+20%"
+        "forme_excellente_+30%"
       ],
-      "forme_dom_pct": 40.0,
-      "forme_ext_pct": 60.0,
-      "classement_dom": 12,
+      "forme_dom_pct": 66.7,
+      "forme_ext_pct": 86.7,
+      "classement_dom": 5,
       "classement_ext": 4
     },
+    "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
     "velora_pick_1n2": "2",
-    "velora_confidence": 59.9
+    "velora_confidence": 56.4
   },
   {
-    "id_match": "68880438",
-    "date_match": "02/06/2026 à 03:00",
-    "match_start_ts": 1780362000,
-    "equipe_domicile": "Canada",
-    "equipe_exterieur": "Ouzbékistan",
-    "cotes": {
-      "1": 1.6,
-      "N": 3.85,
-      "2": 4.8
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 50,
-      "2": 0
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "5 - 0",
-        "prob": 100,
-        "cote": 48.0
-      },
-      {
-        "score": "0 - 1",
-        "prob": 100,
-        "cote": 10.5
-      },
-      {
-        "score": "3 - 1",
-        "prob": 100,
-        "cote": 11.5
-      }
-    ],
+    "id_match": "71601488",
+    "date_match": "08/06/2026 à 20:45",
+    "match_start_ts": 1780944300,
     "match_status": "PREMATCH",
+    "equipe_domicile": "Pays-Bas",
+    "equipe_exterieur": "Ouzbékistan",
+    "meta_match": {
+      "competition": {
+        "name": "International — Matchs Amicaux",
+        "type": "friendly",
+        "stakes_tier": "low",
+        "category_id": "4",
+        "tournament_id": "66"
+      }
+    },
+    "confidence": {
+      "velora_score": 58.8,
+      "indice_velora": 3,
+      "base_confidence": 0.588,
+      "adjusted_confidence": 0.288,
+      "modifiers": [
+        {
+          "code": "friendly_match",
+          "delta": -0.3,
+          "label": "Match amical — confiance réduite"
+        }
+      ]
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.23,
+        "N": 5.8,
+        "2": 8.0
+      },
+      "probabilites": {
+        "1": 50,
+        "N": 0,
+        "2": 50
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Ouzbékistan",
+          "cote": 8.0,
+          "edge": 4.0,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Ouzbékistan",
+        "cote": 8.0,
+        "conseil_short": "🔥 Value Bet — Victoire Ouzbékistan @ 8.00"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 2.95,
-          "plus_prob": 100,
-          "moins_cote": 4.1,
-          "moins_prob": 12
+          "plus_cote": 4.5,
+          "moins_cote": 4.6,
+          "moins_prob": 100,
+          "plus_prob": 43
         },
         "2.5": {
-          "moins_cote": 2.95,
-          "moins_prob": 12,
-          "plus_cote": 2.15,
-          "plus_prob": 88
+          "moins_cote": 3.25,
+          "moins_prob": 100,
+          "plus_cote": 1.5,
+          "plus_prob": 34
         },
         "3.5": {
-          "plus_prob": 8,
-          "moins_cote": 2.5,
-          "moins_prob": 100,
-          "plus_cote": 3.7
+          "plus_cote": 2.25,
+          "plus_prob": 100,
+          "moins_cote": 4.3,
+          "moins_prob": 49
         }
       },
       "buteur_match": null,
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 3,
-    "indice_velora_label": null,
-    "velora_score": 56.4,
-    "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
-    "les_deux_marquent": 63,
+    "top_scores": [
+      {
+        "score": "0 - 1",
+        "prob": 100,
+        "cote": 22.0
+      },
+      {
+        "score": "1 - 2",
+        "prob": 100,
+        "cote": 23.0
+      },
+      {
+        "score": "4 - 2",
+        "prob": 100,
+        "cote": 32.0
+      }
+    ],
+    "les_deux_marquent": 78,
     "btts": {
-      "oui": 1.82,
-      "non": 1.66
+      "oui": 1.78,
+      "non": 1.68
     },
     "over_under_25": {
-      "plus": 2.15,
-      "moins": 2.95
+      "plus": 1.5,
+      "moins": 3.25
     },
     "score_exact": [
       {
-        "score": "1 - 0",
-        "cote": 5.8,
-        "prob": 2
+        "score": "2 - 0",
+        "cote": 6.0,
+        "prob": 10
       },
       {
-        "score": "1 - 1",
-        "cote": 6.25,
+        "score": "3 - 0",
+        "cote": 7.0,
         "prob": 12
       },
       {
-        "score": "2 - 0",
-        "cote": 6.5,
-        "prob": 9
+        "score": "1 - 0",
+        "cote": 7.5,
+        "prob": 6
       },
       {
         "score": "2 - 1",
-        "cote": 7.25,
-        "prob": 26
+        "cote": 7.75,
+        "prob": 4
       }
     ],
+    "tendance_buts": "Match Tactique",
     "velora_intel": {
       "home_form": {
-        "raw": "DWWDD",
+        "raw": "DWWDL",
         "played": 5,
         "wins": 2,
-        "draws": 3,
-        "losses": 0,
-        "points": 9,
+        "draws": 2,
+        "losses": 1,
+        "points": 8,
         "max_points": 15,
-        "pct": 60.0
+        "pct": 53.3
       },
       "away_form": {
-        "raw": "LWWWW",
+        "raw": "WWWWL",
         "played": 5,
         "wins": 4,
         "draws": 0,
@@ -1198,117 +1200,196 @@
       "home_rank": null,
       "away_rank": null,
       "h2h": null,
-      "form_edge": -3,
+      "form_edge": -4,
       "rank_edge": 0
     },
+    "indice_velora": 3,
+    "indice_velora_label": null,
+    "velora_score": 58.8,
     "velora_score_breakdown": {
-      "base": 43.4,
+      "base": 45.2,
       "multiplicateur": 1.3,
       "facteurs": [
         "forme_excellente_+30%"
       ],
-      "forme_dom_pct": 60.0,
+      "forme_dom_pct": 53.3,
       "forme_ext_pct": 80.0,
       "classement_dom": null,
       "classement_ext": null
     },
+    "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
     "velora_pick_1n2": "2",
-    "velora_confidence": 56.4
+    "velora_confidence": 58.8
   },
   {
-    "id_match": "68093892",
-    "date_match": "02/06/2026 à 18:00",
-    "match_start_ts": 1780416000,
-    "equipe_domicile": "Croatie",
-    "equipe_exterieur": "Belgique",
-    "cotes": {
-      "1": 2.45,
-      "N": 3.5,
-      "2": 2.55
-    },
-    "probabilites": {
-      "1": 16,
-      "N": 19,
-      "2": 65
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [
-      {
-        "score": "0 - 0",
-        "prob": 100,
-        "cote": 9.5
-      },
-      {
-        "score": "1 - 0",
-        "prob": 100,
-        "cote": 8.0
-      },
-      {
-        "score": "2 - 0",
-        "prob": 100,
-        "cote": 11.0
-      }
-    ],
+    "id_match": "71307342",
+    "date_match": "08/06/2026 à 21:10",
+    "match_start_ts": 1780945800,
     "match_status": "PREMATCH",
+    "equipe_domicile": "France",
+    "equipe_exterieur": "Irlande du Nord",
+    "meta_match": {
+      "competition": {
+        "name": "International — Matchs Amicaux",
+        "type": "friendly",
+        "stakes_tier": "low",
+        "category_id": "4",
+        "tournament_id": "66"
+      }
+    },
+    "confidence": {
+      "velora_score": 61.1,
+      "indice_velora": 3,
+      "base_confidence": 0.611,
+      "adjusted_confidence": 0.311,
+      "modifiers": [
+        {
+          "code": "friendly_match",
+          "delta": -0.3,
+          "label": "Match amical — confiance réduite"
+        }
+      ]
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.11,
+        "N": 8.0,
+        "2": 15.0
+      },
+      "probabilites": {
+        "1": 33,
+        "N": 33,
+        "2": 34
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Irlande du Nord",
+          "cote": 15.0,
+          "edge": 5.1,
+          "stars": 5,
+          "is_primary": true
+        },
+        {
+          "market": "dc_x2",
+          "pick": "dc_x2",
+          "label": "Double chance X2",
+          "edge": 5.1,
+          "stars": 5,
+          "is_primary": false
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Irlande du Nord",
+        "cote": 15.0,
+        "conseil_short": "🔥 Value Bet — Victoire Irlande du Nord @ 15.00"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire France — forme favorable France",
+      "tendance_buts": "Match Tactique",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 1.8,
-          "plus_prob": 100,
-          "moins_cote": 5.0
+          "plus_prob": 53,
+          "moins_cote": 3.85,
+          "moins_prob": 4,
+          "plus_cote": 1.17
         },
         "2.5": {
-          "plus_cote": 2.8,
-          "plus_prob": 87,
-          "moins_cote": 2.9,
-          "moins_prob": 13
+          "plus_prob": 100,
+          "moins_prob": 68,
+          "plus_cote": 1.37,
+          "moins_cote": 3.35
         },
         "3.5": {
-          "moins_cote": 1.94,
-          "moins_prob": 100,
-          "plus_cote": 4.1,
-          "plus_prob": 9
+          "plus_cote": 1.96,
+          "plus_prob": 63,
+          "moins_cote": 1.86,
+          "moins_prob": 100
         }
       },
       "buteur_match": null,
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 2,
-    "indice_velora_label": null,
-    "velora_score": 51.7,
-    "conseil": "Match nul — forme favorable Croatie",
-    "les_deux_marquent": 100,
+    "top_scores": [
+      {
+        "score": "5 - 1",
+        "prob": 100,
+        "cote": 20.0
+      },
+      {
+        "score": "Autre",
+        "prob": 100,
+        "cote": 8.5
+      },
+      {
+        "score": "3 - 0",
+        "prob": 37,
+        "cote": 5.6
+      }
+    ],
+    "les_deux_marquent": 25,
     "btts": {
-      "oui": 1.54,
-      "non": 1.98
+      "oui": 2.15,
+      "non": 1.45
     },
     "over_under_25": {
-      "plus": 2.8,
-      "moins": 2.9
+      "plus": 1.37,
+      "moins": 3.35
     },
     "score_exact": [
       {
-        "score": "1 - 1",
-        "cote": 5.8,
-        "prob": 9
+        "score": "2 - 0",
+        "cote": 5.5,
+        "prob": 29
+      },
+      {
+        "score": "3 - 0",
+        "cote": 5.6,
+        "prob": 37
+      },
+      {
+        "score": "4 - 0",
+        "cote": 7.25,
+        "prob": 3
       },
       {
         "score": "1 - 0",
-        "cote": 8.0,
-        "prob": 100
-      },
-      {
-        "score": "0 - 1",
-        "cote": 8.0,
-        "prob": 38
-      },
-      {
-        "score": "2 - 1",
-        "cote": 8.0,
-        "prob": 39
+        "cote": 7.75,
+        "prob": 7
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
         "raw": "WWWWL",
@@ -1321,140 +1402,137 @@
         "pct": 80.0
       },
       "away_form": {
-        "raw": "WDWWD",
+        "raw": "LWLDW",
         "played": 5,
-        "wins": 3,
-        "draws": 2,
-        "losses": 0,
-        "points": 11,
+        "wins": 2,
+        "draws": 1,
+        "losses": 2,
+        "points": 7,
         "max_points": 15,
-        "pct": 73.3
+        "pct": 46.7
       },
       "home_rank": null,
       "away_rank": null,
       "h2h": null,
-      "form_edge": 1,
+      "form_edge": 5,
       "rank_edge": 0
     },
+    "indice_velora": 3,
+    "indice_velora_label": null,
+    "velora_score": 61.1,
     "velora_score_breakdown": {
-      "base": 39.8,
+      "base": 47.0,
       "multiplicateur": 1.3,
       "facteurs": [
         "forme_excellente_+30%"
       ],
       "forme_dom_pct": 80.0,
-      "forme_ext_pct": 73.3,
+      "forme_ext_pct": 46.7,
       "classement_dom": null,
       "classement_ext": null
     },
-    "velora_pick_1n2": "N",
-    "velora_confidence": 51.7
+    "conseil": "Victoire France — forme favorable France",
+    "velora_pick_1n2": "1",
+    "velora_confidence": 61.1
   },
   {
-    "id_match": "71652274",
-    "date_match": "02/06/2026 à 21:00",
-    "match_start_ts": 1780426800,
-    "equipe_domicile": "USM Alger",
-    "equipe_exterieur": "Belouizdad",
-    "cotes": {
-      "1": 4.0,
-      "N": 3.2,
-      "2": 1.68
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 100
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": "Données indisponibles",
+    "id_match": "71702730",
+    "date_match": "09/06/2026 à 00:00",
+    "match_start_ts": 1780956000,
     "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": {
-          "plus_cote": 1.37,
-          "moins_cote": 2.4,
-          "plus_prob": 100
-        },
-        "2.5": {
-          "plus_cote": 2.2,
-          "moins_cote": 1.45
-        },
-        "3.5": {
-          "moins_cote": 1.14,
-          "plus_cote": 4.1
-        }
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext +2.5",
-    "les_deux_marquent": 100,
-    "btts": {
-      "oui": 2.05,
-      "non": 1.5
-    },
-    "over_under_25": {
-      "plus": 2.2,
-      "moins": 1.45
-    },
-    "score_exact": [
-      {
-        "score": "0 - 1",
-        "cote": 4.9
-      },
-      {
-        "score": "1 - 1",
-        "cote": 5.9
-      },
-      {
-        "score": "0 - 2",
-        "cote": 6.25
-      },
-      {
-        "score": "0 - 0",
-        "cote": 6.5
+    "equipe_domicile": "Atletico Nacional",
+    "equipe_exterieur": "Junior De Barranquilla",
+    "meta_match": {
+      "competition": {
+        "name": "Colombie — Primera A",
+        "type": "other",
+        "round": "Finale retour",
+        "stakes_tier": "medium",
+        "category_id": "274",
+        "tournament_id": "19232"
       }
-    ]
-  },
-  {
-    "id_match": "71702728",
-    "date_match": "03/06/2026 à 02:30",
-    "match_start_ts": 1780446600,
-    "equipe_domicile": "Junior De Barranquilla",
-    "equipe_exterieur": "Atletico Nacional",
-    "cotes": {
-      "1": 2.25,
-      "N": 2.85,
-      "2": 2.6
     },
-    "probabilites": {
-      "1": 26,
-      "N": 42,
-      "2": 32
+    "confidence": {
+      "velora_score": 54.1,
+      "indice_velora": 3,
+      "base_confidence": 0.541,
+      "adjusted_confidence": 0.541,
+      "modifiers": []
     },
-    "tendance_buts": "Match Offensif",
-    "top_scores": "Données indisponibles",
-    "match_status": "PREMATCH",
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.41,
+        "N": 4.0,
+        "2": 5.0
+      },
+      "probabilites": {
+        "1": 56,
+        "N": 3,
+        "2": 41
+      },
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Junior De Barranquilla",
+          "cote": 5.0,
+          "edge": 2.05,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Junior De Barranquilla",
+        "cote": 5.0,
+        "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 5.00"
+      },
+      "display_badges": []
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
     "marches_supplementaires": {
       "plus_moins_buts": {
         "1.5": {
-          "plus_cote": 1.9,
+          "plus_cote": 3.2,
           "plus_prob": 100,
-          "moins_cote": 4.3
+          "moins_cote": 4.9,
+          "moins_prob": 100
         },
         "2.5": {
-          "plus_cote": 3.25,
+          "plus_cote": 1.8,
           "plus_prob": 100,
-          "moins_cote": 2.75
+          "moins_cote": 3.65
         },
         "3.5": {
-          "plus_cote": 4.8,
-          "moins_cote": 1.84,
+          "plus_cote": 2.9,
+          "moins_cote": 3.05,
           "moins_prob": 100
         }
       },
@@ -1462,50 +1540,58 @@
       "buteur_mi_temps": null,
       "buteur_multiple": null
     },
-    "indice_velora": 3,
-    "indice_velora_label": null,
-    "velora_score": 58.8,
-    "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 2e vs 1e",
-    "les_deux_marquent": 95,
+    "top_scores": [
+      {
+        "score": "0 - 0",
+        "prob": 100,
+        "cote": 11.5
+      },
+      {
+        "score": "2 - 0",
+        "prob": 100,
+        "cote": 6.5
+      },
+      {
+        "score": "3 - 0",
+        "prob": 100,
+        "cote": 9.0
+      }
+    ],
+    "les_deux_marquent": 82,
     "btts": {
-      "oui": 1.64,
-      "non": 1.84
+      "oui": 1.68,
+      "non": 1.78
     },
     "over_under_25": {
-      "plus": 3.25,
-      "moins": 2.75
+      "plus": 1.8,
+      "moins": 3.65
     },
     "score_exact": [
       {
-        "score": "1 - 1",
-        "cote": 5.2
+        "score": "2 - 0",
+        "cote": 6.5,
+        "prob": 100
       },
       {
         "score": "1 - 0",
-        "cote": 7.25
+        "cote": 6.75,
+        "prob": 2
       },
       {
-        "score": "0 - 0",
-        "cote": 7.75
+        "score": "1 - 1",
+        "cote": 7.25,
+        "prob": 46
       },
       {
-        "score": "0 - 1",
-        "cote": 8.0
+        "score": "2 - 1",
+        "cote": 7.25,
+        "prob": 3
       }
     ],
+    "tendance_buts": "Match Offensif",
     "velora_intel": {
       "home_form": {
-        "raw": "DDWWL",
-        "played": 5,
-        "wins": 2,
-        "draws": 2,
-        "losses": 1,
-        "points": 8,
-        "max_points": 15,
-        "pct": 53.3
-      },
-      "away_form": {
-        "raw": "LWWWW",
+        "raw": "WWWWL",
         "played": 5,
         "wins": 4,
         "draws": 0,
@@ -1514,24 +1600,38 @@
         "max_points": 15,
         "pct": 80.0
       },
-      "home_rank": 2,
-      "away_rank": 1,
+      "away_form": {
+        "raw": "DWWLW",
+        "played": 5,
+        "wins": 3,
+        "draws": 1,
+        "losses": 1,
+        "points": 10,
+        "max_points": 15,
+        "pct": 66.7
+      },
+      "home_rank": 1,
+      "away_rank": 2,
       "h2h": null,
-      "form_edge": -4,
-      "rank_edge": -1
+      "form_edge": 2,
+      "rank_edge": 1
     },
+    "indice_velora": 3,
+    "indice_velora_label": null,
+    "velora_score": 54.1,
     "velora_score_breakdown": {
-      "base": 45.2,
+      "base": 41.6,
       "multiplicateur": 1.3,
       "facteurs": [
         "forme_excellente_+30%"
       ],
-      "forme_dom_pct": 53.3,
-      "forme_ext_pct": 80.0,
-      "classement_dom": 2,
-      "classement_ext": 1
+      "forme_dom_pct": 80.0,
+      "forme_ext_pct": 66.7,
+      "classement_dom": 1,
+      "classement_ext": 2
     },
-    "velora_pick_1n2": "2",
-    "velora_confidence": 58.8
+    "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
+    "velora_pick_1n2": "1",
+    "velora_confidence": 54.1
   }
 ]

@@ -5056,41 +5056,46 @@
             return now >= startMs && now < startMs + MATCH_FINISHED_GRACE_MS;
         }
 
-        /** Exclut uniquement les matchs terminés (pas les matchs en cours ni à venir). */
+        /** Exclut matchs terminés ; la date prime sur PREMATCH (JSON Winamax souvent périmé). */
         function estMatchTermine(m) {
             const status = String(m?.match_status || '').trim().toUpperCase();
             if (MATCH_ENDED_STATUSES.has(status)) return true;
             if (Number(m?.matchStatus) === WINAMAX_MATCH_STATUS_ENDED_NUM) return true;
             if (MATCH_LIVE_STATUSES.has(status)) return false;
-            if (MATCH_PREMATCH_STATUSES.has(status)) return false;
             const startMs = parseMatchStartMs(m);
             if (startMs == null) return false;
             return Date.now() > startMs + MATCH_FINISHED_GRACE_MS;
         }
 
+        function estMatchAVenirOuLive(m) {
+            return !estMatchTermine(m);
+        }
+
         function footMetaDonneesMatchs() {
+            const list = (footModeOpportunites && oppMatchs.length) ? oppMatchs : footMatchs;
             let maxMs = 0;
             let minMs = Infinity;
-            for (const m of footMatchs) {
+            for (const m of list) {
                 const ms = parseMatchStartMs(m);
                 if (ms == null) continue;
                 maxMs = Math.max(maxMs, ms);
                 minMs = Math.min(minMs, ms);
             }
-            const perime = footMatchs.length > 0
+            const perime = list.length > 0
                 && maxMs > 0
                 && Date.now() - maxMs > MATCH_DONNEES_PERIMEES_MS;
             const derniereDate = maxMs > 0
                 ? new Date(maxMs).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : null;
-            return { perime, derniereDate, count: footMatchs.length };
+            const aVenir = list.filter(estMatchAVenirOuLive).length;
+            return { perime, derniereDate, count: list.length, aVenir };
         }
 
         function htmlFootAlerteDonneesPerimees() {
             const meta = footMetaDonneesMatchs();
             if (!meta.perime) return '';
             const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
-            return `<p class="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/95">⚠️ Base matchs non actualisée${quand}. Les analyses restent consultables ; le scraper Winamax met à jour la liste automatiquement.</p>`;
+            return `<p class="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/95">⚠️ Tous les matchs en base sont passés${quand}. Aucune analyse à venir tant que le scraper Winamax n'a pas tourné (automatique toutes les 30&nbsp;min).</p>`;
         }
 
         function footMatchsActifs() {
@@ -5099,7 +5104,7 @@
 
         /** Mode recherche normal : à venir + en direct (hors matchs terminés). */
         function footMatchsRecherchables() {
-            return footMatchs.filter((m) => !estMatchTermine(m));
+            return footMatchs.filter(estMatchAVenirOuLive);
         }
 
         function equipesFootRecherchables() {
@@ -6132,7 +6137,7 @@
                 return;
             }
             const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
-            el.innerHTML = `⚠️ Base matchs non actualisée${quand}. Les recherches utilisent la dernière extraction Winamax — mise à jour automatique toutes les 30&nbsp;min.`;
+            el.innerHTML = `⚠️ Matchs en base dépassés${quand} — aucun match à venir affiché. Le moteur Winamax se réactualise automatiquement toutes les 30&nbsp;min.`;
             el.classList.remove('hidden');
         }
 
@@ -6157,7 +6162,40 @@
             const showPremiumEmpty = footModeOpportunites
                 && peutUtiliserRadarFootOpp()
                 && listeLength === 0;
+            if (showPremiumEmpty) {
+                const meta = footMetaDonneesMatchs();
+                const titres = videOpp.querySelectorAll('p');
+                const titre = titres[0];
+                const sous = titres[1];
+                if (meta.perime && titre && sous) {
+                    titre.textContent = 'Aucun match à venir — base Winamax périmée';
+                    sous.textContent = meta.derniereDate
+                        ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous 30 min.`
+                        : 'Prochaine mise à jour automatique sous 30 min.';
+                } else if (titre && sous) {
+                    titre.textContent = 'Aucune opportunité majeure détectée pour le moment.';
+                    sous.textContent = 'Revenez plus tard !';
+                }
+            }
             videOpp.classList.toggle('hidden', !showPremiumEmpty);
+        }
+
+        function majFootZoneVideRecherche(listeLength) {
+            const vide = document.getElementById('footZoneVide');
+            if (!vide) return;
+            const titres = vide.querySelectorAll('p');
+            const titre = titres[0];
+            const sous = titres[1];
+            const meta = footMetaDonneesMatchs();
+            if (listeLength === 0 && meta.perime && titre && sous) {
+                titre.textContent = 'Aucun match à venir en base';
+                sous.textContent = meta.derniereDate
+                    ? `Les matchs du ${meta.derniereDate} sont passés. Attendez la prochaine extraction Winamax.`
+                    : 'Attendez la prochaine extraction Winamax (toutes les 30 min).';
+            } else if (titre && sous) {
+                titre.textContent = 'Aucun match pour cette recherche';
+                sous.textContent = 'Essayez un autre nom d\'équipe ou vérifiez l\'orthographe.';
+            }
         }
 
         function renderFootMatchs() {
@@ -6202,6 +6240,7 @@
             const liste = footMatchAnalyseUnique();
             zone.className = 'foot-resultats-panel space-y-4';
             zone.innerHTML = liste.map(carteFootMatch).join('');
+            majFootZoneVideRecherche(liste.length);
             if (videClassique) videClassique.classList.toggle('hidden', liste.length > 0);
             zone.classList.toggle('hidden', liste.length === 0);
         }

@@ -650,7 +650,13 @@ def select_sniper_batch(
 def load_matches() -> list[dict]:
     try:
         data = json.loads(IN_PATH.read_text(encoding="utf-8"))
-        return data if isinstance(data, list) else []
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict):
+            matchs = data.get("matchs")
+            if isinstance(matchs, list):
+                return matchs
+        return []
     except Exception as e:
         print(f"[sniper] ECHEC lecture {IN_PATH.name}: {e}")
         return []
