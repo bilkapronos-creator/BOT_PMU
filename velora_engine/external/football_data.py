@@ -17,7 +17,9 @@ from typing import Any
 
 API_BASE = "https://api.football-data.org/v4"
 MIN_INTERVAL_SEC = 6.5
-COMPETITION_CODES = ("WC", "EC", "CL", "PL", "SA", "BL1", "PD", "FL1", "DED", "PPL", "ELC")
+COMPETITION_CODES = (
+    "WC", "EC", "CL", "EL", "PL", "SA", "BL1", "PD", "FL1", "FL2", "DED", "PPL", "ELC", "BSA", "CLI",
+)
 
 _DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 _ALIASES_PATH = _DATA_DIR / "fd_team_aliases.json"

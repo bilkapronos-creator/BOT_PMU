@@ -42,6 +42,8 @@ GIT_JSON_FILES = (
     "api_velora_communaute.json",
     "velora_foot_resultats.json",
     "velora_archives_foot.json",
+    "velora_odds_history.json",
+    "velora_foot_calibration.json",
 )
 
 PYTHON = Path(sys.executable).resolve()

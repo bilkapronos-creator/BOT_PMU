@@ -18,6 +18,10 @@ EDGE_THRESHOLD_BUTEUR_MATCH = 1.18
 EDGE_THRESHOLD_BUTEUR_MI_TEMPS = 1.20
 EDGE_THRESHOLD_BUTEUR_DOUBLE = 1.20
 
+# Filtre outsiders 1N2 : pas de value extrême si favori < seuil et outsider >= cote min
+OUTSIDER_FAVORI_COTE_MAX = 1.45
+OUTSIDER_COTE_MIN = 5.0
+
 EDGE_THRESHOLDS: dict[str, float] = {
     "1n2": EDGE_THRESHOLD_1N2,
     "dc_1x": EDGE_THRESHOLD_1N2,

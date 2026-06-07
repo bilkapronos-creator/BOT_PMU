@@ -1,0 +1,46 @@
+"""Copie les JSON racine vers web/ + snapshot cotes + calibration Foot."""
+from __future__ import annotations
+
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+WEB = ROOT / "web"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(WEB) not in sys.path:
+    sys.path.insert(0, str(WEB))
+
+
+def main() -> int:
+    for name in ("api_velora_matchs.json", "api_velora_premium.json"):
+        src = ROOT / name
+        if src.is_file():
+            shutil.copy2(src, WEB / name)
+            print(f"[sync] {name} -> web/")
+
+    try:
+        from velora_engine.odds_snapshots import snapshot_from_json_file
+
+        matchs = WEB / "api_velora_matchs.json"
+        hist = WEB / "velora_odds_history.json"
+        if matchs.is_file():
+            snapshot_from_json_file(matchs, hist)
+            print(f"[sync] historique cotes -> {hist.name}")
+    except Exception as err:
+        print(f"[sync] historique cotes ignoré ({err})")
+
+    try:
+        from stats_foot import ecrire_calibration_foot
+
+        ecrire_calibration_foot()
+        print("[sync] velora_foot_calibration.json régénéré")
+    except Exception as err:
+        print(f"[sync] calibration ignorée ({err})")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

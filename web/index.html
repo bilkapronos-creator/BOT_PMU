@@ -556,6 +556,41 @@
         .vitrine-foot-taux-chip .text-cyan-300 {
             font-variant-numeric: tabular-nums;
         }
+        .foot-filtre-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(17, 24, 39, 0.55);
+            padding: 0.3rem 0.65rem;
+            font-size: 10px;
+            font-weight: 700;
+            color: rgb(209, 213, 219);
+            transition: border-color 0.15s, background 0.15s, color 0.15s;
+        }
+        .foot-filtre-chip:hover {
+            border-color: rgba(34, 211, 238, 0.35);
+            color: #fff;
+        }
+        .foot-filtre-chip--actif {
+            border-color: rgba(251, 191, 36, 0.5);
+            background: rgba(120, 53, 15, 0.35);
+            color: #fde68a;
+        }
+        .velora-odds-spark svg {
+            display: block;
+        }
+        .velora-admin-panel {
+            border: 1px dashed rgba(168, 85, 247, 0.35);
+            background: rgba(59, 7, 100, 0.15);
+        }
+        #veloraAdminBadge {
+            display: none;
+        }
+        body.velora-admin-on #veloraAdminBadge {
+            display: inline-flex;
+        }
         @keyframes foot-live-pulse {
             0%, 100% {
                 opacity: 1;
@@ -1346,9 +1381,10 @@
     <header class="py-2">
         <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-between sm:items-start">
             <div class="flex flex-col items-center gap-2 sm:items-start">
-                <h1 class="text-3xl sm:text-4xl font-black tracking-widest bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 bg-clip-text text-transparent">
+                <h1 id="veloraBrandTitle" class="text-3xl sm:text-4xl font-black tracking-widest bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 bg-clip-text text-transparent cursor-default select-none" title="Triple-clic : mode admin">
                     VELORA ENGINE
                 </h1>
+                <span id="veloraAdminBadge" class="items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-300">Mode admin</span>
                 <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-400 backdrop-blur-sm">
                     <span class="relative flex h-2 w-2" aria-hidden="true">
                         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
@@ -1446,7 +1482,8 @@
                     <span class="foot-opp-pro-badge" title="Réservé Premium">PRO</span>
                     <span class="text-[10px] opacity-70" aria-hidden="true">🔒</span>
                 </button>
-                <div id="footOppToolbar" class="mb-4 hidden flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2">
+                <div id="footOppToolbar" class="mb-4 hidden flex flex-col gap-2 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
                     <p id="oppMajHeure" class="text-[10px] text-gray-500">Mise à jour à : <span id="oppMajHeureVal" class="font-medium text-gray-400">—</span></p>
                     <button type="button" id="btnOppRefresh"
                         class="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2.5 py-1.5 text-[10px] font-semibold text-amber-200 transition hover:bg-amber-500/20 disabled:opacity-60"
@@ -1456,6 +1493,10 @@
                         </svg>
                         Rafraîchir
                     </button>
+                    </div>
+                    <div id="footOppFiltresRow" class="flex flex-wrap gap-1.5">
+                        <button type="button" id="footFiltreOutsidersOpp" class="foot-filtre-chip" aria-pressed="false">💎 Outsiders value</button>
+                    </div>
                 </div>
                 <div id="footSearchBloc" class="grid grid-cols-1 gap-3">
                     <label class="block">
@@ -1469,6 +1510,9 @@
                     </button>
                 </div>
                 <p id="footSearchMeta" class="mt-3 text-center text-xs text-gray-500">Chargement des matchs…</p>
+                <div id="footFiltresRow" class="mt-2 hidden flex flex-wrap justify-center gap-1.5">
+                    <button type="button" id="footFiltreOutsidersSearch" class="foot-filtre-chip" aria-pressed="false">💎 Outsiders value</button>
+                </div>
             </div>
             <div id="blocPmuGauche" class="flex flex-col gap-6">
             <div id="analyseCourseCarte" class="glass-card rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20 lg:p-6">
@@ -3572,7 +3616,18 @@
             ).join('');
             blocTypes.classList.remove('hidden');
 
-            if (hintCal) hintCal.classList.add('hidden');
+            if (hintCal && isFoot && estModeAdminVelora()) {
+                const suggestions = (stats?.calibration?.suggestions || []);
+                if (suggestions.length) {
+                    const s = suggestions[0];
+                    hintCal.textContent = `Calibration : seuil ${s.edge_key} ${s.edge_actuel} → ${s.edge_suggere} (${s.raison}).`;
+                    hintCal.classList.remove('hidden');
+                } else {
+                    hintCal.classList.add('hidden');
+                }
+            } else if (hintCal) {
+                hintCal.classList.add('hidden');
+            }
         }
 
         const SPLASH_MIN_MS = 4500;
@@ -4103,6 +4158,7 @@
                 return;
             }
             try {
+                initModeAdminVelora();
                 gererErreurRetourAuthAuDemarrage();
 
                 const retourConfirmationEmail = Boolean(
@@ -4166,6 +4222,11 @@
         const MATCH_PREMATCH_STATUSES = new Set(['PREMATCH', 'NOT_STARTED', 'SCHEDULED', 'UPCOMING']);
         const WINAMAX_MATCH_STATUS_ENDED_NUM = 3;
         let footFiltre = '';
+        let footFiltreOutsiders = false;
+        let veloraOddsHistory = { by_match: {} };
+        let veloraOddsHistoryCharge = false;
+        const VELORA_JSON_ODDS = '/velora_odds_history.json';
+        const VELORA_ADMIN_LS = 'velora_admin_mode';
         /** True uniquement après clic sur « Générer l'analyse » (comme PMU). */
         let footAnalyseAffichee = false;
         let footModeOpportunites = false;
@@ -4435,6 +4496,7 @@
                 loading.classList.toggle('border-cyan-500/25', !oppActif);
             }
             mettreAJourGuideFoot();
+            majFootFiltresUi();
         }
 
         function aujourdhuiIsoLocal() {
@@ -4715,6 +4777,164 @@
         const VELORA_JSON_MATCHS = '/api_velora_matchs.json';
         const VELORA_JSON_PREMIUM = '/api_velora_premium.json';
 
+        function estModeAdminVelora() {
+            return localStorage.getItem(VELORA_ADMIN_LS) === '1';
+        }
+
+        function appliquerModeAdminVelora() {
+            document.body.classList.toggle('velora-admin-on', estModeAdminVelora());
+        }
+
+        function activerModeAdminVelora(actif) {
+            if (actif) localStorage.setItem(VELORA_ADMIN_LS, '1');
+            else localStorage.removeItem(VELORA_ADMIN_LS);
+            appliquerModeAdminVelora();
+            renderFootMatchs();
+        }
+
+        function initModeAdminVelora() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('admin') === 'velora') activerModeAdminVelora(true);
+            else appliquerModeAdminVelora();
+            let clicks = 0;
+            let timer = null;
+            document.getElementById('veloraBrandTitle')?.addEventListener('click', () => {
+                clicks += 1;
+                clearTimeout(timer);
+                timer = setTimeout(() => { clicks = 0; }, 900);
+                if (clicks >= 3) {
+                    clicks = 0;
+                    activerModeAdminVelora(!estModeAdminVelora());
+                }
+            });
+        }
+
+        async function chargerOddsHistory() {
+            if (veloraOddsHistoryCharge) return;
+            try {
+                veloraOddsHistory = await fetchVeloraJson(VELORA_JSON_ODDS);
+            } catch {
+                veloraOddsHistory = { by_match: {} };
+            }
+            veloraOddsHistoryCharge = true;
+        }
+
+        function cotesHistoriqueMatch(matchId) {
+            return (veloraOddsHistory?.by_match || {})[String(matchId)] || [];
+        }
+
+        function cotes1n2FromMatch(m) {
+            const c = m?.cotes || m?.free_analysis?.cotes_1n2;
+            return (c && typeof c === 'object') ? c : {};
+        }
+
+        function favorite1n2Side(cotes) {
+            let side = null;
+            let cote = null;
+            for (const k of ['1', 'N', '2']) {
+                const c = Number(cotes[k]);
+                if (!c || c <= 1) continue;
+                if (cote == null || c < cote) {
+                    cote = c;
+                    side = k;
+                }
+            }
+            return { side, cote };
+        }
+
+        function estOutsiderValueMatch(m) {
+            const vb = Array.isArray(m?.free_value_bets) ? m.free_value_bets : [];
+            const pp = primaryPickFromMatch(m);
+            if (!vb.length && !(pp && pp.market)) return false;
+            const market = String(pp?.market || vb[0]?.market || '').toLowerCase();
+            if (market && !['1n2', '1n2_stats', ''].includes(market)) return false;
+            const pick = String(pp?.pick || vb[0]?.pick || '').trim();
+            if (!pick || !['1', 'N', '2'].includes(pick)) return false;
+            const cotes = cotes1n2FromMatch(m);
+            const fav = favorite1n2Side(cotes);
+            if (!fav.side || pick === fav.side) return false;
+            const cotePick = Number(cotes[pick] ?? pp?.cote ?? vb[0]?.cote);
+            return Number.isFinite(cotePick) && cotePick >= 2.5;
+        }
+
+        function htmlOddsMovement(m) {
+            const pick = String(m?.pronostic_1n2 || m?.free_analysis?.pronostic_1n2 || '').trim();
+            const entries = cotesHistoriqueMatch(m?.id_match);
+            if (!pick || entries.length < 2) return '';
+            const points = entries
+                .map((e) => {
+                    const c = e?.cotes?.[pick];
+                    const n = Number(c);
+                    return Number.isFinite(n) && n > 1 ? n : null;
+                })
+                .filter((v) => v != null);
+            if (points.length < 2) return '';
+            const min = Math.min(...points);
+            const max = Math.max(...points);
+            const range = max - min || 0.01;
+            const w = 112;
+            const h = 28;
+            const coords = points.map((v, i) => {
+                const x = (i / (points.length - 1)) * w;
+                const y = h - ((v - min) / range) * (h - 4) - 2;
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            }).join(' ');
+            const first = points[0].toFixed(2);
+            const last = points[points.length - 1].toFixed(2);
+            const delta = points[points.length - 1] - points[0];
+            const trend = m?.line_signal || (delta >= 0.05 ? 'cote_baisse' : delta <= -0.05 ? 'cote_hausse' : 'stable');
+            const color = trend === 'cote_baisse' ? '#6ee7b7' : trend === 'cote_hausse' ? '#fdba74' : '#94a3b8';
+            const trendLabel = trend === 'cote_baisse' ? 'En baisse' : trend === 'cote_hausse' ? 'En hausse' : 'Stable';
+            return `
+                <div class="velora-odds-spark mt-2 rounded-lg border border-white/10 bg-black/20 px-3 py-2">
+                    <p class="mb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Évolution cote pronostic</p>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <svg width="${w}" height="${h}" class="shrink-0" aria-hidden="true"><polyline fill="none" stroke="${color}" stroke-width="2" points="${coords}"/></svg>
+                        <span class="text-xs text-gray-400">${first} → <span class="font-semibold" style="color:${color}">${last}</span> · ${escHtml(trendLabel)}</span>
+                    </div>
+                </div>`;
+        }
+
+        function htmlVeloraAdminTechnique(m) {
+            if (!estModeAdminVelora()) return '';
+            const pm = m?.probabilites_marche || {};
+            const pl = m?.poisson_lambdas || {};
+            const parts = [];
+            if (Number(pm['1']) || Number(pm.N) || Number(pm['2'])) {
+                parts.push(`Marché implicite — Dom ${Number(pm['1']) || 0}% · Nul ${Number(pm.N) || 0}% · Ext ${Number(pm['2']) || 0}%`);
+            }
+            if (Number(pl.home) > 0 && Number(pl.away) > 0) {
+                parts.push(`Poisson λ ${Number(pl.home).toFixed(2)} / ${Number(pl.away).toFixed(2)}${m.prob_over_25_modele ? ` · O2.5 ${m.prob_over_25_modele}%` : ''}`);
+            }
+            if (m.football_data_enriched) parts.push('Stats API football-data.org');
+            if (m.line_signal) parts.push(`Line signal : ${m.line_signal}`);
+            if (!parts.length) return '';
+            return `
+                <div class="velora-admin-panel mt-2 rounded-lg px-3 py-2 text-[10px] leading-relaxed text-purple-200/90">
+                    <p class="mb-1 font-semibold uppercase tracking-wider text-purple-300/90">Détails techniques</p>
+                    ${parts.map((p) => `<p>${escHtml(p)}</p>`).join('')}
+                </div>`;
+        }
+
+        function majFootFiltresUi() {
+            const cls = 'foot-filtre-chip--actif';
+            ['footFiltreOutsidersSearch', 'footFiltreOutsidersOpp'].forEach((id) => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                btn.classList.toggle(cls, footFiltreOutsiders);
+                btn.setAttribute('aria-pressed', footFiltreOutsiders ? 'true' : 'false');
+            });
+            const row = document.getElementById('footFiltresRow');
+            if (row) row.classList.toggle('hidden', footModeOpportunites || !estMembreConnecte());
+        }
+
+        function toggleFootFiltreOutsiders() {
+            footFiltreOutsiders = !footFiltreOutsiders;
+            majFootFiltresUi();
+            majFootMeta();
+            renderFootMatchs();
+        }
+
         function veloraDataUrl(jsonPath) {
             const path = jsonPath.startsWith('/') ? jsonPath : `/${jsonPath}`;
             return `${path}?t=${new Date().getTime()}`;
@@ -4836,6 +5056,7 @@
             if (loading) loading.classList.remove('hidden');
             if (erreur) erreur.classList.add('hidden');
             try {
+                await chargerOddsHistory();
                 footMatchs = await fetchVeloraMatchsList(VELORA_JSON_MATCHS);
                 footMatchsCharges = true;
             } catch (e) {
@@ -5256,12 +5477,14 @@
             const q = normaliserTexteRechercheFoot(footFiltre);
             if (!q) return [];
             const actifs = footMatchsRecherchables();
-            return actifs.filter((m) => {
+            let liste = actifs.filter((m) => {
                 const blob = normaliserTexteRechercheFoot(
                     `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
                 );
                 return blob.includes(q);
             });
+            if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
+            return liste;
         }
 
         /** Une seule carte : match le plus pertinent pour la recherche (comme une course PMU). */
@@ -6232,9 +6455,11 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${blocsPronosticValue}
+                        ${htmlOddsMovement(m)}
                         ${htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
                         ${plusParis}
+                        ${htmlVeloraAdminTechnique(m)}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
                             <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Scores probables</summary>
@@ -6456,10 +6681,11 @@
 
         /** Mode opportunités : affichage automatique, sans recherche utilisateur. */
         function oppMatchsFiltres() {
-            return oppMatchs
+            let liste = oppMatchs
                 .filter((m) => !estMatchTermine(m))
-                .filter(estOpportunitePremium)
-                .sort((a, b) => {
+                .filter(estOpportunitePremium);
+            if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
+            return liste.sort((a, b) => {
                     const d = Number(b.indice_velora) - Number(a.indice_velora);
                     if (d !== 0) return d;
                     const pa = (a.opportunite_type || a.value_bet_type) ? 1 : 0;
@@ -6511,6 +6737,7 @@
             if (erreur) erreur.classList.add('hidden');
 
             try {
+                await chargerOddsHistory();
                 oppMatchs = await fetchOppPremiumJson();
                 oppMatchsCharges = true;
                 oppMajDate = new Date();
@@ -6539,7 +6766,8 @@
             const cardTheme = alertMeta?.cardClass || '';
             const oppType = String(m.opportunite_type || m.value_bet_type || alertMeta?.type || 'standard');
             const hide1n2 = oppCacheMarcheSecondaire(m);
-            const analyseBadges = htmlVeloraAnalyseBadges(m, 'opp');
+            const signalBadges = htmlVeloraAnalyseBadges(m, 'opp', 'signals');
+            const blocsPronosticValue = hide1n2 ? '' : htmlBlocPronosticValue(m);
             const detail = String(m.opportunite_detail || m.conseil || '').trim();
             const scoresHtml = htmlTopScoresList(m.top_scores, m);
             const pariFocus = hide1n2 && detail
@@ -6577,7 +6805,7 @@
                                 <span class="block text-[10px] font-medium text-slate-500">${escHtml(m.date_match || '')}</span>
                                 ${htmlFootLiveBadge(m)}
                                 <h3 class="foot-match-title mt-0.5 text-lg font-bold text-white">${escHtml(m.equipe_domicile)} <span class="text-amber-400/80">—</span> ${escHtml(m.equipe_exterieur)}</h3>
-                                ${analyseBadges}
+                                ${signalBadges}
                             </div>
                             <div class="shrink-0 text-right">
                                 <p class="text-[10px] uppercase tracking-widest text-amber-400">Indice Velora</p>
@@ -6585,8 +6813,11 @@
                             </div>
                         </div>
                         ${pariFocus}
+                        ${blocsPronosticValue}
+                        ${hide1n2 ? '' : htmlOddsMovement(m)}
                         ${htmlConseilVelora(m.conseil, 'opp', m)}
                         ${bloc1n2}
+                        ${htmlVeloraAdminTechnique(m)}
                         ${extraMarches}
                         ${scoresBloc}
                     </div>
@@ -6599,6 +6830,8 @@
         document.getElementById('btnVitrineDetail')?.addEventListener('click', () => {
             toggleVitrineDetailPanel();
         });
+        document.getElementById('footFiltreOutsidersSearch')?.addEventListener('click', toggleFootFiltreOutsiders);
+        document.getElementById('footFiltreOutsidersOpp')?.addEventListener('click', toggleFootFiltreOutsiders);
         document.getElementById('footToggleOpp')?.addEventListener('click', onFootToggleOppClick);
         document.getElementById('btnOppRefresh')?.addEventListener('click', () => {
             if (!demanderAccesRadarFootOpp()) return;

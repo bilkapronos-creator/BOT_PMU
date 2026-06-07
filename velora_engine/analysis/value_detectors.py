@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from velora_engine.analysis.probability import edge_score, stars_from_edge
-from velora_engine.config import EDGE_THRESHOLDS
+from velora_engine.config import EDGE_THRESHOLDS, OUTSIDER_COTE_MIN, OUTSIDER_FAVORI_COTE_MAX
 from velora_engine.models import (
     MarketsRaw,
     OuLine,
@@ -88,13 +88,13 @@ def _outsider_value_trop_agressif(
     fav_side, fav_cote = _favorite_1n2(cotes)
     if not fav_side or fav_cote is None or pick == fav_side:
         return False
-    if fav_cote >= 1.45:
+    if fav_cote >= OUTSIDER_FAVORI_COTE_MAX:
         return False
     try:
         c = float(cote) if cote is not None else 0.0
     except (TypeError, ValueError):
         return False
-    return c >= 5.0
+    return c >= OUTSIDER_COTE_MIN
 
 
 def detect_value_1n2(
