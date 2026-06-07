@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-07T03:29:53.595504+02:00",
+    "generated_at": "2026-06-07T03:49:39.686344+02:00",
     "engine": "velora-pro-2",
     "match_count": 8
   },
@@ -55,6 +55,7 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Ukraine",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 2.251,
           "away": 1.37
@@ -83,6 +84,7 @@
         ],
         "prob_over_25_modele": 69,
         "prob_btts_modele": 66,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -174,6 +176,7 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Forge",
         "confiance_niveau": "haute",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 1.634,
           "away": 2.013
@@ -202,6 +205,7 @@
         ],
         "prob_over_25_modele": 70,
         "prob_btts_modele": 69,
+        "football_data_enriched": false,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -280,6 +284,7 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire Maroc",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 1.688,
           "away": 1.965
@@ -308,6 +313,7 @@
         ],
         "prob_over_25_modele": 70,
         "prob_btts_modele": 70,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -404,6 +410,7 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Italie",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 1.991,
           "away": 1.598
@@ -432,6 +439,7 @@
         ],
         "prob_over_25_modele": 69,
         "prob_btts_modele": 68,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -523,6 +531,7 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Malaga",
         "confiance_niveau": "haute",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 2.017,
           "away": 1.58
@@ -551,6 +560,7 @@
         ],
         "prob_over_25_modele": 69,
         "prob_btts_modele": 68,
+        "football_data_enriched": false,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -647,6 +657,7 @@
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Ouzbékistan",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 2.601,
           "away": 1.01
@@ -675,6 +686,7 @@
         ],
         "prob_over_25_modele": 68,
         "prob_btts_modele": 58,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -753,6 +765,7 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire France",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 2.941,
           "away": 0.791
@@ -781,6 +794,7 @@
         ],
         "prob_over_25_modele": 69,
         "prob_btts_modele": 50,
+        "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -854,6 +868,7 @@
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire Atletico Nacional",
         "confiance_niveau": "haute",
+        "line_signal": "stable",
         "poisson_lambdas": {
           "home": 2.413,
           "away": 1.274
@@ -882,6 +897,7 @@
         ],
         "prob_over_25_modele": 70,
         "prob_btts_modele": 65,
+        "football_data_enriched": false,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}

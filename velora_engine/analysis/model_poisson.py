@@ -76,8 +76,18 @@ def estimate_lambdas(
     markets = markets or MarketsRaw()
     hf = intel.get("home_form") or {}
     af = intel.get("away_form") or {}
-    att_h, def_h = attack_defense_from_form(hf if hf.get("played") else None)
-    att_a, def_a = attack_defense_from_form(af if af.get("played") else None)
+    fd_gf_h = intel.get("fd_home_goals_for")
+    fd_ga_h = intel.get("fd_home_goals_against")
+    fd_gf_a = intel.get("fd_away_goals_for")
+    fd_ga_a = intel.get("fd_away_goals_against")
+    if isinstance(fd_gf_h, (int, float)) and isinstance(fd_ga_h, (int, float)):
+        att_h, def_h = float(fd_gf_h), float(fd_ga_h)
+    else:
+        att_h, def_h = attack_defense_from_form(hf if hf.get("played") else None)
+    if isinstance(fd_gf_a, (int, float)) and isinstance(fd_ga_a, (int, float)):
+        att_a, def_a = float(fd_gf_a), float(fd_ga_a)
+    else:
+        att_a, def_a = attack_defense_from_form(af if af.get("played") else None)
 
     lam_home = (att_h / BASE_ATTACK) * (def_a / BASE_ATTACK) * LEAGUE_GOALS_HOME * HOME_ADV_FACTOR
     lam_away = (att_a / BASE_ATTACK) * (def_h / BASE_ATTACK) * LEAGUE_GOALS_AWAY

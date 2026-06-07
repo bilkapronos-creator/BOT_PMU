@@ -172,6 +172,7 @@ class FreeAnalysis:
     top_scores_modele: list[dict[str, Any]] | None = None
     prob_over_25_modele: int | None = None
     prob_btts_modele: int | None = None
+    football_data_enriched: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return _drop_none(
@@ -187,6 +188,7 @@ class FreeAnalysis:
                 "top_scores_modele": self.top_scores_modele,
                 "prob_over_25_modele": self.prob_over_25_modele,
                 "prob_btts_modele": self.prob_btts_modele,
+                "football_data_enriched": self.football_data_enriched,
                 "markets_raw": self.markets_raw.to_dict(),
                 "value_bets": [v.to_dict() for v in self.value_bets],
                 "primary_pick": self.primary_pick.to_dict()

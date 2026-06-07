@@ -4752,6 +4752,7 @@
                     pronostic_label: free.pronostic_label ?? raw.pronostic_label,
                     confiance_niveau: free.confiance_niveau ?? raw.confiance_niveau,
                     line_signal: free.line_signal ?? raw.line_signal,
+                    football_data_enriched: free.football_data_enriched ?? raw.football_data_enriched,
                     probabilites_marche: free.probabilites_marche ?? raw.probabilites_marche,
                     poisson_lambdas: free.poisson_lambdas ?? raw.poisson_lambdas,
                     prob_over_25_modele: free.prob_over_25_modele ?? raw.prob_over_25_modele,
@@ -5940,6 +5941,9 @@
                 chips.push(`<span class="velora-chip velora-chip-line" title="La cote du pronostic baisse">📉 Cote en baisse</span>`);
             } else if (lineSig === 'cote_hausse') {
                 chips.push(`<span class="velora-chip velora-chip-line-up" title="La cote du pronostic monte">📈 Cote en hausse</span>`);
+            }
+            if (m?.football_data_enriched || m?.free_analysis?.football_data_enriched) {
+                chips.push(`<span class="velora-chip velora-chip-pronostic" title="Forme et buts enrichis via football-data.org">📡 Stats API</span>`);
             }
             if (!chips.length) return '';
             const mt = theme === 'opp' ? 'mt-1' : 'mt-0';

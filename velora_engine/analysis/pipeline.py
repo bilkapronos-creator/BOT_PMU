@@ -54,6 +54,7 @@ from parser_winamax import (  # noqa: E402
     is_match_within_parser_horizon,
     is_winamax_match_finished,
 )
+from velora_engine.external.football_data import enrich_intel_from_football_data
 from velora_intel import extract_intel_from_state, intel_stats_suffisantes  # noqa: E402
 
 try:
@@ -113,6 +114,11 @@ def build_match_v2(
     )
     legacy = _apply_intel_overlay(legacy, state, mid)
     intel = extract_intel_from_state(state, mid)
+    intel = enrich_intel_from_football_data(intel, home=home, away=away)
+    if intel_stats_suffisantes(intel):
+        from velora_intel import apply_statistical_velora_analysis
+
+        legacy = apply_statistical_velora_analysis(legacy, intel)
 
     extracted = extract_all_markets(
         mbets,
@@ -217,6 +223,7 @@ def build_match_v2(
         top_scores_modele=poisson.top_scores or None,
         prob_over_25_modele=poisson.prob_over_25,
         prob_btts_modele=poisson.prob_btts_oui,
+        football_data_enriched=bool(intel.get("fd_available")),
     )
 
     record = MatchRecordV2(

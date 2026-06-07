@@ -1456,7 +1456,26 @@ def stars_display(n: int) -> str:
         return "⭐"
 
 
+def _load_local_env() -> None:
+    root = Path(__file__).resolve().parent
+    for env_path in (root / ".env", root / "web" / ".env"):
+        if not env_path.is_file():
+            continue
+        try:
+            for raw in env_path.read_text(encoding="utf-8").splitlines():
+                line = raw.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, val = line.partition("=")
+                key, val = key.strip(), val.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = val
+        except OSError:
+            pass
+
+
 def main() -> None:
+    _load_local_env()
     print(f"[parser] Lecture {DUMP.name}...")
     data = load_preloaded_state()
     if not data:
