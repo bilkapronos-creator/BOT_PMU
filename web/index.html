@@ -2741,7 +2741,11 @@
         /** Abonnements distincts PMU / Foot (+ admin God Mode). */
         const VELORA_PREMIUM_PMU_LS_KEY = 'velora_is_premium_pmu';
         const VELORA_PREMIUM_FOOT_LS_KEY = 'velora_is_premium_foot';
+        const VELORA_PREMIUM_FOOT_UID_KEY = 'velora_premium_foot_uid';
         const VELORA_PREMIUM_LEGACY_LS_KEY = 'velora_is_premium';
+        const PLANS_PASS_FOOT_DB = new Set([
+            'foot', 'premium_foot', 'bundle', 'integral', 'pack_integral', 'pmu_foot',
+        ]);
         const VELORA_GODMODE_EMAIL = 'loudamou14@gmail.com';
         /** Lien Stripe Payment Link — Pass Premium Foot (succès : ?premium_foot=success dans le dashboard Stripe). */
         const STRIPE_CHECKOUT_URL_FOOT = 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00';
@@ -2762,11 +2766,55 @@
             return Boolean(window.VeloraAuth?.estGodModeUtilisateur?.());
         }
 
+        function effacerPassFootLocal() {
+            localStorage.removeItem(VELORA_PREMIUM_FOOT_LS_KEY);
+            localStorage.removeItem(VELORA_PREMIUM_FOOT_UID_KEY);
+        }
+
+        /** Pass Foot lié au compte Supabase connecté (évite LS orphelin / autre navigateur). */
+        function marquerPassFootLocal(actif = true) {
+            const uid = window.VeloraAuth?.getUserId?.();
+            if (!uid) return false;
+            if (actif) {
+                localStorage.setItem(VELORA_PREMIUM_FOOT_LS_KEY, 'true');
+                localStorage.setItem(VELORA_PREMIUM_FOOT_UID_KEY, String(uid));
+            } else {
+                effacerPassFootLocal();
+            }
+            return true;
+        }
+
+        function passFootLieAuCompteActuel() {
+            if (!estMembreConnecte()) return false;
+            if (localStorage.getItem(VELORA_PREMIUM_FOOT_LS_KEY) !== 'true') return false;
+            const uidLie = localStorage.getItem(VELORA_PREMIUM_FOOT_UID_KEY);
+            const uid = String(window.VeloraAuth?.getUserId?.() || '');
+            return Boolean(uid && uidLie && uidLie === uid);
+        }
+
+        function profilDbAutorisePassFoot() {
+            const p = window.VeloraAuth?.getProfile?.();
+            if (!p) return false;
+            const role = String(p.role || '').toLowerCase();
+            if (role === 'admin') return true;
+            const plan = String(p.plan_type || '').toLowerCase();
+            return PLANS_PASS_FOOT_DB.has(plan);
+        }
+
         function forcerGodModePremiumLocal() {
             if (!estEmailVeloraGodMode()) return false;
+            if (!estMembreConnecte()) return false;
             localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
-            localStorage.setItem(VELORA_PREMIUM_FOOT_LS_KEY, 'true');
+            marquerPassFootLocal(true);
             return true;
+        }
+
+        function purgerDonneesOppFoot() {
+            footModeOpportunites = false;
+            oppMatchs = [];
+            oppMatchsCharges = false;
+            footPremiumIndex = null;
+            footPremiumIndexPromise = null;
         }
 
         function migrerAncienneClePremiumUnifiee() {
@@ -2788,11 +2836,16 @@
             return localStorage.getItem(VELORA_PREMIUM_PMU_LS_KEY) === 'true';
         }
 
-        /** Pass Foot : recherches illimitées + Mode Opportunités (Stripe Foot ou admin). */
+        /** Pass Foot : membre connecté + abonnement Foot / Pack (profil ou LS lié au compte). */
         function estVeloraPremiumFoot() {
+            if (!estMembreConnecte()) return false;
             migrerAncienneClePremiumUnifiee();
-            if (forcerGodModePremiumLocal()) return true;
-            return localStorage.getItem(VELORA_PREMIUM_FOOT_LS_KEY) === 'true';
+            if (estEmailVeloraGodMode() && forcerGodModePremiumLocal()) return true;
+            if (profilDbAutorisePassFoot()) {
+                marquerPassFootLocal(true);
+                return true;
+            }
+            return passFootLieAuCompteActuel();
         }
 
         const BADGE_PLAN_PREMIUM_CLASS = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
@@ -2827,9 +2880,11 @@
             return aAccesPremiumVelora();
         }
 
-        /** Radar Opportunités : membre connecté + Pass Foot Premium actif. */
+        /** Radar Opportunités : membre connecté + Pass Foot ou Pack Intégral actif. */
         function peutUtiliserRadarFootOpp() {
-            return estMembreConnecte() && estVeloraPremiumFoot() === true;
+            if (!estMembreConnecte()) return false;
+            if (!estVeloraPremiumFoot()) return false;
+            return true;
         }
 
         function demanderAccesRadarFootOpp() {
@@ -3867,6 +3922,9 @@
             if (!connecte && sectionArchives && !sectionArchives.classList.contains('hidden')) {
                 afficherSection('pronostic');
             }
+            if (!connecte) {
+                purgerDonneesOppFoot();
+            }
             mettreAJourUiAnalyseAuth();
             mettreAJourUiPlanUtilisateur();
             appliquerPaywallDeviceSiBloque();
@@ -4041,6 +4099,7 @@
             window.VeloraAuth.onProfileChange?.(() => {
                 syncVeloraPremiumLocalFlag();
                 mettreAJourUiPlanUtilisateur();
+                quitterFootOppSiNonPremium();
                 syncFootModeUi();
             });
 
@@ -4113,8 +4172,13 @@
             if (!pmuOk && !footOk && !bundleOk) return;
 
             if (bundleOk) {
+                if (!estMembreConnecte()) {
+                    ouvrirModalAuth('login');
+                    afficherToastVelora('Connectez-vous pour activer votre Pack Intégral.', 8000);
+                    return;
+                }
                 localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
-                localStorage.setItem(VELORA_PREMIUM_FOOT_LS_KEY, 'true');
+                marquerPassFootLocal(true);
                 if (typeof window.VeloraAuth?.appliquerPremiumOptimiste === 'function') {
                     window.VeloraAuth.appliquerPremiumOptimiste();
                 }
@@ -4123,6 +4187,11 @@
                 synchroniserProfilPremiumArrierePlan();
             } else {
                 if (pmuOk) {
+                    if (!estMembreConnecte()) {
+                        ouvrirModalAuth('login');
+                        afficherToastVelora('Connectez-vous pour activer votre Pass PMU.', 8000);
+                        return;
+                    }
                     localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
                     if (typeof window.VeloraAuth?.appliquerPremiumOptimiste === 'function') {
                         window.VeloraAuth.appliquerPremiumOptimiste();
@@ -4132,7 +4201,12 @@
                 }
 
                 if (footOk) {
-                    localStorage.setItem(VELORA_PREMIUM_FOOT_LS_KEY, 'true');
+                    if (!estMembreConnecte()) {
+                        ouvrirModalAuth('login');
+                        afficherToastVelora('Connectez-vous pour activer votre Pass Foot.', 8000);
+                        return;
+                    }
+                    marquerPassFootLocal(true);
                     afficherToastVelora('⚽ Pass Premium Foot activé — radar et recherches débloqués.');
                 }
             }
@@ -4470,6 +4544,7 @@
             if (toggle) {
                 toggle.setAttribute('aria-checked', oppActif ? 'true' : 'false');
                 toggle.setAttribute('aria-disabled', oppAutorise ? 'false' : 'true');
+                toggle.disabled = false;
                 toggle.classList.toggle('foot-toggle-opp-on', oppActif);
                 toggle.classList.toggle('foot-toggle-opp--vip-locked', !oppAutorise);
                 toggle.title = oppAutorise
@@ -4749,11 +4824,6 @@
                 footFiltre = raw;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
-                if (!estVeloraPremiumFoot()) {
-                    ensureFootPremiumIndex().then(() => {
-                        if (footAnalyseAffichee && !footModeOpportunites) renderFootMatchs();
-                    });
-                }
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -4765,12 +4835,15 @@
 
         async function onFootToggleOppClick(ev) {
             ev?.preventDefault();
-            const wantOn = !footModeOpportunites;
-            if (wantOn) {
-                if (!demanderAccesRadarFootOpp()) return;
-            } else if (!peutUtiliserRadarFootOpp()) {
+            if (!peutUtiliserRadarFootOpp()) {
+                purgerDonneesOppFoot();
+                syncFootModeUi();
+                if (footModeOpportunites) renderFootMatchs();
+                demanderAccesRadarFootOpp();
                 return;
             }
+            const wantOn = !footModeOpportunites;
+            if (wantOn && !demanderAccesRadarFootOpp()) return;
             await setFootModeOpportunites(wantOn);
         }
 
@@ -4929,6 +5002,7 @@
         }
 
         function toggleFootFiltreOutsiders() {
+            if (!peutUtiliserRadarFootOpp()) return;
             footFiltreOutsiders = !footFiltreOutsiders;
             majFootFiltresUi();
             majFootMeta();
@@ -6041,6 +6115,11 @@
         }
 
         async function ensureFootPremiumIndex() {
+            if (!estVeloraPremiumFoot()) {
+                footPremiumIndex = null;
+                footPremiumIndexPromise = null;
+                return new Map();
+            }
             if (footPremiumIndex) return footPremiumIndex;
             if (!footPremiumIndexPromise) {
                 footPremiumIndexPromise = fetchVeloraMatchsList(VELORA_JSON_PREMIUM)
@@ -6180,8 +6259,9 @@
         function htmlBlocPronosticValue(m) {
             const pronostic = String(m?.pronostic_label || '').trim();
             const valueLabel = libelleValuePickAffichage(m);
-            const hasValue = !!valueLabel
+            const hasValueBrut = !!valueLabel
                 || (Array.isArray(m?.free_value_bets) && m.free_value_bets.length > 0);
+            const hasValue = hasValueBrut && estVeloraPremiumFoot();
             if (!pronostic && !hasValue) return '';
             const gridCls = pronostic && hasValue ? 'velora-pronostic-value-grid velora-pronostic-value-grid--duo' : 'velora-pronostic-value-grid';
             const blocPronostic = pronostic
@@ -6511,10 +6591,10 @@
             if (!footAnalyseAffichee || !q) {
                 const totalBase = footMatchs.length;
                 const baseInfo = actifs.length > 0
-                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (24 h)`
+                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (journée + nocturnes)`
                     : (totalBase > 0
                         ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base (données à actualiser)`
-                        : '0 match sur les 24 h');
+                        : '0 match aujourd\'hui');
                 meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
             }
@@ -6548,10 +6628,10 @@
             const n = footMatchsRecherchables().length;
             const total = footMatchs.length;
             const baseLabel = n > 0
-                ? `${n} match${n > 1 ? 's' : ''} Winamax (24 h)`
+                ? `${n} match${n > 1 ? 's' : ''} Winamax (journée + nocturnes)`
                 : (total > 0
                     ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
-                    : 'Aucun match sur les 24 h');
+                    : 'Aucun match aujourd\'hui');
             el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
             majFootAlerteDonneesUi();
         }
@@ -6605,11 +6685,14 @@
             const accueil = document.getElementById('footZoneAccueil');
             if (!zone) return;
 
+            if (!peutUtiliserRadarFootOpp()) {
+                purgerDonneesOppFoot();
+            }
             if (quitterFootOppSiNonPremium()) {
                 // Re-rendu en mode recherche après correction du mode
             }
 
-            if (footModeOpportunites) {
+            if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
                 const liste = oppMatchsFiltres();
                 majFootMeta();
                 if (accueil) accueil.classList.add('hidden');
@@ -6714,12 +6797,16 @@
         }
 
         async function fetchOppPremiumJson() {
+            if (!peutUtiliserRadarFootOpp()) {
+                throw new Error('opp_access_denied');
+            }
             const data = await fetchVeloraJson(VELORA_JSON_PREMIUM);
             return parseVeloraMatchsPayload(data);
         }
 
         async function chargerOppMatchs(options = {}) {
             if (!peutUtiliserRadarFootOpp()) {
+                purgerDonneesOppFoot();
                 quitterFootOppSiNonPremium();
                 return chargerFootMatchs(options);
             }
