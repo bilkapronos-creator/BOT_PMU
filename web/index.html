@@ -536,6 +536,26 @@
             background: rgba(124, 45, 18, 0.3);
             color: #fdba74;
         }
+        .velora-bloc-pronostic {
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: linear-gradient(135deg, rgba(8, 47, 73, 0.45), rgba(12, 74, 110, 0.2));
+        }
+        .velora-bloc-value {
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            background: linear-gradient(135deg, rgba(69, 26, 3, 0.4), rgba(120, 53, 15, 0.25));
+        }
+        .velora-pronostic-value-grid {
+            display: grid;
+            gap: 0.65rem;
+        }
+        @media (min-width: 480px) {
+            .velora-pronostic-value-grid--duo {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .vitrine-foot-taux-chip .text-cyan-300 {
+            font-variant-numeric: tabular-nums;
+        }
         @keyframes foot-live-pulse {
             0%, 100% {
                 opacity: 1;
@@ -1578,7 +1598,7 @@
                                 </dl>
                                 <p id="vitrineFootApercu" class="mt-2 hidden text-[10px] italic text-cyan-500/60">Données Foot en cours de collecte</p>
                                 <div id="vitrineFootParType" class="hidden mt-3">
-                                    <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Par marché</p>
+                                    <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Performance par marché</p>
                                     <div id="vitrineFootParTypeListe" class="flex flex-wrap gap-1.5"></div>
                                 </div>
                                 <div id="vitrineFootHistorique" class="vitrine-pmu-historique vitrine-foot-historique hidden">
@@ -2329,7 +2349,22 @@
             return entrees.map(([label, count]) => {
                 const isTierce = /tiercé|tierce|super\s*4|multi/i.test(label);
                 const cls = isTierce ? 'vitrine-pmu-badge--tierce' : (variante === 'foot' ? 'text-cyan-200' : 'text-emerald-200');
-                return `<span class="vitrine-par-type-chip"><span class="font-semibold ${cls}">${label}</span><span class="${accent}">×${count}</span></span>`;
+                return `<span class="vitrine-par-type-chip"><span class="font-semibold ${cls}">${escHtml(label)}</span><span class="${accent}">×${count}</span></span>`;
+            }).join('');
+        }
+
+        function htmlVitrineFootParTypeChips(detail) {
+            const entrees = Object.entries(detail || {})
+                .filter(([, v]) => v && Number(v.total) > 0)
+                .sort((a, b) => (Number(b[1].total) || 0) - (Number(a[1].total) || 0));
+            if (!entrees.length) return '';
+            return entrees.map(([key, v]) => {
+                const label = v.label || key;
+                const total = Number(v.total) || 0;
+                const succes = Number(v.succes) || 0;
+                const taux = v.taux != null ? Number(v.taux) : (total ? Math.round((succes / total) * 100) : 0);
+                const cls = taux >= 50 ? 'text-cyan-200' : 'text-gray-300';
+                return `<span class="vitrine-par-type-chip vitrine-foot-taux-chip"><span class="font-semibold ${cls}">${escHtml(label)}</span><span class="text-cyan-300 font-bold">${taux}%</span><span class="text-gray-500">${succes}/${total}</span></span>`;
             }).join('');
         }
 
@@ -2365,13 +2400,7 @@
             const blocHist = document.getElementById('vitrineFootHistorique');
             const listeHist = document.getElementById('vitrineFootHistoriqueListe');
             const detail = foot.detail_par_marche || foot.detail_par_type_pari || {};
-            const reussites = {};
-            Object.entries(detail).forEach(([key, v]) => {
-                if (!v || !v.succes) return;
-                const label = v.label || key;
-                reussites[label] = v.succes;
-            });
-            const chips = htmlVitrineParTypeChips(reussites, 'foot');
+            const chips = htmlVitrineFootParTypeChips(detail);
             if (listeParType) listeParType.innerHTML = chips;
             if (blocParType) blocParType.classList.toggle('hidden', !chips);
 
@@ -3543,18 +3572,7 @@
             ).join('');
             blocTypes.classList.remove('hidden');
 
-            if (hintCal && isFoot) {
-                const suggestions = (stats?.calibration?.suggestions || []);
-                if (suggestions.length) {
-                    const s = suggestions[0];
-                    hintCal.textContent = `Calibration auto : seuil ${s.edge_key} ${s.edge_actuel} → ${s.edge_suggere} (${s.raison}).`;
-                    hintCal.classList.remove('hidden');
-                } else {
-                    hintCal.classList.add('hidden');
-                }
-            } else if (hintCal) {
-                hintCal.classList.add('hidden');
-            }
+            if (hintCal) hintCal.classList.add('hidden');
         }
 
         const SPLASH_MIN_MS = 4500;
@@ -5921,18 +5939,58 @@
                 </div>`;
         }
 
-        function htmlVeloraAnalyseBadges(m, theme = 'foot') {
+        function libelleValuePickAffichage(m) {
+            const pp = primaryPickFromMatch(m);
+            if (!pp || !pp.market) return '';
+            let label = String(pp.label || '').trim();
+            if (!label) {
+                label = String(pp.conseil_short || '')
+                    .replace(/^🔥\s*Value Bet\s*[—\-–:]\s*/i, '')
+                    .replace(/\s*@\s*[\d.,]+.*$/, '')
+                    .trim();
+            }
+            const cote = fmtCoteMarche(pp.cote);
+            if (!label) return cote ? `Cote ${cote}` : '';
+            return cote ? `${label} · Cote ${cote}` : label;
+        }
+
+        function htmlBlocPronosticValue(m) {
+            const pronostic = String(m?.pronostic_label || '').trim();
+            const valueLabel = libelleValuePickAffichage(m);
+            const hasValue = !!valueLabel
+                || (Array.isArray(m?.free_value_bets) && m.free_value_bets.length > 0);
+            if (!pronostic && !hasValue) return '';
+            const gridCls = pronostic && hasValue ? 'velora-pronostic-value-grid velora-pronostic-value-grid--duo' : 'velora-pronostic-value-grid';
+            const blocPronostic = pronostic
+                ? `<div class="velora-bloc-pronostic rounded-xl px-4 py-3">
+                        <p class="text-[10px] font-semibold uppercase tracking-wider text-sky-400/90">Notre pronostic</p>
+                        <p class="mt-1.5 text-sm font-extrabold leading-snug text-sky-50 sm:text-base">🎯 ${escHtml(pronostic)}</p>
+                    </div>`
+                : '';
+            const affichageValue = valueLabel || 'Pari à valeur détecté';
+            const blocValue = hasValue
+                ? `<div class="velora-bloc-value rounded-xl px-4 py-3">
+                        <p class="text-[10px] font-semibold uppercase tracking-wider text-amber-400/90">Value bet</p>
+                        <p class="mt-1.5 text-sm font-extrabold leading-snug text-amber-50 sm:text-base">💎 ${escHtml(affichageValue)}</p>
+                    </div>`
+                : '';
+            return `<div class="${gridCls}">${blocPronostic}${blocValue}</div>`;
+        }
+
+        function htmlVeloraAnalyseBadges(m, theme = 'foot', mode = 'full') {
             const chips = [];
             const pronostic = String(m?.pronostic_label || '').trim();
             const confiance = String(m?.confiance_niveau || '').toLowerCase();
             const hasValue = (Array.isArray(m?.free_value_bets) && m.free_value_bets.length > 0)
                 || !!(m?.primary_pick && m.primary_pick.market);
             const lineSig = String(m?.line_signal || '').trim();
-            if (pronostic) {
-                chips.push(`<span class="velora-chip velora-chip-pronostic" title="Pronostic statistique Velora">🎯 ${escHtml(pronostic)}</span>`);
-            }
-            if (hasValue) {
-                chips.push(`<span class="velora-chip velora-chip-value" title="Value bet détecté sur ce match">💎 Value</span>`);
+            if (mode !== 'signals') {
+                if (pronostic) {
+                    chips.push(`<span class="velora-chip velora-chip-pronostic" title="Pronostic statistique Velora">🎯 ${escHtml(pronostic)}</span>`);
+                }
+                if (hasValue) {
+                    chips.push(`<span class="velora-chip velora-chip-value" title="Value bet détecté sur ce match">💎 Value</span>`);
+                }
             }
             if (confiance === 'faible') {
                 chips.push(`<span class="velora-chip velora-chip-faible" title="Peu de données ou confiance réduite">⚠ Confiance faible</span>`);
@@ -6139,16 +6197,9 @@
                 : Array.isArray(topScores) && topScores.length
                     ? topScores.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
                     : '';
-            const analyseBadges = htmlVeloraAnalyseBadges(m, 'foot');
+            const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
-            const pm = m.probabilites_marche || {};
-            const marcheHint = (Number(pm['1']) || Number(pm.N) || Number(pm['2']))
-                ? `<p class="mt-1 text-[10px] text-gray-500">Marché implicite — Dom ${Number(pm['1']) || 0}% · Nul ${Number(pm.N) || 0}% · Ext ${Number(pm['2']) || 0}%</p>`
-                : '';
-            const pl = m.poisson_lambdas || {};
-            const poissonHint = (Number(pl.home) > 0 && Number(pl.away) > 0)
-                ? `<p class="mt-0.5 text-[10px] text-cyan-500/70">Poisson — λ dom ${Number(pl.home).toFixed(2)} · λ ext ${Number(pl.away).toFixed(2)}${m.prob_over_25_modele ? ` · O2.5 ${m.prob_over_25_modele}%` : ''}</p>`
-                : '';
+            const blocsPronosticValue = htmlBlocPronosticValue(m);
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
                 ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
@@ -6163,7 +6214,7 @@
                             <span class="block text-[10px] font-medium leading-tight tracking-wide text-slate-500">${escHtml(m.date_match || '')}</span>
                             ${htmlFootLiveBadge(m)}
                             <h3 class="foot-match-title mt-0.5 text-base font-bold text-white sm:text-lg">${escHtml(m.equipe_domicile)} <span class="font-normal text-gray-500">—</span> ${escHtml(m.equipe_exterieur)}</h3>
-                            ${analyseBadges}
+                            ${signalBadges}
                         </div>
                         <div class="shrink-0 text-right">
                             <p class="text-[10px] uppercase tracking-widest text-amber-400/80">Indice Velora (stats)</p>
@@ -6172,24 +6223,23 @@
                     </div>
                     <div class="foot-match-card-body space-y-4">
                         <div>
-                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probas modèle Velora</p>
+                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Nos probabilités</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
                                 <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
                                 <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
                                 <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
                             </div>
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
-                            ${marcheHint}
                         </div>
+                        ${blocsPronosticValue}
                         ${htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
                         ${plusParis}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Top scores Poisson (probas)</summary>
+                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Scores probables</summary>
                             <ul class="mt-2 space-y-1 border-t border-white/10 pt-2">${scoresMoteurHtml}</ul>
                         </details>` : ''}
-                        ${htmlVelora1n2PickRow(m, 'foot')}
                     </div>
                 </article>`;
         }
@@ -6401,7 +6451,7 @@
                     `<li class="flex justify-between text-xs"><span class="text-gray-300">${escHtml(s.score)}</span><span class="font-bold text-amber-300/90">${escHtml(s.prob)}%</span></li>`,
                 ).join('');
             }
-            return '<li class="text-xs text-gray-500">Top scores non disponibles</li>';
+            return '<li class="text-xs text-gray-500">Scores non disponibles</li>';
         }
 
         /** Mode opportunités : affichage automatique, sans recherche utilisateur. */
@@ -6499,7 +6549,7 @@
                 ? ''
                 : `
                         <div>
-                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Probas modèle Velora</p>
+                            <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Nos probabilités</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
                                 <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
                                 <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
@@ -6513,7 +6563,7 @@
                 ? ''
                 : `
                         <div class="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5">
-                            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">Top scores moteur (probas)</p>
+                            <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">Scores probables</p>
                             <ul class="space-y-1.5">${scoresHtml}</ul>
                         </div>`;
 
