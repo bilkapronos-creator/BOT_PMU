@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "edge_thresholds": {
+    "1n2": 1.05,
+    "dc_1x": 1.05,
+    "dc_x2": 1.05,
+    "ou_total": 1.08,
+    "btts": 1.06,
+    "team_goals_home": 1.08,
+    "team_goals_away": 1.08,
+    "score_exact": 1.15
+  },
+  "suggestions": [
+    {
+      "marche": "over_25",
+      "label": "Over 2.5",
+      "edge_key": "ou_total",
+      "edge_actuel": 1.06,
+      "edge_suggere": 1.08,
+      "taux_pct": 42,
+      "echantillon": 12,
+      "raison": "42% de réussite sur 12 matchs — seuil relevé"
+    }
+  ],
+  "detail_par_marche": {
+    "over_25": {
+      "label": "Over 2.5",
+      "total": 12,
+      "succes": 5,
+      "taux": 42,
+      "profit_net": -69.5
+    },
+    "pronostic_1n2": {
+      "label": "Pronostic 1N2",
+      "total": 2,
+      "succes": 2,
+      "taux": 100,
+      "profit_net": 11.6
+    },
+    "value_1n2": {
+      "label": "Value 1N2",
+      "total": 3,
+      "succes": 1,
+      "taux": 33,
+      "profit_net": 3.5
+    },
+    "double_chance": {
+      "label": "Double chance",
+      "total": 1,
+      "succes": 1,
+      "taux": 100,
+      "profit_net": 6.2
+    }
+  }
+}

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from velora_finance import MISE_UNITAIRE, bloc_communaute_depuis_stats, fusionner_blocs_sports
-from stats_foot import get_stats_foot_publiques
+from stats_foot import ecrire_calibration_foot, get_stats_foot_publiques
 from stats_pmu import (
     extraire_historique_communaute_pmu,
     get_stats_publiques,
@@ -85,6 +85,8 @@ def construire_bloc_foot() -> dict:
             archives = []
     bloc = bloc_communaute_depuis_stats(foot)
     bloc["detail_par_type_pari"] = foot.get("detail_par_type_pari") or {}
+    bloc["detail_par_marche"] = foot.get("detail_par_marche") or {}
+    bloc["calibration"] = foot.get("calibration") or {}
     bloc["historique_matchs"] = _extraire_historique_foot(archives)
     return bloc
 
@@ -112,6 +114,7 @@ def main() -> int:
             pass
     data = construire_communaute()
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    ecrire_calibration_foot()
     pmu = data.get("pmu") or {}
     ch = pmu.get("compteur_historique") or {}
     print(

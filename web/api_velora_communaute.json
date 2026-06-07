@@ -1,30 +1,204 @@
 {
   "pmu": {
-    "taux": 76,
-    "victoires": 101,
-    "total": 133,
-    "mises_cumulees": 1330.0,
-    "profit_net": 2903.0,
-    "roi_pct": 218.3
+    "taux": 33,
+    "victoires": 1,
+    "total": 3,
+    "mises_cumulees": 30.0,
+    "profit_net": -5.0,
+    "roi_pct": -16.7,
+    "historique_courses": [
+      {
+        "reunion": "R1",
+        "course": "C1",
+        "date_affiche": "",
+        "type_pari_pmu": "Perdu",
+        "reussi_pmu": false,
+        "badges": [
+          "Perdu"
+        ],
+        "est_quinte": false
+      },
+      {
+        "reunion": "R1",
+        "course": "C1",
+        "date_affiche": "",
+        "type_pari_pmu": "Perdu",
+        "reussi_pmu": false,
+        "badges": [
+          "Perdu"
+        ],
+        "est_quinte": false
+      },
+      {
+        "reunion": "R1",
+        "course": "C1",
+        "date_affiche": "",
+        "type_pari_pmu": "Gagnant",
+        "reussi_pmu": true,
+        "badges": [],
+        "est_quinte": false
+      }
+    ],
+    "compteur_historique": {
+      "courses_analysees": 3,
+      "courses_terminees": 3,
+      "victoires": 1,
+      "taux_reussite": 33
+    },
+    "gains_par_famille": {},
+    "reussites_par_type": {},
+    "membres_actifs": 2
   },
   "foot": {
-    "taux": 47,
-    "victoires": 7,
-    "total": 15,
-    "mises_cumulees": 150.0,
-    "profit_net": -49.8,
-    "roi_pct": -33.2
+    "taux": 50,
+    "victoires": 9,
+    "total": 18,
+    "mises_cumulees": 180.0,
+    "profit_net": -48.2,
+    "roi_pct": -26.8,
+    "detail_par_type_pari": {
+      "Over 2.5": {
+        "total": 12,
+        "succes": 5,
+        "taux": 42
+      },
+      "1N2 Domicile": {
+        "total": 2,
+        "succes": 2,
+        "taux": 100
+      },
+      "1N2 Nul": {
+        "total": 1,
+        "succes": 1,
+        "taux": 100
+      },
+      "Value 1N2": {
+        "total": 2,
+        "succes": 0,
+        "taux": 0
+      },
+      "Double chance X2": {
+        "total": 1,
+        "succes": 1,
+        "taux": 100
+      }
+    },
+    "detail_par_marche": {
+      "over_25": {
+        "label": "Over 2.5",
+        "total": 12,
+        "succes": 5,
+        "taux": 42,
+        "profit_net": -69.5
+      },
+      "pronostic_1n2": {
+        "label": "Pronostic 1N2",
+        "total": 2,
+        "succes": 2,
+        "taux": 100,
+        "profit_net": 11.6
+      },
+      "value_1n2": {
+        "label": "Value 1N2",
+        "total": 3,
+        "succes": 1,
+        "taux": 33,
+        "profit_net": 3.5
+      },
+      "double_chance": {
+        "label": "Double chance",
+        "total": 1,
+        "succes": 1,
+        "taux": 100,
+        "profit_net": 6.2
+      }
+    },
+    "calibration": {
+      "edge_thresholds": {
+        "1n2": 1.05,
+        "dc_1x": 1.05,
+        "dc_x2": 1.05,
+        "ou_total": 1.08,
+        "btts": 1.06,
+        "team_goals_home": 1.08,
+        "team_goals_away": 1.08,
+        "score_exact": 1.15
+      },
+      "suggestions": [
+        {
+          "marche": "over_25",
+          "label": "Over 2.5",
+          "edge_key": "ou_total",
+          "edge_actuel": 1.06,
+          "edge_suggere": 1.08,
+          "taux_pct": 42,
+          "echantillon": 12,
+          "raison": "42% de réussite sur 12 matchs — seuil relevé"
+        }
+      ],
+      "echantillon_min": 5
+    },
+    "historique_matchs": [
+      {
+        "equipe_domicile": "USM Alger",
+        "equipe_exterieur": "Belouizdad",
+        "score_final": "2-0",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "over_25"
+      },
+      {
+        "equipe_domicile": "Autriche",
+        "equipe_exterieur": "Tunisie",
+        "score_final": "1-0",
+        "type_pari_foot": "1N2 Domicile",
+        "reussi_foot": true,
+        "marche": "1n2"
+      },
+      {
+        "equipe_domicile": "Norvège",
+        "equipe_exterieur": "Suède",
+        "score_final": "3-1",
+        "type_pari_foot": "1N2 Domicile",
+        "reussi_foot": true,
+        "marche": "1n2"
+      },
+      {
+        "equipe_domicile": "Huachipato",
+        "equipe_exterieur": "Universidad Catolica",
+        "score_final": "0-3",
+        "type_pari_foot": "Over 2.5",
+        "reussi_foot": true,
+        "marche": "over_25"
+      },
+      {
+        "equipe_domicile": "Palmeiras",
+        "equipe_exterieur": "Chapecoense",
+        "score_final": "1-0",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "over_25"
+      },
+      {
+        "equipe_domicile": "Vasco da Gama",
+        "equipe_exterieur": "Atlético Mineiro",
+        "score_final": "0-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "over_25"
+      }
+    ]
   },
   "global": {
-    "taux": 73,
-    "victoires": 108,
-    "total": 148,
-    "mises_cumulees": 1480.0,
-    "profit_net": 2853.2,
-    "roi_pct": 192.8
+    "taux": 48,
+    "victoires": 10,
+    "total": 21,
+    "mises_cumulees": 210.0,
+    "profit_net": -53.2,
+    "roi_pct": -25.3
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-01T14:19:18.121954+00:00"
+    "genere_at": "2026-06-07T01:34:43.211229+00:00"
   }
 }

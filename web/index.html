@@ -1699,16 +1699,18 @@
                     </div>
                     <div id="archivesDashboardFoot" class="hidden">
                         <p class="mt-2 text-center text-3xl font-black text-cyan-400">
-                            <span id="archivesFootCount">0</span>
+                            <span id="archivesFootTaux">0</span><span class="text-lg">%</span>
                         </p>
-                        <p class="text-center text-xs text-gray-400">Matchs archivés</p>
+                        <p class="text-center text-xs text-gray-400">Taux de réussite Foot</p>
+                        <p class="mt-1 text-center text-[10px] text-gray-500"><span id="archivesFootCount">0</span> matchs archivés</p>
                     </div>
                     <p id="statsArchives" class="mt-2 text-center text-xs text-gray-400" data-libelle-pmu="0 course analysée" data-libelle-foot="0 match analysé">0 course analysée</p>
                 </div>
 
                 <div id="statsParType" class="hidden">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition des succès</p>
+                    <p id="statsParTypeTitre" class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Répartition des succès</p>
                     <div id="statsParTypeListe" class="grid grid-cols-1 gap-2 md:grid-cols-2"></div>
+                    <p id="statsCalibrationHint" class="mt-2 hidden text-[10px] leading-relaxed text-amber-400/85"></p>
                 </div>
 
                 <div id="resultatsArchives" class="space-y-3"></div>
@@ -2362,10 +2364,12 @@
             const listeParType = document.getElementById('vitrineFootParTypeListe');
             const blocHist = document.getElementById('vitrineFootHistorique');
             const listeHist = document.getElementById('vitrineFootHistoriqueListe');
-            const detail = foot.detail_par_type_pari || {};
+            const detail = foot.detail_par_marche || foot.detail_par_type_pari || {};
             const reussites = {};
-            Object.entries(detail).forEach(([label, v]) => {
-                if (v && v.succes > 0) reussites[label] = v.succes;
+            Object.entries(detail).forEach(([key, v]) => {
+                if (!v || !v.succes) return;
+                const label = v.label || key;
+                reussites[label] = v.succes;
             });
             const chips = htmlVitrineParTypeChips(reussites, 'foot');
             if (listeParType) listeParType.innerHTML = chips;
@@ -3502,26 +3506,55 @@
                 </div>`;
         }
 
-        function afficherDashboardPrive(stats) {
+        function afficherDashboardPrive(stats, options = {}) {
             const blocTypes = document.getElementById('statsParType');
             const listeTypes = document.getElementById('statsParTypeListe');
+            const titreTypes = document.getElementById('statsParTypeTitre');
+            const hintCal = document.getElementById('statsCalibrationHint');
             if (!blocTypes || !listeTypes) return;
 
-            const detail = stats?.detail_par_type_pari || {};
+            const isFoot = options.sport === 'foot';
+            const detail = isFoot
+                ? (stats?.detail_par_marche || stats?.detail_par_type_pari || {})
+                : (stats?.detail_par_type_pari || {});
             const entrees = Object.entries(detail)
-                .filter(([, v]) => v && v.succes > 0)
-                .sort((a, b) => (b[1].succes || 0) - (a[1].succes || 0));
+                .map(([key, v]) => {
+                    const label = (v && v.label) ? v.label : key;
+                    return [label, v];
+                })
+                .filter(([, v]) => v && (isFoot ? v.total > 0 : v.succes > 0))
+                .sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
+
+            if (titreTypes) {
+                titreTypes.textContent = isFoot
+                    ? 'Performance par type de pari'
+                    : 'Répartition des succès';
+            }
 
             if (entrees.length === 0) {
                 blocTypes.classList.add('hidden');
                 listeTypes.innerHTML = '';
+                if (hintCal) hintCal.classList.add('hidden');
                 return;
             }
 
             listeTypes.innerHTML = entrees.map(([label, v]) =>
-                htmlBarreTypePari(label, v.succes, v.total, v.taux),
+                htmlBarreTypePari(label, v.succes || 0, v.total || 0, v.taux || 0),
             ).join('');
             blocTypes.classList.remove('hidden');
+
+            if (hintCal && isFoot) {
+                const suggestions = (stats?.calibration?.suggestions || []);
+                if (suggestions.length) {
+                    const s = suggestions[0];
+                    hintCal.textContent = `Calibration auto : seuil ${s.edge_key} ${s.edge_actuel} → ${s.edge_suggere} (${s.raison}).`;
+                    hintCal.classList.remove('hidden');
+                } else {
+                    hintCal.classList.add('hidden');
+                }
+            } else if (hintCal) {
+                hintCal.classList.add('hidden');
+            }
         }
 
         const SPLASH_MIN_MS = 4500;
@@ -5018,7 +5051,9 @@
             }
             if (blocPmu) blocPmu.classList.toggle('hidden', isFoot);
             if (blocFoot) blocFoot.classList.toggle('hidden', !isFoot);
-            if (statsParType) statsParType.classList.toggle('hidden', isFoot);
+            if (statsParType && isFoot) {
+                statsParType.classList.add('hidden');
+            }
             const statsEl = document.getElementById('statsArchives');
             if (statsEl) {
                 const libelle = isFoot
@@ -6697,6 +6732,7 @@
             const liste = document.getElementById('resultatsArchives');
             const statsEl = document.getElementById('statsArchives');
             const countEl = document.getElementById('archivesFootCount');
+            const tauxEl = document.getElementById('archivesFootTaux');
             if (!liste) return;
 
             masquerErreurSync('statsSyncErreur');
@@ -6712,16 +6748,24 @@
             const n = archives.length;
             const nbValides = archives.filter((a) => archiveFootEstValidee(a)).length;
             const nbAttente = archives.filter((a) => archiveFootEstEnAttente(a)).length;
-            const nbGagnes = archives.filter((a) => {
-                const sp = String(a.statut_pari || '').toUpperCase();
-                return /^(GAGNÉ|GAGNE|GAGNANT)$/.test(sp.replace('É', 'E')) || a.reussi_foot === true;
-            }).length;
+            const statsLocales = calculerStatsFootLocales(archives);
+            let statsCommunaute = null;
+            try {
+                const com = await fetchVeloraJson('/api_velora_communaute.json');
+                statsCommunaute = com?.foot || null;
+            } catch { /* local only */ }
+            const statsFoot = statsCommunaute?.detail_par_marche
+                ? statsCommunaute
+                : statsLocales;
+            const taux = statsCommunaute?.taux ?? statsLocales.taux ?? calculerTauxReussiteFoot(archives);
             if (countEl) countEl.textContent = String(n);
+            if (tauxEl) tauxEl.textContent = String(taux);
             if (statsEl) {
                 statsEl.textContent = n
-                    ? `${libelleMatchsAnalysesFoot(n)} · ${nbValides} validé${nbValides > 1 ? 's' : ''} · ${nbAttente} en attente · ${nbGagnes} gagnant${nbGagnes > 1 ? 's' : ''}`
+                    ? `${libelleMatchsAnalysesFoot(n)} · ${nbValides} validé${nbValides > 1 ? 's' : ''} · ${nbAttente} en attente · ${statsLocales.victoires || 0} gagnant${(statsLocales.victoires || 0) > 1 ? 's' : ''}`
                     : '0 match analysé';
             }
+            afficherDashboardPrive(statsFoot, { sport: 'foot' });
 
             liste.innerHTML = '';
             if (n === 0) {

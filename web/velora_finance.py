@@ -250,11 +250,33 @@ def _fusionner_blocs_actifs(pmu: dict, foot: dict) -> dict[str, Any]:
     }
 
 
+def _bloc_communaute_enrichi(source: dict) -> dict[str, Any]:
+    """Conserve les champs détaillés (historique, calibration…) en plus des KPI."""
+    out = bloc_communaute_depuis_stats(source)
+    for key in (
+        "detail_par_type_pari",
+        "detail_par_marche",
+        "calibration",
+        "historique_matchs",
+        "historique_courses",
+        "compteur_historique",
+        "gains_par_famille",
+        "reussites_par_type",
+        "membres_actifs",
+        "mise_unitaire",
+        "matchs_termines",
+        "taux_reussite_plateforme",
+    ):
+        if key in source and source[key] is not None:
+            out[key] = source[key]
+    return out
+
+
 def fusionner_blocs_sports(pmu: dict, foot: dict) -> dict[str, Any]:
     """Score global : sports actifs uniquement (évite 100 % Foot vide + PMU réel)."""
     global_bloc = _fusionner_blocs_actifs(pmu, foot)
     return {
-        "pmu": bloc_communaute_depuis_stats(pmu),
-        "foot": bloc_communaute_depuis_stats(foot),
+        "pmu": _bloc_communaute_enrichi(pmu),
+        "foot": _bloc_communaute_enrichi(foot),
         "global": bloc_communaute_depuis_stats(global_bloc),
     }

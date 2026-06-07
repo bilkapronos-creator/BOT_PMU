@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 SCHEMA_VERSION = 2
 ENGINE_ID = "velora-pro-2"
 
@@ -34,3 +37,24 @@ LEGACY_TTL_WEEKS = 2
 
 # Lignes O/U fréquentes (découverte dynamique au-delà de cette liste)
 DEFAULT_OU_LINES = ("0.5", "1.5", "2.5", "3.5", "4.5")
+
+_CALIB_PATH = Path(__file__).resolve().parents[1] / "web" / "velora_foot_calibration.json"
+
+
+def _apply_foot_calibration() -> None:
+    global EDGE_THRESHOLDS  # noqa: PLW0603
+    if not _CALIB_PATH.is_file():
+        return
+    try:
+        data = json.loads(_CALIB_PATH.read_text(encoding="utf-8"))
+        overrides = data.get("edge_thresholds") if isinstance(data, dict) else None
+        if not isinstance(overrides, dict):
+            return
+        for key, val in overrides.items():
+            if key in EDGE_THRESHOLDS and isinstance(val, (int, float)):
+                EDGE_THRESHOLDS[key] = float(val)
+    except (OSError, json.JSONDecodeError, TypeError):
+        pass
+
+
+_apply_foot_calibration()

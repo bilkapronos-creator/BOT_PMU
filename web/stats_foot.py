@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from foot_archive_stats import build_foot_stats_payload
 from velora_finance import (
     MISE_UNITAIRE,
     agreger_stats_archives,
@@ -44,26 +45,37 @@ def _charger_archives_foot() -> list[dict]:
 def get_stats_foot_publiques() -> dict[str, Any]:
     archives = _charger_archives_foot()
     agg = agreger_stats_archives(archives, champ_reussi="reussi_foot")
-    par_type: dict[str, dict[str, Any]] = {}
-    for archive in archives:
-        if not est_archive_terminee_finance(archive, "reussi_foot"):
-            continue
-        label = archive.get("type_pari_foot") or archive.get("opportunite_type") or "Foot"
-        if label == "Perdu":
-            continue
-        if label not in par_type:
-            par_type[label] = {"total": 0, "succes": 0, "taux": 0}
-        par_type[label]["total"] += 1
-        if est_victoire_archive(archive, "reussi_foot"):
-            par_type[label]["succes"] += 1
-    for stats in par_type.values():
-        stats["taux"] = (
-            round(stats["succes"] / stats["total"] * 100) if stats["total"] else 0
-        )
+    payload = build_foot_stats_payload(archives)
+    taux = int(agg.get("taux") or 0)
+    if not taux and agg.get("total"):
+        victoires = int(agg.get("victoires") or 0)
+        total = int(agg.get("total") or 0)
+        taux = round(victoires / total * 100) if total else 0
     return {
         "sport": "foot",
         "mise_unitaire": MISE_UNITAIRE,
         **agg,
+        "taux_reussite_plateforme": taux,
         "matchs_termines": agg["total"],
-        "detail_par_type_pari": par_type,
+        "detail_par_type_pari": payload["detail_par_type_pari"],
+        "detail_par_marche": payload["detail_par_marche"],
+        "calibration": payload["calibration"],
     }
+
+
+def ecrire_calibration_foot(path: Path | None = None) -> dict[str, Any]:
+    """Écrit web/velora_foot_calibration.json pour le moteur value bets."""
+    stats = get_stats_foot_publiques()
+    cal = stats.get("calibration") or {}
+    out = path or (Path(__file__).resolve().parent / "velora_foot_calibration.json")
+    doc = {
+        "version": 1,
+        "edge_thresholds": cal.get("edge_thresholds") or {},
+        "suggestions": cal.get("suggestions") or [],
+        "detail_par_marche": stats.get("detail_par_marche") or {},
+    }
+    out.write_text(
+        __import__("json").dumps(doc, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    return doc
