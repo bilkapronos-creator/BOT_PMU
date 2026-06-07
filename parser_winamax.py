@@ -1199,6 +1199,35 @@ MATCH_ENDED_STATUSES = frozenset({"ENDED", "CLOSED", "FINISHED", "CANCELLED", "C
 WINAMAX_MATCH_STATUS_ENDED_NUM = 3
 MATCH_FINISHED_GRACE_MINUTES = 120
 MATCH_PARSER_HORIZON_HOURS = int(os.environ.get("VELORA_PARSER_HORIZON_HOURS", "24"))
+MATCH_PARSER_HORIZON_MODE = os.environ.get("VELORA_PARSER_HORIZON_MODE", "betting_day").strip().lower()
+BETTING_DAY_END_HOUR = int(os.environ.get("VELORA_BETTING_DAY_END_HOUR", "8"))
+
+
+def is_kickoff_in_betting_day(kickoff: datetime, now: datetime | None = None) -> bool:
+    """
+    Fenêtre « journée + nocturnes » (Paris) :
+    - tous les matchs du jour civil (00:00 → 23:59) ;
+    - plus la nuit suivante jusqu'à BETTING_DAY_END_HOUR (MLS, Amérique du Sud après minuit).
+    """
+    now = (now or datetime.now(tz=TZ_PARIS)).astimezone(TZ_PARIS)
+    kickoff = kickoff.astimezone(TZ_PARIS)
+    h_end = max(0, min(23, BETTING_DAY_END_HOUR))
+    earliest = now - timedelta(minutes=MATCH_FINISHED_GRACE_MINUTES)
+    if kickoff < earliest:
+        return False
+    if kickoff.date() == now.date():
+        return True
+    tomorrow = now.date() + timedelta(days=1)
+    if kickoff.date() == tomorrow and kickoff.hour < h_end:
+        return True
+    return False
+
+
+def parser_window_end(now: datetime | None = None, hours: int | None = None) -> datetime:
+    """Fin approximative pour logs / sniper (mode rolling uniquement)."""
+    now = now or datetime.now(tz=TZ_PARIS)
+    horizon = hours if hours is not None else MATCH_PARSER_HORIZON_HOURS
+    return now + timedelta(hours=horizon)
 
 
 def is_winamax_match_finished(
@@ -1250,10 +1279,9 @@ def is_match_within_parser_horizon(
     hours: int | None = None,
 ) -> bool:
     """
-    True si le coup d'envoi est dans les N prochaines heures (défaut 24 h).
-    Exclut les matchs lointains (ex. août) et ceux déjà terminés.
+    True si le coup d'envoi est dans la fenêtre parser (journée+nocturnes Paris, ou N h glissantes).
+    Exclut les matchs lointains et ceux déjà terminés.
     """
-    horizon = hours if hours is not None else MATCH_PARSER_HORIZON_HOURS
     now = now or datetime.now(tz=TZ_PARIS)
     kickoff: datetime | None = None
 
@@ -1282,8 +1310,11 @@ def is_match_within_parser_horizon(
     if is_winamax_match_finished(raw_match, match_start_ts, now):
         return False
 
+    if hours is None and MATCH_PARSER_HORIZON_MODE != "rolling":
+        return is_kickoff_in_betting_day(kickoff, now)
+
     earliest = now - timedelta(minutes=MATCH_FINISHED_GRACE_MINUTES)
-    latest = now + timedelta(hours=horizon)
+    latest = parser_window_end(now, hours)
     return earliest <= kickoff <= latest
 
 
@@ -1425,7 +1456,8 @@ def parse_football_matches(data: dict) -> list[dict]:
     if skipped_horizon:
         print(
             f"[parser] {skipped_horizon} match(s) hors fenêtre "
-            f"(>{MATCH_PARSER_HORIZON_HOURS} h ou date inconnue) — ignorés du JSON."
+            f"(hors fenêtre {'24 h' if MATCH_PARSER_HORIZON_MODE == 'rolling' else 'journée+nocturnes'} "
+            f"ou date inconnue) — ignorés du JSON."
         )
     if skipped_live:
         print(

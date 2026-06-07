@@ -19,6 +19,7 @@ from velora_engine.analysis.model_1n2 import (
     pronostic_label_for_pick,
 )
 from velora_engine.analysis.model_poisson import (
+    align_top_scores_for_pick,
     blend_probability_dicts,
     build_poisson_analysis,
 )
@@ -150,8 +151,6 @@ def build_match_v2(
         poisson.probabilites_1n2,
         poisson.blend_weight,
     )
-    if poisson.top_scores:
-        legacy["top_scores"] = poisson.top_scores
     if poisson.prob_over_25 > 55:
         legacy["tendance_buts"] = "Match Offensif"
 
@@ -194,6 +193,12 @@ def build_match_v2(
     )
 
     pronostic_pick = str(legacy.get("velora_pick_1n2") or ctx.pronostic_1n2 or "")
+    top_scores_modele = align_top_scores_for_pick(
+        poisson.top_scores,
+        pronostic_pick,
+        matrix=poisson.matrix,
+        limit=5,
+    )
     history = load_odds_history(default_history_path())
     line_sig = line_signal_for_pick(history, mid, pronostic_pick)
     confiance = confiance_niveau_from_context(
@@ -220,7 +225,7 @@ def build_match_v2(
         confiance_niveau=confiance,
         line_signal=line_sig,
         poisson_lambdas={"home": poisson.lambda_home, "away": poisson.lambda_away},
-        top_scores_modele=poisson.top_scores or None,
+        top_scores_modele=top_scores_modele or None,
         prob_over_25_modele=poisson.prob_over_25,
         prob_btts_modele=poisson.prob_btts_oui,
         football_data_enriched=bool(intel.get("fd_available")),

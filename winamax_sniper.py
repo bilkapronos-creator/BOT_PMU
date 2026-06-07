@@ -34,6 +34,7 @@ from velora_intel import (
     extract_intel_from_page,
     extract_intel_from_state,
 )
+from velora_engine.analysis.model_poisson import align_top_scores_for_pick
 
 if hasattr(sys.stdout, "reconfigure"):
     try:
@@ -82,6 +83,12 @@ GOAL_LINES = ("1.5", "2.5", "3.5")
 SNIPER_LIMIT = int(os.environ.get("SNIPER_LIMIT", "25"))
 PAUSE_SECONDS = int(os.environ.get("SNIPER_PAUSE", "4"))
 SNIPER_WINDOW_HOURS = int(os.environ.get("SNIPER_WINDOW_HOURS", "24"))
+
+from parser_winamax import (  # noqa: E402
+    MATCH_PARSER_HORIZON_MODE,
+    is_kickoff_in_betting_day,
+    parser_window_end,
+)
 SNIPER_PAST_GRACE_HOURS = int(os.environ.get("SNIPER_PAST_GRACE_HOURS", "2"))
 TZ_PARIS = ZoneInfo("Europe/Paris")
 DATE_MATCH_FMT = "%d/%m/%Y à %H:%M"
@@ -164,13 +171,15 @@ def match_start_datetime(match: dict) -> datetime | None:
 def is_within_sniper_window(
     match: dict, now: datetime | None = None
 ) -> bool:
-    """True si le match est imminent (≤ 24 h) ou vient de démarrer (grâce 2 h)."""
+    """True si le match est dans la fenêtre journée+nocturnes (ou N h glissantes)."""
     kickoff = match_start_datetime(match)
     if kickoff is None:
         return False
     now = now or datetime.now(tz=TZ_PARIS)
+    if MATCH_PARSER_HORIZON_MODE != "rolling":
+        return is_kickoff_in_betting_day(kickoff, now)
     earliest = now - timedelta(hours=SNIPER_PAST_GRACE_HOURS)
-    latest = now + timedelta(hours=SNIPER_WINDOW_HOURS)
+    latest = parser_window_end(now, SNIPER_WINDOW_HOURS)
     return earliest <= kickoff <= latest
 
 
@@ -532,6 +541,40 @@ def extract_marches_supplementaires(
         return default_marches_supplementaires()
 
 
+def _pronostic_pick_from_match(match: dict) -> str:
+    free = match.get("free_analysis") or {}
+    pick = (
+        match.get("velora_pick_1n2")
+        or free.get("pronostic_1n2")
+        or (free.get("primary_pick") or {}).get("pick")
+    )
+    return str(pick or "").strip()
+
+
+def _align_display_scores_for_pick(match: dict) -> dict:
+    """Scores affichés alignés sur le pronostic Velora 1N2."""
+    updated = dict(match)
+    pick = _pronostic_pick_from_match(updated)
+    if pick not in ("1", "N", "2", "dc_1x", "dc_x2"):
+        return updated
+
+    free = updated.get("free_analysis") or {}
+    model_scores = free.get("top_scores_modele")
+    if isinstance(model_scores, list) and model_scores:
+        updated["top_scores"] = model_scores[:5]
+    elif isinstance(updated.get("top_scores"), list) and updated["top_scores"]:
+        aligned = align_top_scores_for_pick(updated["top_scores"], pick, limit=5)
+        if aligned:
+            updated["top_scores"] = aligned
+
+    exact = updated.get("score_exact")
+    if isinstance(exact, list) and exact:
+        aligned_exact = align_top_scores_for_pick(exact, pick, limit=5)
+        if aligned_exact:
+            updated["score_exact"] = aligned_exact
+    return updated
+
+
 def _apply_velora_engine(updated: dict, state: dict | None, page=None) -> dict:
     """Indice Velora = score pondéré historique ; pas de fallback cotes."""
     mid = updated.get("id_match")
@@ -604,6 +647,7 @@ def enrich_from_state(match: dict, state: dict | None, page=None) -> dict:
             updated["tendance_buts"] = updated.get("tendance_buts") or "Match Tactique"
 
         updated = _apply_velora_engine(updated, state, page=page)
+        updated = _align_display_scores_for_pick(updated)
     except Exception:
         if _top_scores_empty(updated.get("top_scores")):
             updated["top_scores"] = UNAVAILABLE
@@ -634,7 +678,7 @@ def _has_velora_intel(match: dict) -> bool:
 def select_sniper_batch(
     all_matches: list[dict], now: datetime | None = None
 ) -> list[dict]:
-    """Matchs dans les 24 h : priorité sans intel, puis les plus proches (limite SNIPER_LIMIT)."""
+    """Matchs journée+nocturnes : priorité sans intel, puis les plus proches (limite SNIPER_LIMIT)."""
     now = now or datetime.now(tz=TZ_PARIS)
     in_window = [m for m in all_matches if is_within_sniper_window(m, now)]
     in_window.sort(

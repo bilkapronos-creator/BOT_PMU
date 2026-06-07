@@ -36,9 +36,9 @@
         "2": 4.4
       },
       "probabilites": {
-        "1": 86,
-        "N": 5,
-        "2": 9
+        "1": 42,
+        "N": 25,
+        "2": 33
       },
       "markets_raw": {
         "over_under_total": {},
@@ -47,22 +47,60 @@
       "value_bets": [
         {
           "market": "1n2",
-          "pick": "1",
-          "label": "Victoire Danemark",
-          "cote": 1.66,
-          "edge": 1.428,
+          "pick": "2",
+          "label": "Victoire Ukraine",
+          "cote": 4.4,
+          "edge": 1.452,
           "stars": 5,
           "is_primary": true
         }
       ],
       "primary_pick": {
         "market": "1n2",
-        "pick": "1",
-        "label": "Victoire Danemark",
-        "cote": 1.66,
-        "conseil_short": "🔥 Value Bet — Victoire Danemark @ 1.66"
+        "pick": "2",
+        "label": "Victoire Ukraine",
+        "cote": 4.4,
+        "conseil_short": "🔥 Value Bet — Victoire Ukraine @ 4.40"
       },
-      "display_badges": []
+      "display_badges": [],
+      "probabilites_marche": {
+        "1": 54,
+        "N": 26,
+        "2": 20
+      },
+      "pronostic_1n2": "2",
+      "pronostic_label": "Victoire Ukraine",
+      "confiance_niveau": "faible",
+      "line_signal": "stable",
+      "poisson_lambdas": {
+        "home": 2.251,
+        "away": 1.37
+      },
+      "top_scores_modele": [
+        {
+          "score": "1-2",
+          "prob": 6
+        },
+        {
+          "score": "0-1",
+          "prob": 4
+        },
+        {
+          "score": "2-3",
+          "prob": 3
+        },
+        {
+          "score": "1-3",
+          "prob": 3
+        },
+        {
+          "score": "0-2",
+          "prob": 3
+        }
+      ],
+      "prob_over_25_modele": 69,
+      "prob_btts_modele": 66,
+      "football_data_enriched": true
     },
     "premium_analysis": {
       "score_exact": {
@@ -112,19 +150,24 @@
     },
     "top_scores": [
       {
-        "score": "0 - 1",
-        "prob": 100,
-        "cote": 9.5
+        "score": "1-2",
+        "prob": 6
       },
       {
-        "score": "4 - 1",
-        "prob": 100,
-        "cote": 28.0
+        "score": "0-1",
+        "prob": 4
       },
       {
-        "score": "4 - 5",
-        "prob": 100,
-        "cote": 500.0
+        "score": "2-3",
+        "prob": 3
+      },
+      {
+        "score": "1-3",
+        "prob": 3
+      },
+      {
+        "score": "0-2",
+        "prob": 3
       }
     ],
     "les_deux_marquent": 100,
@@ -236,9 +279,9 @@
         "2": 1.96
       },
       "probabilites": {
-        "1": 11,
-        "N": 14,
-        "2": 75
+        "1": 23,
+        "N": 23,
+        "2": 54
       },
       "markets_raw": {
         "over_under_total": {},
@@ -250,8 +293,8 @@
           "pick": "2",
           "label": "Victoire Forge",
           "cote": 1.96,
-          "edge": 1.47,
-          "stars": 5,
+          "edge": 1.058,
+          "stars": 2,
           "is_primary": true
         }
       ],
@@ -262,7 +305,45 @@
         "cote": 1.96,
         "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
       },
-      "display_badges": []
+      "display_badges": [],
+      "probabilites_marche": {
+        "1": 29,
+        "N": 27,
+        "2": 44
+      },
+      "pronostic_1n2": "2",
+      "pronostic_label": "Victoire Forge",
+      "confiance_niveau": "haute",
+      "line_signal": "stable",
+      "poisson_lambdas": {
+        "home": 1.834,
+        "away": 2.259
+      },
+      "top_scores_modele": [
+        {
+          "score": "1-2",
+          "prob": 8
+        },
+        {
+          "score": "1-3",
+          "prob": 6
+        },
+        {
+          "score": "2-3",
+          "prob": 5
+        },
+        {
+          "score": "0-2",
+          "prob": 4
+        },
+        {
+          "score": "0-1",
+          "prob": 4
+        }
+      ],
+      "prob_over_25_modele": 76,
+      "prob_btts_modele": 74,
+      "football_data_enriched": true
     },
     "premium_analysis": {
       "score_exact": {
@@ -311,19 +392,24 @@
     },
     "top_scores": [
       {
-        "score": "0 - 2",
-        "prob": 100,
-        "cote": 8.5
+        "score": "1-2",
+        "prob": 8
       },
       {
-        "score": "5 - 2",
-        "prob": 100,
-        "cote": 160.0
+        "score": "1-3",
+        "prob": 6
       },
       {
-        "score": "4 - 3",
-        "prob": 100,
-        "cote": 95.0
+        "score": "2-3",
+        "prob": 5
+      },
+      {
+        "score": "0-2",
+        "prob": 4
+      },
+      {
+        "score": "0-1",
+        "prob": 4
       }
     ],
     "les_deux_marquent": 100,
@@ -336,11 +422,6 @@
       "moins": 2.8
     },
     "score_exact": [
-      {
-        "score": "1 - 1",
-        "cote": 5.8,
-        "prob": 4
-      },
       {
         "score": "0 - 1",
         "cote": 7.0
@@ -440,9 +521,9 @@
         "2": 2.15
       },
       "probabilites": {
-        "1": 84,
-        "N": 5,
-        "2": 11
+        "1": 40,
+        "N": 26,
+        "2": 34
       },
       "markets_raw": {
         "over_under_total": {},
@@ -454,7 +535,7 @@
           "pick": "1",
           "label": "Victoire Maroc",
           "cote": 3.0,
-          "edge": 2.52,
+          "edge": 1.2,
           "stars": 5,
           "is_primary": true
         }
@@ -466,7 +547,45 @@
         "cote": 3.0,
         "conseil_short": "🔥 Value Bet — Victoire Maroc @ 3.00"
       },
-      "display_badges": []
+      "display_badges": [],
+      "probabilites_marche": {
+        "1": 31,
+        "N": 27,
+        "2": 42
+      },
+      "pronostic_1n2": "1",
+      "pronostic_label": "Victoire Maroc",
+      "confiance_niveau": "faible",
+      "line_signal": "stable",
+      "poisson_lambdas": {
+        "home": 1.688,
+        "away": 1.965
+      },
+      "top_scores_modele": [
+        {
+          "score": "2-1",
+          "prob": 7
+        },
+        {
+          "score": "1-0",
+          "prob": 4
+        },
+        {
+          "score": "3-1",
+          "prob": 4
+        },
+        {
+          "score": "3-2",
+          "prob": 4
+        },
+        {
+          "score": "2-0",
+          "prob": 4
+        }
+      ],
+      "prob_over_25_modele": 70,
+      "prob_btts_modele": 70,
+      "football_data_enriched": true
     },
     "premium_analysis": {
       "score_exact": {
@@ -516,19 +635,24 @@
     },
     "top_scores": [
       {
-        "score": "4 - 1",
-        "prob": 100,
-        "cote": 50.0
+        "score": "2-1",
+        "prob": 7
       },
       {
-        "score": "3 - 2",
-        "prob": 100,
-        "cote": 27.0
+        "score": "1-0",
+        "prob": 4
       },
       {
-        "score": "0 - 3",
-        "prob": 100,
-        "cote": 17.0
+        "score": "3-1",
+        "prob": 4
+      },
+      {
+        "score": "3-2",
+        "prob": 4
+      },
+      {
+        "score": "2-0",
+        "prob": 4
       }
     ],
     "les_deux_marquent": 99,
@@ -541,21 +665,6 @@
       "moins": 2.85
     },
     "score_exact": [
-      {
-        "score": "1 - 1",
-        "cote": 5.7,
-        "prob": 5
-      },
-      {
-        "score": "0 - 1",
-        "cote": 7.25,
-        "prob": 2
-      },
-      {
-        "score": "1 - 2",
-        "cote": 7.75,
-        "prob": 8
-      },
       {
         "score": "1 - 0",
         "cote": 8.5,
@@ -645,9 +754,9 @@
         "2": 3.1
       },
       "probabilites": {
-        "1": 3,
-        "N": 4,
-        "2": 93
+        "1": 37,
+        "N": 26,
+        "2": 37
       },
       "markets_raw": {
         "over_under_total": {},
@@ -659,8 +768,8 @@
           "pick": "2",
           "label": "Victoire Italie",
           "cote": 3.1,
-          "edge": 2.883,
-          "stars": 5,
+          "edge": 1.147,
+          "stars": 4,
           "is_primary": true
         }
       ],
@@ -671,7 +780,45 @@
         "cote": 3.1,
         "conseil_short": "🔥 Value Bet — Victoire Italie @ 3.10"
       },
-      "display_badges": []
+      "display_badges": [],
+      "probabilites_marche": {
+        "1": 45,
+        "N": 26,
+        "2": 29
+      },
+      "pronostic_1n2": "2",
+      "pronostic_label": "Victoire Italie",
+      "confiance_niveau": "faible",
+      "line_signal": "stable",
+      "poisson_lambdas": {
+        "home": 1.991,
+        "away": 1.598
+      },
+      "top_scores_modele": [
+        {
+          "score": "1-2",
+          "prob": 7
+        },
+        {
+          "score": "0-1",
+          "prob": 4
+        },
+        {
+          "score": "1-3",
+          "prob": 4
+        },
+        {
+          "score": "2-3",
+          "prob": 4
+        },
+        {
+          "score": "0-2",
+          "prob": 4
+        }
+      ],
+      "prob_over_25_modele": 69,
+      "prob_btts_modele": 68,
+      "football_data_enriched": true
     },
     "premium_analysis": {
       "score_exact": {
@@ -722,19 +869,24 @@
     },
     "top_scores": [
       {
-        "score": "4 - 1",
-        "prob": 100,
-        "cote": 34.0
+        "score": "1-2",
+        "prob": 7
       },
       {
-        "score": "3 - 2",
-        "prob": 100,
-        "cote": 24.0
+        "score": "0-1",
+        "prob": 4
       },
       {
-        "score": "4 - 2",
-        "prob": 100,
-        "cote": 50.0
+        "score": "1-3",
+        "prob": 4
+      },
+      {
+        "score": "2-3",
+        "prob": 4
+      },
+      {
+        "score": "0-2",
+        "prob": 4
       }
     ],
     "les_deux_marquent": 96,
@@ -846,9 +998,9 @@
         "2": 3.3
       },
       "probabilites": {
-        "1": 21,
-        "N": 12,
-        "2": 67
+        "1": 33,
+        "N": 29,
+        "2": 38
       },
       "markets_raw": {
         "over_under_total": {},
@@ -860,9 +1012,17 @@
           "pick": "2",
           "label": "Victoire Malaga",
           "cote": 3.3,
-          "edge": 2.211,
+          "edge": 1.254,
           "stars": 5,
           "is_primary": true
+        },
+        {
+          "market": "dc_x2",
+          "pick": "dc_x2",
+          "label": "Double chance X2",
+          "edge": 1.254,
+          "stars": 5,
+          "is_primary": false
         }
       ],
       "primary_pick": {
@@ -872,7 +1032,45 @@
         "cote": 3.3,
         "conseil_short": "🔥 Value Bet — Victoire Malaga @ 3.30"
       },
-      "display_badges": []
+      "display_badges": [],
+      "probabilites_marche": {
+        "1": 44,
+        "N": 29,
+        "2": 27
+      },
+      "pronostic_1n2": "2",
+      "pronostic_label": "Victoire Malaga",
+      "confiance_niveau": "haute",
+      "line_signal": "stable",
+      "poisson_lambdas": {
+        "home": 1.326,
+        "away": 1.039
+      },
+      "top_scores_modele": [
+        {
+          "score": "0-1",
+          "prob": 10
+        },
+        {
+          "score": "1-2",
+          "prob": 7
+        },
+        {
+          "score": "0-2",
+          "prob": 5
+        },
+        {
+          "score": "1-3",
+          "prob": 2
+        },
+        {
+          "score": "0-3",
+          "prob": 2
+        }
+      ],
+      "prob_over_25_modele": 42,
+      "prob_btts_modele": 47,
+      "football_data_enriched": true
     },
     "premium_analysis": {
       "score_exact": {
@@ -923,19 +1121,24 @@
     },
     "top_scores": [
       {
-        "score": "2 - 0",
-        "prob": 100,
-        "cote": 8.0
+        "score": "0-1",
+        "prob": 10
       },
       {
-        "score": "3 - 0",
-        "prob": 100,
-        "cote": 15.0
+        "score": "1-2",
+        "prob": 7
       },
       {
-        "score": "0 - 1",
-        "prob": 100,
-        "cote": 8.0
+        "score": "0-2",
+        "prob": 5
+      },
+      {
+        "score": "1-3",
+        "prob": 2
+      },
+      {
+        "score": "0-3",
+        "prob": 2
       }
     ],
     "les_deux_marquent": 99,
@@ -1137,11 +1340,6 @@
         "score": "1 - 2",
         "prob": 100,
         "cote": 23.0
-      },
-      {
-        "score": "4 - 2",
-        "prob": 100,
-        "cote": 32.0
       }
     ],
     "les_deux_marquent": 78,
@@ -1348,11 +1546,6 @@
         "cote": 20.0
       },
       {
-        "score": "Autre",
-        "prob": 100,
-        "cote": 8.5
-      },
-      {
         "score": "3 - 0",
         "prob": 37,
         "cote": 5.6
@@ -1542,11 +1735,6 @@
     },
     "top_scores": [
       {
-        "score": "0 - 0",
-        "prob": 100,
-        "cote": 11.5
-      },
-      {
         "score": "2 - 0",
         "prob": 100,
         "cote": 6.5
@@ -1576,11 +1764,6 @@
         "score": "1 - 0",
         "cote": 6.75,
         "prob": 2
-      },
-      {
-        "score": "1 - 1",
-        "cote": 7.25,
-        "prob": 46
       },
       {
         "score": "2 - 1",

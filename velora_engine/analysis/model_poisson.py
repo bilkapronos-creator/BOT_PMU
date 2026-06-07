@@ -169,15 +169,48 @@ def prob_btts_oui_from_matrix(matrix: list[list[float]]) -> int:
     return int(round(min(99.0, max(1.0, total * 100.0))))
 
 
+def _score_outcome_1n2(home_goals: int, away_goals: int) -> str:
+    if home_goals > away_goals:
+        return "1"
+    if home_goals < away_goals:
+        return "2"
+    return "N"
+
+
+def _score_matches_pick(home_goals: int, away_goals: int, pick: str) -> bool:
+    pick = str(pick or "").strip()
+    if pick in ("1", "N", "2"):
+        return _score_outcome_1n2(home_goals, away_goals) == pick
+    if pick == "dc_1x":
+        return home_goals >= away_goals
+    if pick == "dc_x2":
+        return home_goals <= away_goals
+    return True
+
+
+def _parse_score_label(label: str) -> tuple[int, int] | None:
+    raw = str(label or "").strip().replace(" ", "")
+    if "-" not in raw:
+        return None
+    parts = raw.split("-", 1)
+    try:
+        return int(parts[0]), int(parts[1])
+    except (TypeError, ValueError):
+        return None
+
+
 def top_scores_from_matrix(
     matrix: list[list[float]],
     *,
     limit: int = 5,
+    pick: str | None = None,
 ) -> list[dict[str, Any]]:
     scores: list[tuple[float, str]] = []
     for i, row in enumerate(matrix):
         for j, p in enumerate(row):
             if p <= 0:
+                continue
+            if pick and not _score_matches_pick(i, j, pick):
                 continue
             scores.append((p, f"{i}-{j}"))
     scores.sort(key=lambda x: x[0], reverse=True)
@@ -188,6 +221,42 @@ def top_scores_from_matrix(
             continue
         out.append({"score": label, "prob": prob})
     return out
+
+
+def align_top_scores_for_pick(
+    scores: list[dict[str, Any]],
+    pick: str | None,
+    *,
+    matrix: list[list[float]] | None = None,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Garde uniquement les scores cohérents avec le pronostic 1N2 affiché."""
+    pick = str(pick or "").strip()
+    if pick not in ("1", "N", "2", "dc_1x", "dc_x2"):
+        return scores[:limit]
+    filtered: list[dict[str, Any]] = []
+    for row in scores:
+        if not isinstance(row, dict):
+            continue
+        parsed = _parse_score_label(str(row.get("score") or ""))
+        if not parsed:
+            continue
+        if _score_matches_pick(parsed[0], parsed[1], pick):
+            filtered.append(row)
+    if filtered:
+        if len(filtered) < limit and matrix is not None:
+            seen = {str(r.get("score") or "") for r in filtered}
+            for row in top_scores_from_matrix(matrix, limit=limit * 2, pick=pick):
+                key = str(row.get("score") or "")
+                if key and key not in seen:
+                    filtered.append(row)
+                    seen.add(key)
+                if len(filtered) >= limit:
+                    break
+        return filtered[:limit]
+    if matrix is not None:
+        return top_scores_from_matrix(matrix, limit=limit, pick=pick)
+    return []
 
 
 def poisson_blend_weight(

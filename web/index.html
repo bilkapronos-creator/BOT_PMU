@@ -5061,6 +5061,7 @@
                     cotes: free.cotes_1n2 ?? raw.cotes,
                     conseil: raw.conseil || leg.conseil || free.pronostic_label || primary?.conseil_short || '',
                     pronostic_1n2: free.pronostic_1n2 ?? raw.pronostic_1n2,
+                    velora_pick_1n2: free.pronostic_1n2 ?? raw.velora_pick_1n2 ?? raw.pronostic_1n2,
                     pronostic_label: free.pronostic_label ?? raw.pronostic_label,
                     confiance_niveau: free.confiance_niveau ?? raw.confiance_niveau,
                     line_signal: free.line_signal ?? raw.line_signal,
@@ -5840,17 +5841,26 @@
         function scoresExactFromMatch(m) {
             const premTop = m?.premium_analysis?.score_exact?.top3;
             if (Array.isArray(premTop) && premTop.length) {
-                return premTop.filter((s) => s && String(s.score || '').trim());
+                const rows = premTop.filter((s) => s && String(s.score || '').trim());
+                const aligned = filtrerScoresSelonPronostic(m, rows);
+                if (aligned.length) return aligned;
             }
             if (Array.isArray(m?.score_exact) && m.score_exact.length) {
-                return m.score_exact.filter((s) => s && s.score);
+                const rows = m.score_exact.filter((s) => s && s.score);
+                const aligned = filtrerScoresSelonPronostic(m, rows);
+                if (aligned.length) return aligned.slice(0, 4);
+            }
+            const modele = m?.free_analysis?.top_scores_modele;
+            if (Array.isArray(modele) && modele.length) {
+                return filtrerScoresSelonPronostic(m, modele).slice(0, 4);
             }
             const top = m?.top_scores;
             if (!Array.isArray(top)) return [];
-            return [...top]
+            const rows = [...top]
                 .filter((s) => s && s.score && fmtCoteMarche(s.cote) != null)
-                .sort((a, b) => Number(a.cote) - Number(b.cote))
-                .slice(0, 4);
+                .sort((a, b) => Number(a.cote) - Number(b.cote));
+            const aligned = filtrerScoresSelonPronostic(m, rows);
+            return (aligned.length ? aligned : rows).slice(0, 4);
         }
 
         function primaryPickFromMatch(m) {
@@ -6494,11 +6504,11 @@
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
-            const topScores = m.top_scores;
-            const scoresMoteurHtml = typeof topScores === 'string'
-                ? `<li class="text-xs text-gray-500">${escHtml(topScores)}</li>`
-                : Array.isArray(topScores) && topScores.length
-                    ? topScores.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
+            const scoresAlignes = scoresAffichablesPourMatch(m);
+            const scoresMoteurHtml = typeof scoresAlignes === 'string'
+                ? `<li class="text-xs text-gray-500">${escHtml(scoresAlignes)}</li>`
+                : Array.isArray(scoresAlignes) && scoresAlignes.length
+                    ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span><span class="font-semibold text-cyan-300/90">${escHtml(s.prob)}%</span></li>`).join('')
                     : '';
             const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
@@ -6729,9 +6739,67 @@
             zone.classList.toggle('hidden', liste.length === 0);
         }
 
+        function parseScoreLabel1n2(scoreStr) {
+            const raw = String(scoreStr || '').trim().replace(/\s+/g, '');
+            const m = raw.match(/^(\d+)[\-–](\d+)$/);
+            if (!m) return null;
+            return { home: Number(m[1]), away: Number(m[2]) };
+        }
+
+        function outcome1n2FromScore(home, away) {
+            if (home > away) return '1';
+            if (home < away) return '2';
+            return 'N';
+        }
+
+        function pronosticPick1n2PourScores(m) {
+            const direct = String(m?.pronostic_1n2 || m?.free_analysis?.pronostic_1n2 || '').trim();
+            if (direct === '1' || direct === 'N' || direct === '2' || direct === 'dc_1x' || direct === 'dc_x2') {
+                return direct;
+            }
+            const inferred = inferVelora1n2Pick(m);
+            if (inferred === '1' || inferred === 'N' || inferred === '2' || inferred === 'dc_1x' || inferred === 'dc_x2') {
+                return inferred;
+            }
+            return null;
+        }
+
+        function scoreCoherentAvecPronostic(scoreStr, pick) {
+            const parts = parseScoreLabel1n2(scoreStr);
+            if (!parts || !pick) return true;
+            const outcome = outcome1n2FromScore(parts.home, parts.away);
+            if (pick === '1' || pick === 'N' || pick === '2') return outcome === pick;
+            if (pick === 'dc_1x') return parts.home >= parts.away;
+            if (pick === 'dc_x2') return parts.home <= parts.away;
+            return true;
+        }
+
+        function filtrerScoresSelonPronostic(m, scores) {
+            if (!Array.isArray(scores) || !scores.length) return [];
+            const pick = pronosticPick1n2PourScores(m);
+            if (!pick) return scores;
+            return scores.filter((s) => scoreCoherentAvecPronostic(s?.score, pick));
+        }
+
+        function trierScoresParProbDesc(scores) {
+            return [...scores].sort((a, b) => (Number(b?.prob) || 0) - (Number(a?.prob) || 0));
+        }
+
         function scoresAffichablesPourMatch(m) {
-            const top = m?.top_scores;
+            const pick = pronosticPick1n2PourScores(m);
+            const modele = m?.free_analysis?.top_scores_modele;
+            if (Array.isArray(modele) && modele.length) {
+                const alignee = filtrerScoresSelonPronostic(m, modele);
+                if (alignee.length) return trierScoresParProbDesc(alignee).slice(0, 3);
+            }
+
             const exact = m?.score_exact;
+            if (Array.isArray(exact) && exact.length && pick) {
+                const alignee = trierScoresParProbDesc(filtrerScoresSelonPronostic(m, exact));
+                if (alignee.length) return alignee.slice(0, 3);
+            }
+
+            const top = m?.top_scores;
             if (Array.isArray(top) && top.length) {
                 const sansAutre = top.filter((s) => String(s?.score || '').trim().toLowerCase() !== 'autre');
                 const sane = sansAutre.filter((s) => {
@@ -6739,13 +6807,23 @@
                     return Number.isFinite(p) && p > 0 && p < 95;
                 });
                 const centPourCent = sansAutre.filter((s) => Number(s?.prob) >= 95).length;
-                if (sane.length >= 2) return sane;
-                if (centPourCent > 1 && Array.isArray(exact) && exact.length) {
-                    return exact.slice(0, 3);
+                let liste = null;
+                if (sane.length >= 2) liste = sane;
+                else if (centPourCent > 1 && Array.isArray(exact) && exact.length) {
+                    liste = trierScoresParProbDesc(filtrerScoresSelonPronostic(m, exact));
+                } else if (sansAutre.length) liste = sansAutre;
+                if (Array.isArray(liste) && liste.length) {
+                    const alignee = filtrerScoresSelonPronostic(m, liste);
+                    if (alignee.length) return trierScoresParProbDesc(alignee).slice(0, 3);
                 }
-                if (sansAutre.length) return sansAutre.slice(0, 3);
             }
-            if (Array.isArray(exact) && exact.length) return exact.slice(0, 3);
+
+            if (Array.isArray(modele) && modele.length) {
+                return trierScoresParProbDesc(modele).slice(0, 3);
+            }
+            if (Array.isArray(top) && top.length) {
+                return top.slice(0, 3);
+            }
             return top;
         }
 

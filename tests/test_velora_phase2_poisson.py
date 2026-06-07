@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from velora_engine.analysis.model_poisson import (
+    align_top_scores_for_pick,
     attack_defense_from_form,
     build_poisson_analysis,
     probabilities_1n2_from_matrix,
@@ -60,3 +61,72 @@ def test_attack_defense_form():
     gf2, ga2 = attack_defense_from_form({"played": 5, "wins": 0, "draws": 0, "losses": 5})
     assert gf > gf2
     assert ga2 > ga
+
+
+def test_pipeline_top_scores_alignes_sur_pronostic():
+    from velora_engine.analysis.pipeline import build_match_v2
+    from velora_engine.analysis.schedule_risk import build_schedule_index
+
+    state = {
+        "bets": {
+            "b1": {
+                "matchId": "99",
+                "betTypeName": "Résultat du match",
+                "outcomes": ["o1", "oN", "o2"],
+            }
+        },
+        "outcomes": {
+            "o1": {"label": "Maroc", "percentDistribution": 0.31},
+            "oN": {"label": "Nul", "percentDistribution": 0.27},
+            "o2": {"label": "Norvège", "percentDistribution": 0.42},
+        },
+        "odds": {"o1": 3.0, "oN": 3.45, "o2": 2.15},
+        "matches": {
+            "99": {
+                "matchId": "99",
+                "sportId": 1,
+                "mainBetId": "b1",
+                "matchStart": "2026-06-07T19:00:00Z",
+                "competitor1Name": "Maroc",
+                "competitor2Name": "Norvège",
+            }
+        },
+    }
+    raw = state["matches"]["99"]
+    built = build_match_v2(
+        state=state,
+        match_id="99",
+        raw_match=raw,
+        home="Maroc",
+        away="Norvège",
+        schedule_index=build_schedule_index(state),
+    )
+    assert built is not None
+    pick = built.free_analysis.pronostic_1n2
+    scores = built.free_analysis.top_scores_modele or []
+    assert scores
+    for row in scores:
+        h, a = map(int, str(row["score"]).replace(" ", "").split("-"))
+        if pick == "1":
+            assert h > a
+        elif pick == "2":
+            assert h < a
+        elif pick == "N":
+            assert h == a
+
+
+def test_top_scores_filtre_pronostic_ext():
+    matrix = score_probability_matrix(0.75, 2.1)
+    brut = top_scores_from_matrix(matrix, limit=8)
+    assert brut
+    assert any("-" in s["score"] for s in brut)
+    ext = top_scores_from_matrix(matrix, limit=5, pick="2")
+    assert len(ext) >= 1
+    for row in ext:
+        h, a = map(int, row["score"].split("-"))
+        assert h < a
+    alignes = align_top_scores_for_pick(brut, "2", matrix=matrix, limit=5)
+    assert alignes
+    for row in alignes:
+        h, a = map(int, row["score"].split("-"))
+        assert h < a
