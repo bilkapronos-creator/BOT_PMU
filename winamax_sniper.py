@@ -713,8 +713,7 @@ def enrich_from_state(match: dict, state: dict | None, page=None) -> dict:
             updated["tendance_buts"] = updated.get("tendance_buts") or "Match Tactique"
 
         updated = _apply_velora_engine(updated, state, page=page)
-        updated = _inject_poisson_model_scores(updated)
-        updated = _align_display_scores_for_pick(updated)
+        updated = ensure_match_scores_coherent(updated)
     except Exception:
         if _top_scores_empty(updated.get("top_scores")):
             updated["top_scores"] = UNAVAILABLE
@@ -722,7 +721,7 @@ def enrich_from_state(match: dict, state: dict | None, page=None) -> dict:
             updated["les_deux_marquent"] = UNAVAILABLE
         updated["marches_supplementaires"] = default_marches_supplementaires()
 
-    return updated
+    return ensure_match_scores_coherent(updated)
 
 
 def fetch_preloaded_state(page) -> dict | None:

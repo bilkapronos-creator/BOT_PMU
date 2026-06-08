@@ -115,6 +115,31 @@ def test_pipeline_top_scores_alignes_sur_pronostic():
             assert h == a
 
 
+def test_ensure_match_scores_coherent_ext():
+    from velora_engine.analysis.match_scores import ensure_match_scores_coherent
+
+    match = {
+        "equipe_domicile": "Grèce",
+        "equipe_exterieur": "Italie",
+        "velora_pick_1n2": "2",
+        "cotes": {"1": 2.05, "N": 3.45, "2": 3.1},
+        "top_scores": [
+            {"score": "4 - 1", "prob": 100, "cote": 12.0},
+            {"score": "3 - 2", "prob": 100, "cote": 14.0},
+        ],
+        "free_analysis": {
+            "pronostic_1n2": "2",
+            "cotes_1n2": {"1": 2.05, "N": 3.45, "2": 3.1},
+        },
+    }
+    fixed = ensure_match_scores_coherent(match)
+    scores = fixed.get("top_scores") or []
+    assert scores
+    for row in scores:
+        h, a = map(int, str(row["score"]).replace(" ", "").split("-"))
+        assert h < a
+
+
 def test_top_scores_filtre_pronostic_ext():
     matrix = score_probability_matrix(0.75, 2.1)
     brut = top_scores_from_matrix(matrix, limit=8)

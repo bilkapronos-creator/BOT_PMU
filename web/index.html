@@ -1559,7 +1559,7 @@
                             <p class="vitrine-kpi-value">
                                 <span id="vitrineKpiTaux" class="vitrine-taux-val">—</span><span class="vitrine-kpi-unit">%</span>
                             </p>
-                        </div>
+                    </div>
                         <div class="vitrine-kpi-card vitrine-kpi-card--roi">
                             <span class="vitrine-kpi-label">ROI</span>
                             <p class="vitrine-kpi-value">
@@ -1610,12 +1610,12 @@
                                 <div id="vitrinePmuParType" class="hidden mt-3">
                                     <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/75">Par type</p>
                                     <div id="vitrinePmuParTypeListe" class="flex flex-wrap gap-1.5"></div>
-                                </div>
-                                <div id="vitrinePmuHistorique" class="vitrine-pmu-historique hidden">
-                                    <p class="mb-2 mt-3 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/75">Dernières courses</p>
-                                    <ul id="vitrinePmuHistoriqueListe" class="space-y-1.5"></ul>
-                                </div>
                             </div>
+                            <div id="vitrinePmuHistorique" class="vitrine-pmu-historique hidden">
+                                    <p class="mb-2 mt-3 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/75">Dernières courses</p>
+                                <ul id="vitrinePmuHistoriqueListe" class="space-y-1.5"></ul>
+                            </div>
+                        </div>
                             <div class="vitrine-detail-sport vitrine-detail-sport--foot">
                                 <p class="vitrine-detail-sport-title">⚽ Football</p>
                                 <dl>
@@ -1644,10 +1644,10 @@
                                 <div id="vitrineFootParType" class="hidden mt-3">
                                     <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Performance par marché</p>
                                     <div id="vitrineFootParTypeListe" class="flex flex-wrap gap-1.5"></div>
-                                </div>
-                                <div id="vitrineFootHistorique" class="vitrine-pmu-historique vitrine-foot-historique hidden">
+                            </div>
+                            <div id="vitrineFootHistorique" class="vitrine-pmu-historique vitrine-foot-historique hidden">
                                     <p class="mb-2 mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Derniers matchs</p>
-                                    <ul id="vitrineFootHistoriqueListe" class="space-y-1.5"></ul>
+                                <ul id="vitrineFootHistoriqueListe" class="space-y-1.5"></ul>
                                 </div>
                             </div>
                         </div>
@@ -1679,9 +1679,9 @@
                         <div class="flex items-center gap-3" aria-hidden="true">
                             <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-2xl">🐎</span>
                             <div class="relative flex h-14 w-14 items-center justify-center">
-                                <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20"></div>
-                                <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
-                                <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
+                            <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20"></div>
+                            <div class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-emerald-400 border-r-cyan-400"></div>
+                            <div class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"></div>
                             </div>
                             <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-500/40 bg-cyan-500/15 text-2xl">⚽</span>
                         </div>
@@ -4808,7 +4808,7 @@
                 if (attempt.reason === 'auth') {
                     exigerConnexionPourAnalyser();
                 } else {
-                    showPaywallModal('search_limit');
+                showPaywallModal('search_limit');
                 }
                 return;
             }
@@ -6079,7 +6079,7 @@
             const pills = [];
             const bttsPick = inferVeloraBttsPick(m);
             if (bttsPick) {
-                const btts = bttsCotesFromMatch(m);
+            const btts = bttsCotesFromMatch(m);
                 const coteRaw = btts ? (bttsPick === 'oui' ? btts.oui : btts.non) : null;
                 const coteStr = fmtCoteMarche(coteRaw);
                 pills.push(htmlVeloraPickPill(
@@ -6091,7 +6091,7 @@
             }
             const ouPick = inferVeloraOu25Pick(m);
             if (ouPick) {
-                const ou = ou25CotesFromMatch(m);
+            const ou = ou25CotesFromMatch(m);
                 const coteRaw = ou ? (ouPick === 'plus' ? ou.plus : ou.moins) : null;
                 const coteStr = fmtCoteMarche(coteRaw);
                 pills.push(htmlVeloraPickPill(
@@ -7290,12 +7290,12 @@
             masquerErreurSync('statsSyncErreur');
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Chargement des archives Foot…</p>';
 
-            synchroniserArchivesFootDepuisMatchs(footMatchs);
+                synchroniserArchivesFootDepuisMatchs(footMatchs);
             const archivesServeur = await chargerArchivesFootServeur();
             const archivesLocal = lireArchivesFootLocal();
             const archives = fusionnerArchivesFoot(archivesLocal, archivesServeur);
             if (archives.length > 0) {
-                ecrireArchivesFootLocal(archives);
+            ecrireArchivesFootLocal(archives);
             }
             const n = archives.length;
             const nbValides = archives.filter((a) => archiveFootEstValidee(a)).length;
@@ -7413,7 +7413,7 @@
                 for (const ev of evaluations) {
                     if (ev.erreur) {
                         console.warn('[Velora] Évaluation archive en attente :', ev.erreur);
-                    }
+                }
                 }
 
                 const majParCle = new Map(evaluations.map((ev) => [cleCourseArchive(ev.archive), ev.archive]));
