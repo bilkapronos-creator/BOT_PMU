@@ -49,6 +49,25 @@ def main() -> int:
     except Exception as err:
         print(f"[sync] calibration ignorée ({err})")
 
+    try:
+        from velora_archiver_foot import resoudre_matchs_en_attente
+
+        stats = resoudre_matchs_en_attente(assurer_premium=True)
+        print(
+            f"[sync] archives Foot résolues "
+            f"({stats.get('resolus', 0)} validés, {stats.get('encore_attente', 0)} en attente)"
+        )
+    except Exception as err:
+        print(f"[sync] résolution Foot ignorée ({err})")
+
+    try:
+        from publish_communaute import main as publish_communaute
+
+        publish_communaute()
+        print("[sync] api_velora_communaute.json régénéré")
+    except Exception as err:
+        print(f"[sync] publication communauté ignorée ({err})")
+
     return 0
 
 

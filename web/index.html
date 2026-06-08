@@ -2245,11 +2245,15 @@
         }
 
         function choisirHistoriquePmu(localList, jsonList) {
-            const local = Array.isArray(localList) ? localList : [];
-            const distant = Array.isArray(jsonList) ? jsonList : [];
-            if (local.length >= distant.length) return local.slice(0, 8);
-            if (distant.length > 0) return distant.slice(0, 8);
-            return local.slice(0, 8);
+            const parCle = new Map();
+            const cle = (c) => `${c.reunion || '?'}|${c.course || '?'}|${c.date_affiche || ''}`;
+            const qualite = (c) => (c.reussi_pmu != null ? 1 : 0);
+            for (const c of [...(Array.isArray(jsonList) ? jsonList : []), ...(Array.isArray(localList) ? localList : [])]) {
+                const k = cle(c);
+                const prev = parCle.get(k);
+                if (!prev || qualite(c) >= qualite(prev)) parCle.set(k, c);
+            }
+            return [...parCle.values()].slice(0, 8);
         }
 
         function choisirHistoriqueFoot(localList, jsonList) {
@@ -2344,7 +2348,8 @@
         async function chargerVitrineDepuisJson(options = {}) {
             const communaute = await lireCommunauteJson();
             if (!communaute) return false;
-            const stats = resoudreStatsCommunaute(null, communaute, null, {});
+            const historiqueFootLocal = await preparerHistoriqueFootCommunaute().catch(() => []);
+            const stats = resoudreStatsCommunaute(null, communaute, null, { historiqueFootLocal });
             injecterStatsCommunauteUI(stats, options);
             return true;
         }
@@ -2569,6 +2574,11 @@
 
             if (animer) {
                 pulseVitrineTaux([kpiTaux, pmuTaux, footTaux]);
+            }
+            const nbHist = (pmu.historique_courses?.length || 0) + (foot.historique_matchs?.length || 0);
+            if (nbHist > 0 && !window.__vitrineDetailAutoOuvert) {
+                toggleVitrineDetailPanel(true);
+                window.__vitrineDetailAutoOuvert = true;
             }
             if (section) section.classList.remove('hidden');
         }
@@ -4889,6 +4899,10 @@
                 renderFootMatchs();
                 const liste = footMatchAnalyseUnique();
                 if (liste.length) {
+                    synchroniserArchivesFootDepuisMatchs(liste);
+                    preparerHistoriqueFootCommunaute()
+                        .then(() => chargerStatsPlateforme({ animer: false }))
+                        .catch(() => {});
                     defilerVersResultatsFoot();
                 }
             } catch (err) {
@@ -5391,7 +5405,7 @@
                 lireArchivesFootLocal().map((a) => [String(a.id_match), a]),
             );
             for (const m of matchs) {
-                if (!estOpportunitePremium(m)) continue;
+                if (!estPronosticVeloraArchive(m)) continue;
                 if (!estCoupEnvoiPasse(m)) continue;
                 const id = String(m.id_match || '');
                 if (!id) continue;
@@ -5502,7 +5516,11 @@
                 /* footMatchs peut être vide au premier chargement */
             }
             const archivesServeur = await chargerArchivesFootServeur();
-            const archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
+            let archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
+            archives = await resoudreArchivesFootEnAttente(archives);
+            if (archives.length) {
+                ecrireArchivesFootLocal(archives);
+            }
             return extraireHistoriqueFootDepuisArchives(archives);
         }
 
@@ -5804,6 +5822,25 @@
 
         const OPP_VELORA_SCORE_MIN = 58;
 
+        /** Aligné velora_archiver_foot._est_pronostic_velora — archivage communauté. */
+        function estPronosticVeloraArchive(m) {
+            if (m?.is_opportunite === true) return true;
+            const ot = String(m?.opportunite_type || '').trim();
+            if (ot && !['—', 'none', '-', ''].includes(ot.toLowerCase())) return true;
+            const vbt = String(m?.value_bet_type || '').trim().toLowerCase();
+            if (vbt && !['—', 'none', '-', ''].includes(vbt)) return true;
+            const score = Number(m?.velora_score);
+            if (Number.isFinite(score) && score >= 68) return true;
+            const blob = `${m?.opportunite_detail || ''} ${m?.conseil || ''}`.toLowerCase();
+            if (/value bet/.test(blob) || /privilégier le \+2\.5/.test(blob) || /privilegier le \+2\.5/.test(blob)) {
+                return true;
+            }
+            const pp = primaryPickFromMatch(m);
+            if (pp && pp.market) return true;
+            if (m?.pronostic_1n2 || m?.velora_pick_1n2 || m?.free_analysis?.pronostic_1n2) return true;
+            return false;
+        }
+
         function estOpportunitePremium(m) {
             if (m?.is_opportunite === true) return true;
             const oppType = String(m?.opportunite_type || '').trim();
@@ -6056,6 +6093,23 @@
             const bm = m?.marches_supplementaires?.buteur_match;
             if (buteursMatchUtilisables(bm)) return bm;
             return [];
+        }
+
+        function scoreExactAttenduFromMatch(m) {
+            const detail = String(m?.opportunite_detail || m?.conseil || '');
+            const avantCote = detail.split('@')[0];
+            const nums = [...avantCote.replace(/–/g, '-').matchAll(/(\d+)/g)].map((x) => Number(x[1]));
+            if (nums.length >= 2) {
+                return { dom: nums[0], ext: nums[1] };
+            }
+            const scores = scoresExactFromMatch(m);
+            const top = scores[0];
+            if (!top?.score) return null;
+            const parts = String(top.score).replace(':', '-').split('-').map((x) => Number(x.trim()));
+            if (parts.length >= 2 && parts.every((n) => Number.isFinite(n))) {
+                return { dom: parts[0], ext: parts[1] };
+            }
+            return null;
         }
 
         function scoresExactFromMatch(m) {
@@ -6330,8 +6384,18 @@
                 typePari = pick === 'oui' ? 'BTTS Oui' : 'BTTS Non';
                 const b = bttsCotesFromMatch(m);
                 cote = pick === 'oui' ? b?.oui : b?.non;
-            } else if (marche === 'buteur' || marche === 'score_exact') {
+            } else if (marche === 'buteur') {
                 return null;
+            } else if (marche === 'score_exact') {
+                const attendu = scoreExactAttenduFromMatch(m);
+                if (!attendu) return null;
+                gagne = dom === attendu.dom && ext === attendu.ext;
+                const scores = scoresExactFromMatch(m);
+                const label = `${attendu.dom}-${attendu.ext}`;
+                const row = scores.find((s) => String(s?.score || '').replace(':', '-') === label) || scores[0];
+                cote = row ? Number(fmtCoteMarche(row.cote)) : null;
+                if (!Number.isFinite(cote)) cote = null;
+                typePari = `Score exact ${label}`;
             } else {
                 const pick = pronosticVelora1n2Pick(m) || inferVelora1n2Pick(m);
                 if (!pick) return null;

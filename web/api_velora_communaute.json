@@ -50,13 +50,23 @@
     "membres_actifs": 2
   },
   "foot": {
-    "taux": 50,
-    "victoires": 9,
-    "total": 18,
-    "mises_cumulees": 180.0,
-    "profit_net": -48.2,
-    "roi_pct": -26.8,
+    "taux": 52,
+    "victoires": 12,
+    "total": 23,
+    "mises_cumulees": 230.0,
+    "profit_net": -67.9,
+    "roi_pct": -29.5,
     "detail_par_type_pari": {
+      "Pronostic 1N2": {
+        "total": 2,
+        "succes": 0,
+        "taux": 0
+      },
+      "1N2 Extérieur": {
+        "total": 3,
+        "succes": 3,
+        "taux": 100
+      },
       "Over 2.5": {
         "total": 12,
         "succes": 5,
@@ -84,19 +94,19 @@
       }
     },
     "detail_par_marche": {
+      "pronostic_1n2": {
+        "label": "Pronostic 1N2",
+        "total": 7,
+        "succes": 5,
+        "taux": 71,
+        "profit_net": -8.1
+      },
       "over_25": {
         "label": "Over 2.5",
         "total": 12,
         "succes": 5,
         "taux": 42,
         "profit_net": -69.5
-      },
-      "pronostic_1n2": {
-        "label": "Pronostic 1N2",
-        "total": 2,
-        "succes": 2,
-        "taux": 100,
-        "profit_net": 11.6
       },
       "value_1n2": {
         "label": "Value 1N2",
@@ -140,6 +150,56 @@
     },
     "historique_matchs": [
       {
+        "equipe_domicile": "Maroc",
+        "equipe_exterieur": "Norvège",
+        "score_final": "1-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780858800
+      },
+      {
+        "equipe_domicile": "Grèce",
+        "equipe_exterieur": "Italie",
+        "score_final": "0-1",
+        "type_pari_foot": "1N2 Extérieur",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780858800
+      },
+      {
+        "equipe_domicile": "Las Palmas",
+        "equipe_exterieur": "Malaga",
+        "score_final": "0-1",
+        "type_pari_foot": "1N2 Extérieur",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780858800
+      },
+      {
+        "equipe_domicile": "Inter Toronto",
+        "equipe_exterieur": "Forge",
+        "score_final": "1-4",
+        "type_pari_foot": "1N2 Extérieur",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780855200
+      },
+      {
+        "equipe_domicile": "Danemark",
+        "equipe_exterieur": "Ukraine",
+        "score_final": "2-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780849800
+      },
+      {
         "equipe_domicile": "USM Alger",
         "equipe_exterieur": "Belouizdad",
         "score_final": "2-0",
@@ -168,69 +228,19 @@
         "marche": "1n2",
         "en_attente": false,
         "match_start_ts": 1780333200
-      },
-      {
-        "equipe_domicile": "Palestino",
-        "equipe_exterieur": "Audax Italiano",
-        "score_final": "0-0",
-        "type_pari_foot": "1N2 Nul",
-        "reussi_foot": true,
-        "marche": "1n2",
-        "en_attente": false,
-        "match_start_ts": 1780272000
-      },
-      {
-        "equipe_domicile": "Cruzeiro",
-        "equipe_exterieur": "Fluminense",
-        "score_final": "1-1",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
-        "marche": "over_25",
-        "en_attente": false,
-        "match_start_ts": 1780270200
-      },
-      {
-        "equipe_domicile": "Remo",
-        "equipe_exterieur": "Sao Paulo",
-        "score_final": "1-0",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
-        "marche": "over_25",
-        "en_attente": false,
-        "match_start_ts": 1780270200
-      },
-      {
-        "equipe_domicile": "Emelec",
-        "equipe_exterieur": "Universidad Católica (EQU)",
-        "score_final": "1-0",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
-        "marche": "1n2",
-        "en_attente": false,
-        "match_start_ts": 1780269000
-      },
-      {
-        "equipe_domicile": "O'Higgins",
-        "equipe_exterieur": "Everton",
-        "score_final": "2-3",
-        "type_pari_foot": "Over 2.5",
-        "reussi_foot": true,
-        "marche": "over_25",
-        "en_attente": false,
-        "match_start_ts": 1780263000
       }
     ]
   },
   "global": {
-    "taux": 48,
-    "victoires": 10,
-    "total": 21,
-    "mises_cumulees": 210.0,
-    "profit_net": -53.2,
-    "roi_pct": -25.3
+    "taux": 50,
+    "victoires": 13,
+    "total": 26,
+    "mises_cumulees": 260.0,
+    "profit_net": -72.9,
+    "roi_pct": -28.0
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-08T02:25:24.066377+00:00"
+    "genere_at": "2026-06-08T18:19:11.909891+00:00"
   }
 }

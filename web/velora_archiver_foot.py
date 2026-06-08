@@ -108,6 +108,12 @@ def _est_pronostic_velora(match: dict) -> bool:
     vbt = str(match.get("value_bet_type") or "").strip().lower()
     if vbt and vbt not in ("—", "none", "-", ""):
         return True
+    free = match.get("free_analysis") or {}
+    pp = match.get("primary_pick") or free.get("primary_pick")
+    if isinstance(pp, dict) and str(pp.get("market") or "").strip():
+        return True
+    if match.get("pronostic_1n2") or match.get("velora_pick_1n2") or free.get("pronostic_1n2"):
+        return True
     try:
         if float(match.get("velora_score") or 0) >= 68:
             return True
@@ -395,7 +401,8 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
             return None
         gagne = (dom, ext) == attendu
         cote = _cote_score_exact(match)
-        type_pari = f"Score exact {dom}-{ext}"
+        ad, ae = attendu
+        type_pari = f"Score exact {ad}-{ae}"
         selection = type_pari
 
     else:
@@ -747,11 +754,22 @@ def _assurer_archives_coup_envoi(
     snapshots: list[dict],
     par_id: dict[str, dict],
     now: datetime | None = None,
+    catalogue: list[dict] | None = None,
 ) -> int:
     """Ajoute / met à jour les entrées EN_ATTENTE dès le coup d'envoi (pronos Velora uniquement)."""
     now = now or datetime.now(tz=TZ_PARIS)
     ajouts = 0
-    for match in snapshots:
+    sources: list[dict] = [m for m in snapshots if isinstance(m, dict)]
+    if catalogue:
+        deja = {str(m.get("id_match") or "").strip() for m in sources}
+        for match in catalogue:
+            if not isinstance(match, dict):
+                continue
+            mid = str(match.get("id_match") or "").strip()
+            if mid and mid not in deja:
+                sources.append(match)
+                deja.add(mid)
+    for match in sources:
         if not isinstance(match, dict) or not _est_pronostic_velora(match):
             continue
         mid = str(match.get("id_match") or "").strip()
@@ -1081,7 +1099,7 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
         _ecrire_json(RESULTATS_PATH, resultats)
 
     if assurer_premium:
-        _assurer_archives_coup_envoi(snapshots, par_id, now_paris)
+        _assurer_archives_coup_envoi(snapshots, par_id, now_paris, catalogue=catalogue)
         purges = _purger_archives_non_velora(par_id, snapshots)
         if purges:
             print(f"[resolver-foot] {purges} entrée(s) hors pronos Velora retirée(s).")
