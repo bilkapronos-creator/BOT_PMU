@@ -49,9 +49,103 @@ def probas_1n2_suspectes(probs: dict[str, Any] | None) -> bool:
         p2 = int(probs.get("2") or 0)
         if n == 0 and p1 + p2 >= 99 and abs(p1 - p2) <= 5:
             return True
+        vals = [p1, n, p2]
+        if max(vals) - min(vals) <= 10:
+            return True
         return False
     except (TypeError, ValueError):
         return False
+
+
+def _value_pick_opposes_pronostic(official: str, market: str | None, pick: str | None) -> bool:
+    """True si un value bet 1N2 / DC contredit le pronostic modèle Velora."""
+    if not official or not pick:
+        return False
+    mk = str(market or "").lower()
+    pk = str(pick).strip()
+    if mk == "1n2":
+        return pk != official
+    if mk == "dc_1x":
+        return official == "2"
+    if mk == "dc_x2":
+        return official == "1"
+    return False
+
+
+def sanitize_conflicting_value_picks(match: dict[str, Any]) -> dict[str, Any]:
+    """Retire primary_pick / value_bets 1N2 qui contredisent pronostic_1n2 / velora_pick."""
+    updated = dict(match)
+    official = pronostic_pick_from_match(updated)
+    if official not in ("1", "N", "2", "dc_1x", "dc_x2"):
+        return updated
+
+    free = dict(updated.get("free_analysis") or {})
+
+    def _strip_pp(container: dict[str, Any], key: str = "primary_pick") -> None:
+        pp = container.get(key)
+        if isinstance(pp, dict) and _value_pick_opposes_pronostic(
+            official, pp.get("market"), pp.get("pick")
+        ):
+            container.pop(key, None)
+
+    _strip_pp(free)
+    _strip_pp(updated)
+
+    vbs = free.get("value_bets")
+    if isinstance(vbs, list):
+        free["value_bets"] = [
+            v
+            for v in vbs
+            if isinstance(v, dict)
+            and not _value_pick_opposes_pronostic(official, v.get("market"), v.get("pick"))
+        ]
+        if not free.get("primary_pick") and free["value_bets"]:
+            best = max(free["value_bets"], key=lambda v: float(v.get("edge") or 0))
+            free["primary_pick"] = {
+                "market": best.get("market"),
+                "pick": best.get("pick"),
+                "label": best.get("label"),
+                "cote": best.get("cote"),
+                "conseil_short": best.get("label"),
+            }
+
+    if not free.get("value_bets"):
+        free.pop("primary_pick", None)
+
+    cur_probs = free.get("probabilites") or updated.get("probabilites")
+    cotes = free.get("cotes_1n2") or updated.get("cotes") or {}
+    if probas_1n2_suspectes(cur_probs) and any(cotes.get(k) for k in ("1", "N", "2")):
+        poisson = build_poisson_analysis(
+            cotes=cotes,
+            intel=updated.get("velora_intel"),
+            markets=MarketsRaw(),
+        )
+        free["probabilites"] = poisson.probabilites_1n2
+        updated["probabilites"] = poisson.probabilites_1n2
+
+    updated["free_analysis"] = free
+    if isinstance(updated.get("primary_pick"), dict) and not free.get("primary_pick"):
+        updated.pop("primary_pick", None)
+
+    pp = free.get("primary_pick") or updated.get("primary_pick")
+    if isinstance(pp, dict) and _value_pick_opposes_pronostic(official, pp.get("market"), pp.get("pick")):
+        free.pop("primary_pick", None)
+        updated.pop("primary_pick", None)
+
+    legacy = updated.get("_legacy")
+    if isinstance(legacy, dict):
+        leg_pp = legacy.get("opportunite_type")
+        if str(leg_pp or "").lower() in ("1n2", "dc_1x", "dc_x2") and not free.get("value_bets"):
+            legacy["is_opportunite"] = False
+            legacy.pop("opportunite_type", None)
+
+    if str(updated.get("opportunite_type") or "").lower() in ("1n2", "dc_1x", "dc_x2"):
+        if not free.get("value_bets"):
+            updated.pop("opportunite_type", None)
+            updated.pop("opportunite_detail", None)
+            updated["is_opportunite"] = False
+
+    return updated
 
 
 def ensure_match_scores_coherent(match: dict[str, Any]) -> dict[str, Any]:
@@ -59,7 +153,7 @@ def ensure_match_scores_coherent(match: dict[str, Any]) -> dict[str, Any]:
     updated = dict(match)
     pick = pronostic_pick_from_match(updated)
     if pick not in ("1", "N", "2", "dc_1x", "dc_x2"):
-        return updated
+        return sanitize_conflicting_value_picks(updated)
 
     free = dict(updated.get("free_analysis") or {})
     cotes = free.get("cotes_1n2") or updated.get("cotes") or {}
@@ -114,7 +208,7 @@ def ensure_match_scores_coherent(match: dict[str, Any]) -> dict[str, Any]:
         if aligned_exact:
             updated["score_exact"] = aligned_exact
 
-    return updated
+    return sanitize_conflicting_value_picks(updated)
 
 
 def sanitize_matchs_document(data: Any) -> Any:

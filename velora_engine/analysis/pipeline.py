@@ -153,6 +153,9 @@ def build_match_v2(
     if poisson.prob_over_25 > 55:
         legacy["tendance_buts"] = "Match Offensif"
 
+    pronostic_ref = str(
+        legacy.get("velora_pick_1n2") or ctx.pronostic_1n2 or ""
+    ).strip() or None
     free_values = detect_all_free_values(
         cotes_1n2=cotes_out,
         probs=probs_modele,
@@ -160,6 +163,7 @@ def build_match_v2(
         les_deux_marquent=legacy.get("les_deux_marquent"),
         home=home,
         away=away,
+        pronostic_1n2=pronostic_ref,
     )
 
     premium = premium_from_extracted(

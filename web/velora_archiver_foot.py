@@ -266,6 +266,9 @@ def _cote_score_exact(match: dict) -> float | None:
 
 
 def _score_exact_attendu(match: dict) -> tuple[int, int] | None:
+    prop = _extraire_proposition_score_exact(match)
+    if prop:
+        return prop["dom"], prop["ext"]
     detail = str(match.get("opportunite_detail") or match.get("conseil") or "")
     nums = [int(x) for x in re.findall(r"\d+", detail.replace("–", "-").split("@")[0])]
     if len(nums) >= 2:
@@ -277,6 +280,109 @@ def _score_exact_attendu(match: dict) -> tuple[int, int] | None:
         if parsed:
             return parsed
     return None
+
+
+def _id_match_base(archive_or_id: str | dict) -> str:
+    if isinstance(archive_or_id, dict):
+        raw = str(archive_or_id.get("id_match") or "").strip()
+    else:
+        raw = str(archive_or_id or "").strip()
+    return raw.split(":")[0].strip()
+
+
+def _storage_key_archive(archive: dict) -> str:
+    ak = str(archive.get("archive_key") or "").strip()
+    if ak:
+        return ak
+    mid = _id_match_base(archive)
+    if not mid:
+        return ""
+    marche = str(archive.get("marche") or archive.get("opportunite_type") or "1n2").lower()
+    if marche in ("", "1n2"):
+        return mid
+    return f"{mid}:{marche}"
+
+
+def _iter_value_bets(match: dict):
+    prem = match.get("premium_analysis") or {}
+    free = match.get("free_analysis") or {}
+    for src in (
+        prem.get("value_bets"),
+        free.get("value_bets"),
+        match.get("free_value_bets"),
+    ):
+        if isinstance(src, list):
+            for vb in src:
+                if isinstance(vb, dict):
+                    yield vb
+
+
+def _scores_exact_liste_match(match: dict) -> list[dict]:
+    scores = match.get("score_exact")
+    if isinstance(scores, list) and scores:
+        return scores
+    leg = match.get("_legacy")
+    if isinstance(leg, dict) and isinstance(leg.get("score_exact"), list):
+        return leg["score_exact"]
+    prem_top = ((match.get("premium_analysis") or {}).get("score_exact") or {}).get("top3")
+    if isinstance(prem_top, list) and prem_top:
+        return prem_top
+    free = match.get("free_analysis") or {}
+    modele = free.get("top_scores_modele")
+    if isinstance(modele, list) and modele:
+        return modele
+    top = match.get("top_scores")
+    return top if isinstance(top, list) else []
+
+
+def _extraire_proposition_score_exact(match: dict) -> dict | None:
+    """Meilleur score exact proposé par Velora (value bet > liste modèle / premium)."""
+    for vb in _iter_value_bets(match):
+        if str(vb.get("market") or "").lower() != "score_exact":
+            continue
+        label = str(vb.get("pick") or vb.get("label") or "")
+        parsed = parse_score_reel(label.replace("Score exact", "").strip())
+        if not parsed:
+            continue
+        dom, ext = parsed
+        cote = _safe_float(vb.get("cote"))
+        score_label = f"{dom}-{ext}"
+        detail = str(vb.get("label") or f"Score exact {score_label}")
+        if cote:
+            detail = f"Score exact {score_label} @ {cote:g}"
+        return {"dom": dom, "ext": ext, "score_label": score_label, "cote": cote, "detail": detail}
+
+    rows = [
+        s for s in _scores_exact_liste_match(match)
+        if isinstance(s, dict) and s.get("score")
+    ]
+    if not rows:
+        return None
+    rows.sort(key=lambda s: -(float(s.get("prob") or 0)))
+    row = rows[0]
+    parsed = parse_score_reel(str(row.get("score") or ""))
+    if not parsed:
+        return None
+    dom, ext = parsed
+    cote = _safe_float(row.get("cote"))
+    score_label = f"{dom}-{ext}"
+    detail = f"Score exact {score_label}"
+    if cote:
+        detail = f"{detail} @ {cote:g}"
+    return {"dom": dom, "ext": ext, "score_label": score_label, "cote": cote, "detail": detail}
+
+
+def _archive_score_exact_depuis_match(match: dict, prop: dict) -> dict:
+    arch = construire_archive_foot_en_attente(match)
+    arch["marche"] = "score_exact"
+    arch["opportunite_type"] = "score_exact"
+    arch["opportunite_detail"] = prop["detail"]
+    arch["conseil"] = prop["detail"]
+    scores_list = _scores_exact_liste_match(match)
+    arch["score_exact"] = scores_list if scores_list else [
+        {"score": prop["score_label"], "cote": prop.get("cote")}
+    ]
+    return arch
 
 
 def _marche_effectif(match: dict) -> str:
@@ -681,7 +787,14 @@ def _ecrire_json(path: Path, data) -> None:
 
 
 def _index_archives(archives: list[dict]) -> dict[str, dict]:
-    return {str(a.get("id_match")): a for a in archives if a.get("id_match")}
+    out: dict[str, dict] = {}
+    for a in archives:
+        if not isinstance(a, dict):
+            continue
+        key = _storage_key_archive(a)
+        if key:
+            out[key] = a
+    return out
 
 
 def _score_deja_enregistre(resultats: dict, mid: str) -> bool:
@@ -728,7 +841,7 @@ def _collecter_ids_matchs_sans_score(
     for archive in archives:
         if not isinstance(archive, dict) or not _est_en_attente(archive):
             continue
-        mid = str(archive.get("id_match") or "").strip()
+        mid = _id_match_base(archive)
         if not mid or _score_deja_enregistre(resultats, mid):
             continue
         if _archive_pret_pour_score(archive):
@@ -750,15 +863,19 @@ def _collecter_ids_matchs_sans_score(
     return sorted(ids)
 
 
-def _assurer_archives_coup_envoi(
+def _peut_ajouter_archive(par_id: dict[str, dict], key: str) -> bool:
+    existant = par_id.get(key)
+    if existant and _est_archive_terminee_validee(existant):
+        return False
+    if existant and _est_en_attente(existant):
+        return False
+    return True
+
+
+def _sources_pronos_velora(
     snapshots: list[dict],
-    par_id: dict[str, dict],
-    now: datetime | None = None,
-    catalogue: list[dict] | None = None,
-) -> int:
-    """Ajoute / met à jour les entrées EN_ATTENTE dès le coup d'envoi (pronos Velora uniquement)."""
-    now = now or datetime.now(tz=TZ_PARIS)
-    ajouts = 0
+    catalogue: list[dict] | None,
+) -> list[dict]:
     sources: list[dict] = [m for m in snapshots if isinstance(m, dict)]
     if catalogue:
         deja = {str(m.get("id_match") or "").strip() for m in sources}
@@ -769,27 +886,86 @@ def _assurer_archives_coup_envoi(
             if mid and mid not in deja:
                 sources.append(match)
                 deja.add(mid)
-    for match in sources:
-        if not isinstance(match, dict) or not _est_pronostic_velora(match):
+    return sources
+
+
+def _assurer_archives_coup_envoi(
+    snapshots: list[dict],
+    par_id: dict[str, dict],
+    now: datetime | None = None,
+    catalogue: list[dict] | None = None,
+) -> int:
+    """Ajoute / met à jour les entrées EN_ATTENTE dès le coup d'envoi (pronos Velora uniquement)."""
+    now = now or datetime.now(tz=TZ_PARIS)
+    ajouts = 0
+    for match in _sources_pronos_velora(snapshots, catalogue):
+        if not _est_pronostic_velora(match):
             continue
         mid = str(match.get("id_match") or "").strip()
         if not mid:
             continue
-        existant = par_id.get(mid)
-        if existant and _est_archive_terminee_validee(existant):
-            continue
-        if existant and _est_en_attente(existant):
-            continue
         if not _match_coup_envoi_passe(match, now):
             continue
-        par_id[mid] = construire_archive_foot_en_attente(match)
+
+        marche_principal = _marche_effectif(match)
+        cle_principale = mid if marche_principal == "1n2" else f"{mid}:{marche_principal}"
+        if _peut_ajouter_archive(par_id, cle_principale):
+            arch = construire_archive_foot_en_attente(match)
+            arch["archive_key"] = cle_principale
+            if marche_principal != "1n2":
+                arch["marche"] = marche_principal
+                arch["opportunite_type"] = marche_principal
+            par_id[cle_principale] = arch
+            ajouts += 1
+
+        if marche_principal == "score_exact":
+            continue
+        prop = _extraire_proposition_score_exact(match)
+        if not prop:
+            continue
+        cle_exact = f"{mid}:score_exact"
+        if not _peut_ajouter_archive(par_id, cle_exact):
+            continue
+        arch_exact = _archive_score_exact_depuis_match(match, prop)
+        arch_exact["archive_key"] = cle_exact
+        par_id[cle_exact] = arch_exact
+        ajouts += 1
+    return ajouts
+
+
+def _assurer_archives_score_exact_retroactif(
+    snapshots: list[dict],
+    par_id: dict[str, dict],
+    now: datetime | None = None,
+    catalogue: list[dict] | None = None,
+) -> int:
+    """Complète les archives score exact pour les matchs déjà archivés (1N2 / over)."""
+    now = now or datetime.now(tz=TZ_PARIS)
+    ajouts = 0
+    for match in _sources_pronos_velora(snapshots, catalogue):
+        if not _est_pronostic_velora(match):
+            continue
+        mid = str(match.get("id_match") or "").strip()
+        if not mid or not _match_coup_envoi_passe(match, now):
+            continue
+        if _marche_effectif(match) == "score_exact":
+            continue
+        prop = _extraire_proposition_score_exact(match)
+        if not prop:
+            continue
+        cle_exact = f"{mid}:score_exact"
+        if not _peut_ajouter_archive(par_id, cle_exact):
+            continue
+        arch_exact = _archive_score_exact_depuis_match(match, prop)
+        arch_exact["archive_key"] = cle_exact
+        par_id[cle_exact] = arch_exact
         ajouts += 1
     return ajouts
 
 
 def _enrichir_match_pour_validation(archive: dict, snapshots: list, catalogue: list) -> dict:
     """Fusionne archive EN_ATTENTE + snapshot premium pour valider_foot."""
-    mid = str(archive.get("id_match") or "")
+    mid = _id_match_base(archive)
     snap = _match_record_pour_id(mid, snapshots, catalogue, archive)
     out = {**archive}
     for cle in (
@@ -1091,15 +1267,23 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
     if ids_a_purger:
         matchs_res = resultats.get("matchs")
         if isinstance(matchs_res, dict):
-            for mid in ids_a_purger:
-                matchs_res.pop(mid, None)
-                matchs_res.pop(int(mid) if mid.isdigit() else mid, None)
-        for mid in ids_a_purger:
-            resultats.pop(mid, None)
+            for key in ids_a_purger:
+                base = _id_match_base(key)
+                matchs_res.pop(base, None)
+                if base.isdigit():
+                    matchs_res.pop(int(base), None)
+        for key in ids_a_purger:
+            base = _id_match_base(key)
+            resultats.pop(base, None)
         _ecrire_json(RESULTATS_PATH, resultats)
 
     if assurer_premium:
         _assurer_archives_coup_envoi(snapshots, par_id, now_paris, catalogue=catalogue)
+        retro = _assurer_archives_score_exact_retroactif(
+            snapshots, par_id, now_paris, catalogue=catalogue,
+        )
+        if retro:
+            print(f"[resolver-foot] {retro} archive(s) score exact complétée(s)")
         purges = _purger_archives_non_velora(par_id, snapshots)
         if purges:
             print(f"[resolver-foot] {purges} entrée(s) hors pronos Velora retirée(s).")
@@ -1111,15 +1295,16 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
         resultats = {}
 
     ids_fetch: list[str] = []
-    for mid, arch in en_attente.items():
+    for key, arch in en_attente.items():
+        mid = _id_match_base(arch)
         if not _archive_pret_pour_score(arch, now_paris):
             print(
-                f"[resolver-foot] Skip fetch {mid} "
+                f"[resolver-foot] Skip fetch {key} "
                 f"({arch.get('equipe_domicile')} — {arch.get('equipe_exterieur')}) : "
                 "match pas encore éligible (date/kickoff)"
             )
             continue
-        if _lire_resultat_pour_match(resultats, mid) is None:
+        if _lire_resultat_pour_match(resultats, mid) is None and mid not in ids_fetch:
             ids_fetch.append(mid)
 
     print(f"[resolver-foot] IDs envoyés à Winamax/TheSportsDB : {len(ids_fetch)}")
@@ -1138,16 +1323,18 @@ def resoudre_matchs_en_attente(assurer_premium: bool = True) -> dict[str, Any]:
             print(f"[resolver-foot] Échec récupération scores : {exc}")
 
     resolus = 0
-    for mid, arch in list(en_attente.items()):
+    for key, arch in list(en_attente.items()):
         if not _archive_pret_pour_score(arch, now_paris):
             continue
+        mid = _id_match_base(arch)
         res = _lire_resultat_pour_match(resultats, mid)
         if res is None:
             continue
         match = _enrichir_match_pour_validation(arch, snapshots, catalogue)
         validee = valider_foot(match, res)
         if validee:
-            par_id[mid] = validee
+            validee["archive_key"] = key
+            par_id[key] = validee
             resolus += 1
 
     stats["resolus"] = resolus

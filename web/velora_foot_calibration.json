@@ -8,9 +8,19 @@
     "btts": 1.06,
     "team_goals_home": 1.08,
     "team_goals_away": 1.08,
-    "score_exact": 1.15
+    "score_exact": 1.23
   },
   "suggestions": [
+    {
+      "marche": "score_exact",
+      "label": "Score exact",
+      "edge_key": "score_exact",
+      "edge_actuel": 1.15,
+      "edge_suggere": 1.23,
+      "taux_pct": 0,
+      "echantillon": 5,
+      "raison": "0% de réussite sur 5 matchs — seuil relevé"
+    },
     {
       "marche": "over_25",
       "label": "Over 2.5",
@@ -29,6 +39,13 @@
       "succes": 5,
       "taux": 71,
       "profit_net": -8.1
+    },
+    "score_exact": {
+      "label": "Score exact",
+      "total": 5,
+      "succes": 0,
+      "taux": 0,
+      "profit_net": -50.0
     },
     "over_25": {
       "label": "Over 2.5",

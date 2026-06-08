@@ -2333,12 +2333,30 @@
             return [...parCle.values()].slice(0, 8);
         }
 
+        function idMatchBaseFoot(raw) {
+            return String(raw || '').split(':')[0].trim();
+        }
+
+        function storageKeyArchiveFoot(a) {
+            const ak = String(a?.archive_key || '').trim();
+            if (ak) return ak;
+            const id = idMatchBaseFoot(a?.id_match);
+            if (!id) return '';
+            const marche = String(a?.marche || a?.opportunite_type || '1n2').toLowerCase();
+            if (!marche || marche === '1n2') return id;
+            return `${id}:${marche}`;
+        }
+
         function choisirHistoriqueFoot(localList, jsonList) {
             const local = Array.isArray(localList) ? localList : [];
             const distant = Array.isArray(jsonList) ? jsonList : [];
             const parCle = new Map();
             const cle = (m) => {
-                if (m.id_match) return `id:${m.id_match}`;
+                if (m.archive_key) return String(m.archive_key);
+                const id = idMatchBaseFoot(m.id_match);
+                const marche = String(m.marche || m.opportunite_type || '').toLowerCase();
+                if (id && marche && marche !== '1n2') return `${id}:${marche}`;
+                if (id) return `id:${id}`;
                 return `team:${m.equipe_domicile}|${m.equipe_exterieur}|${m.match_start_ts || m.timestamp || ''}`;
             };
             const qualite = (m) => (m.en_attente ? 0 : 1);
@@ -2352,7 +2370,7 @@
                     (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
                         - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
                 )
-                .slice(0, 8);
+                .slice(0, 12);
         }
 
         function extraireHistoriquePmuDepuisArchivesLocales() {
@@ -5684,19 +5702,78 @@
             return startMs != null && Date.now() >= startMs;
         }
 
+        function extrairePropositionScoreExact(m) {
+            const sources = [
+                ...(Array.isArray(m?.premium_analysis?.value_bets) ? m.premium_analysis.value_bets : []),
+                ...(Array.isArray(m?.free_analysis?.value_bets) ? m.free_analysis.value_bets : []),
+                ...(Array.isArray(m?.free_value_bets) ? m.free_value_bets : []),
+            ];
+            for (const vb of sources) {
+                if (String(vb?.market || '').toLowerCase() !== 'score_exact') continue;
+                const label = String(vb?.pick || vb?.label || '');
+                const nums = [...label.replace(/score exact/gi, '').replace(/–/g, '-').matchAll(/(\d+)/g)]
+                    .map((x) => Number(x[1]));
+                if (nums.length >= 2) {
+                    const scoreLabel = `${nums[0]}-${nums[1]}`;
+                    const cote = fmtCoteMarche(vb?.cote);
+                    const detail = vb?.label || `Score exact ${scoreLabel}${cote ? ` @ ${cote}` : ''}`;
+                    return { dom: nums[0], ext: nums[1], scoreLabel, cote, detail };
+                }
+            }
+            const attendu = scoreExactAttenduFromMatch(m);
+            if (!attendu) return null;
+            const scoreLabel = `${attendu.dom}-${attendu.ext}`;
+            return {
+                dom: attendu.dom,
+                ext: attendu.ext,
+                scoreLabel,
+                cote: null,
+                detail: `Score exact ${scoreLabel}`,
+            };
+        }
+
+        function construireArchiveScoreExactDepuisMatch(m, prop) {
+            const arch = construireArchiveFootDepuisMatch(m);
+            arch.marche = 'score_exact';
+            arch.opportunite_type = 'score_exact';
+            arch.opportunite_detail = prop.detail;
+            arch.conseil = prop.detail;
+            arch.archive_key = `${idMatchBaseFoot(m.id_match)}:score_exact`;
+            const scores = scoresExactFromMatch(m);
+            arch.score_exact = scores.length
+                ? scores
+                : [{ score: prop.scoreLabel, cote: prop.cote }];
+            return arch;
+        }
+
         function synchroniserArchivesFootDepuisMatchs(matchs) {
             if (!Array.isArray(matchs) || !matchs.length) return;
             const parId = new Map(
-                lireArchivesFootLocal().map((a) => [String(a.id_match), a]),
+                lireArchivesFootLocal().map((a) => [storageKeyArchiveFoot(a), a]),
             );
             for (const m of matchs) {
                 if (!estPronosticVeloraArchive(m)) continue;
                 if (!estCoupEnvoiPasse(m)) continue;
-                const id = String(m.id_match || '');
+                const id = idMatchBaseFoot(m.id_match);
                 if (!id) continue;
-                const existant = parId.get(id);
-                if (existant && archiveFootEstValidee(existant)) continue;
-                parId.set(id, construireArchiveFootDepuisMatch(m));
+                const marche = String(
+                    m.opportunite_type || m.value_bet_type || inferVeloraMarcheType(m) || '1n2',
+                ).toLowerCase();
+                const clePrincipale = marche === '1n2' ? id : `${id}:${marche}`;
+                const existant = parId.get(clePrincipale);
+                if (!existant || !archiveFootEstValidee(existant)) {
+                    const arch = construireArchiveFootDepuisMatch(m);
+                    arch.archive_key = clePrincipale;
+                    parId.set(clePrincipale, arch);
+                }
+                if (marche === 'score_exact') continue;
+                const prop = extrairePropositionScoreExact(m);
+                if (!prop) continue;
+                const cleExact = `${id}:score_exact`;
+                const existantExact = parId.get(cleExact);
+                if (!existantExact || !archiveFootEstValidee(existantExact)) {
+                    parId.set(cleExact, construireArchiveScoreExactDepuisMatch(m, prop));
+                }
             }
             ecrireArchivesFootLocal([...parId.values()]);
         }
@@ -5789,7 +5866,7 @@
                 (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
                     - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
             );
-            return list.slice(0, 8).map(archiveVersHistoriqueFootItem);
+            return list.slice(0, 12).map(archiveVersHistoriqueFootItem);
         }
 
         async function preparerHistoriqueFootCommunaute() {
@@ -5832,11 +5909,11 @@
             };
             /* local puis distant : à qualité égale, velora_archives_foot.json l'emporte */
             for (const a of [...local, ...distant]) {
-                const id = String(a?.id_match || '');
-                if (!id) continue;
-                const prev = parId.get(id);
+                const key = storageKeyArchiveFoot(a);
+                if (!key) continue;
+                const prev = parId.get(key);
                 if (!prev || scoreQualite(a) >= scoreQualite(prev)) {
-                    parId.set(id, a);
+                    parId.set(key, a);
                 }
             }
             return [...parId.values()].sort(
@@ -6166,6 +6243,14 @@
                 icon: '⚽',
                 heroLabel: 'Pari recommandé — Buteur',
             },
+            buteur_mi_temps: {
+                type: 'buteur_mi_temps',
+                alertClass: 'alert-buteur',
+                cardClass: 'opp-alert-card--buteur',
+                badgeLabel: 'VALUE BUTEUR MI-TEMPS',
+                icon: '⏱️',
+                heroLabel: 'Pari recommandé — Buteur mi-temps',
+            },
             over_25: {
                 type: 'over_25',
                 alertClass: 'alert-over-25',
@@ -6184,15 +6269,25 @@
             },
         };
 
+        function opportuniteTypeEffectif(m) {
+            const direct = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
+            if (direct && direct !== '—' && direct !== 'none') return direct;
+            const premVb = (m?.premium_analysis?.value_bets || [])[0];
+            if (premVb?.market) return String(premVb.market).toLowerCase();
+            const pp = m?.primary_pick || m?.free_analysis?.primary_pick;
+            if (pp?.market) return String(pp.market).toLowerCase();
+            return direct;
+        }
+
         function getOpportuniteMeta(m) {
-            const t = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
+            const t = opportuniteTypeEffectif(m);
             if (t && OPP_TYPE_META[t]) return OPP_TYPE_META[t];
             return classifyConseilAlert(m?.opportunite_detail || m?.conseil);
         }
 
         function oppCacheMarcheSecondaire(m) {
-            const t = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
-            return ['buteur', 'score_exact', 'btts', 'over_25'].includes(t);
+            const t = opportuniteTypeEffectif(m);
+            return ['buteur', 'buteur_mi_temps', 'score_exact', 'btts', 'over_25'].includes(t);
         }
 
         function htmlOppNeonHero(m) {
@@ -6267,7 +6362,20 @@
                     icon: '🔥',
                 };
             }
-            if (t.includes('buteur')) {
+            if (
+                /mi[-\s]?temps|mi[-\s]?tps|1[èe]re\s*mi/i.test(t)
+                && (t.includes('buteur') || t.includes('marqueur'))
+            ) {
+                return {
+                    type: 'buteur_mi_temps',
+                    alertClass: 'alert-buteur',
+                    cardClass: 'opp-alert-card--buteur',
+                    footCardClass: 'foot-card--buteur',
+                    badgeLabel: 'VALUE BUTEUR MI-TEMPS',
+                    icon: '⏱️',
+                };
+            }
+            if (t.includes('buteur') || t.includes('marqueur')) {
                 return {
                     type: 'buteur',
                     alertClass: 'alert-buteur',
@@ -6366,6 +6474,12 @@
             return top.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
         }
 
+        function scorersListFromMarches(ms, key) {
+            const raw = ms && ms[key];
+            if (!buteursMatchUtilisables(raw)) return [];
+            return raw.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
+        }
+
         function buteursFromMatch(m) {
             const prem = m?.premium_analysis;
             if (prem) {
@@ -6375,9 +6489,19 @@
             if (Array.isArray(m?.buteurs) && m.buteurs.length) {
                 return m.buteurs.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
             }
-            const bm = m?.marches_supplementaires?.buteur_match;
-            if (buteursMatchUtilisables(bm)) return bm;
-            return [];
+            return scorersListFromMarches(m?.marches_supplementaires, 'buteur_match');
+        }
+
+        function buteursMiTempsFromMatch(m) {
+            const prem = m?.premium_analysis;
+            if (prem) {
+                const fromPrem = premiumScorersList(prem, 'buteur_mi_temps');
+                if (fromPrem.length) return fromPrem;
+            }
+            if (Array.isArray(m?.buteurs_mi_temps) && m.buteurs_mi_temps.length) {
+                return m.buteurs_mi_temps.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
+            }
+            return scorersListFromMarches(m?.marches_supplementaires, 'buteur_mi_temps');
         }
 
         function scoreExactAttenduFromMatch(m) {
@@ -6739,7 +6863,7 @@
             const out = (archives || []).map((a) => {
                 if (!archiveFootEstEnAttente(a)) return a;
                 if (!archiveFootMatchDejaJoue(a)) return a;
-                const sc = scoreDepuisResultatsFoot(a.id_match);
+                const sc = scoreDepuisResultatsFoot(idMatchBaseFoot(a.id_match));
                 if (!sc) return a;
                 const valide = validerArchiveFootClient(a, sc.dom, sc.ext);
                 if (!valide || !archiveFootEstValidee(valide)) return a;
@@ -6893,12 +7017,15 @@
         }
 
         function marchesPlusVisible(m) {
-            return buteursFromMatch(m).length > 0 || scoresExactFromMatch(m).length > 0;
+            return buteursFromMatch(m).length > 0
+                || buteursMiTempsFromMatch(m).length > 0
+                || scoresExactFromMatch(m).length > 0;
         }
 
         function marchesDetailVisible(ms) {
             if (!ms || typeof ms !== 'object') return false;
-            return buteursMatchUtilisables(ms.buteur_match);
+            return buteursMatchUtilisables(ms.buteur_match)
+                || buteursMatchUtilisables(ms.buteur_mi_temps);
         }
 
         function htmlMarchesPillsRow(m, theme = 'foot', wrap = true) {
@@ -6984,10 +7111,12 @@
                 const prem = m.premium_analysis;
                 const msBase = m.marches_supplementaires || {};
                 const buteurLegacy = premiumScorersList(prem, 'buteur_match');
+                const mtLegacy = premiumScorersList(prem, 'buteur_mi_temps');
                 return {
                     ...m,
                     premium_analysis: prem,
                     buteurs: buteurLegacy.length ? buteurLegacy : m.buteurs,
+                    buteurs_mi_temps: mtLegacy.length ? mtLegacy : m.buteurs_mi_temps,
                 };
             }
             const id = String(m?.id_match || '').trim();
@@ -7013,6 +7142,7 @@
                     ...msPrem,
                     plus_moins_buts: msPrem.plus_moins_buts || msBase.plus_moins_buts,
                     buteur_match: msPrem.buteur_match ?? msBase.buteur_match,
+                    buteur_mi_temps: msPrem.buteur_mi_temps ?? msBase.buteur_mi_temps,
                 },
             };
         }
@@ -7023,6 +7153,7 @@
             const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
             let topScores = scoresExactFromMatch(enr).slice(0, 3);
             let buteurs = buteursFromMatch(enr).slice(0, 4);
+            let buteursMiTemps = buteursMiTempsFromMatch(enr).slice(0, 4);
             let doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
             if (!topScores.length) {
                 topScores = [
@@ -7041,7 +7172,14 @@
             if (!doubles.length) {
                 doubles = [{ joueur: 'Doublé A + B', cote: 12.0 }];
             }
-            return { topScores, buteurs, doubles, valueBets, hasRealPremium: !!(prem && (m.__veloraV2 || prem.score_exact)) };
+            return {
+                topScores,
+                buteurs,
+                buteursMiTemps,
+                doubles,
+                valueBets,
+                hasRealPremium: !!(prem && (m.__veloraV2 || prem.score_exact)),
+            };
         }
 
         function htmlPremiumScoresPanel(scores, theme) {
@@ -7077,9 +7215,34 @@
                 </div>`;
         }
 
+        function valuePickOpposesPronostic(m, pp) {
+            const official = pronosticVelora1n2Pick(m);
+            if (!official || !pp) return false;
+            const mk = String(pp.market || '').toLowerCase();
+            const pk = String(pp.pick || '').trim();
+            if (mk === '1n2') return pk && pk !== official;
+            if (mk === 'dc_1x') return official === '2';
+            if (mk === 'dc_x2') return official === '1';
+            return false;
+        }
+
+        function libellePronosticCarte(m) {
+            const label = String(m?.pronostic_label || '').trim();
+            if (label) return label;
+            const conseil = String(m?.conseil || '').trim();
+            if (conseil) return conseil.split('—')[0].trim();
+            const pick = pronosticVelora1n2Pick(m);
+            if (!pick) return '';
+            const dom = String(m?.equipe_domicile || 'Domicile');
+            const ext = String(m?.equipe_exterieur || 'Extérieur');
+            const map = { 1: `Victoire ${dom}`, N: 'Match nul', 2: `Victoire ${ext}` };
+            return map[pick] || '';
+        }
+
         function libelleValuePickAffichage(m) {
             const pp = primaryPickFromMatch(m);
             if (!pp || !pp.market) return '';
+            if (valuePickOpposesPronostic(m, pp)) return '';
             let label = String(pp.label || '').trim();
             if (!label) {
                 label = String(pp.conseil_short || '')
@@ -7093,10 +7256,11 @@
         }
 
         function htmlBlocPronosticValue(m) {
-            const pronostic = String(m?.pronostic_label || '').trim();
+            const pronostic = libellePronosticCarte(m);
             const valueLabel = libelleValuePickAffichage(m);
-            const hasValueBrut = !!valueLabel
-                || (Array.isArray(m?.free_value_bets) && m.free_value_bets.length > 0);
+            const pp = primaryPickFromMatch(m);
+            const valueCoherent = pp && !valuePickOpposesPronostic(m, pp);
+            const hasValueBrut = !!valueLabel && valueCoherent;
             const hasValue = hasValueBrut && estVeloraPremiumFoot();
             if (!pronostic && !hasValue) return '';
             const gridCls = pronostic && hasValue ? 'velora-pronostic-value-grid velora-pronostic-value-grid--duo' : 'velora-pronostic-value-grid';
@@ -7168,22 +7332,33 @@
             const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
             const topScores = scoresExactFromMatch(enr).slice(0, 3);
             const buteurs = buteursFromMatch(enr).slice(0, 4);
+            const buteursMiTemps = buteursMiTempsFromMatch(enr).slice(0, 4);
             const doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
             const hasScores = topScores.length > 0;
             const hasButeurs = buteurs.length > 0;
+            const hasButeursMiTemps = buteursMiTemps.length > 0;
             const hasDoubles = doubles.length > 0;
             const hasValueBets = valueBets.length > 0;
-            const hasAny = hasScores || hasButeurs || hasDoubles || hasValueBets;
+            const hasAny = hasScores || hasButeurs || hasButeursMiTemps || hasDoubles || hasValueBets;
             if (!enrich) {
-                return { hasScores, hasButeurs, hasDoubles, hasValueBets, hasAny };
+                return {
+                    hasScores,
+                    hasButeurs,
+                    hasButeursMiTemps,
+                    hasDoubles,
+                    hasValueBets,
+                    hasAny,
+                };
             }
             return {
                 topScores,
                 buteurs,
+                buteursMiTemps,
                 doubles,
                 valueBets,
                 hasScores,
                 hasButeurs,
+                hasButeursMiTemps,
                 hasDoubles,
                 hasValueBets,
                 hasAny,
@@ -7223,27 +7398,33 @@
                 }
                 const scoresPanel = htmlPremiumScoresPanel(data.topScores, 'foot');
                 const buteursPanel = htmlPremiumButeursPanel(data.buteurs, 'Buteurs match', 'foot');
+                const buteursMtPanel = htmlPremiumButeursPanel(data.buteursMiTemps, 'Buteurs mi-temps', 'foot');
                 const doublesPanel = htmlPremiumButeursPanel(data.doubles, 'Doublés buteurs', 'foot');
-                const cols = [scoresPanel, buteursPanel, doublesPanel].filter(Boolean).length > 1
-                    ? 'sm:grid-cols-2 lg:grid-cols-3'
-                    : 'grid-cols-1';
+                const panels = [scoresPanel, buteursPanel, buteursMtPanel, doublesPanel].filter(Boolean);
+                const cols = panels.length > 2
+                    ? 'sm:grid-cols-2 lg:grid-cols-2'
+                    : panels.length > 1
+                        ? 'sm:grid-cols-2'
+                        : 'grid-cols-1';
                 const vb = data.valueBets.length
-                    ? `<div class="mb-2 flex flex-wrap gap-1">${data.valueBets.slice(0, 2).map((vb) =>
-                        `<span class="velora-marche-pill velora-marche-pill--highlight">💎 ${escHtml(vb.label || vb.pick || 'Value')}</span>`
-                    ).join('')}</div>`
+                    ? `<div class="mb-2 flex flex-wrap gap-1">${data.valueBets.slice(0, 3).map((vb) => {
+                        const icon = String(vb.market || '').includes('mi_temps') ? '⏱️' : '💎';
+                        return `<span class="velora-marche-pill velora-marche-pill--highlight">${icon} ${escHtml(vb.label || vb.pick || 'Value')}</span>`;
+                    }).join('')}</div>`
                     : '';
                 return `
                     <div class="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-3" role="region" aria-label="Analyse premium">
                         <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Analyse Premium</p>
                         ${vb}
-                        <div class="grid gap-2 ${cols}">${scoresPanel}${buteursPanel}${doublesPanel}</div>
+                        <div class="grid gap-2 ${cols}">${panels.join('')}</div>
                     </div>`;
             }
 
             const counts = readPremiumAnalysisRaw(m, { enrich: false });
             const resumeParts = [];
             if (counts.hasScores) resumeParts.push('scores exacts');
-            if (counts.hasButeurs) resumeParts.push('buteurs');
+            if (counts.hasButeurs) resumeParts.push('buteurs match');
+            if (counts.hasButeursMiTemps) resumeParts.push('buteurs mi-temps');
             if (counts.hasDoubles) resumeParts.push('doublés');
             const resume = resumeParts.length
                 ? `Moteur Velora : ${resumeParts.join(', ')} analysés pour ce match`
@@ -7265,27 +7446,76 @@
                 </div>`;
         }
 
+        function htmlBlocScorersMarches(ms, key, title, theme) {
+            const raw = ms && ms[key];
+            if (!buteursMatchUtilisables(raw)) return '';
+            const badgeCls = theme === 'opp'
+                ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
+                : 'velora-buteur-badge border-cyan-500/20 text-gray-200';
+            const badges = raw
+                .filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null)
+                .slice(0, 4)
+                .map((b) => `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`)
+                .join('');
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">${escHtml(title)}</p>
+                    <div class="flex flex-wrap gap-1.5">${badges}</div>
+                </div>`;
+        }
+
+        function htmlOppMarchesSecondaires(m) {
+            const enr = footMatchEnrichiPremium(m);
+            const type = opportuniteTypeEffectif(enr);
+            if (!['buteur', 'buteur_match', 'buteur_mi_temps'].includes(type)) return '';
+            const panels = [];
+            const pushPanel = (list, title) => {
+                const html = htmlPremiumButeursPanel(list, title, 'opp');
+                if (html) panels.push(html);
+            };
+            if (type === 'buteur_mi_temps') {
+                pushPanel(buteursMiTempsFromMatch(enr).slice(0, 4), 'Buteurs mi-temps');
+            } else {
+                pushPanel(buteursFromMatch(enr).slice(0, 4), 'Buteurs match');
+                if (type === 'buteur' && buteursMiTempsFromMatch(enr).length) {
+                    pushPanel(buteursMiTempsFromMatch(enr).slice(0, 4), 'Buteurs mi-temps');
+                }
+            }
+            if (!panels.length) return '';
+            const cols = panels.length > 1 ? 'sm:grid-cols-2' : 'grid-cols-1';
+            return `<div class="grid gap-2 ${cols}">${panels.join('')}</div>`;
+        }
+
         function htmlVoirPlusParis(m, theme = 'foot') {
-            const buteurs = buteursFromMatch(m);
-            const scores = scoresExactFromMatch(m);
-            const legacyMs = m.marches_supplementaires;
-            const legacyDetail = marchesDetailVisible(legacyMs) && !buteurs.length
-                ? htmlBlocButeursMarches(legacyMs, theme)
+            const enr = footMatchEnrichiPremium(m);
+            const buteurs = buteursFromMatch(enr);
+            const buteursMt = buteursMiTempsFromMatch(enr);
+            const scores = scoresExactFromMatch(enr);
+            const legacyMs = enr.marches_supplementaires;
+            const legacyBm = !buteurs.length
+                ? htmlBlocScorersMarches(legacyMs, 'buteur_match', 'Buteurs match', theme)
                 : '';
-            if (!buteurs.length && !scores.length && !legacyDetail) return '';
+            const legacyMt = !buteursMt.length
+                ? htmlBlocScorersMarches(legacyMs, 'buteur_mi_temps', 'Buteurs mi-temps', theme)
+                : '';
+            if (!buteurs.length && !buteursMt.length && !scores.length && !legacyBm && !legacyMt) return '';
 
             const badgeCls = theme === 'opp'
                 ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
                 : 'velora-buteur-badge border-cyan-500/20 text-gray-200';
-            const buteursHtml = buteurs.length
+            const blocScorers = (list, title) => (list.length
                 ? `
                 <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85'}">Buteurs</p>
-                    <div class="flex flex-wrap gap-1.5">${buteurs.slice(0, 4).map((b) => `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`).join('')}</div>
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85'}">${escHtml(title)}</p>
+                    <div class="flex flex-wrap gap-1.5">${list.slice(0, 4).map((b) => `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`).join('')}</div>
                 </div>`
-                : '';
+                : '');
+            const buteursHtml = blocScorers(buteurs, 'Buteurs match') || legacyBm;
+            const buteursMtHtml = blocScorers(buteursMt, 'Buteurs mi-temps') || legacyMt;
             const scoresHtml = htmlBlocScoresExactListe(scores, theme);
-            const cols = (buteursHtml && scoresHtml) ? 'sm:grid-cols-2' : 'grid-cols-1';
+            const nbCols = [buteursHtml, buteursMtHtml, scoresHtml].filter(Boolean).length;
+            const cols = nbCols > 1 ? 'sm:grid-cols-2' : 'grid-cols-1';
             const borderCls = theme === 'opp' ? 'border-amber-500/20 bg-amber-500/[0.04]' : 'border-white/10 bg-white/[0.02]';
             const summaryCls = theme === 'opp'
                 ? 'text-gray-400 group-open:text-amber-300'
@@ -7296,7 +7526,7 @@
                         Voir plus de paris (buteurs &amp; scores exacts)
                     </summary>
                     <div class="velora-marches-panel mt-2 grid ${cols} gap-2 border-t border-white/10 pt-2">
-                        ${buteursHtml}${scoresHtml}${legacyDetail}
+                        ${buteursHtml}${buteursMtHtml}${scoresHtml}
                     </div>
                 </details>`;
         }
@@ -7336,29 +7566,15 @@
         }
 
         function htmlBlocButeursMarches(ms, theme) {
-            const raw = ms && ms.buteur_match;
-            if (!buteursMatchUtilisables(raw)) return '';
-            const badgeCls = theme === 'opp'
-                ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
-                : 'velora-buteur-badge border-cyan-500/20 text-gray-200';
-            const badges = raw
-                .filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null)
-                .slice(0, 3)
-                .map((b) => `<span class="${badgeCls}">${escHtml(b.joueur)} · ${fmtCoteMarche(b.cote)}</span>`)
-                .join('');
-            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
-            return `
-                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Buteurs</p>
-                    <div class="flex flex-wrap gap-1.5">${badges}</div>
-                </div>`;
+            return htmlBlocScorersMarches(ms, 'buteur_match', 'Buteurs match', theme);
         }
 
         function htmlMarchesDetailAccordion(m, theme = 'foot') {
             const ms = m.marches_supplementaires;
             if (!marchesDetailVisible(ms)) return '';
             const buteurs = htmlBlocButeursMarches(ms, theme);
-            const cols = 'grid-cols-1';
+            const buteursMt = htmlBlocScorersMarches(ms, 'buteur_mi_temps', 'Buteurs mi-temps', theme);
+            const cols = buteurs && buteursMt ? 'sm:grid-cols-2' : 'grid-cols-1';
             const borderCls = theme === 'opp' ? 'border-amber-500/20 bg-amber-500/[0.04]' : 'border-white/10 bg-white/[0.02]';
             const summaryCls = theme === 'opp'
                 ? 'text-gray-400 group-open:text-amber-300'
@@ -7369,7 +7585,7 @@
                         📊 Voir l'analyse détaillée (buteurs)
                     </summary>
                     <div class="velora-marches-panel mt-2 grid ${cols} gap-2 border-t border-white/10 pt-2">
-                        ${buteurs}
+                        ${buteurs}${buteursMt}
                     </div>
                 </details>`;
         }
@@ -7848,15 +8064,24 @@
                 const faSrc = src.free_analysis || {};
                 const faPrem = m.free_analysis || {};
                 return normalizeFootMatch({
-                    ...src,
                     ...m,
+                    ...src,
+                    conseil: src.conseil || m.conseil,
+                    velora_pick_1n2: src.velora_pick_1n2 || m.velora_pick_1n2,
                     probabilites: src.probabilites || m.probabilites,
                     probabilites_marche: src.probabilites_marche || m.probabilites_marche,
+                    top_scores: src.top_scores || m.top_scores,
                     free_analysis: {
-                        ...faSrc,
                         ...faPrem,
-                        top_scores_modele: faSrc.top_scores_modele || faPrem.top_scores_modele,
+                        ...faSrc,
                         pronostic_1n2: faSrc.pronostic_1n2 || faPrem.pronostic_1n2 || m.velora_pick_1n2,
+                        pronostic_label: faSrc.pronostic_label || faPrem.pronostic_label,
+                        probabilites: faSrc.probabilites || faPrem.probabilites,
+                        probabilites_marche: faSrc.probabilites_marche || faPrem.probabilites_marche,
+                        value_bets: Array.isArray(faSrc.value_bets) ? faSrc.value_bets : (faPrem.value_bets || []),
+                        primary_pick: faSrc.primary_pick ?? faPrem.primary_pick ?? null,
+                        display_badges: faSrc.display_badges ?? faPrem.display_badges ?? [],
+                        top_scores_modele: faSrc.top_scores_modele || faPrem.top_scores_modele,
                         cotes_1n2: faPrem.cotes_1n2 || faSrc.cotes_1n2 || m.cotes,
                     },
                 });
@@ -7922,7 +8147,7 @@
             const p2 = Number(p['2']) || 0;
             const alertMeta = getOpportuniteMeta(m);
             const cardTheme = alertMeta?.cardClass || '';
-            const oppType = String(m.opportunite_type || m.value_bet_type || alertMeta?.type || 'standard');
+            const oppType = opportuniteTypeEffectif(m) || alertMeta?.type || 'standard';
             const hide1n2 = oppCacheMarcheSecondaire(m);
             const signalBadges = htmlVeloraAnalyseBadges(m, 'opp', 'signals');
             const blocsPronosticValue = hide1n2 ? '' : htmlBlocPronosticValue(m);
@@ -7944,7 +8169,9 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${htmlVelora1n2PickRow(m, 'opp')}`;
-            const extraMarches = hide1n2 ? '' : `${htmlMarchesPillsRow(m, 'opp')}${htmlVoirPlusParis(m, 'opp')}`;
+            const extraMarches = hide1n2
+                ? htmlOppMarchesSecondaires(m)
+                : `${htmlMarchesPillsRow(m, 'opp')}${htmlVoirPlusParis(m, 'opp')}`;
             const scoresBloc = hide1n2
                 ? ''
                 : `

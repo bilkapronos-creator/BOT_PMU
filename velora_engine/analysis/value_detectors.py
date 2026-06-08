@@ -214,6 +214,28 @@ def _detect_team_goals_side(
     return best[1] if best else None
 
 
+def _filter_value_bets_vs_pronostic(
+    pool: list[ValueBet],
+    pronostic_1n2: str | None,
+) -> list[ValueBet]:
+    pick = str(pronostic_1n2 or "").strip()
+    if pick not in ("1", "N", "2", "dc_1x", "dc_x2"):
+        return pool
+
+    def _opp(vb: ValueBet) -> bool:
+        mk = str(vb.market or "").lower()
+        pk = str(vb.pick or "").strip()
+        if mk == "1n2":
+            return pk != pick
+        if mk == "dc_1x":
+            return pick == "2"
+        if mk == "dc_x2":
+            return pick == "1"
+        return False
+
+    return [v for v in pool if not _opp(v)]
+
+
 def detect_all_free_values(
     *,
     cotes_1n2: dict[str, float | None],
@@ -222,6 +244,7 @@ def detect_all_free_values(
     les_deux_marquent: int | None = None,
     home: str = "",
     away: str = "",
+    pronostic_1n2: str | None = None,
 ) -> FreeValueResult:
     pool: list[ValueBet] = []
     pool.extend(detect_value_1n2(cotes_1n2, probs, home=home, away=away))
@@ -242,6 +265,8 @@ def detect_all_free_values(
         tg = _detect_team_goals_side("away", "team_goals_away", markets.team_goals["away"])
         if tg:
             pool.append(tg)
+
+    pool = _filter_value_bets_vs_pronostic(pool, pronostic_1n2)
 
     primary_vb: ValueBet | None = None
     for market_id in FREE_PRIMARY_ORDER:

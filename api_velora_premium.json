@@ -999,9 +999,9 @@
         "2": 3.3
       },
       "probabilites": {
-        "1": 33,
-        "N": 29,
-        "2": 38
+        "1": 47,
+        "N": 22,
+        "2": 31
       },
       "markets_raw": {
         "over_under_total": {},
@@ -1217,7 +1217,12 @@
     },
     "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
     "velora_pick_1n2": "2",
-    "velora_confidence": 56.4
+    "velora_confidence": 56.4,
+    "probabilites": {
+      "1": 47,
+      "N": 22,
+      "2": 31
+    }
   },
   {
     "id_match": "71601488",
@@ -1499,40 +1504,15 @@
         "2": 15.0
       },
       "probabilites": {
-        "1": 33,
-        "N": 33,
-        "2": 34
+        "1": 80,
+        "N": 13,
+        "2": 7
       },
       "markets_raw": {
         "over_under_total": {},
         "team_goals": {}
       },
-      "value_bets": [
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Irlande du Nord",
-          "cote": 15.0,
-          "edge": 5.1,
-          "stars": 5,
-          "is_primary": true
-        },
-        {
-          "market": "dc_x2",
-          "pick": "dc_x2",
-          "label": "Double chance X2",
-          "edge": 5.1,
-          "stars": 5,
-          "is_primary": false
-        }
-      ],
-      "primary_pick": {
-        "market": "1n2",
-        "pick": "2",
-        "label": "Victoire Irlande du Nord",
-        "cote": 15.0,
-        "conseil_short": "🔥 Value Bet — Victoire Irlande du Nord @ 15.00"
-      },
+      "value_bets": [],
       "display_badges": [],
       "top_scores_modele": [
         {
@@ -1581,8 +1561,7 @@
       "conseil": "Victoire France — forme favorable France",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "1n2",
-      "is_opportunite": true
+      "is_opportunite": false
     },
     "marches_supplementaires": {
       "plus_moins_buts": {
@@ -1706,7 +1685,12 @@
     },
     "conseil": "Victoire France — forme favorable France",
     "velora_pick_1n2": "1",
-    "velora_confidence": 61.1
+    "velora_confidence": 61.1,
+    "probabilites": {
+      "1": 80,
+      "N": 13,
+      "2": 7
+    }
   },
   {
     "id_match": "71702730",
@@ -1748,24 +1732,7 @@
         "over_under_total": {},
         "team_goals": {}
       },
-      "value_bets": [
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Junior De Barranquilla",
-          "cote": 5.0,
-          "edge": 2.05,
-          "stars": 5,
-          "is_primary": true
-        }
-      ],
-      "primary_pick": {
-        "market": "1n2",
-        "pick": "2",
-        "label": "Victoire Junior De Barranquilla",
-        "cote": 5.0,
-        "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 5.00"
-      },
+      "value_bets": [],
       "display_badges": [],
       "top_scores_modele": [
         {
@@ -1814,8 +1781,7 @@
       "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "1n2",
-      "is_opportunite": true
+      "is_opportunite": false
     },
     "marches_supplementaires": {
       "plus_moins_buts": {

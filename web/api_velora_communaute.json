@@ -50,12 +50,12 @@
     "membres_actifs": 2
   },
   "foot": {
-    "taux": 52,
+    "taux": 43,
     "victoires": 12,
-    "total": 23,
-    "mises_cumulees": 230.0,
-    "profit_net": -67.9,
-    "roi_pct": -29.5,
+    "total": 28,
+    "mises_cumulees": 280.0,
+    "profit_net": -117.9,
+    "roi_pct": -42.1,
     "detail_par_type_pari": {
       "Pronostic 1N2": {
         "total": 2,
@@ -66,6 +66,11 @@
         "total": 3,
         "succes": 3,
         "taux": 100
+      },
+      "Score exact": {
+        "total": 5,
+        "succes": 0,
+        "taux": 0
       },
       "Over 2.5": {
         "total": 12,
@@ -101,6 +106,13 @@
         "taux": 71,
         "profit_net": -8.1
       },
+      "score_exact": {
+        "label": "Score exact",
+        "total": 5,
+        "succes": 0,
+        "taux": 0,
+        "profit_net": -50.0
+      },
       "over_25": {
         "label": "Over 2.5",
         "total": 12,
@@ -132,9 +144,19 @@
         "btts": 1.06,
         "team_goals_home": 1.08,
         "team_goals_away": 1.08,
-        "score_exact": 1.15
+        "score_exact": 1.23
       },
       "suggestions": [
+        {
+          "marche": "score_exact",
+          "label": "Score exact",
+          "edge_key": "score_exact",
+          "edge_actuel": 1.15,
+          "edge_suggere": 1.23,
+          "taux_pct": 0,
+          "echantillon": 5,
+          "raison": "0% de réussite sur 5 matchs — seuil relevé"
+        },
         {
           "marche": "over_25",
           "label": "Over 2.5",
@@ -149,6 +171,16 @@
       "echantillon_min": 5
     },
     "historique_matchs": [
+      {
+        "equipe_domicile": "Pays-Bas",
+        "equipe_exterieur": "Ouzbékistan",
+        "score_final": "",
+        "type_pari_foot": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
+        "reussi_foot": null,
+        "marche": "1n2",
+        "en_attente": true,
+        "match_start_ts": 1780944300
+      },
       {
         "equipe_domicile": "Maroc",
         "equipe_exterieur": "Norvège",
@@ -168,6 +200,16 @@
         "marche": "1n2",
         "en_attente": false,
         "match_start_ts": 1780858800
+      },
+      {
+        "equipe_domicile": "Pays-Bas",
+        "equipe_exterieur": "Ouzbékistan",
+        "score_final": "",
+        "type_pari_foot": "Score exact 3-0 @ 7",
+        "reussi_foot": null,
+        "marche": "score_exact",
+        "en_attente": true,
+        "match_start_ts": 1780944300
       },
       {
         "equipe_domicile": "Las Palmas",
@@ -190,6 +232,16 @@
         "match_start_ts": 1780855200
       },
       {
+        "equipe_domicile": "Maroc",
+        "equipe_exterieur": "Norvège",
+        "score_final": "1-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "en_attente": false,
+        "match_start_ts": 1780858800
+      },
+      {
         "equipe_domicile": "Danemark",
         "equipe_exterieur": "Ukraine",
         "score_final": "2-1",
@@ -208,6 +260,16 @@
         "marche": "over_25",
         "en_attente": false,
         "match_start_ts": 1780426800
+      },
+      {
+        "equipe_domicile": "Grèce",
+        "equipe_exterieur": "Italie",
+        "score_final": "0-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "en_attente": false,
+        "match_start_ts": 1780858800
       },
       {
         "equipe_domicile": "Autriche",
@@ -232,15 +294,30 @@
     ]
   },
   "global": {
-    "taux": 50,
+    "taux": 42,
     "victoires": 13,
-    "total": 26,
-    "mises_cumulees": 260.0,
-    "profit_net": -72.9,
-    "roi_pct": -28.0
+    "total": 31,
+    "mises_cumulees": 310.0,
+    "profit_net": -122.9,
+    "roi_pct": -39.6
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-08T18:19:11.909891+00:00"
+    "genere_at": "2026-06-08T18:55:43.009766+00:00",
+    "archives_foot": 28,
+    "nouvelles_validations": 5,
+    "sync_winamax": {
+      "demandes": 0,
+      "recuperes": 0,
+      "erreur": null,
+      "ids_interroges": []
+    },
+    "resolution_en_attente": {
+      "en_attente_avant": 7,
+      "resolus": 5,
+      "encore_attente": 2,
+      "scores_recuperes": 0,
+      "erreur": null
+    }
   }
 }

@@ -140,6 +140,40 @@ def test_ensure_match_scores_coherent_ext():
         assert h < a
 
 
+def test_sanitize_conflicting_value_picks_france_irlande():
+    from velora_engine.analysis.match_scores import sanitize_conflicting_value_picks
+
+    match = {
+        "equipe_domicile": "France",
+        "equipe_exterieur": "Irlande du Nord",
+        "velora_pick_1n2": "1",
+        "conseil": "Victoire France — forme favorable France",
+        "free_analysis": {
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire France",
+            "probabilites": {"1": 81, "N": 14, "2": 5},
+            "value_bets": [
+                {
+                    "market": "1n2",
+                    "pick": "2",
+                    "label": "Victoire Irlande du Nord",
+                    "cote": 15.0,
+                    "edge": 5.1,
+                }
+            ],
+            "primary_pick": {
+                "market": "1n2",
+                "pick": "2",
+                "label": "Victoire Irlande du Nord",
+                "cote": 15.0,
+            },
+        },
+    }
+    fixed = sanitize_conflicting_value_picks(match)
+    assert fixed["free_analysis"].get("primary_pick") is None
+    assert fixed["free_analysis"].get("value_bets") == []
+
+
 def test_ensure_match_scores_ignore_conflicting_primary_pick():
     from velora_engine.analysis.match_scores import ensure_match_scores_coherent
 

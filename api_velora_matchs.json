@@ -659,9 +659,9 @@
           "2": 2.2
         },
         "probabilites": {
-          "1": 31,
-          "N": 31,
-          "2": 38
+          "1": 33,
+          "N": 25,
+          "2": 42
         },
         "probabilites_marche": {
           "1": 30,
@@ -750,7 +750,12 @@
           "prob": 1
         }
       ],
-      "velora_pick_1n2": "N"
+      "velora_pick_1n2": "N",
+      "probabilites": {
+        "1": 33,
+        "N": 25,
+        "2": 42
+      }
     },
     {
       "id_match": "71702730",

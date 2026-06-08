@@ -17,7 +17,7 @@ from stats_pmu import (
 OUT = Path(__file__).resolve().parent / "api_velora_communaute.json"
 
 
-def _extraire_historique_foot(archives: list, limit: int = 8) -> list[dict]:
+def _extraire_historique_foot(archives: list, limit: int = 12) -> list[dict]:
     web_dir = Path(__file__).resolve().parent
     if str(web_dir) not in sys.path:
         sys.path.insert(0, str(web_dir))
@@ -36,8 +36,21 @@ def _extraire_historique_foot(archives: list, limit: int = 8) -> list[dict]:
         key=lambda a: a.get("match_start_ts") or a.get("timestamp") or 0,
         reverse=True,
     )
+    # Inclure au moins quelques scores exacts récents (souvent exclus par la limite stricte 1N2)
+    exacts = [a for a in candidats if str(a.get("marche") or "").lower() == "score_exact"]
+    principaux = [a for a in candidats if a not in exacts]
+    melange: list = []
+    ei = 0
+    for a in principaux:
+        melange.append(a)
+        if ei < len(exacts) and len(melange) % 3 == 0:
+            melange.append(exacts[ei])
+            ei += 1
+    while ei < len(exacts):
+        melange.append(exacts[ei])
+        ei += 1
     out = []
-    for a in candidats[:limit]:
+    for a in melange[:limit]:
         en_attente = _est_en_attente(a)
         type_pari = (
             a.get("type_pari_foot")
