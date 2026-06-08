@@ -5481,6 +5481,8 @@
                     display_badges: displayBadges,
                     primary_pick: primary,
                     free_value_bets: free.value_bets || [],
+                    conseils_intelligents: free.conseils_intelligents || [],
+                    meilleur_conseil: free.meilleur_conseil || null,
                     opportunite_type: leg.opportunite_type || primary?.market || raw.opportunite_type,
                     is_opportunite: leg.is_opportunite != null
                         ? leg.is_opportunite
@@ -7262,6 +7264,45 @@
             return cote ? `${label} · Cote ${cote}` : label;
         }
 
+        function conseilsIntelligentsFromMatch(m) {
+            const fa = m?.free_analysis || {};
+            const list = Array.isArray(m?.conseils_intelligents)
+                ? m.conseils_intelligents
+                : (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents : []);
+            return list.filter((c) => c && c.label);
+        }
+
+        function htmlConseilsIntelligents(m) {
+            const conseils = conseilsIntelligentsFromMatch(m);
+            if (!conseils.length) return '';
+            const tierCls = {
+                excellent: 'border-emerald-500/35 bg-emerald-500/10 text-emerald-100',
+                bon: 'border-cyan-500/30 bg-cyan-500/8 text-cyan-50',
+                prudent: 'border-amber-500/30 bg-amber-500/8 text-amber-100',
+                value: 'border-amber-400/25 bg-amber-500/6 text-amber-50',
+            };
+            const rows = conseils.slice(0, 5).map((c, i) => {
+                const cls = tierCls[c.tier] || tierCls.bon;
+                const cote = c.cote ? `@ ${Number(c.cote).toFixed(2)}` : '';
+                const stars = c.stars ? '★'.repeat(Math.min(5, Number(c.stars))) : '';
+                const raison = c.raison ? `<p class="mt-1 text-[10px] leading-snug opacity-75">${escHtml(c.raison)}</p>` : '';
+                return `<li class="rounded-lg border px-3 py-2 ${cls}">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="text-xs font-bold leading-snug">${i + 1}. ${escHtml(c.label)} ${escHtml(cote)}</span>
+                        <span class="shrink-0 text-[10px] opacity-80">${escHtml(stars)}</span>
+                    </div>
+                    <p class="mt-0.5 text-[10px] opacity-90">Proba ${escHtml(String(c.prob_pct || '?'))}% · edge ${escHtml(String(c.edge || '?'))}</p>
+                    ${raison}
+                </li>`;
+            }).join('');
+            return `
+                <div class="rounded-xl border border-white/10 bg-black/25 px-3 py-3">
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-violet-300/90">Meilleurs paris (proba × cote)</p>
+                    <p class="mb-2 text-[10px] text-gray-500">Une cote &lt; 1,50 est rarement avantageuse — Velora privilégie le rendement réel.</p>
+                    <ol class="space-y-2">${rows}</ol>
+                </div>`;
+        }
+
         function htmlBlocPronosticValue(m) {
             const pronostic = libellePronosticCarte(m);
             const valueLabel = libelleValuePickAffichage(m);
@@ -7643,6 +7684,7 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${blocsPronosticValue}
+                        ${htmlConseilsIntelligents(m)}
                         ${htmlOddsMovement(m)}
                         ${htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
@@ -8206,6 +8248,7 @@
                         </div>
                         ${pariFocus}
                         ${blocsPronosticValue}
+                        ${htmlConseilsIntelligents(m)}
                         ${hide1n2 ? '' : htmlOddsMovement(m)}
                         ${htmlConseilVelora(m.conseil, 'opp', m)}
                         ${bloc1n2}

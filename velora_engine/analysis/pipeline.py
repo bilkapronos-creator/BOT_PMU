@@ -23,6 +23,7 @@ from velora_engine.analysis.model_poisson import (
     blend_probability_dicts,
     build_poisson_analysis,
 )
+from velora_engine.analysis.bet_advisor import build_intelligent_conseils
 from velora_engine.analysis.value_detectors import detect_all_free_values
 from velora_engine.odds_snapshots import (
     default_history_path,
@@ -35,6 +36,7 @@ from velora_engine.models import (
     FreeAnalysis,
     MatchRecordV2,
     MetaMatch,
+    PrimaryPick,
     document_to_json,
 )
 from velora_engine.output.legacy_adapter import legacy_shim_from_v2, premium_from_extracted
@@ -215,14 +217,43 @@ def build_match_v2(
         or pronostic_label_for_pick(pronostic_pick, home, away)
     )
 
+    conseils, meilleur = build_intelligent_conseils(
+        cotes_1n2=cotes_out,
+        probs=probs_modele,
+        markets=extracted.markets_raw,
+        les_deux_marquent=legacy.get("les_deux_marquent"),
+        prob_over_25_modele=poisson.prob_over_25,
+        prob_btts_modele=poisson.prob_btts_oui,
+        home=home,
+        away=away,
+        value_bets=free_values.value_bets,
+        premium=premium,
+        pronostic_1n2=pronostic_ref,
+    )
+    primary_pick = free_values.primary_pick
+    if meilleur:
+        prefix = "🎯" if meilleur.tier == "excellent" else "💡"
+        conseil_short = f"{prefix} {meilleur.label}"
+        if meilleur.cote:
+            conseil_short = f"{conseil_short} @ {meilleur.cote:.2f}"
+        primary_pick = PrimaryPick(
+            market=meilleur.market,
+            pick=meilleur.pick,
+            label=meilleur.label,
+            cote=meilleur.cote,
+            conseil_short=conseil_short,
+        )
+
     free = FreeAnalysis(
         cotes_1n2=cotes_out,
         probabilites=probs_modele,
         probabilites_marche=ctx.probabilites_marche,
         markets_raw=extracted.markets_raw,
         value_bets=free_values.value_bets,
-        primary_pick=free_values.primary_pick,
+        primary_pick=primary_pick,
         display_badges=free_values.display_badges,
+        conseils_intelligents=conseils,
+        meilleur_conseil=meilleur,
         pronostic_1n2=pronostic_pick or None,
         pronostic_label=pronostic_label or None,
         confiance_niveau=confiance,

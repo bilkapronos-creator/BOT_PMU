@@ -15,6 +15,7 @@ from typing import Any
 
 from velora_engine.models import (
     CompetitionMeta,
+    MarketOutcome,
     MarketsRaw,
     OuLine,
     ScoreExactRow,
@@ -370,6 +371,237 @@ def extract_team_goals(
     return out
 
 
+def _bet_filter_exact(bet: dict, name: str) -> bool:
+    fn = str(bet.get("betFilterName") or "").strip().lower()
+    return fn == name.lower()
+
+
+def _bet_filter_contains(bet: dict, needle: str, *, exclude: tuple[str, ...] = ()) -> bool:
+    blob = bet_label(bet)
+    if any(ex in blob for ex in exclude):
+        return False
+    return needle in blob
+
+
+def _parse_dc_pick(label: str) -> str | None:
+    s = str(label or "").upper().replace(" ", "").replace("OU", "")
+    if "1X" in s or ("DOM" in s.upper() and "NUL" in s.upper()):
+        return "1x"
+    if "X2" in s or ("EXT" in s.upper() and "NUL" in s.upper()):
+        return "x2"
+    if s in ("12", "1OR2", "DOMEXT") or ("DOM" in s.upper() and "EXT" in s.upper()):
+        return "12"
+    return None
+
+
+def _parse_1n2_pick(label: str, code: str = "") -> str | None:
+    c = str(code or "").strip().upper()
+    if c in ("1", "HOME"):
+        return "1"
+    if c in ("2", "AWAY"):
+        return "2"
+    if c in ("N", "X", "DRAW"):
+        return "N"
+    lab = str(label or "").strip().lower()
+    if lab in ("1", "n", "2", "x"):
+        return "N" if lab == "x" else lab.upper()
+    if "nul" in lab or "égalité" in lab or "egalite" in lab:
+        return "N"
+    if "dom" in lab or lab == "home":
+        return "1"
+    if "ext" in lab or lab == "away":
+        return "2"
+    return None
+
+
+def _parse_dnb_pick(label: str, home: str, away: str) -> str | None:
+    lab = str(label or "").strip().lower()
+    h = home.lower().strip()
+    a = away.lower().strip()
+    if h and len(h) > 2 and h in lab:
+        return "home"
+    if a and len(a) > 2 and a in lab:
+        return "away"
+    if "équipe 1" in lab or "equipe 1" in lab or "domicile" in lab:
+        return "home"
+    if "équipe 2" in lab or "equipe 2" in lab or "extérieur" in lab or "exterieur" in lab:
+        return "away"
+    return None
+
+
+def _collect_outcomes(
+    bet: dict,
+    outcomes: dict,
+    odds: dict | None,
+    pick_parser,
+) -> dict[str, MarketOutcome]:
+    rows: dict[str, MarketOutcome] = {}
+    for oid in bet.get("outcomes") or []:
+        out = lookup(outcomes, oid)
+        if not out:
+            continue
+        pick = pick_parser(out)
+        if not pick or pick in rows:
+            continue
+        price = lookup_odd(odds, oid)
+        pct = outcome_pct(out)
+        if price is None and pct is None:
+            continue
+        rows[pick] = MarketOutcome(
+            cote=round(float(price), 2) if price is not None else None,
+            prob=pct,
+        )
+    return rows
+
+
+def extract_double_chance(
+    match_bets: list,
+    outcomes: dict,
+    odds: dict | None = None,
+) -> dict[str, MarketOutcome]:
+    for bet in match_bets:
+        if not (
+            _bet_filter_exact(bet, "Double chance")
+            or _bet_filter_contains(bet, "double chance", exclude=("mt ", "mi-temps", "nb ", "marquent"))
+        ):
+            continue
+        rows = _collect_outcomes(
+            bet,
+            outcomes,
+            odds,
+            lambda o: _parse_dc_pick(str(o.get("label") or "")),
+        )
+        if rows:
+            return rows
+    return {}
+
+
+def extract_dnb(
+    match_bets: list,
+    outcomes: dict,
+    odds: dict | None,
+    home: str,
+    away: str,
+) -> dict[str, MarketOutcome]:
+    for bet in match_bets:
+        if not (
+            _bet_filter_exact(bet, "Remboursé si nul")
+            or _bet_filter_contains(bet, "remboursé si nul", exclude=("mt ", "mi-temps"))
+            or _bet_filter_contains(bet, "rembourse si nul", exclude=("mt ", "mi-temps"))
+        ):
+            continue
+        rows = _collect_outcomes(
+            bet,
+            outcomes,
+            odds,
+            lambda o: _parse_dnb_pick(str(o.get("label") or ""), home, away),
+        )
+        if rows:
+            return rows
+    return {}
+
+
+def extract_half_time_1n2(
+    match_bets: list,
+    outcomes: dict,
+    odds: dict | None = None,
+) -> dict[str, MarketOutcome]:
+    for bet in match_bets:
+        if not (
+            _bet_filter_exact(bet, "MT résultat")
+            or _bet_filter_contains(bet, "mt résultat", exclude=("double", "remboursé", "mi-temps/fin"))
+            or _bet_filter_contains(bet, "mt resultat", exclude=("double", "rembourse"))
+        ):
+            continue
+        rows = _collect_outcomes(
+            bet,
+            outcomes,
+            odds,
+            lambda o: _parse_1n2_pick(str(o.get("label") or ""), str(o.get("code") or "")),
+        )
+        if rows:
+            return rows
+    return {}
+
+
+def extract_handicap(
+    match_bets: list,
+    outcomes: dict,
+    odds: dict | None = None,
+    *,
+    home: str = "",
+    away: str = "",
+) -> dict[str, dict[str, MarketOutcome]]:
+    buckets: dict[str, dict[str, MarketOutcome]] = {}
+    for bet in match_bets:
+        if not (
+            _bet_filter_exact(bet, "Écart buts")
+            or _bet_filter_contains(bet, "écart buts", exclude=("mt ", "mi-temps"))
+            or _bet_filter_contains(bet, "format handicap", exclude=("mt ", "mi-temps"))
+        ):
+            continue
+        line = str(bet.get("specialBetValue") or "").strip() or "0"
+        side_bucket = buckets.setdefault(line, {})
+        for oid in bet.get("outcomes") or []:
+            out = lookup(outcomes, oid)
+            if not out:
+                continue
+            label = str(out.get("label") or "").strip().lower()
+            pick = _parse_1n2_pick(label, str(out.get("code") or ""))
+            if not pick:
+                if home.lower() in label:
+                    pick = "1"
+                elif away.lower() in label:
+                    pick = "2"
+            if not pick or pick in side_bucket:
+                continue
+            price = lookup_odd(odds, oid)
+            pct = outcome_pct(out)
+            if price is None and pct is None:
+                continue
+            side_bucket[pick] = MarketOutcome(
+                cote=round(float(price), 2) if price is not None else None,
+                prob=pct,
+            )
+    return {ln: sides for ln, sides in buckets.items() if sides}
+
+
+def extract_exact_goals(
+    match_bets: list,
+    outcomes: dict,
+    odds: dict | None = None,
+) -> dict[str, MarketOutcome]:
+    for bet in match_bets:
+        blob = bet_label(bet)
+        if "nb exact" not in blob and "nombre exact" not in blob:
+            continue
+        if any(x in blob for x in ("équipe", "equipe", "mi-temps", "mi temps", "mt ")):
+            continue
+        rows: dict[str, MarketOutcome] = {}
+        for oid in bet.get("outcomes") or []:
+            out = lookup(outcomes, oid)
+            if not out:
+                continue
+            label = str(out.get("label") or "").strip()
+            m = re.match(r"^(\d+)", label)
+            if not m:
+                continue
+            pick = m.group(1)
+            if pick in rows:
+                continue
+            price = lookup_odd(odds, oid)
+            pct = outcome_pct(out)
+            if price is None and pct is None:
+                continue
+            rows[pick] = MarketOutcome(
+                cote=round(float(price), 2) if price is not None else None,
+                prob=pct,
+            )
+        if rows:
+            return rows
+    return {}
+
+
 def extract_btts(
     match_bets: list, outcomes: dict, odds: dict | None = None
 ) -> dict[str, float | None] | None:
@@ -588,6 +820,11 @@ def extract_all_markets(
         over_under_total=ou_total,
         btts=btts,
         team_goals=team_goals,
+        double_chance=extract_double_chance(match_bets, outcomes, odds),
+        dnb=extract_dnb(match_bets, outcomes, odds, home, away),
+        half_time_1n2=extract_half_time_1n2(match_bets, outcomes, odds),
+        handicap=extract_handicap(match_bets, outcomes, odds, home=home, away=away),
+        exact_goals=extract_exact_goals(match_bets, outcomes, odds),
     )
     competition = extract_competition_meta(
         raw_match,

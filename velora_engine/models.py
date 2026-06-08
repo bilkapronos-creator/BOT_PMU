@@ -45,10 +45,24 @@ class TeamGoalsSide:
 
 
 @dataclass
+class MarketOutcome:
+    cote: float | None = None
+    prob: int | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return _drop_none(asdict(self))
+
+
+@dataclass
 class MarketsRaw:
     over_under_total: dict[str, OuLine] = field(default_factory=dict)
     btts: dict[str, float | None] | None = None
     team_goals: dict[str, TeamGoalsSide] = field(default_factory=dict)
+    double_chance: dict[str, MarketOutcome] = field(default_factory=dict)
+    dnb: dict[str, MarketOutcome] = field(default_factory=dict)
+    half_time_1n2: dict[str, MarketOutcome] = field(default_factory=dict)
+    handicap: dict[str, dict[str, MarketOutcome]] = field(default_factory=dict)
+    exact_goals: dict[str, MarketOutcome] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         out: dict[str, Any] = {
@@ -59,6 +73,19 @@ class MarketsRaw:
         }
         if self.btts is not None:
             out["btts"] = _drop_none(self.btts)
+        if self.double_chance:
+            out["double_chance"] = {k: v.to_dict() for k, v in self.double_chance.items()}
+        if self.dnb:
+            out["dnb"] = {k: v.to_dict() for k, v in self.dnb.items()}
+        if self.half_time_1n2:
+            out["half_time_1n2"] = {k: v.to_dict() for k, v in self.half_time_1n2.items()}
+        if self.handicap:
+            out["handicap"] = {
+                ln: {k: v.to_dict() for k, v in sides.items()}
+                for ln, sides in self.handicap.items()
+            }
+        if self.exact_goals:
+            out["exact_goals"] = {k: v.to_dict() for k, v in self.exact_goals.items()}
         return out
 
 
@@ -156,6 +183,23 @@ class PrimaryPick:
 
 
 @dataclass
+class BetRecommendation:
+    market: str
+    pick: str
+    label: str
+    cote: float | None
+    prob_pct: int
+    edge: float
+    score: float
+    tier: str  # excellent | bon | prudent | value
+    raison: str
+    stars: int = 3
+
+    def to_dict(self) -> dict[str, Any]:
+        return _drop_none(asdict(self))
+
+
+@dataclass
 class FreeAnalysis:
     cotes_1n2: dict[str, float | None]
     probabilites: dict[str, int]
@@ -173,6 +217,8 @@ class FreeAnalysis:
     prob_over_25_modele: int | None = None
     prob_btts_modele: int | None = None
     football_data_enriched: bool | None = None
+    conseils_intelligents: list[BetRecommendation] = field(default_factory=list)
+    meilleur_conseil: BetRecommendation | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return _drop_none(
@@ -195,6 +241,10 @@ class FreeAnalysis:
                 if self.primary_pick
                 else None,
                 "display_badges": self.display_badges,
+                "conseils_intelligents": [c.to_dict() for c in self.conseils_intelligents],
+                "meilleur_conseil": self.meilleur_conseil.to_dict()
+                if self.meilleur_conseil
+                else None,
             }
         )
 

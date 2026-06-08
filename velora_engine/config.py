@@ -22,6 +22,11 @@ EDGE_THRESHOLD_BUTEUR_DOUBLE = 1.20
 OUTSIDER_FAVORI_COTE_MAX = 1.45
 OUTSIDER_COTE_MIN = 5.0
 
+# Conseils intelligents : cote < seuil = faible rendement sauf edge exceptionnel
+MIN_COTE_AVANTAGEUSE = 1.50
+LOW_ODDS_EDGE_MIN = 1.08
+ADVISOR_TOP_N = 5
+
 EDGE_THRESHOLDS: dict[str, float] = {
     "1n2": EDGE_THRESHOLD_1N2,
     "dc_1x": EDGE_THRESHOLD_1N2,
@@ -34,6 +39,10 @@ EDGE_THRESHOLDS: dict[str, float] = {
     "buteur_match": EDGE_THRESHOLD_BUTEUR_MATCH,
     "buteur_mi_temps": EDGE_THRESHOLD_BUTEUR_MI_TEMPS,
     "buteur_double": EDGE_THRESHOLD_BUTEUR_DOUBLE,
+    "dnb": EDGE_THRESHOLD_1N2,
+    "half_time_1n2": EDGE_THRESHOLD_1N2,
+    "handicap": EDGE_THRESHOLD_1N2,
+    "exact_goals": EDGE_THRESHOLD_OU_TOTAL,
 }
 
 # Durée de transition front (nœud _legacy)

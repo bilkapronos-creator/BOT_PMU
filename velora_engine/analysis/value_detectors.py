@@ -9,7 +9,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from velora_engine.analysis.probability import edge_score, stars_from_edge
-from velora_engine.config import EDGE_THRESHOLDS, OUTSIDER_COTE_MIN, OUTSIDER_FAVORI_COTE_MAX
+from velora_engine.config import (
+    EDGE_THRESHOLDS,
+    LOW_ODDS_EDGE_MIN,
+    MIN_COTE_AVANTAGEUSE,
+    OUTSIDER_COTE_MIN,
+    OUTSIDER_FAVORI_COTE_MAX,
+)
 from velora_engine.models import (
     MarketsRaw,
     OuLine,
@@ -115,6 +121,12 @@ def detect_value_1n2(
         p = probs.get(key, 0)
         e = edge_score(p, c)
         if e is None or e < _threshold("1n2"):
+            continue
+        try:
+            cf = float(c) if c is not None else 0.0
+        except (TypeError, ValueError):
+            cf = 0.0
+        if cf < MIN_COTE_AVANTAGEUSE and e < LOW_ODDS_EDGE_MIN:
             continue
         if _outsider_value_trop_agressif(key, c, cotes):
             continue
