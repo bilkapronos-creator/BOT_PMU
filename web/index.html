@@ -7138,6 +7138,55 @@
             return `<div class="velora-match-badges-row">${tendancePill}${pillsMarches}</div>`;
         }
 
+        /** Données premium réelles (sans placeholders) pour affichage / teaser paywall. */
+        function readPremiumAnalysisRaw(m, options = {}) {
+            const enrich = options.enrich !== false;
+            const enr = footMatchEnrichiPremium(m);
+            const prem = enr?.premium_analysis;
+            const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
+            const topScores = scoresExactFromMatch(enr).slice(0, 3);
+            const buteurs = buteursFromMatch(enr).slice(0, 4);
+            const doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
+            const hasScores = topScores.length > 0;
+            const hasButeurs = buteurs.length > 0;
+            const hasDoubles = doubles.length > 0;
+            const hasValueBets = valueBets.length > 0;
+            const hasAny = hasScores || hasButeurs || hasDoubles || hasValueBets;
+            if (!enrich) {
+                return { hasScores, hasButeurs, hasDoubles, hasValueBets, hasAny };
+            }
+            return {
+                topScores,
+                buteurs,
+                doubles,
+                valueBets,
+                hasScores,
+                hasButeurs,
+                hasDoubles,
+                hasValueBets,
+                hasAny,
+            };
+        }
+
+        function htmlPremiumUnavailableMessage() {
+            return `<div class="foot-premium-unavailable">
+                <p class="foot-premium-unavailable-text">Analyse premium indisponible pour ce match (marchés buteurs / scores exacts non publiés par le bookmaker).</p>
+            </div>`;
+        }
+
+        function htmlPremiumPaywallSkeleton() {
+            const panel = (bars) => `
+                <div class="foot-premium-skeleton-panel">
+                    <div class="foot-premium-skeleton-title" aria-hidden="true"></div>
+                    ${bars}
+                </div>`;
+            const bar = '<div class="foot-premium-skeleton-bar" aria-hidden="true"></div>';
+            return `<div class="foot-premium-skeleton" aria-hidden="true">
+                ${panel(`${bar}${bar}${bar}`)}
+                ${panel(`${bar}${bar}`)}
+            </div>`;
+        }
+
         function htmlFootPremiumAnalysisSection(m) {
             const isPremiumUser = estVeloraPremiumFoot() === true;
 
@@ -7541,12 +7590,13 @@
             if (accueil) accueil.classList.add('hidden');
             const liste = footMatchAnalyseUnique();
             zone.className = 'foot-resultats-panel space-y-4';
+            const erreur = document.getElementById('footErreur');
             try {
                 zone.innerHTML = liste.map(carteFootMatch).join('');
+                if (erreur) erreur.classList.add('hidden');
             } catch (err) {
                 console.error('[Velora] Rendu carte Foot :', err);
                 zone.innerHTML = '';
-                const erreur = document.getElementById('footErreur');
                 if (erreur) {
                     erreur.textContent = 'Erreur d\'affichage de l\'analyse. Rechargez la page.';
                     erreur.classList.remove('hidden');
