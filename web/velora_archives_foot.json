@@ -1,6 +1,162 @@
 [
   {
     "sport": "foot",
+    "id_match": "71899602",
+    "equipe_domicile": "Olympique Dcheira",
+    "equipe_exterieur": "HUSA Agadir",
+    "date_match": "08/06/2026 à 22:00",
+    "match_start_ts": 1780948800,
+    "conseil": "Double Chance DC 1X",
+    "cotes": {},
+    "indice_velora": 0,
+    "opportunite_type": "1n2",
+    "opportunite_detail": "Double Chance DC 1X",
+    "marche": "1n2",
+    "selection": "",
+    "score_final": null,
+    "statut": "EN_ATTENTE",
+    "statut_pari": "EN_ATTENTE",
+    "reussi_foot": null,
+    "type_pari_foot": null,
+    "cote_jouee": null,
+    "financier": null,
+    "profit": null,
+    "timestamp": 1780948800,
+    "archive_key": "71899602"
+  },
+  {
+    "sport": "foot",
+    "id_match": "71899602",
+    "equipe_domicile": "Olympique Dcheira",
+    "equipe_exterieur": "HUSA Agadir",
+    "date_match": "08/06/2026 à 22:00",
+    "match_start_ts": 1780948800,
+    "conseil": "Scores exacts proposés : 1-1, 2-2, 3-3",
+    "cotes": {},
+    "indice_velora": 0,
+    "opportunite_type": "score_exact",
+    "opportunite_detail": "Scores exacts proposés : 1-1, 2-2, 3-3",
+    "marche": "score_exact",
+    "selection": "Top 3 scores exacts",
+    "score_final": null,
+    "statut": "EN_ATTENTE",
+    "statut_pari": "EN_ATTENTE",
+    "reussi_foot": null,
+    "type_pari_foot": null,
+    "cote_jouee": null,
+    "financier": null,
+    "profit": null,
+    "timestamp": 1780948800,
+    "scores_proposes": [
+      "1-1",
+      "2-2",
+      "3-3"
+    ],
+    "validation_mode": "top3_ui",
+    "score_exact": [
+      {
+        "score": "1-1",
+        "prob": 8
+      },
+      {
+        "score": "2-2",
+        "prob": 7
+      },
+      {
+        "score": "3-3",
+        "prob": 3
+      },
+      {
+        "score": "0-0",
+        "prob": 2
+      },
+      {
+        "score": "4-4",
+        "prob": 1
+      }
+    ],
+    "archive_key": "71899602:score_exact"
+  },
+  {
+    "sport": "foot",
+    "id_match": "71307342",
+    "equipe_domicile": "France",
+    "equipe_exterieur": "Irlande du Nord",
+    "date_match": "08/06/2026 à 21:10",
+    "match_start_ts": 1780945800,
+    "conseil": "Match en direct — cotes annexes non utilisées",
+    "cotes": {},
+    "indice_velora": 0,
+    "opportunite_type": "1n2",
+    "opportunite_detail": "Match en direct — cotes annexes non utilisées",
+    "marche": "1n2",
+    "selection": "",
+    "score_final": null,
+    "statut": "EN_ATTENTE",
+    "statut_pari": "EN_ATTENTE",
+    "reussi_foot": null,
+    "type_pari_foot": null,
+    "cote_jouee": null,
+    "financier": null,
+    "profit": null,
+    "timestamp": 1780945800,
+    "archive_key": "71307342"
+  },
+  {
+    "sport": "foot",
+    "id_match": "71307342",
+    "equipe_domicile": "France",
+    "equipe_exterieur": "Irlande du Nord",
+    "date_match": "08/06/2026 à 21:10",
+    "match_start_ts": 1780945800,
+    "conseil": "Scores exacts proposés : 3-0, 2-0, 4-0",
+    "cotes": {},
+    "indice_velora": 0,
+    "opportunite_type": "score_exact",
+    "opportunite_detail": "Scores exacts proposés : 3-0, 2-0, 4-0",
+    "marche": "score_exact",
+    "selection": "Top 3 scores exacts",
+    "score_final": null,
+    "statut": "EN_ATTENTE",
+    "statut_pari": "EN_ATTENTE",
+    "reussi_foot": null,
+    "type_pari_foot": null,
+    "cote_jouee": null,
+    "financier": null,
+    "profit": null,
+    "timestamp": 1780945800,
+    "scores_proposes": [
+      "3-0",
+      "2-0",
+      "4-0"
+    ],
+    "validation_mode": "top3_ui",
+    "score_exact": [
+      {
+        "score": "3-0",
+        "prob": 15
+      },
+      {
+        "score": "2-0",
+        "prob": 14
+      },
+      {
+        "score": "4-0",
+        "prob": 13
+      },
+      {
+        "score": "5-0",
+        "prob": 9
+      },
+      {
+        "score": "1-0",
+        "prob": 8
+      }
+    ],
+    "archive_key": "71307342:score_exact"
+  },
+  {
+    "sport": "foot",
     "id_match": "71601488",
     "equipe_domicile": "Pays-Bas",
     "equipe_exterieur": "Ouzbékistan",
@@ -70,6 +226,96 @@
       }
     ],
     "archive_key": "71601488:score_exact"
+  },
+  {
+    "sport": "foot",
+    "id_match": "71899600",
+    "equipe_domicile": "RSB Berkane",
+    "equipe_exterieur": "Ittihad Tanger",
+    "date_match": "08/06/2026 à 20:00",
+    "match_start_ts": 1780941600,
+    "conseil": "",
+    "cotes": {},
+    "indice_velora": null,
+    "opportunite_type": "1n2",
+    "opportunite_detail": "",
+    "marche": "1n2",
+    "selection": "1N2 Domicile",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": null,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 10.1,
+      "profit": 0.1,
+      "roi_pari": 1.0
+    },
+    "profit": 0.1,
+    "timestamp": 1780948966816,
+    "valide_at": "2026-06-08T20:02:46.816095+00:00",
+    "archive_key": "71899600"
+  },
+  {
+    "sport": "foot",
+    "id_match": "71899600",
+    "equipe_domicile": "RSB Berkane",
+    "equipe_exterieur": "Ittihad Tanger",
+    "date_match": "08/06/2026 à 20:00",
+    "match_start_ts": 1780941600,
+    "conseil": "Scores exacts proposés : 1-0, 2-1, 2-0",
+    "cotes": {},
+    "indice_velora": null,
+    "opportunite_type": "score_exact",
+    "opportunite_detail": "Scores exacts proposés : 1-0, 2-1, 2-0",
+    "marche": "score_exact",
+    "selection": "1-0, 2-1, 2-0",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "Score exact 1-0",
+    "cote_jouee": null,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 10.1,
+      "profit": 0.1,
+      "roi_pari": 1.0
+    },
+    "profit": 0.1,
+    "timestamp": 1780948966816,
+    "valide_at": "2026-06-08T20:02:46.816907+00:00",
+    "scores_proposes": [
+      "1-0",
+      "2-1",
+      "2-0"
+    ],
+    "validation_mode": "top3_ui",
+    "score_exact": [
+      {
+        "score": "1-0",
+        "prob": 11
+      },
+      {
+        "score": "2-1",
+        "prob": 10
+      },
+      {
+        "score": "2-0",
+        "prob": 9
+      },
+      {
+        "score": "3-1",
+        "prob": 6
+      },
+      {
+        "score": "3-0",
+        "prob": 5
+      }
+    ],
+    "archive_key": "71899600:score_exact"
   },
   {
     "sport": "foot",

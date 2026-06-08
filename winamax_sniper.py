@@ -35,6 +35,7 @@ from velora_intel import (
     extract_intel_from_page,
     extract_intel_from_state,
 )
+from velora_engine.analysis.match_scores import ensure_match_scores_coherent
 from velora_engine.analysis.model_poisson import align_top_scores_for_pick
 
 if hasattr(sys.stdout, "reconfigure"):

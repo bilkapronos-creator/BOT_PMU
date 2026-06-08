@@ -1,135 +1,18 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-08T04:34:16.163651+02:00",
+    "generated_at": "2026-06-08T22:00:03.627161+02:00",
     "engine": "velora-pro-2",
-    "match_count": 7
+    "match_count": 5
   },
   "matchs": [
     {
-      "id_match": "71899596",
-      "date_match": "08/06/2026 à 18:00",
-      "match_start_ts": 1780934400,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "FUS Rabat",
-      "equipe_exterieur": "Difaa El Jadida",
-      "meta_match": {
-        "competition": {
-          "name": "Maroc — Botola Pro",
-          "type": "other",
-          "round": "J23",
-          "stakes_tier": "medium",
-          "category_id": "303",
-          "tournament_id": "3640"
-        }
-      },
-      "confidence": {
-        "indice_velora": 0,
-        "indice_label": "Non calculable",
-        "base_confidence": 0.5,
-        "adjusted_confidence": 0.5,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.72,
-          "N": 3.1,
-          "2": 3.95
-        },
-        "probabilites": {
-          "1": 45,
-          "N": 31,
-          "2": 24
-        },
-        "probabilites_marche": {
-          "1": 50,
-          "N": 28,
-          "2": 22
-        },
-        "pronostic_1n2": "N",
-        "pronostic_label": "🔥 Value Bet Détecté : Dom",
-        "confiance_niveau": "faible",
-        "poisson_lambdas": {
-          "home": 1.68,
-          "away": 1.115
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-1",
-            "prob": 11
-          },
-          {
-            "score": "0-0",
-            "prob": 6
-          },
-          {
-            "score": "2-2",
-            "prob": 5
-          },
-          {
-            "score": "3-3",
-            "prob": 1
-          }
-        ],
-        "prob_over_25_modele": 53,
-        "prob_btts_modele": 55,
-        "football_data_enriched": false,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "🔥 Value Bet Détecté : Dom",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "top_scores": [
-        {
-          "score": "1-1",
-          "prob": 11
-        },
-        {
-          "score": "0-0",
-          "prob": 6
-        },
-        {
-          "score": "2-2",
-          "prob": 5
-        },
-        {
-          "score": "3-3",
-          "prob": 1
-        }
-      ],
-      "velora_pick_1n2": "N"
-    },
-    {
-      "id_match": "71899598",
+      "id_match": "71899600",
       "date_match": "08/06/2026 à 20:00",
       "match_start_ts": 1780941600,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Wydad Casablanca",
-      "equipe_exterieur": "OC Safi",
+      "match_status": "LIVE",
+      "equipe_domicile": "RSB Berkane",
+      "equipe_exterieur": "Ittihad Tanger",
       "meta_match": {
         "competition": {
           "name": "Maroc — Botola Pro",
@@ -150,26 +33,27 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.44,
-          "N": 3.9,
-          "2": 5.4
+          "1": 1.05,
+          "N": 12.0,
+          "2": 250.0
         },
         "probabilites": {
-          "1": 54,
-          "N": 26,
-          "2": 20
+          "1": 69,
+          "N": 19,
+          "2": 12
         },
         "probabilites_marche": {
-          "1": 61,
-          "N": 23,
-          "2": 16
+          "1": 92,
+          "N": 8,
+          "2": 0
         },
         "pronostic_1n2": "1",
         "pronostic_label": "Privilégier le +2.5 buts",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.848,
-          "away": 0.947
+          "home": 1.748,
+          "away": 1.047
         },
         "top_scores_modele": [
           {
@@ -177,31 +61,32 @@
             "prob": 11
           },
           {
-            "score": "2-0",
-            "prob": 10
-          },
-          {
             "score": "2-1",
             "prob": 10
           },
           {
-            "score": "3-0",
-            "prob": 6
+            "score": "2-0",
+            "prob": 9
           },
           {
             "score": "3-1",
             "prob": 6
+          },
+          {
+            "score": "3-0",
+            "prob": 5
           }
         ],
         "prob_over_25_modele": 53,
-        "prob_btts_modele": 51,
+        "prob_btts_modele": 53,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
         "value_bets": [],
-        "display_badges": []
+        "display_badges": [],
+        "conseils_intelligents": []
       },
       "premium_analysis": {
         "score_exact": {
@@ -230,146 +115,29 @@
           "prob": 11
         },
         {
-          "score": "2-0",
-          "prob": 10
-        },
-        {
           "score": "2-1",
           "prob": 10
         },
         {
-          "score": "3-0",
-          "prob": 6
+          "score": "2-0",
+          "prob": 9
         },
         {
           "score": "3-1",
           "prob": 6
+        },
+        {
+          "score": "3-0",
+          "prob": 5
         }
       ],
       "velora_pick_1n2": "1"
     },
     {
-      "id_match": "71899600",
-      "date_match": "08/06/2026 à 20:00",
-      "match_start_ts": 1780941600,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "RSB Berkane",
-      "equipe_exterieur": "Ittihad Tanger",
-      "meta_match": {
-        "competition": {
-          "name": "Maroc — Botola Pro",
-          "type": "other",
-          "round": "J23",
-          "stakes_tier": "medium",
-          "category_id": "303",
-          "tournament_id": "3640"
-        }
-      },
-      "confidence": {
-        "indice_velora": 0,
-        "indice_label": "Non calculable",
-        "base_confidence": 0.5,
-        "adjusted_confidence": 0.5,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.58,
-          "N": 3.25,
-          "2": 4.6
-        },
-        "probabilites": {
-          "1": 48,
-          "N": 30,
-          "2": 22
-        },
-        "probabilites_marche": {
-          "1": 54,
-          "N": 27,
-          "2": 19
-        },
-        "pronostic_1n2": "N",
-        "pronostic_label": "🔥 Value Bet Détecté : Dom",
-        "confiance_niveau": "faible",
-        "poisson_lambdas": {
-          "home": 1.754,
-          "away": 1.041
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-1",
-            "prob": 11
-          },
-          {
-            "score": "0-0",
-            "prob": 6
-          },
-          {
-            "score": "2-2",
-            "prob": 5
-          },
-          {
-            "score": "3-3",
-            "prob": 1
-          }
-        ],
-        "prob_over_25_modele": 53,
-        "prob_btts_modele": 53,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "🔥 Value Bet Détecté : Dom",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "top_scores": [
-        {
-          "score": "1-1",
-          "prob": 11
-        },
-        {
-          "score": "0-0",
-          "prob": 6
-        },
-        {
-          "score": "2-2",
-          "prob": 5
-        },
-        {
-          "score": "3-3",
-          "prob": 1
-        }
-      ],
-      "velora_pick_1n2": "N"
-    },
-    {
       "id_match": "71601488",
       "date_match": "08/06/2026 à 20:45",
       "match_start_ts": 1780944300,
-      "match_status": "PREMATCH",
+      "match_status": "LIVE",
       "equipe_domicile": "Pays-Bas",
       "equipe_exterieur": "Ouzbékistan",
       "meta_match": {
@@ -397,59 +165,85 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.23,
-          "N": 5.7,
-          "2": 8.0
+          "1": 1.05,
+          "N": 6.75,
+          "2": 38.0
         },
         "probabilites": {
-          "1": 56,
-          "N": 19,
-          "2": 25
+          "1": 68,
+          "N": 15,
+          "2": 17
         },
         "probabilites_marche": {
-          "1": 73,
-          "N": 16,
-          "2": 11
+          "1": 85,
+          "N": 13,
+          "2": 2
         },
         "pronostic_1n2": "2",
         "pronostic_label": "Victoire Ouzbékistan",
         "confiance_niveau": "faible",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 2.601,
-          "away": 1.01
+          "home": 3.13,
+          "away": 0.48
         },
         "top_scores_modele": [
           {
-            "score": "1-2",
-            "prob": 4
-          },
-          {
             "score": "0-1",
-            "prob": 3
-          },
-          {
-            "score": "2-3",
-            "prob": 2
-          },
-          {
-            "score": "0-2",
             "prob": 1
           },
           {
-            "score": "1-3",
+            "score": "1-2",
             "prob": 1
           }
         ],
-        "prob_over_25_modele": 68,
-        "prob_btts_modele": 58,
+        "prob_over_25_modele": 66,
+        "prob_btts_modele": 35,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
         "value_bets": [],
-        "display_badges": []
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 38.0,
+            "prob_pct": 32,
+            "edge": 12.16,
+            "score": 17.1389,
+            "tier": "excellent",
+            "raison": "Proba 32% × cote 38.00 → edge 12.16 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Ouzbékistan",
+            "cote": 38.0,
+            "prob_pct": 17,
+            "edge": 6.46,
+            "score": 8.094,
+            "tier": "excellent",
+            "raison": "Proba 17% × cote 38.00 → edge 6.46 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 38.0,
+          "prob_pct": 32,
+          "edge": 12.16,
+          "score": 17.1389,
+          "tier": "excellent",
+          "raison": "Proba 32% × cote 38.00 → edge 12.16 — bon équilibre proba/rendement",
+          "stars": 5
+        }
       },
       "premium_analysis": {
         "score_exact": {
@@ -474,23 +268,11 @@
       },
       "top_scores": [
         {
-          "score": "1-2",
-          "prob": 4
-        },
-        {
           "score": "0-1",
-          "prob": 3
-        },
-        {
-          "score": "2-3",
-          "prob": 2
-        },
-        {
-          "score": "0-2",
           "prob": 1
         },
         {
-          "score": "1-3",
+          "score": "1-2",
           "prob": 1
         }
       ],
@@ -500,7 +282,7 @@
       "id_match": "71307342",
       "date_match": "08/06/2026 à 21:10",
       "match_start_ts": 1780945800,
-      "match_status": "PREMATCH",
+      "match_status": "LIVE",
       "equipe_domicile": "France",
       "equipe_exterieur": "Irlande du Nord",
       "meta_match": {
@@ -528,59 +310,60 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.11,
-          "N": 8.5,
-          "2": 14.5
+          "1": 1.03,
+          "N": 17.0,
+          "2": 65.0
         },
         "probabilites": {
-          "1": 81,
-          "N": 14,
-          "2": 5
+          "1": 89,
+          "N": 10,
+          "2": 1
         },
         "probabilites_marche": {
-          "1": 83,
-          "N": 11,
-          "2": 6
+          "1": 93,
+          "N": 6,
+          "2": 1
         },
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire France",
         "confiance_niveau": "faible",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 2.941,
-          "away": 0.791
+          "home": 3.381,
+          "away": 0.351
         },
         "top_scores_modele": [
           {
-            "score": "2-0",
-            "prob": 10
-          },
-          {
             "score": "3-0",
-            "prob": 10
+            "prob": 15
           },
           {
-            "score": "2-1",
-            "prob": 8
-          },
-          {
-            "score": "3-1",
-            "prob": 8
+            "score": "2-0",
+            "prob": 14
           },
           {
             "score": "4-0",
-            "prob": 7
+            "prob": 13
+          },
+          {
+            "score": "5-0",
+            "prob": 9
+          },
+          {
+            "score": "1-0",
+            "prob": 8
           }
         ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 50,
+        "prob_over_25_modele": 66,
+        "prob_btts_modele": 27,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
         "value_bets": [],
-        "display_badges": []
+        "display_badges": [],
+        "conseils_intelligents": []
       },
       "premium_analysis": {
         "score_exact": {
@@ -605,24 +388,24 @@
       },
       "top_scores": [
         {
-          "score": "2-0",
-          "prob": 10
-        },
-        {
           "score": "3-0",
-          "prob": 10
+          "prob": 15
         },
         {
-          "score": "2-1",
-          "prob": 8
-        },
-        {
-          "score": "3-1",
-          "prob": 8
+          "score": "2-0",
+          "prob": 14
         },
         {
           "score": "4-0",
-          "prob": 7
+          "prob": 13
+        },
+        {
+          "score": "5-0",
+          "prob": 9
+        },
+        {
+          "score": "1-0",
+          "prob": 8
         }
       ],
       "velora_pick_1n2": "1"
@@ -654,26 +437,27 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 2.9,
-          "N": 2.9,
-          "2": 2.2
+          "1": 3.8,
+          "N": 2.45,
+          "2": 2.15
         },
         "probabilites": {
-          "1": 33,
-          "N": 25,
-          "2": 42
-        },
-        "probabilites_marche": {
-          "1": 30,
-          "N": 30,
+          "1": 26,
+          "N": 34,
           "2": 40
         },
+        "probabilites_marche": {
+          "1": 23,
+          "N": 36,
+          "2": 41
+        },
         "pronostic_1n2": "N",
-        "pronostic_label": "🔥 Value Bet Détecté : Nul",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
         "confiance_niveau": "faible",
+        "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.758,
-          "away": 2.03
+          "home": 1.622,
+          "away": 2.165
         },
         "top_scores_modele": [
           {
@@ -698,14 +482,64 @@
           }
         ],
         "prob_over_25_modele": 72,
-        "prob_btts_modele": 71,
+        "prob_btts_modele": 70,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
         "value_bets": [],
-        "display_badges": []
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 3.8,
+            "prob_pct": 66,
+            "edge": 2.508,
+            "score": 2.2773,
+            "tier": "excellent",
+            "raison": "Proba 66% × cote 3.80 → edge 2.51 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 3.8,
+            "prob_pct": 60,
+            "edge": 2.28,
+            "score": 1.9081,
+            "tier": "excellent",
+            "raison": "Proba 60% × cote 3.80 → edge 2.28 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.15,
+            "prob_pct": 74,
+            "edge": 1.591,
+            "score": 0.8432,
+            "tier": "excellent",
+            "raison": "Proba 74% × cote 2.15 → edge 1.59 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 3.8,
+          "prob_pct": 66,
+          "edge": 2.508,
+          "score": 2.2773,
+          "tier": "excellent",
+          "raison": "Proba 66% × cote 3.80 → edge 2.51 — bon équilibre proba/rendement",
+          "stars": 5
+        }
       },
       "premium_analysis": {
         "score_exact": {
@@ -723,9 +557,10 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "🔥 Value Bet Détecté : Nul",
+        "conseil": "🔥 Value Bet Détecté : Dom",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
         "is_opportunite": false
       },
       "top_scores": [
@@ -750,12 +585,7 @@
           "prob": 1
         }
       ],
-      "velora_pick_1n2": "N",
-      "probabilites": {
-        "1": 33,
-        "N": 25,
-        "2": 42
-      }
+      "velora_pick_1n2": "N"
     },
     {
       "id_match": "71702730",
@@ -784,9 +614,9 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.43,
-          "N": 4.1,
-          "2": 5.2
+          "1": 1.4,
+          "N": 4.2,
+          "2": 5.5
         },
         "probabilites": {
           "1": 62,
@@ -794,17 +624,17 @@
           "2": 14
         },
         "probabilites_marche": {
-          "1": 62,
+          "1": 63,
           "N": 21,
-          "2": 17
+          "2": 16
         },
         "pronostic_1n2": "1",
         "pronostic_label": "Victoire Atletico Nacional",
         "confiance_niveau": "haute",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.863,
-          "away": 0.975
+          "home": 1.887,
+          "away": 0.951
         },
         "top_scores_modele": [
           {
@@ -821,7 +651,7 @@
           },
           {
             "score": "3-0",
-            "prob": 6
+            "prob": 7
           },
           {
             "score": "3-1",
@@ -836,7 +666,33 @@
           "team_goals": {}
         },
         "value_bets": [],
-        "display_badges": []
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.4,
+            "prob_pct": 86,
+            "edge": 1.204,
+            "score": 0.2364,
+            "tier": "prudent",
+            "raison": "Proba 86% × cote 1.40 → edge 1.20 — cote faible (<1.50), gain limité",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.4,
+          "prob_pct": 86,
+          "edge": 1.204,
+          "score": 0.2364,
+          "tier": "prudent",
+          "raison": "Proba 86% × cote 1.40 → edge 1.20 — cote faible (<1.50), gain limité",
+          "stars": 5
+        }
       },
       "premium_analysis": {
         "score_exact": {
@@ -874,7 +730,7 @@
         },
         {
           "score": "3-0",
-          "prob": 6
+          "prob": 7
         },
         {
           "score": "3-1",
