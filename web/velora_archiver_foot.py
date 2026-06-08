@@ -171,8 +171,13 @@ def _pick_ou25(match: dict) -> str | None:
 
 
 def _pick_1n2(match: dict) -> str | None:
-    """1 | N | 2 | dc_1x | dc_x2 — aligné inferVelora1n2Pick."""
-    pick = match.get("velora_pick_1n2")
+    """1 | N | 2 | dc_1x | dc_x2 — pronostic modèle (pas le value bet primary_pick)."""
+    free = match.get("free_analysis") or {}
+    pick = (
+        match.get("pronostic_1n2")
+        or match.get("velora_pick_1n2")
+        or free.get("pronostic_1n2")
+    )
     if pick in ("1", "N", "2", "dc_1x", "dc_x2"):
         return pick
 

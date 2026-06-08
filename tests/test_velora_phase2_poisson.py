@@ -140,6 +140,34 @@ def test_ensure_match_scores_coherent_ext():
         assert h < a
 
 
+def test_ensure_match_scores_ignore_conflicting_primary_pick():
+    from velora_engine.analysis.match_scores import ensure_match_scores_coherent
+
+    match = {
+        "equipe_domicile": "Atletico Nacional",
+        "equipe_exterieur": "Junior",
+        "velora_pick_1n2": "1",
+        "cotes": {"1": 1.45, "N": 4.2, "2": 5.0},
+        "top_scores": [{"score": "2-1", "prob": 12, "cote": 9.0}],
+        "free_analysis": {
+            "pronostic_1n2": "1",
+            "cotes_1n2": {"1": 1.45, "N": 4.2, "2": 5.0},
+            "primary_pick": {
+                "market": "1n2",
+                "pick": "2",
+                "label": "Victoire Junior",
+                "cote": 5.0,
+            },
+        },
+    }
+    fixed = ensure_match_scores_coherent(match)
+    assert fixed["velora_pick_1n2"] == "1"
+    assert fixed["free_analysis"]["pronostic_1n2"] == "1"
+    for row in fixed.get("top_scores") or []:
+        h, a = map(int, str(row["score"]).replace(" ", "").split("-"))
+        assert h > a
+
+
 def test_top_scores_filtre_pronostic_ext():
     matrix = score_probability_matrix(0.75, 2.1)
     brut = top_scores_from_matrix(matrix, limit=8)

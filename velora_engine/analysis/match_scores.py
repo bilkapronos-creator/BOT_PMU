@@ -18,8 +18,8 @@ def pronostic_pick_from_match(match: dict[str, Any]) -> str:
     free = match.get("free_analysis") or {}
     pick = (
         match.get("velora_pick_1n2")
+        or match.get("pronostic_1n2")
         or free.get("pronostic_1n2")
-        or (free.get("primary_pick") or {}).get("pick")
     )
     return str(pick or "").strip()
 
@@ -99,7 +99,10 @@ def ensure_match_scores_coherent(match: dict[str, Any]) -> dict[str, Any]:
     if aligned:
         updated["top_scores"] = aligned
         free["top_scores_modele"] = aligned
-        updated["free_analysis"] = free
+
+    updated["velora_pick_1n2"] = pick
+    free["pronostic_1n2"] = pick
+    updated["free_analysis"] = free
 
     exact = updated.get("score_exact")
     if isinstance(exact, list) and exact:

@@ -4313,6 +4313,7 @@
         let footMatchs = [];
         let footMatchsMeta = null;
         let footMatchsCharges = false;
+        let footMatchsChargementPromise = null;
         /** Index id_match → fiche premium (aperçu verrouillé analyse gratuite). */
         let footPremiumIndex = null;
         let footPremiumIndexPromise = null;
@@ -4802,6 +4803,16 @@
             renderFootMatchs();
         }
 
+        function defilerVersResultatsFoot() {
+            const cible = document.getElementById('footResultats')
+                || document.getElementById('sectionFootball')
+                || document.getElementById('colonneDroite');
+            if (!cible) return;
+            requestAnimationFrame(() => {
+                cible.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        }
+
         async function lancerAnalyseFoot() {
             if (footModeOpportunites) return;
             if (!exigerConnexionPourAnalyser()) return;
@@ -4811,11 +4822,10 @@
             const raw = input?.value || '';
             const trimmed = raw.trim();
 
-            footFiltre = '';
-            footAnalyseAffichee = false;
-            renderFootMatchs();
-
             if (!trimmed) {
+                footFiltre = '';
+                footAnalyseAffichee = false;
+                renderFootMatchs();
                 const meta = document.getElementById('footSearchMeta');
                 if (meta) meta.textContent = 'Saisissez le nom d\'une équipe ou d\'un club, puis cliquez sur Générer l\'analyse.';
                 return;
@@ -4831,26 +4841,37 @@
 
             const attempt = consommerTentativeRechercheFoot(trimmed);
             if (!attempt.allowed) {
-                if (input) input.value = footFiltre;
                 if (attempt.reason === 'auth') {
                     exigerConnexionPourAnalyser();
                 } else {
-                showPaywallModal('search_limit');
+                    showPaywallModal('search_limit');
                 }
                 return;
             }
+
+            if (sportActif !== 'foot') changerSport('foot');
+            if (sectionActive !== 'pronostic') afficherSection('pronostic');
 
             if (btn) {
                 btn.disabled = true;
                 btn.textContent = 'Génération…';
             }
             try {
-                if (!footMatchsCharges) {
-                    await chargerFootMatchs();
-                }
-                footFiltre = raw;
+                await assurerFootMatchsCharges();
+                footFiltre = trimmed;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
+                const liste = footMatchAnalyseUnique();
+                if (liste.length) {
+                    defilerVersResultatsFoot();
+                }
+            } catch (err) {
+                console.error('[Velora] Analyse Foot :', err);
+                const erreur = document.getElementById('footErreur');
+                if (erreur) {
+                    erreur.textContent = 'Impossible d\'afficher l\'analyse. Réessayez dans un instant.';
+                    erreur.classList.remove('hidden');
+                }
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -5212,12 +5233,36 @@
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible') tick();
             });
-            setTimeout(tick, VELORA_AUTO_REFRESH_MS);
+            setTimeout(tick, 2500);
+        }
+
+        async function assurerFootMatchsCharges(options = {}) {
+            const force = options.force === true;
+            if (footMatchsCharges && !force) return true;
+            if (footMatchsChargementPromise) return footMatchsChargementPromise;
+            footMatchsChargementPromise = (async () => {
+                const loading = document.getElementById('footLoading');
+                const erreur = document.getElementById('footErreur');
+                setFootLoadingMessage(false);
+                if (loading) loading.classList.remove('hidden');
+                if (erreur) erreur.classList.add('hidden');
+                const ok = await rechargerFootMatchsServeur({ force: true, silent: true, skipRender: true });
+                if (!ok && !footMatchsCharges) {
+                    footMatchs = [];
+                    if (erreur) {
+                        erreur.textContent = 'Impossible de charger api_velora_matchs.json. Mise à jour automatique toutes les 30 min.';
+                        erreur.classList.remove('hidden');
+                    }
+                }
+                if (loading) loading.classList.add('hidden');
+                return ok || footMatchsCharges;
+            })().finally(() => {
+                footMatchsChargementPromise = null;
+            });
+            return footMatchsChargementPromise;
         }
 
         async function chargerFootMatchs(options = {}) {
-            const loading = document.getElementById('footLoading');
-            const erreur = document.getElementById('footErreur');
             if (footModeOpportunites) {
                 if (!peutUtiliserRadarFootOpp()) {
                     quitterFootOppSiNonPremium();
@@ -5226,26 +5271,20 @@
                 }
             }
             const force = options.force === true;
+            const preserveAnalyse = options.preserveAnalyse === true;
             if (footMatchsCharges && !force) {
                 if (!options.skipRender) renderFootMatchs();
                 return;
             }
-            setFootLoadingMessage(false);
-            if (loading) loading.classList.remove('hidden');
-            if (erreur) erreur.classList.add('hidden');
-            const ok = await rechargerFootMatchsServeur({ force: true, silent: true, skipRender: true });
-            if (!ok && !footMatchsCharges) {
-                footMatchs = [];
-                if (erreur) {
-                    erreur.textContent = 'Impossible de charger api_velora_matchs.json. Mise à jour automatique toutes les 30 min.';
-                    erreur.classList.remove('hidden');
-                }
+            await assurerFootMatchsCharges({ force });
+            if (!preserveAnalyse && !(footAnalyseAffichee && footFiltre.trim())) {
+                footAnalyseAffichee = false;
             }
-            if (loading) loading.classList.add('hidden');
-            footAnalyseAffichee = false;
-            majFootMeta();
-            renderFootMatchs();
-            majFootZoneAccueilTexte();
+            if (!options.skipRender) {
+                majFootMeta();
+                renderFootMatchs();
+                majFootZoneAccueilTexte();
+            }
             chargerStatsPlateforme({ animer: false }).catch((err) => {
                 console.warn('[Velora] Rafraîchissement vitrine Foot :', err);
             });
@@ -6082,8 +6121,25 @@
 
         const VELORA_VALUE_THRESHOLD = 1.05;
 
+        /** Pronostic 1N2 officiel Velora (modèle), jamais le value bet primary_pick. */
+        function pronosticVelora1n2Pick(m) {
+            const direct = String(
+                m?.pronostic_1n2
+                || m?.velora_pick_1n2
+                || m?.free_analysis?.pronostic_1n2
+                || '',
+            ).trim();
+            if (direct === '1' || direct === 'N' || direct === '2' || direct === 'dc_1x' || direct === 'dc_x2') {
+                return direct;
+            }
+            return null;
+        }
+
         /** Choix Velora 1N2 (1 | N | 2 | dc_1x | dc_x2), aligné velora_archiver_foot. */
         function inferVelora1n2Pick(m) {
+            const official = pronosticVelora1n2Pick(m);
+            if (official) return official;
+
             const pp = primaryPickFromMatch(m);
             if (pp && (pp.market === '1n2' || pp.market === '1n2_stats')) {
                 const p = String(pp.pick || '').trim();
@@ -6092,11 +6148,6 @@
             const oppType = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
             if (['buteur', 'score_exact', 'btts', 'over_25', 'ou_total'].includes(oppType)) {
                 return null;
-            }
-
-            const pickStored = m?.velora_pick_1n2;
-            if (pickStored === '1' || pickStored === 'N' || pickStored === '2') {
-                return pickStored;
             }
 
             const conseil = String(m?.conseil || '').toLowerCase();
@@ -6256,7 +6307,7 @@
             } else if (marche === 'buteur' || marche === 'score_exact') {
                 return null;
             } else {
-                const pick = inferVelora1n2Pick(m);
+                const pick = pronosticVelora1n2Pick(m) || inferVelora1n2Pick(m);
                 if (!pick) return null;
                 if (pick === 'dc_1x') {
                     gagne = issue === '1' || issue === 'N';
@@ -6431,7 +6482,7 @@
         }
 
         function htmlVelora1n2PickRow(m, theme = 'foot') {
-            const pick = inferVelora1n2Pick(m);
+            const pick = pronosticVelora1n2Pick(m) || inferVelora1n2Pick(m);
             if (!pick) return '';
             const label = label1n2Velora(m, pick);
             if (!label) return '';
@@ -7137,10 +7188,22 @@
             if (accueil) accueil.classList.add('hidden');
             const liste = footMatchAnalyseUnique();
             zone.className = 'foot-resultats-panel space-y-4';
-            zone.innerHTML = liste.map(carteFootMatch).join('');
+            try {
+                zone.innerHTML = liste.map(carteFootMatch).join('');
+            } catch (err) {
+                console.error('[Velora] Rendu carte Foot :', err);
+                zone.innerHTML = '';
+                const erreur = document.getElementById('footErreur');
+                if (erreur) {
+                    erreur.textContent = 'Erreur d\'affichage de l\'analyse. Rechargez la page.';
+                    erreur.classList.remove('hidden');
+                }
+            }
             majFootZoneVideRecherche(liste.length);
             if (videClassique) videClassique.classList.toggle('hidden', liste.length > 0);
             zone.classList.toggle('hidden', liste.length === 0);
+            const loading = document.getElementById('footLoading');
+            if (loading) loading.classList.add('hidden');
         }
 
         function impliedProbas1n2FromCotes(cotes) {
@@ -7237,10 +7300,8 @@
         }
 
         function pronosticPick1n2PourScores(m) {
-            const direct = String(m?.pronostic_1n2 || m?.free_analysis?.pronostic_1n2 || '').trim();
-            if (direct === '1' || direct === 'N' || direct === '2' || direct === 'dc_1x' || direct === 'dc_x2') {
-                return direct;
-            }
+            const direct = pronosticVelora1n2Pick(m);
+            if (direct) return direct;
             const inferred = inferVelora1n2Pick(m);
             if (inferred === '1' || inferred === 'N' || inferred === '2' || inferred === 'dc_1x' || inferred === 'dc_x2') {
                 return inferred;
