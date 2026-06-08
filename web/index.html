@@ -2205,18 +2205,13 @@
                 pmu.roi_pct = Math.round((pmu.profit_net / pmu.mises_cumulees) * 1000) / 10;
             }
 
-            const analysesPlateforme = Number(
-                pub.total_courses_plateforme ?? ch.courses_analysees ?? financeTotal,
-            ) || 0;
             const resoluesPlateforme = Number(
-                pub.courses_terminees_plateforme ?? ch.courses_terminees ?? financeTotal,
+                pub.courses_terminees_plateforme ?? ch.courses_terminees ?? ch.courses_analysees ?? financeTotal,
             ) || 0;
-            const enAttentePlateforme = Number(pub.courses_en_attente_arrivee ?? 0) || 0;
 
             pmu.compteur_historique = {
-                courses_analysees: analysesPlateforme,
+                courses_analysees: resoluesPlateforme,
                 courses_terminees: resoluesPlateforme,
-                courses_en_attente: enAttentePlateforme,
                 victoires: financeVictoires,
                 taux_reussite: pmu.taux,
             };
@@ -2231,14 +2226,17 @@
             return pmu;
         }
 
-        function enrichirBlocFoot(footBase, communaute) {
+        function enrichirBlocFoot(footBase, communaute, historiqueLocal = []) {
             const blocJson = communaute?.foot && typeof communaute.foot === 'object' ? communaute.foot : {};
             const foot = { ...footBase };
             foot.mises_cumulees = Number(blocJson.mises_cumulees ?? foot.mises_cumulees) || 0;
             foot.profit_net = Number(blocJson.profit_net ?? foot.profit_net) || 0;
             foot.roi_pct = Number(blocJson.roi_pct ?? foot.roi_pct) || 0;
             foot.detail_par_type_pari = blocJson.detail_par_type_pari || {};
-            foot.historique_matchs = Array.isArray(blocJson.historique_matchs) ? blocJson.historique_matchs : [];
+            foot.historique_matchs = choisirHistoriqueFoot(
+                historiqueLocal,
+                Array.isArray(blocJson.historique_matchs) ? blocJson.historique_matchs : [],
+            );
             return foot;
         }
 
@@ -2248,6 +2246,28 @@
             if (local.length >= distant.length) return local.slice(0, 8);
             if (distant.length > 0) return distant.slice(0, 8);
             return local.slice(0, 8);
+        }
+
+        function choisirHistoriqueFoot(localList, jsonList) {
+            const local = Array.isArray(localList) ? localList : [];
+            const distant = Array.isArray(jsonList) ? jsonList : [];
+            const parCle = new Map();
+            const cle = (m) => {
+                if (m.id_match) return `id:${m.id_match}`;
+                return `team:${m.equipe_domicile}|${m.equipe_exterieur}|${m.match_start_ts || m.timestamp || ''}`;
+            };
+            const qualite = (m) => (m.en_attente ? 0 : 1);
+            for (const m of [...distant, ...local]) {
+                const k = cle(m);
+                const prev = parCle.get(k);
+                if (!prev || qualite(m) >= qualite(prev)) parCle.set(k, m);
+            }
+            return [...parCle.values()]
+                .sort(
+                    (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
+                        - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
+                )
+                .slice(0, 8);
         }
 
         function extraireHistoriquePmuDepuisArchivesLocales() {
@@ -2273,7 +2293,7 @@
         /**
          * Remix PMU + Foot : compteur historique Supabase (prioritaire), finance JSON, détail Tiercé.
          */
-        function resoudreStatsCommunaute(row, communaute, statsPubliques = null) {
+        function resoudreStatsCommunaute(row, communaute, statsPubliques = null, extras = {}) {
             const supabasePmu = pmuDepuisSupabase(row);
             let pmu = supabasePmu || blocSportStats(0, 0);
 
@@ -2305,7 +2325,7 @@
             } else if (row) {
                 foot = lireStatsFootDepuisRow(row);
             }
-            foot = enrichirBlocFoot(foot, communaute);
+            foot = enrichirBlocFoot(foot, communaute, extras.historiqueFootLocal || []);
 
             const global = fusionnerStatsGlobales(pmu, foot);
 
@@ -2333,13 +2353,10 @@
 
         function formaterCompteurHistoriquePmu(pmu) {
             const ch = pmu.compteur_historique || {};
-            const analyses = ch.courses_analysees ?? 0;
-            const resolues = ch.courses_terminees ?? pmu.total ?? 0;
-            const enAttente = ch.courses_en_attente ?? 0;
-            if (analyses === 0 && resolues === 0) return '—';
-            let txt = `${analyses} analysées · ${resolues} résolues`;
-            if (enAttente > 0) txt += ` · ${enAttente} en attente PMU`;
-            return txt;
+            const resolues = ch.courses_terminees ?? ch.courses_analysees ?? pmu.total ?? 0;
+            const victoires = ch.victoires ?? pmu.victoires ?? 0;
+            if (resolues === 0) return '—';
+            return `${resolues} résolue${resolues > 1 ? 's' : ''} · ${victoires} victoire${victoires > 1 ? 's' : ''}`;
         }
 
         function formaterCompteurFoot(foot) {
@@ -2415,8 +2432,15 @@
         function htmlVitrineHistoriqueFootItem(match) {
             const titre = `${match.equipe_domicile || '?'} – ${match.equipe_exterieur || '?'}`;
             const score = match.score_final ? ` · ${match.score_final}` : '';
-            const type = match.type_pari_foot || match.marche || '';
-            const badge = type && type !== 'Perdu' ? htmlVitrineBadgePmu(type) : htmlVitrineBadgePmu('Perdu');
+            const enAttente = !!match.en_attente
+                || (match.reussi_foot == null && !match.score_final && !/perdu/i.test(String(match.type_pari_foot || '')));
+            let badge;
+            if (enAttente) {
+                badge = '<span class="vitrine-pmu-badge text-cyan-200/90 border border-cyan-500/30 bg-cyan-500/10">En attente</span>';
+            } else {
+                const type = match.type_pari_foot || match.marche || '';
+                badge = type && type !== 'Perdu' ? htmlVitrineBadgePmu(type) : htmlVitrineBadgePmu('Perdu');
+            }
             return `
                 <li class="vitrine-pmu-historique-item">
                     <span class="font-semibold text-gray-200">${titre}${score}</span>
@@ -2656,12 +2680,13 @@
             if (section) section.classList.remove('hidden');
 
             masquerErreurSync('vitrineSyncErreur');
-            const [{ row, erreur }, communaute, statsPub] = await Promise.all([
+            const [{ row, erreur }, communaute, statsPub, historiqueFootLocal] = await Promise.all([
                 lireVeloraStatsSupabase(),
                 lireCommunauteJson(),
                 lireStatsPubliques(),
+                preparerHistoriqueFootCommunaute(),
             ]);
-            const stats = resoudreStatsCommunaute(row, communaute, statsPub?.stats);
+            const stats = resoudreStatsCommunaute(row, communaute, statsPub?.stats, { historiqueFootLocal });
             injecterStatsCommunauteUI(stats, options);
             if (erreur && !communaute && !statsPub?.stats) {
                 afficherErreurSync(
@@ -4265,6 +4290,7 @@
                 chargerStatsPlateforme().catch((err) => {
                     console.warn('[Velora] Stats plateforme au démarrage :', err);
                 });
+                demarrerAutoRefreshVelora();
             }
         }
 
@@ -4285,6 +4311,7 @@
         let sportActif = 'pmu';
         let sectionActive = 'pronostic';
         let footMatchs = [];
+        let footMatchsMeta = null;
         let footMatchsCharges = false;
         /** Index id_match → fiche premium (aperçu verrouillé analyse gratuite). */
         let footPremiumIndex = null;
@@ -5113,6 +5140,81 @@
             return parseVeloraMatchsPayload(data);
         }
 
+        const VELORA_AUTO_REFRESH_MS = 30 * 60 * 1000;
+        const VELORA_AUTO_REFRESH_PROBE_MS = 5 * 60 * 1000;
+        let veloraAutoRefreshTimer = null;
+
+        /**
+         * Recharge api_velora_matchs.json (cache-bust). Retourne true si les données ont changé.
+         */
+        async function rechargerFootMatchsServeur(options = {}) {
+            const { force = false, silent = false, skipRender = false } = options;
+            try {
+                await chargerOddsHistory();
+                const payload = await fetchVeloraJson(VELORA_JSON_MATCHS);
+                const newGen = payload?.meta?.generated_at || null;
+                const countNext = Array.isArray(payload?.matchs)
+                    ? payload.matchs.length
+                    : (Array.isArray(payload) ? payload.length : 0);
+                const countPrev = footMatchs.length;
+                if (
+                    !force
+                    && footMatchsCharges
+                    && newGen
+                    && footMatchsMeta?.generated_at === newGen
+                    && countNext === countPrev
+                ) {
+                    return false;
+                }
+                footMatchsMeta = payload?.meta && typeof payload.meta === 'object' ? payload.meta : null;
+                footMatchs = parseVeloraMatchsPayload(payload);
+                footMatchsCharges = true;
+                synchroniserArchivesFootDepuisMatchs(footMatchs);
+                if (!skipRender) {
+                    majFootMeta();
+                    renderFootMatchs();
+                    majFootZoneAccueilTexte();
+                    majFootAlerteDonneesUi();
+                }
+                if (!silent) {
+                    console.info(
+                        '[Velora] Matchs Foot mis à jour',
+                        countNext,
+                        newGen ? `(${newGen})` : '',
+                    );
+                }
+                return true;
+            } catch (e) {
+                if (!silent) console.warn('[Velora] Rafraîchissement matchs Foot :', e);
+                return false;
+            }
+        }
+
+        async function rafraichirDonneesVeloraAuto(options = {}) {
+            const silent = options.silent !== false;
+            await rechargerFootMatchsServeur({ force: false, silent, skipRender: false });
+            await rafraichirArchivesFootEtRoi({ silent });
+            const tasks = [chargerStatsPlateforme({ animer: false })];
+            if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
+                tasks.push(chargerOppMatchs({ force: true, skipRender: false }));
+            }
+            await Promise.all(tasks);
+        }
+
+        function demarrerAutoRefreshVelora() {
+            if (veloraAutoRefreshTimer) return;
+            const tick = () => {
+                rafraichirDonneesVeloraAuto({ silent: true }).catch((err) => {
+                    console.warn('[Velora] Auto-refresh :', err);
+                });
+            };
+            veloraAutoRefreshTimer = setInterval(tick, VELORA_AUTO_REFRESH_PROBE_MS);
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') tick();
+            });
+            setTimeout(tick, VELORA_AUTO_REFRESH_MS);
+        }
+
         async function chargerFootMatchs(options = {}) {
             const loading = document.getElementById('footLoading');
             const erreur = document.getElementById('footErreur');
@@ -5123,30 +5225,30 @@
                     return chargerOppMatchs(options);
                 }
             }
-            if (footMatchsCharges) {
+            const force = options.force === true;
+            if (footMatchsCharges && !force) {
                 if (!options.skipRender) renderFootMatchs();
                 return;
             }
             setFootLoadingMessage(false);
             if (loading) loading.classList.remove('hidden');
             if (erreur) erreur.classList.add('hidden');
-            try {
-                await chargerOddsHistory();
-                footMatchs = await fetchVeloraMatchsList(VELORA_JSON_MATCHS);
-                footMatchsCharges = true;
-            } catch (e) {
+            const ok = await rechargerFootMatchsServeur({ force: true, silent: true, skipRender: true });
+            if (!ok && !footMatchsCharges) {
                 footMatchs = [];
                 if (erreur) {
-                    erreur.textContent = 'Impossible de charger api_velora_matchs.json. Lancez run_all.py puis déployez.';
+                    erreur.textContent = 'Impossible de charger api_velora_matchs.json. Mise à jour automatique toutes les 30 min.';
                     erreur.classList.remove('hidden');
                 }
-            } finally {
-                if (loading) loading.classList.add('hidden');
             }
+            if (loading) loading.classList.add('hidden');
             footAnalyseAffichee = false;
-            synchroniserArchivesFootDepuisMatchs(footMatchs);
             majFootMeta();
             renderFootMatchs();
+            majFootZoneAccueilTexte();
+            chargerStatsPlateforme({ animer: false }).catch((err) => {
+                console.warn('[Velora] Rafraîchissement vitrine Foot :', err);
+            });
         }
 
         const VELORA_ARCHIVES_FOOT_KEY = 'velora_archives_foot';
@@ -5296,6 +5398,47 @@
 
         function archivesFootTermineesSeulement(archives) {
             return (archives || []).filter(archiveFootEstValidee);
+        }
+
+        function archiveVersHistoriqueFootItem(a) {
+            const enAttente = archiveFootEstEnAttente(a);
+            const type = a.type_pari_foot || a.opportunite_detail || a.conseil || a.marche || '';
+            return {
+                id_match: a.id_match || '',
+                equipe_domicile: a.equipe_domicile || '?',
+                equipe_exterieur: a.equipe_exterieur || '?',
+                score_final: enAttente ? '' : (a.score_final || ''),
+                type_pari_foot: enAttente ? type : (a.type_pari_foot || type),
+                reussi_foot: enAttente ? null : a.reussi_foot,
+                marche: a.marche || a.opportunite_type || '',
+                en_attente: enAttente,
+                match_start_ts: Number(a.match_start_ts) || Number(a.timestamp) || 0,
+            };
+        }
+
+        function extraireHistoriqueFootDepuisArchives(archives) {
+            const list = (archives || []).filter((a) => {
+                if (!a?.equipe_domicile && !a?.equipe_exterieur) return false;
+                return archiveFootEstValidee(a) || archiveFootEstEnAttente(a);
+            });
+            list.sort(
+                (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
+                    - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
+            );
+            return list.slice(0, 8).map(archiveVersHistoriqueFootItem);
+        }
+
+        async function preparerHistoriqueFootCommunaute() {
+            try {
+                if (Array.isArray(footMatchs) && footMatchs.length) {
+                    synchroniserArchivesFootDepuisMatchs(footMatchs);
+                }
+            } catch {
+                /* footMatchs peut être vide au premier chargement */
+            }
+            const archivesServeur = await chargerArchivesFootServeur();
+            const archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
+            return extraireHistoriqueFootDepuisArchives(archives);
         }
 
         function htmlBadgeResultatArchiveFoot(a) {
@@ -5491,7 +5634,19 @@
                 ? new Date(maxMs).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
                 : null;
             const aVenir = list.filter(estMatchAVenirOuLive).length;
-            return { perime, derniereDate, count: list.length, aVenir };
+            let genereAt = null;
+            let genereAgeH = null;
+            const rawGen = footMatchsMeta?.generated_at;
+            if (rawGen) {
+                const genMs = Date.parse(String(rawGen));
+                if (Number.isFinite(genMs)) {
+                    genereAt = new Date(genMs).toLocaleString('fr-FR', {
+                        day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+                    });
+                    genereAgeH = Math.round((Date.now() - genMs) / 3600000);
+                }
+            }
+            return { perime, derniereDate, count: list.length, aVenir, genereAt, genereAgeH };
         }
 
         function htmlFootAlerteDonneesPerimees() {
@@ -6015,6 +6170,251 @@
             if (pick === 'dc_1x' || pick === 'dc_x2') return null;
             const cotes = m?.cotes || {};
             return fmtCoteMarche(cotes[pick]);
+        }
+
+        const VELORA_JSON_FOOT_RESULTATS = '/velora_foot_resultats.json';
+        let footResultatsCache = null;
+
+        function matchFootParId(id) {
+            const key = String(id || '');
+            if (!key) return null;
+            const list = [...(footMatchs || []), ...(oppMatchs || [])];
+            return list.find((m) => String(m.id_match) === key) || null;
+        }
+
+        function enrichirArchivePourValidation(archive) {
+            const match = matchFootParId(archive?.id_match);
+            const cotesMatch = match?.cotes || match?.free_analysis?.cotes_1n2 || {};
+            const cotesArch = archive?.cotes || {};
+            const cotes = (cotesArch['1'] != null || cotesArch['2'] != null) ? cotesArch : cotesMatch;
+            return {
+                ...archive,
+                equipe_domicile: archive.equipe_domicile || match?.equipe_domicile || '?',
+                equipe_exterieur: archive.equipe_exterieur || match?.equipe_exterieur || '?',
+                conseil: archive.conseil || match?.conseil || '',
+                opportunite_detail: archive.opportunite_detail || match?.opportunite_detail || '',
+                opportunite_type: archive.opportunite_type || match?.opportunite_type || archive.marche,
+                marche: archive.marche || match?.opportunite_type || inferVeloraMarcheType(match || archive),
+                cotes,
+                probabilites: archive.probabilites || match?.probabilites || match?.free_analysis?.probabilites || {},
+                velora_pick_1n2: archive.velora_pick_1n2 || match?.velora_pick_1n2 || match?.free_analysis?.pronostic_1n2,
+                primary_pick: match?.primary_pick || match?.free_analysis?.primary_pick || archive.primary_pick,
+                les_deux_marquent: archive.les_deux_marquent ?? match?.les_deux_marquent,
+                over_under_25: archive.over_under_25 || match?.over_under_25,
+                marches_supplementaires: archive.marches_supplementaires || match?.marches_supplementaires,
+                btts: archive.btts || match?.btts,
+            };
+        }
+
+        function calculerFinancierFoot(gagne, cote) {
+            const m = VELORA_MISE_UNITAIRE;
+            if (!gagne) {
+                return { mise: m, gain_brut: 0, profit: -m, roi_pari: -100 };
+            }
+            let c = Number(cote);
+            if (!Number.isFinite(c) || c < 1.01) c = 1.01;
+            const gainBrut = Math.round(m * c * 100) / 100;
+            const profit = Math.round((gainBrut - m) * 100) / 100;
+            return {
+                mise: m,
+                gain_brut: gainBrut,
+                profit,
+                roi_pari: Math.round((profit / m) * 1000) / 10,
+            };
+        }
+
+        function issue1n2Foot(dom, ext) {
+            if (dom > ext) return '1';
+            if (dom < ext) return '2';
+            return 'N';
+        }
+
+        function validerArchiveFootClient(archive, dom, ext) {
+            const m = enrichirArchivePourValidation(archive);
+            const marche = String(m.marche || m.opportunite_type || inferVeloraMarcheType(m)).toLowerCase();
+            const issue = issue1n2Foot(dom, ext);
+            const total = dom + ext;
+            let gagne = false;
+            let typePari = '';
+            let cote = null;
+
+            if (marche === 'over_25' || marche === 'ou_total') {
+                const pick = inferVeloraOu25Pick(m);
+                if (!pick) return null;
+                gagne = pick === 'plus' ? total > 2 : total < 3;
+                typePari = pick === 'plus' ? 'Over 2.5' : 'Under 2.5';
+                const ou = ou25CotesFromMatch(m);
+                cote = pick === 'plus' ? ou?.plus : ou?.moins;
+            } else if (marche === 'btts') {
+                const pick = inferVeloraBttsPick(m);
+                if (!pick) return null;
+                const bttsOk = dom > 0 && ext > 0;
+                gagne = pick === 'oui' ? bttsOk : !bttsOk;
+                typePari = pick === 'oui' ? 'BTTS Oui' : 'BTTS Non';
+                const b = bttsCotesFromMatch(m);
+                cote = pick === 'oui' ? b?.oui : b?.non;
+            } else if (marche === 'buteur' || marche === 'score_exact') {
+                return null;
+            } else {
+                const pick = inferVelora1n2Pick(m);
+                if (!pick) return null;
+                if (pick === 'dc_1x') {
+                    gagne = issue === '1' || issue === 'N';
+                    typePari = 'Double chance 1X';
+                    cote = m.cotes?.['1'];
+                } else if (pick === 'dc_x2') {
+                    gagne = issue === 'N' || issue === '2';
+                    typePari = 'Double chance X2';
+                    cote = m.cotes?.['2'];
+                } else {
+                    gagne = pick === issue;
+                    const labels = { 1: 'Domicile', N: 'Nul', 2: 'Extérieur' };
+                    typePari = `1N2 ${labels[pick] || pick}`;
+                    cote = m.cotes?.[pick];
+                }
+            }
+
+            const financier = calculerFinancierFoot(gagne, cote);
+            return {
+                ...m,
+                score_final: `${dom}-${ext}`,
+                statut: 'Terminée',
+                statut_pari: gagne ? 'GAGNANT' : 'PERDANT',
+                reussi_foot: gagne,
+                type_pari_foot: gagne ? typePari : 'Perdu',
+                cote_jouee: cote,
+                financier,
+                profit: financier.profit,
+                valide_at: new Date().toISOString(),
+            };
+        }
+
+        async function chargerResultatsFootServeur() {
+            try {
+                footResultatsCache = await fetchVeloraJson(VELORA_JSON_FOOT_RESULTATS);
+            } catch {
+                footResultatsCache = null;
+            }
+            return footResultatsCache;
+        }
+
+        function scoreDepuisResultatsFoot(idMatch) {
+            const bloc = footResultatsCache?.matchs?.[String(idMatch)];
+            if (!bloc || bloc.domicile == null || bloc.exterieur == null) return null;
+            const dom = Number(bloc.domicile);
+            const ext = Number(bloc.exterieur);
+            if (!Number.isFinite(dom) || !Number.isFinite(ext)) return null;
+            return { dom, ext };
+        }
+
+        async function resoudreArchivesFootEnAttente(archives) {
+            await chargerResultatsFootServeur();
+            let resolus = 0;
+            const out = (archives || []).map((a) => {
+                if (!archiveFootEstEnAttente(a)) return a;
+                if (!archiveFootMatchDejaJoue(a)) return a;
+                const sc = scoreDepuisResultatsFoot(a.id_match);
+                if (!sc) return a;
+                const valide = validerArchiveFootClient(a, sc.dom, sc.ext);
+                if (!valide || !archiveFootEstValidee(valide)) return a;
+                resolus += 1;
+                return valide;
+            });
+            if (resolus > 0) {
+                console.info(`[Velora] ${resolus} archive(s) Foot résolue(s) — ROI recalculé.`);
+            }
+            return out;
+        }
+
+        function classifierMarcheArchiveFoot(archive) {
+            const marche = String(archive?.marche || archive?.opportunite_type || '').toLowerCase();
+            const blob = `${archive?.conseil || ''} ${archive?.opportunite_detail || ''} ${archive?.type_pari_foot || ''}`.toLowerCase();
+            if (marche.includes('over') || blob.includes('over 2.5') || blob.includes('+2.5')) {
+                return ['over_25', 'Over 2.5'];
+            }
+            if (marche.includes('under') || blob.includes('under 2.5')) {
+                return ['under_25', 'Under 2.5'];
+            }
+            if (marche === 'btts' || blob.includes('btts')) {
+                return ['btts', 'BTTS'];
+            }
+            if (blob.includes('double chance')) {
+                return ['double_chance', 'Double chance'];
+            }
+            return ['pronostic_1n2', 'Pronostic 1N2'];
+        }
+
+        function calculerStatsFootLocales(archives) {
+            const valides = archivesFootTermineesSeulement(archives);
+            const victoires = valides.filter((a) => a.reussi_foot === true).length;
+            const total = valides.length;
+            const taux = total ? Math.round((victoires / total) * 100) : 0;
+            let mises = 0;
+            let profit = 0;
+            const buckets = {};
+            for (const a of valides) {
+                const fin = a.financier && typeof a.financier === 'object' ? a.financier : {};
+                mises += Number(fin.mise) || VELORA_MISE_UNITAIRE;
+                profit += Number.isFinite(Number(fin.profit))
+                    ? Number(fin.profit)
+                    : (a.reussi_foot ? 0 : -VELORA_MISE_UNITAIRE);
+                const [cle, label] = classifierMarcheArchiveFoot(a);
+                if (!buckets[cle]) {
+                    buckets[cle] = { label, total: 0, succes: 0, taux: 0 };
+                }
+                buckets[cle].total += 1;
+                if (a.reussi_foot === true) buckets[cle].succes += 1;
+            }
+            for (const b of Object.values(buckets)) {
+                b.taux = b.total ? Math.round((b.succes / b.total) * 100) : 0;
+            }
+            const roiPct = mises > 0 ? Math.round((profit / mises) * 1000) / 10 : 0;
+            return {
+                victoires,
+                total,
+                taux,
+                mises_cumulees: Math.round(mises * 100) / 100,
+                profit_net: Math.round(profit * 100) / 100,
+                roi_pct: roiPct,
+                detail_par_marche: buckets,
+            };
+        }
+
+        function calculerTauxReussiteFoot(archives) {
+            return calculerStatsFootLocales(archives).taux;
+        }
+
+        async function rafraichirArchivesFootEtRoi(options = {}) {
+            try {
+                if (Array.isArray(footMatchs) && footMatchs.length) {
+                    synchroniserArchivesFootDepuisMatchs(footMatchs);
+                }
+            } catch {
+                /* footMatchs peut être vide */
+            }
+            const enAttenteAvant = lireArchivesFootLocal().filter(archiveFootEstEnAttente).length;
+            if (enAttenteAvant === 0) return false;
+
+            const archivesServeur = await chargerArchivesFootServeur();
+            let archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
+            archives = await resoudreArchivesFootEnAttente(archives);
+            const enAttenteApres = archives.filter(archiveFootEstEnAttente).length;
+
+            if (archives.length) {
+                ecrireArchivesFootLocal(archives);
+            }
+
+            if (enAttenteApres < enAttenteAvant) {
+                if (!options.silent) {
+                    console.info('[Velora] Archives Foot mises à jour — résultats intégrés au ROI.');
+                }
+                await chargerStatsPlateforme({ animer: true });
+                if (sectionActive === 'archives' && sportActif === 'foot') {
+                    await chargerArchivesFoot();
+                }
+                return true;
+            }
+            return false;
         }
 
         function label1n2Velora(m, pick) {
@@ -6600,10 +7000,14 @@
             }
             if (!footAnalyseAffichee || !q) {
                 const totalBase = footMatchs.length;
+                const fm = footMetaDonneesMatchs();
+                const majHint = fm.genereAt && (fm.genereAgeH == null || fm.genereAgeH >= 1)
+                    ? ` · base MAJ ${fm.genereAt}`
+                    : '';
                 const baseInfo = actifs.length > 0
-                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (journée + nocturnes)`
+                    ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (journée + nocturnes)${majHint}`
                     : (totalBase > 0
-                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base (données à actualiser)`
+                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto 30 min`
                         : '0 match aujourd\'hui');
                 meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
@@ -7290,12 +7694,19 @@
             masquerErreurSync('statsSyncErreur');
             liste.innerHTML = '<p class="text-center text-sm text-gray-400 py-6">Chargement des archives Foot…</p>';
 
-                synchroniserArchivesFootDepuisMatchs(footMatchs);
+            synchroniserArchivesFootDepuisMatchs(footMatchs);
             const archivesServeur = await chargerArchivesFootServeur();
             const archivesLocal = lireArchivesFootLocal();
-            const archives = fusionnerArchivesFoot(archivesLocal, archivesServeur);
+            let archives = fusionnerArchivesFoot(archivesLocal, archivesServeur);
+
+            const aVerifier = archives.filter((a) => archiveFootEstEnAttente(a) && archiveFootMatchDejaJoue(a));
+            if (aVerifier.length > 0) {
+                liste.innerHTML = `<p class="text-center text-sm text-gray-400 py-6">Vérification des résultats (${aVerifier.length} match${aVerifier.length > 1 ? 's' : ''})…</p>`;
+                archives = await resoudreArchivesFootEnAttente(archives);
+            }
+
             if (archives.length > 0) {
-            ecrireArchivesFootLocal(archives);
+                ecrireArchivesFootLocal(archives);
             }
             const n = archives.length;
             const nbValides = archives.filter((a) => archiveFootEstValidee(a)).length;
@@ -7306,10 +7717,10 @@
                 const com = await fetchVeloraJson('/api_velora_communaute.json');
                 statsCommunaute = com?.foot || null;
             } catch { /* local only */ }
-            const statsFoot = statsCommunaute?.detail_par_marche
-                ? statsCommunaute
-                : statsLocales;
-            const taux = statsCommunaute?.taux ?? statsLocales.taux ?? calculerTauxReussiteFoot(archives);
+            const statsFoot = statsLocales.total > 0 ? statsLocales : (statsCommunaute || statsLocales);
+            const taux = statsLocales.total > 0
+                ? statsLocales.taux
+                : (statsCommunaute?.taux ?? calculerTauxReussiteFoot(archives));
             if (countEl) countEl.textContent = String(n);
             if (tauxEl) tauxEl.textContent = String(taux);
             if (statsEl) {
@@ -7324,8 +7735,7 @@
                 liste.innerHTML = `
                     <p class="text-center text-sm text-gray-500 py-8">
                         Aucun match football archivé.
-                        <br><span class="text-gray-500">Au coup d'envoi, le match passe en « En attente ». Placez vos archives dans <code class="text-cyan-400/90">web/velora_archives_foot.json</code> puis lancez <code class="text-cyan-400/90">python resolver_scores_foot.py</code>.</span>
-                        <br><button type="button" onclick="telechargerArchivesFootPourPipeline()" class="mt-3 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs text-cyan-200 hover:bg-cyan-500/20">Exporter mes archives (JSON) pour le pipeline</button>
+                        <br><span class="text-gray-500">Au coup d'envoi, le match passe en « En attente » puis se valide automatiquement à la fin (ROI mis à jour toutes les 5–30&nbsp;min).</span>
                     </p>`;
                 return;
             }

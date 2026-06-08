@@ -1,403 +1,205 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-07T13:25:55.420717+02:00",
+    "generated_at": "2026-06-08T04:34:16.163651+02:00",
     "engine": "velora-pro-2",
-    "match_count": 5
+    "match_count": 7
   },
   "matchs": [
     {
-      "id_match": "71421980",
-      "date_match": "07/06/2026 à 18:30",
-      "match_start_ts": 1780849800,
+      "id_match": "71899596",
+      "date_match": "08/06/2026 à 18:00",
+      "match_start_ts": 1780934400,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Danemark",
-      "equipe_exterieur": "Ukraine",
+      "equipe_domicile": "FUS Rabat",
+      "equipe_exterieur": "Difaa El Jadida",
       "meta_match": {
         "competition": {
-          "name": "International — Matchs Amicaux",
-          "type": "friendly",
-          "stakes_tier": "low",
-          "category_id": "4",
-          "tournament_id": "66"
+          "name": "Maroc — Botola Pro",
+          "type": "other",
+          "round": "J23",
+          "stakes_tier": "medium",
+          "category_id": "303",
+          "tournament_id": "3640"
         }
       },
       "confidence": {
-        "velora_score": 52.0,
-        "indice_velora": 2,
-        "base_confidence": 0.52,
-        "adjusted_confidence": 0.22,
-        "modifiers": [
-          {
-            "code": "friendly_match",
-            "delta": -0.3,
-            "label": "Match amical — confiance réduite"
-          }
-        ]
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.66,
-          "N": 3.5,
-          "2": 4.4
+          "1": 1.72,
+          "N": 3.1,
+          "2": 3.95
         },
         "probabilites": {
-          "1": 42,
-          "N": 25,
-          "2": 33
+          "1": 45,
+          "N": 31,
+          "2": 24
         },
         "probabilites_marche": {
+          "1": 50,
+          "N": 28,
+          "2": 22
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.68,
+          "away": 1.115
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 11
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 5
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 55,
+        "football_data_enriched": false,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 11
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 5
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ]
+    },
+    {
+      "id_match": "71899598",
+      "date_match": "08/06/2026 à 20:00",
+      "match_start_ts": 1780941600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Wydad Casablanca",
+      "equipe_exterieur": "OC Safi",
+      "meta_match": {
+        "competition": {
+          "name": "Maroc — Botola Pro",
+          "type": "other",
+          "round": "J23",
+          "stakes_tier": "medium",
+          "category_id": "303",
+          "tournament_id": "3640"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.44,
+          "N": 3.9,
+          "2": 5.4
+        },
+        "probabilites": {
           "1": 54,
           "N": 26,
           "2": 20
         },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Ukraine",
-        "confiance_niveau": "faible",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.251,
-          "away": 1.37
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-2",
-            "prob": 6
-          },
-          {
-            "score": "0-1",
-            "prob": 4
-          },
-          {
-            "score": "2-3",
-            "prob": 3
-          },
-          {
-            "score": "1-3",
-            "prob": 3
-          },
-          {
-            "score": "0-2",
-            "prob": 3
-          }
-        ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 66,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Ukraine",
-            "cote": 4.4,
-            "edge": 1.452,
-            "stars": 5,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Ukraine",
-          "cote": 4.4,
-          "conseil_short": "🔥 Value Bet — Victoire Ukraine @ 4.40"
-        },
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Ukraine — forme favorable Ukraine",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
-      },
-      "top_scores": [
-        {
-          "score": "1-2",
-          "prob": 6
-        },
-        {
-          "score": "0-1",
-          "prob": 4
-        },
-        {
-          "score": "2-3",
-          "prob": 3
-        },
-        {
-          "score": "1-3",
-          "prob": 3
-        },
-        {
-          "score": "0-2",
-          "prob": 3
-        }
-      ]
-    },
-    {
-      "id_match": "68686010",
-      "date_match": "07/06/2026 à 20:00",
-      "match_start_ts": 1780855200,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Inter Toronto",
-      "equipe_exterieur": "Forge",
-      "meta_match": {
-        "competition": {
-          "name": "Canada — Canadian Premier League",
-          "type": "league",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "388",
-          "tournament_id": "80244"
-        }
-      },
-      "confidence": {
-        "velora_score": 67.2,
-        "indice_velora": 3,
-        "base_confidence": 0.672,
-        "adjusted_confidence": 0.672,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 2.95,
-          "N": 3.25,
-          "2": 1.96
-        },
-        "probabilites": {
-          "1": 23,
+        "probabilites_marche": {
+          "1": 61,
           "N": 23,
-          "2": 54
-        },
-        "probabilites_marche": {
-          "1": 29,
-          "N": 27,
-          "2": 44
-        },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Forge",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 1.834,
-          "away": 2.259
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-2",
-            "prob": 8
-          },
-          {
-            "score": "1-3",
-            "prob": 6
-          },
-          {
-            "score": "2-3",
-            "prob": 5
-          },
-          {
-            "score": "0-2",
-            "prob": 4
-          },
-          {
-            "score": "0-1",
-            "prob": 4
-          }
-        ],
-        "prob_over_25_modele": 76,
-        "prob_btts_modele": 74,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Forge",
-            "cote": 1.96,
-            "edge": 1.058,
-            "stars": 2,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Forge",
-          "cote": 1.96,
-          "conseil_short": "🔥 Value Bet — Victoire Forge @ 1.96"
-        },
-        "display_badges": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
-      },
-      "top_scores": [
-        {
-          "score": "1-2",
-          "prob": 8
-        },
-        {
-          "score": "1-3",
-          "prob": 6
-        },
-        {
-          "score": "2-3",
-          "prob": 5
-        },
-        {
-          "score": "0-2",
-          "prob": 4
-        },
-        {
-          "score": "0-1",
-          "prob": 4
-        }
-      ]
-    },
-    {
-      "id_match": "71170368",
-      "date_match": "07/06/2026 à 21:00",
-      "match_start_ts": 1780858800,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Maroc",
-      "equipe_exterieur": "Norvège",
-      "meta_match": {
-        "competition": {
-          "name": "International — Matchs Amicaux",
-          "type": "friendly",
-          "stakes_tier": "low",
-          "category_id": "4",
-          "tournament_id": "66"
-        }
-      },
-      "confidence": {
-        "velora_score": 56.4,
-        "indice_velora": 3,
-        "base_confidence": 0.564,
-        "adjusted_confidence": 0.264,
-        "modifiers": [
-          {
-            "code": "friendly_match",
-            "delta": -0.3,
-            "label": "Match amical — confiance réduite"
-          }
-        ]
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 3.0,
-          "N": 3.45,
-          "2": 2.15
-        },
-        "probabilites": {
-          "1": 40,
-          "N": 26,
-          "2": 34
-        },
-        "probabilites_marche": {
-          "1": 31,
-          "N": 27,
-          "2": 42
+          "2": 16
         },
         "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Maroc",
+        "pronostic_label": "Privilégier le +2.5 buts",
         "confiance_niveau": "faible",
-        "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.688,
-          "away": 1.965
+          "home": 1.848,
+          "away": 0.947
         },
         "top_scores_modele": [
           {
-            "score": "2-1",
-            "prob": 7
-          },
-          {
             "score": "1-0",
-            "prob": 4
-          },
-          {
-            "score": "3-1",
-            "prob": 4
-          },
-          {
-            "score": "3-2",
-            "prob": 4
+            "prob": 11
           },
           {
             "score": "2-0",
-            "prob": 4
+            "prob": 10
+          },
+          {
+            "score": "2-1",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 6
+          },
+          {
+            "score": "3-1",
+            "prob": 6
           }
         ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 70,
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 51,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "1",
-            "label": "Victoire Maroc",
-            "cote": 3.0,
-            "edge": 1.2,
-            "stars": 5,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "1",
-          "label": "Victoire Maroc",
-          "cote": 3.0,
-          "conseil_short": "🔥 Value Bet — Victoire Maroc @ 3.00"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -416,42 +218,157 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Maroc — forme favorable Maroc",
+        "conseil": "Privilégier le +2.5 buts",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       },
       "top_scores": [
         {
-          "score": "2-1",
-          "prob": 7
-        },
-        {
           "score": "1-0",
-          "prob": 4
-        },
-        {
-          "score": "3-1",
-          "prob": 4
-        },
-        {
-          "score": "3-2",
-          "prob": 4
+          "prob": 11
         },
         {
           "score": "2-0",
-          "prob": 4
+          "prob": 10
+        },
+        {
+          "score": "2-1",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 6
+        },
+        {
+          "score": "3-1",
+          "prob": 6
         }
       ]
     },
     {
-      "id_match": "71422646",
-      "date_match": "07/06/2026 à 21:00",
-      "match_start_ts": 1780858800,
+      "id_match": "71899600",
+      "date_match": "08/06/2026 à 20:00",
+      "match_start_ts": 1780941600,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Grèce",
-      "equipe_exterieur": "Italie",
+      "equipe_domicile": "RSB Berkane",
+      "equipe_exterieur": "Ittihad Tanger",
+      "meta_match": {
+        "competition": {
+          "name": "Maroc — Botola Pro",
+          "type": "other",
+          "round": "J23",
+          "stakes_tier": "medium",
+          "category_id": "303",
+          "tournament_id": "3640"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.58,
+          "N": 3.25,
+          "2": 4.6
+        },
+        "probabilites": {
+          "1": 48,
+          "N": 30,
+          "2": 22
+        },
+        "probabilites_marche": {
+          "1": 54,
+          "N": 27,
+          "2": 19
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.754,
+          "away": 1.041
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 11
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 5
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 53,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 11
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 5
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ]
+    },
+    {
+      "id_match": "71601488",
+      "date_match": "08/06/2026 à 20:45",
+      "match_start_ts": 1780944300,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Pays-Bas",
+      "equipe_exterieur": "Ouzbékistan",
       "meta_match": {
         "competition": {
           "name": "International — Matchs Amicaux",
@@ -462,10 +379,10 @@
         }
       },
       "confidence": {
-        "velora_score": 49.9,
-        "indice_velora": 2,
-        "base_confidence": 0.499,
-        "adjusted_confidence": 0.199,
+        "velora_score": 58.8,
+        "indice_velora": 3,
+        "base_confidence": 0.588,
+        "adjusted_confidence": 0.288,
         "modifiers": [
           {
             "code": "friendly_match",
@@ -477,75 +394,58 @@
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 2.05,
-          "N": 3.45,
-          "2": 3.1
+          "1": 1.23,
+          "N": 5.7,
+          "2": 8.0
         },
         "probabilites": {
-          "1": 37,
-          "N": 26,
-          "2": 37
+          "1": 56,
+          "N": 19,
+          "2": 25
         },
         "probabilites_marche": {
-          "1": 45,
-          "N": 26,
-          "2": 29
+          "1": 73,
+          "N": 16,
+          "2": 11
         },
         "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Italie",
+        "pronostic_label": "Victoire Ouzbékistan",
         "confiance_niveau": "faible",
         "line_signal": "stable",
         "poisson_lambdas": {
-          "home": 1.991,
-          "away": 1.598
+          "home": 2.601,
+          "away": 1.01
         },
         "top_scores_modele": [
           {
             "score": "1-2",
-            "prob": 7
+            "prob": 4
           },
           {
             "score": "0-1",
-            "prob": 4
-          },
-          {
-            "score": "1-3",
-            "prob": 4
+            "prob": 3
           },
           {
             "score": "2-3",
-            "prob": 4
+            "prob": 2
           },
           {
             "score": "0-2",
-            "prob": 4
+            "prob": 1
+          },
+          {
+            "score": "1-3",
+            "prob": 1
           }
         ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 68,
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 58,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Italie",
-            "cote": 3.1,
-            "edge": 1.147,
-            "stars": 4,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Italie",
-          "cote": 3.1,
-          "conseil_short": "🔥 Value Bet — Victoire Italie @ 3.10"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -564,139 +464,242 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Italie — forme favorable Italie",
+        "conseil": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       },
       "top_scores": [
         {
           "score": "1-2",
-          "prob": 7
+          "prob": 4
         },
         {
           "score": "0-1",
-          "prob": 4
-        },
-        {
-          "score": "1-3",
-          "prob": 4
+          "prob": 3
         },
         {
           "score": "2-3",
-          "prob": 4
+          "prob": 2
         },
         {
           "score": "0-2",
-          "prob": 4
+          "prob": 1
+        },
+        {
+          "score": "1-3",
+          "prob": 1
         }
       ]
     },
     {
-      "id_match": "71853280",
-      "date_match": "07/06/2026 à 21:00",
-      "match_start_ts": 1780858800,
+      "id_match": "71307342",
+      "date_match": "08/06/2026 à 21:10",
+      "match_start_ts": 1780945800,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Las Palmas",
-      "equipe_exterieur": "Malaga",
+      "equipe_domicile": "France",
+      "equipe_exterieur": "Irlande du Nord",
       "meta_match": {
         "competition": {
-          "name": "Espagne — LaLiga2",
-          "type": "league",
-          "round": "1/2 aller",
-          "stakes_tier": "medium",
-          "category_id": "32",
-          "tournament_id": "16255"
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
         }
       },
       "confidence": {
-        "velora_score": 56.4,
+        "velora_score": 61.1,
         "indice_velora": 3,
-        "base_confidence": 0.564,
-        "adjusted_confidence": 0.564,
+        "base_confidence": 0.611,
+        "adjusted_confidence": 0.311,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.11,
+          "N": 8.5,
+          "2": 14.5
+        },
+        "probabilites": {
+          "1": 81,
+          "N": 14,
+          "2": 5
+        },
+        "probabilites_marche": {
+          "1": 83,
+          "N": 11,
+          "2": 6
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire France",
+        "confiance_niveau": "faible",
+        "line_signal": "stable",
+        "poisson_lambdas": {
+          "home": 2.941,
+          "away": 0.791
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-0",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 10
+          },
+          {
+            "score": "2-1",
+            "prob": 8
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "4-0",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 50,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire France — forme favorable France",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "top_scores": [
+        {
+          "score": "2-0",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 10
+        },
+        {
+          "score": "2-1",
+          "prob": 8
+        },
+        {
+          "score": "3-1",
+          "prob": 8
+        },
+        {
+          "score": "4-0",
+          "prob": 7
+        }
+      ]
+    },
+    {
+      "id_match": "71899602",
+      "date_match": "08/06/2026 à 22:00",
+      "match_start_ts": 1780948800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Olympique Dcheira",
+      "equipe_exterieur": "HUSA Agadir",
+      "meta_match": {
+        "competition": {
+          "name": "Maroc — Botola Pro",
+          "type": "other",
+          "round": "J23",
+          "stakes_tier": "medium",
+          "category_id": "303",
+          "tournament_id": "3640"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.98,
-          "N": 3.0,
-          "2": 3.3
+          "1": 2.9,
+          "N": 2.9,
+          "2": 2.2
         },
         "probabilites": {
-          "1": 33,
-          "N": 29,
+          "1": 31,
+          "N": 31,
           "2": 38
         },
         "probabilites_marche": {
-          "1": 44,
-          "N": 29,
-          "2": 27
+          "1": 30,
+          "N": 30,
+          "2": 40
         },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Malaga",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Nul",
+        "confiance_niveau": "faible",
         "poisson_lambdas": {
-          "home": 1.326,
-          "away": 1.039
+          "home": 1.758,
+          "away": 2.03
         },
         "top_scores_modele": [
           {
-            "score": "0-1",
-            "prob": 10
+            "score": "1-1",
+            "prob": 8
           },
           {
-            "score": "1-2",
+            "score": "2-2",
             "prob": 7
           },
           {
-            "score": "0-2",
-            "prob": 5
+            "score": "3-3",
+            "prob": 3
           },
           {
-            "score": "1-3",
+            "score": "0-0",
             "prob": 2
           },
           {
-            "score": "0-3",
-            "prob": 2
+            "score": "4-4",
+            "prob": 1
           }
         ],
-        "prob_over_25_modele": 42,
-        "prob_btts_modele": 47,
+        "prob_over_25_modele": 72,
+        "prob_btts_modele": 71,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Malaga",
-            "cote": 3.3,
-            "edge": 1.254,
-            "stars": 5,
-            "is_primary": true
-          },
-          {
-            "market": "dc_x2",
-            "pick": "dc_x2",
-            "label": "Double chance X2",
-            "edge": 1.254,
-            "stars": 5,
-            "is_primary": false
-          }
-        ],
-        "primary_pick": {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Malaga",
-          "cote": 3.3,
-          "conseil_short": "🔥 Value Bet — Victoire Malaga @ 3.30"
-        },
+        "value_bets": [],
         "display_badges": []
       },
       "premium_analysis": {
@@ -715,32 +718,156 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
+        "conseil": "🔥 Value Bet Détecté : Nul",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
+        "is_opportunite": false
       },
       "top_scores": [
         {
-          "score": "0-1",
-          "prob": 10
+          "score": "1-1",
+          "prob": 8
         },
         {
-          "score": "1-2",
+          "score": "2-2",
           "prob": 7
         },
         {
-          "score": "0-2",
-          "prob": 5
+          "score": "3-3",
+          "prob": 3
         },
         {
-          "score": "1-3",
+          "score": "0-0",
           "prob": 2
         },
         {
-          "score": "0-3",
-          "prob": 2
+          "score": "4-4",
+          "prob": 1
+        }
+      ]
+    },
+    {
+      "id_match": "71702730",
+      "date_match": "09/06/2026 à 00:00",
+      "match_start_ts": 1780956000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Atletico Nacional",
+      "equipe_exterieur": "Junior De Barranquilla",
+      "meta_match": {
+        "competition": {
+          "name": "Colombie — Primera A",
+          "type": "other",
+          "round": "Finale retour",
+          "stakes_tier": "medium",
+          "category_id": "274",
+          "tournament_id": "19232"
+        }
+      },
+      "confidence": {
+        "velora_score": 54.1,
+        "indice_velora": 3,
+        "base_confidence": 0.541,
+        "adjusted_confidence": 0.541,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.43,
+          "N": 4.1,
+          "2": 5.2
+        },
+        "probabilites": {
+          "1": 62,
+          "N": 24,
+          "2": 14
+        },
+        "probabilites_marche": {
+          "1": 62,
+          "N": 21,
+          "2": 17
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire Atletico Nacional",
+        "confiance_niveau": "haute",
+        "line_signal": "stable",
+        "poisson_lambdas": {
+          "home": 1.863,
+          "away": 0.975
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-0",
+            "prob": 11
+          },
+          {
+            "score": "2-0",
+            "prob": 10
+          },
+          {
+            "score": "2-1",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 6
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 54,
+        "prob_btts_modele": 52,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Atletico Nacional — forme favorable Atletico Nacional — Classement 1e vs 2e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "top_scores": [
+        {
+          "score": "1-0",
+          "prob": 11
+        },
+        {
+          "score": "2-0",
+          "prob": 10
+        },
+        {
+          "score": "2-1",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 6
+        },
+        {
+          "score": "3-1",
+          "prob": 6
         }
       ]
     }

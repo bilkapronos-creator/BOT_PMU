@@ -51,7 +51,6 @@ from parser_winamax import (  # noqa: E402
     find_main_bet,
     format_match_start,
     get_teams,
-    is_match_live,
     is_match_within_parser_horizon,
     is_winamax_match_finished,
 )
@@ -269,8 +268,6 @@ def build_api_document_from_state(state: dict | None) -> ApiVeloraDocument:
 
     for match_id, raw in matches_map.items():
         if not isinstance(raw, dict) or raw.get("sportId") != FOOTBALL_SPORT_ID:
-            continue
-        if is_match_live(raw):
             continue
         home, away = get_teams(raw)
         if home == "?" and away == "?":

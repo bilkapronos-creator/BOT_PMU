@@ -1425,7 +1425,7 @@ def parse_football_matches(data: dict) -> list[dict]:
     results = []
     skipped_finished = 0
     skipped_horizon = 0
-    skipped_live = 0
+    live_included = 0
     now = datetime.now(tz=TZ_PARIS)
 
     for match_id, match in matches_map.items():
@@ -1433,8 +1433,7 @@ def parse_football_matches(data: dict) -> list[dict]:
             if not isinstance(match, dict) or match.get("sportId") != FOOTBALL_SPORT_ID:
                 continue
             if is_match_live(match):
-                skipped_live += 1
-                continue
+                live_included += 1
             home, away = get_teams(match)
             if home == "?" and away == "?":
                 continue
@@ -1486,10 +1485,10 @@ def parse_football_matches(data: dict) -> list[dict]:
             f"(hors fenêtre {'24 h' if MATCH_PARSER_HORIZON_MODE == 'rolling' else 'journée+nocturnes'} "
             f"ou date inconnue) — ignorés du JSON."
         )
-    if skipped_live:
+    if live_included:
         print(
-            f"[parser] {skipped_live} match(s) LIVE exclus "
-            f"(cotes annexes / O-U non fiables)."
+            f"[parser] {live_included} match(s) LIVE inclus "
+            f"(1N2 OK — cotes annexes / O-U peuvent être instables)."
         )
     return results
 

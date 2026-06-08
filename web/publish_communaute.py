@@ -17,28 +17,45 @@ from stats_pmu import (
 OUT = Path(__file__).resolve().parent / "api_velora_communaute.json"
 
 
-def _extraire_historique_foot(archives: list, limit: int = 6) -> list[dict]:
+def _extraire_historique_foot(archives: list, limit: int = 8) -> list[dict]:
     web_dir = Path(__file__).resolve().parent
     if str(web_dir) not in sys.path:
         sys.path.insert(0, str(web_dir))
-    from velora_archiver_foot import _est_archive_terminee_validee, _match_deja_joue  # noqa: PLC0415
+    from velora_archiver_foot import (  # noqa: PLC0415
+        _est_archive_terminee_validee,
+        _est_en_attente,
+    )
 
-    terminees = [
+    candidats = [
         a
         for a in archives
-        if _est_archive_terminee_validee(a) and _match_deja_joue(a)
+        if (_est_archive_terminee_validee(a) or _est_en_attente(a))
+        and (a.get("equipe_domicile") or a.get("equipe_exterieur"))
     ]
-    terminees.sort(key=lambda a: a.get("timestamp") or 0, reverse=True)
+    candidats.sort(
+        key=lambda a: a.get("match_start_ts") or a.get("timestamp") or 0,
+        reverse=True,
+    )
     out = []
-    for a in terminees[:limit]:
+    for a in candidats[:limit]:
+        en_attente = _est_en_attente(a)
+        type_pari = (
+            a.get("type_pari_foot")
+            or a.get("opportunite_detail")
+            or a.get("conseil")
+            or a.get("marche")
+            or ""
+        )
         out.append(
             {
                 "equipe_domicile": a.get("equipe_domicile") or "?",
                 "equipe_exterieur": a.get("equipe_exterieur") or "?",
-                "score_final": a.get("score_final") or "",
-                "type_pari_foot": a.get("type_pari_foot") or "",
-                "reussi_foot": a.get("reussi_foot"),
+                "score_final": "" if en_attente else (a.get("score_final") or ""),
+                "type_pari_foot": type_pari if en_attente else (a.get("type_pari_foot") or type_pari),
+                "reussi_foot": None if en_attente else a.get("reussi_foot"),
                 "marche": a.get("marche") or a.get("opportunite_type") or "",
+                "en_attente": en_attente,
+                "match_start_ts": a.get("match_start_ts") or a.get("timestamp") or 0,
             }
         )
     return out
@@ -60,9 +77,10 @@ def construire_bloc_pmu() -> dict:
             "roi_pct": pmu.get("roi_pct", 0),
         }
     )
+    terminees = int(pmu.get("courses_terminees_plateforme") or 0)
     bloc["compteur_historique"] = {
-        "courses_analysees": int(pmu.get("total_courses_plateforme") or 0),
-        "courses_terminees": int(pmu.get("courses_terminees_plateforme") or 0),
+        "courses_analysees": terminees,
+        "courses_terminees": terminees,
         "victoires": int(pmu.get("victoires_plateforme") or 0),
         "taux_reussite": int(pmu.get("taux_reussite_plateforme") or 0),
     }

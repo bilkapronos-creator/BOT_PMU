@@ -145,7 +145,9 @@
         "score_final": "2-0",
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
-        "marche": "over_25"
+        "marche": "over_25",
+        "en_attente": false,
+        "match_start_ts": 1780426800
       },
       {
         "equipe_domicile": "Autriche",
@@ -153,7 +155,9 @@
         "score_final": "1-0",
         "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
-        "marche": "1n2"
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780339500
       },
       {
         "equipe_domicile": "Norvège",
@@ -161,31 +165,59 @@
         "score_final": "3-1",
         "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
-        "marche": "1n2"
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780333200
       },
       {
-        "equipe_domicile": "Huachipato",
-        "equipe_exterieur": "Universidad Catolica",
-        "score_final": "0-3",
-        "type_pari_foot": "Over 2.5",
+        "equipe_domicile": "Palestino",
+        "equipe_exterieur": "Audax Italiano",
+        "score_final": "0-0",
+        "type_pari_foot": "1N2 Nul",
         "reussi_foot": true,
-        "marche": "over_25"
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780272000
       },
       {
-        "equipe_domicile": "Palmeiras",
-        "equipe_exterieur": "Chapecoense",
+        "equipe_domicile": "Cruzeiro",
+        "equipe_exterieur": "Fluminense",
+        "score_final": "1-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "over_25",
+        "en_attente": false,
+        "match_start_ts": 1780270200
+      },
+      {
+        "equipe_domicile": "Remo",
+        "equipe_exterieur": "Sao Paulo",
         "score_final": "1-0",
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
-        "marche": "over_25"
+        "marche": "over_25",
+        "en_attente": false,
+        "match_start_ts": 1780270200
       },
       {
-        "equipe_domicile": "Vasco da Gama",
-        "equipe_exterieur": "Atlético Mineiro",
-        "score_final": "0-1",
+        "equipe_domicile": "Emelec",
+        "equipe_exterieur": "Universidad Católica (EQU)",
+        "score_final": "1-0",
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
-        "marche": "over_25"
+        "marche": "1n2",
+        "en_attente": false,
+        "match_start_ts": 1780269000
+      },
+      {
+        "equipe_domicile": "O'Higgins",
+        "equipe_exterieur": "Everton",
+        "score_final": "2-3",
+        "type_pari_foot": "Over 2.5",
+        "reussi_foot": true,
+        "marche": "over_25",
+        "en_attente": false,
+        "match_start_ts": 1780263000
       }
     ]
   },
@@ -199,6 +231,6 @@
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-07T01:34:43.211229+00:00"
+    "genere_at": "2026-06-08T02:25:24.066377+00:00"
   }
 }

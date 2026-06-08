@@ -66,6 +66,7 @@ jobs:
       - name: Exécuter run_all.py (xvfb + Chromium classique)
         env:
           VELORA_HEADLESS: "0"
+          VELORA_SKIP_GIT_PUSH: "1"
           # Secret repo (Settings → Secrets) : URL proxy France, ex. http://user:pass@host:port
           VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
           # football-data.org — en-tête X-Auth-Token (plan gratuit)
