@@ -264,6 +264,70 @@
         .kpi-roi--pos, .kpi-profit--pos { color: rgb(52, 211, 153); }
         .kpi-roi--neg, .kpi-profit--neg { color: rgb(248, 113, 113); }
         .kpi-roi--neutral, .kpi-profit--neutral { color: rgb(209, 213, 219); }
+        .vitrine-kpi-card--cta {
+            cursor: pointer;
+            border-color: rgba(245, 158, 11, 0.35);
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.75));
+            transition: border-color 0.2s, transform 0.15s;
+        }
+        .vitrine-kpi-card--cta:hover {
+            border-color: rgba(251, 191, 36, 0.55);
+            transform: translateY(-1px);
+        }
+        .vitrine-kpi-card--cta .vitrine-kpi-value {
+            color: rgb(253, 224, 71);
+            font-size: 1.35rem;
+        }
+        .vitrine-finance-masque { display: none !important; }
+        .vitrine-cta {
+            margin-top: 1rem;
+            padding: 0.85rem 0.75rem;
+            border-radius: 0.85rem;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.06));
+            text-align: center;
+        }
+        .vitrine-cta-texte {
+            font-size: 0.75rem;
+            line-height: 1.45;
+            color: rgb(209, 213, 219);
+        }
+        .vitrine-cta-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.65rem;
+        }
+        @media (min-width: 400px) {
+            .vitrine-cta-actions { flex-direction: row; justify-content: center; }
+        }
+        .vitrine-cta-btn {
+            flex: 1;
+            min-width: 0;
+            max-width: 14rem;
+            border-radius: 0.65rem;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .vitrine-cta-btn:hover { transform: translateY(-1px); }
+        .vitrine-cta-btn--primary {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
+        }
+        .vitrine-cta-btn--secondary {
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.12);
+            color: rgb(253, 224, 71);
+        }
+        .vitrine-kpi-subtitle {
+            margin-top: 0.35rem;
+            text-align: center;
+            font-size: 0.65rem;
+            color: rgba(156, 163, 175, 0.9);
+        }
         .vitrine-detail-btn {
             display: flex;
             align-items: center;
@@ -1553,25 +1617,38 @@
             <section id="sectionVitrine" aria-label="Statistiques communauté Velora">
                 <div class="vitrine-kpi-wrap glass-card">
                     <p class="vitrine-kpi-title">Communauté Velora</p>
+                    <p id="vitrineKpiSubtitle" class="vitrine-kpi-subtitle">Outil d'analyse · pronostics suivis en direct</p>
 
                     <div class="vitrine-kpi-grid" role="group" aria-label="Indicateurs principaux">
-                        <div class="vitrine-kpi-card vitrine-kpi-card--taux">
-                            <span class="vitrine-kpi-label">Taux de réussite</span>
+                        <div id="vitrineKpiCardActivite" class="vitrine-kpi-card vitrine-kpi-card--taux">
+                            <span id="vitrineKpiLabelActivite" class="vitrine-kpi-label">Activité</span>
                             <p class="vitrine-kpi-value">
-                                <span id="vitrineKpiTaux" class="vitrine-taux-val">—</span><span class="vitrine-kpi-unit">%</span>
+                                <span id="vitrineKpiTaux" class="vitrine-taux-val">—</span><span id="vitrineKpiUnit" class="vitrine-kpi-unit">%</span>
                             </p>
                         </div>
-                        <div class="vitrine-kpi-card vitrine-kpi-card--roi">
-                            <span class="vitrine-kpi-label">ROI</span>
+                        <div id="vitrineKpiCardTaux" class="vitrine-kpi-card vitrine-kpi-card--roi">
+                            <span id="vitrineKpiLabelTaux" class="vitrine-kpi-label">Taux Foot</span>
                             <p class="vitrine-kpi-value">
-                                <span id="vitrineKpiRoi" class="vitrine-taux-val kpi-roi--neutral">—</span>
+                                <span id="vitrineKpiRoi" class="vitrine-taux-val kpi-roi--neutral">—</span><span id="vitrineKpiUnitSecond" class="vitrine-kpi-unit hidden">%</span>
                             </p>
                         </div>
-                        <div class="vitrine-kpi-card vitrine-kpi-card--profit">
-                            <span class="vitrine-kpi-label">Bénéfice net</span>
+                        <div id="vitrineKpiCardPremium" class="vitrine-kpi-card vitrine-kpi-card--profit vitrine-kpi-card--cta hidden" role="button" tabindex="0" aria-label="Découvrir Premium">
+                            <span class="vitrine-kpi-label">Premium</span>
+                            <p class="vitrine-kpi-value"><span aria-hidden="true">★</span> Débloquer</p>
+                        </div>
+                        <div id="vitrineKpiCardFinance" class="vitrine-kpi-card vitrine-kpi-card--profit vitrine-finance-bloc">
+                            <span id="vitrineKpiLabelFinance" class="vitrine-kpi-label">Bénéfice net</span>
                             <p class="vitrine-kpi-value">
                                 <span id="vitrineKpiProfit" class="vitrine-taux-val kpi-profit--neutral">—</span>
                             </p>
+                        </div>
+                    </div>
+
+                    <div id="vitrineCta" class="vitrine-cta hidden">
+                        <p id="vitrineCtaTexte" class="vitrine-cta-texte"></p>
+                        <div class="vitrine-cta-actions">
+                            <button type="button" id="btnVitrineCtaPrimary" class="vitrine-cta-btn vitrine-cta-btn--primary"></button>
+                            <button type="button" id="btnVitrineCtaSecondary" class="vitrine-cta-btn vitrine-cta-btn--secondary hidden"></button>
                         </div>
                     </div>
 
@@ -1592,14 +1669,14 @@
                                         <dd><span id="vitrinePmuTaux" class="vitrine-sport-taux">—</span>%</dd>
                                     </div>
                                     <div class="vitrine-detail-row">
-                                        <dt>Validés</dt>
+                                        <dt>Paris résolus</dt>
                                         <dd id="vitrinePmuRecord">— / —</dd>
                                     </div>
-                                    <div class="vitrine-detail-row">
+                                    <div class="vitrine-detail-row vitrine-finance-row">
                                         <dt>ROI</dt>
                                         <dd id="vitrinePmuRoi">—</dd>
                                     </div>
-                                    <div class="vitrine-detail-row">
+                                    <div class="vitrine-detail-row vitrine-finance-row">
                                         <dt>Bénéfice</dt>
                                         <dd id="vitrinePmuProfit">—</dd>
                                     </div>
@@ -1625,19 +1702,19 @@
                                         <dd><span id="vitrineFootTaux" class="vitrine-sport-taux">—</span>%</dd>
                                     </div>
                                     <div class="vitrine-detail-row">
-                                        <dt>Validés</dt>
+                                        <dt>Paris résolus</dt>
                                         <dd id="vitrineFootRecord">— / —</dd>
                                     </div>
-                                    <div class="vitrine-detail-row">
+                                    <div class="vitrine-detail-row vitrine-finance-row">
                                         <dt>ROI</dt>
                                         <dd id="vitrineFootRoi">—</dd>
                                     </div>
-                                    <div class="vitrine-detail-row">
+                                    <div class="vitrine-detail-row vitrine-finance-row">
                                         <dt>Bénéfice</dt>
                                         <dd id="vitrineFootProfit">—</dd>
                                     </div>
                                     <div class="vitrine-detail-row">
-                                        <dt>Matchs</dt>
+                                        <dt>Matchs suivis</dt>
                                         <dd id="vitrineFootCompteur">—</dd>
                                     </div>
                                 </dl>
@@ -2375,16 +2452,157 @@
 
         function formaterCompteurHistoriquePmu(pmu) {
             const ch = pmu.compteur_historique || {};
-            const resolues = ch.courses_terminees ?? ch.courses_analysees ?? pmu.total ?? 0;
+            const analyses = ch.courses_analysees ?? pmu.compteur_analyses ?? 0;
+            const resolues = ch.courses_terminees ?? pmu.total ?? 0;
             const victoires = ch.victoires ?? pmu.victoires ?? 0;
+            if (analyses > 0 && analyses !== resolues) {
+                return `${analyses} analyse${analyses > 1 ? 's' : ''} générée${analyses > 1 ? 's' : ''}`;
+            }
             if (resolues === 0) return '—';
-            return `${resolues} résolue${resolues > 1 ? 's' : ''} · ${victoires} victoire${victoires > 1 ? 's' : ''}`;
+            return `${resolues} pari${resolues > 1 ? 's' : ''} résolu${resolues > 1 ? 's' : ''} · ${victoires} victoire${victoires > 1 ? 's' : ''}`;
         }
 
         function formaterCompteurFoot(foot) {
             const t = foot.total ?? 0;
             if (t === 0) return '—';
-            return `${t} validés`;
+            return `${t} matchs`;
+        }
+
+        const VITRINE_PUBLISH_FOOT_MIN = 100;
+        const VITRINE_PUBLISH_ROI_MIN = 0;
+
+        function vitrineFinancePubliable(foot, global) {
+            const footN = Number(foot?.total ?? 0);
+            const roi = Number(global?.roi_pct ?? foot?.roi_pct ?? -999);
+            return footN >= VITRINE_PUBLISH_FOOT_MIN && roi >= VITRINE_PUBLISH_ROI_MIN;
+        }
+
+        function compterActiviteVitrine(pmu, foot) {
+            const pmuN = Number(
+                pmu.compteur_historique?.courses_analysees
+                ?? pmu.compteur_analyses
+                ?? pmu.total
+                ?? 0,
+            );
+            const footN = Number(foot?.total ?? 0);
+            return pmuN + footN;
+        }
+
+        function meilleurTauxVitrine(pmu, foot) {
+            const footN = Number(foot?.total ?? 0);
+            const footTaux = Number(foot?.taux ?? 0);
+            const pmuFinanceN = Number(pmu?.total ?? 0);
+            const pmuTaux = Number(pmu?.taux ?? 0);
+            if (footN >= 5 && footTaux > 0) {
+                return { taux: footTaux, label: 'Taux Foot' };
+            }
+            if (pmuFinanceN >= 5 && pmuTaux > 0) {
+                return { taux: pmuTaux, label: 'Taux PMU' };
+            }
+            if (footTaux > 0) return { taux: footTaux, label: 'Taux Foot' };
+            if (pmuTaux > 0) return { taux: pmuTaux, label: 'Taux PMU' };
+            return null;
+        }
+
+        function formaterRecordPmuVitrine(pmu) {
+            const financeN = Number(pmu.total ?? 0);
+            const financeV = Number(pmu.victoires ?? 0);
+            if (financeN > 0) return `${financeV} / ${financeN}`;
+            const analyses = Number(
+                pmu.compteur_historique?.courses_analysees ?? pmu.compteur_analyses ?? 0,
+            );
+            if (analyses > 0) return `${analyses} analyses`;
+            return '—';
+        }
+
+        function appliquerVisibiliteFinanceVitrine(afficherFinance) {
+            document.querySelectorAll('.vitrine-finance-row, .vitrine-finance-bloc').forEach((el) => {
+                el.classList.toggle('vitrine-finance-masque', !afficherFinance);
+            });
+            const premium = document.getElementById('vitrineKpiCardPremium');
+            const finance = document.getElementById('vitrineKpiCardFinance');
+            if (premium) premium.classList.toggle('hidden', afficherFinance);
+            if (finance) finance.classList.toggle('hidden', !afficherFinance);
+        }
+
+        function majVitrineCta(stats) {
+            const bloc = document.getElementById('vitrineCta');
+            const texte = document.getElementById('vitrineCtaTexte');
+            const btnPrimary = document.getElementById('btnVitrineCtaPrimary');
+            const btnSecondary = document.getElementById('btnVitrineCtaSecondary');
+            if (!bloc || !texte || !btnPrimary) return;
+
+            const connecte = typeof estMembreConnecte === 'function' && estMembreConnecte();
+            const premiumComplet = typeof estVeloraPremiumPmu === 'function'
+                && typeof estVeloraPremiumFoot === 'function'
+                && estVeloraPremiumPmu()
+                && estVeloraPremiumFoot();
+
+            if (premiumComplet) {
+                bloc.classList.add('hidden');
+                return;
+            }
+
+            bloc.classList.remove('hidden');
+            const activite = compterActiviteVitrine(stats.pmu || {}, stats.foot || {});
+
+            if (!connecte) {
+                texte.textContent = activite > 0
+                    ? `Rejoignez la communauté : ${activite}+ analyses & matchs déjà suivis. Compte gratuit — 3 essais PMU & Foot par jour.`
+                    : 'Créez un compte gratuit : 3 analyses PMU et 3 recherches Foot par jour, sans carte bancaire.';
+                btnPrimary.textContent = 'Créer mon compte gratuit';
+                btnPrimary.dataset.vitrineAction = 'signup';
+                if (btnSecondary) {
+                    btnSecondary.classList.remove('hidden');
+                    btnSecondary.textContent = 'Voir Premium';
+                    btnSecondary.dataset.vitrineAction = 'premium';
+                }
+                return;
+            }
+
+            const sport = typeof sportActif !== 'undefined' ? sportActif : 'foot';
+            const offreFoot = typeof estVeloraPremiumFoot === 'function' && !estVeloraPremiumFoot();
+            const offrePmu = typeof estVeloraPremiumPmu === 'function' && !estVeloraPremiumPmu();
+
+            if (offreFoot && offrePmu) {
+                texte.textContent = 'Passez Premium : analyses illimitées, radar Value Bets Foot et archives complètes.';
+                btnPrimary.textContent = 'Pack Intégral · -25 %';
+                btnPrimary.dataset.vitrineAction = 'bundle';
+            } else if (sport === 'pmu' && offrePmu) {
+                texte.textContent = 'Débloquez les analyses PMU illimitées et conservez toutes vos archives.';
+                btnPrimary.textContent = 'Pass PMU illimité';
+                btnPrimary.dataset.vitrineAction = 'premium_pmu';
+            } else if (offreFoot) {
+                texte.textContent = 'Débloquez le radar Value Bets, les recherches Foot illimitées et les scores exacts.';
+                btnPrimary.textContent = 'Pass Foot · 19,99 €/mois';
+                btnPrimary.dataset.vitrineAction = 'premium_foot';
+            } else {
+                bloc.classList.add('hidden');
+                return;
+            }
+            if (btnSecondary) {
+                btnSecondary.classList.add('hidden');
+            }
+        }
+
+        function ouvrirOffreVitrinePremium(action) {
+            if (action === 'signup') {
+                ouvrirModalAuth('signup');
+                return;
+            }
+            if (action === 'bundle') {
+                showPaywallModal('premium_offer_foot');
+                return;
+            }
+            if (action === 'premium_pmu') {
+                showPaywallModal('premium_offer_pmu');
+                return;
+            }
+            showPaywallModal(
+                typeof sportActif !== 'undefined' && sportActif === 'pmu'
+                    ? 'premium_offer_pmu'
+                    : 'premium_offer_foot',
+            );
         }
 
         function toggleVitrineDetailPanel(forceOpen) {
@@ -2516,6 +2734,12 @@
             const kpiTaux = document.getElementById('vitrineKpiTaux');
             const kpiRoi = document.getElementById('vitrineKpiRoi');
             const kpiProfit = document.getElementById('vitrineKpiProfit');
+            const kpiUnit = document.getElementById('vitrineKpiUnit');
+            const kpiUnitSecond = document.getElementById('vitrineKpiUnitSecond');
+            const labelActivite = document.getElementById('vitrineKpiLabelActivite');
+            const labelTaux = document.getElementById('vitrineKpiLabelTaux');
+            const labelFinance = document.getElementById('vitrineKpiLabelFinance');
+            const kpiSubtitle = document.getElementById('vitrineKpiSubtitle');
             const pmuTaux = document.getElementById('vitrinePmuTaux');
             const pmuRecord = document.getElementById('vitrinePmuRecord');
             const pmuRoi = document.getElementById('vitrinePmuRoi');
@@ -2528,32 +2752,63 @@
             const footCompteur = document.getElementById('vitrineFootCompteur');
             const footApercu = document.getElementById('vitrineFootApercu');
 
+            const afficherFinance = vitrineFinancePubliable(foot, global);
+            appliquerVisibiliteFinanceVitrine(afficherFinance);
+
+            const activite = compterActiviteVitrine(pmu, foot);
+            const meilleurTaux = meilleurTauxVitrine(pmu, foot);
             const hasGlobal = global.total > 0;
-            const kpiTauxAffiche = hasGlobal
-                ? global.taux
-                : (pmu.total > 0 ? pmu.taux : '—');
 
-            if (kpiTaux) kpiTaux.textContent = hasGlobal || pmu.total > 0 ? String(kpiTauxAffiche) : '—';
-            const kpiRoiVal = hasGlobal ? global.roi_pct : (pmu.total > 0 ? pmu.roi_pct : null);
-            const kpiProfitVal = hasGlobal ? global.profit_net : (pmu.total > 0 ? pmu.profit_net : null);
-            if (kpiRoi) {
-                kpiRoi.textContent = kpiRoiVal != null ? formatVeloraRoi(kpiRoiVal) : '—';
-                appliquerClasseFinanciere(kpiRoi, kpiRoiVal, 'kpi-roi');
-            }
-            if (kpiProfit) {
-                kpiProfit.textContent = kpiProfitVal != null ? formatVeloraEuro(kpiProfitVal) : '—';
-                appliquerClasseFinanciere(kpiProfit, kpiProfitVal, 'kpi-profit');
+            if (afficherFinance) {
+                const kpiTauxAffiche = hasGlobal ? global.taux : (pmu.total > 0 ? pmu.taux : '—');
+                if (labelActivite) labelActivite.textContent = 'Taux de réussite';
+                if (labelTaux) labelTaux.textContent = 'ROI';
+                if (labelFinance) labelFinance.textContent = 'Bénéfice net';
+                if (kpiUnit) kpiUnit.classList.remove('hidden');
+                if (kpiUnitSecond) kpiUnitSecond.classList.add('hidden');
+                if (kpiTaux) kpiTaux.textContent = hasGlobal || pmu.total > 0 ? String(kpiTauxAffiche) : '—';
+                const kpiRoiVal = hasGlobal ? global.roi_pct : (pmu.total > 0 ? pmu.roi_pct : null);
+                const kpiProfitVal = hasGlobal ? global.profit_net : (pmu.total > 0 ? pmu.profit_net : null);
+                if (kpiRoi) {
+                    kpiRoi.textContent = kpiRoiVal != null ? formatVeloraRoi(kpiRoiVal) : '—';
+                    appliquerClasseFinanciere(kpiRoi, kpiRoiVal, 'kpi-roi');
+                }
+                if (kpiProfit) {
+                    kpiProfit.textContent = kpiProfitVal != null ? formatVeloraEuro(kpiProfitVal) : '—';
+                    appliquerClasseFinanciere(kpiProfit, kpiProfitVal, 'kpi-profit');
+                }
+                if (kpiSubtitle) {
+                    kpiSubtitle.textContent = 'Track record vérifié · communauté Velora';
+                }
+            } else {
+                if (labelActivite) labelActivite.textContent = 'Activité';
+                if (labelTaux) labelTaux.textContent = meilleurTaux?.label || 'Taux';
+                if (kpiUnit) kpiUnit.classList.add('hidden');
+                if (kpiUnitSecond) kpiUnitSecond.classList.toggle('hidden', !meilleurTaux);
+                if (kpiTaux) kpiTaux.textContent = activite > 0 ? String(activite) : '—';
+                if (kpiRoi) {
+                    kpiRoi.textContent = meilleurTaux ? String(meilleurTaux.taux) : '—';
+                    kpiRoi.classList.remove('kpi-roi--neg', 'kpi-roi--pos', 'kpi-roi--neutral');
+                    if (meilleurTaux && meilleurTaux.taux >= 50) {
+                        kpiRoi.classList.add('vitrine-taux-val');
+                        kpiRoi.style.color = 'rgb(253, 224, 71)';
+                    }
+                }
+                if (kpiSubtitle) {
+                    kpiSubtitle.textContent = 'Track record en cours · ROI publié à partir de 100 matchs Foot';
+                }
             }
 
-            if (pmuTaux) pmuTaux.textContent = pmu.total > 0 ? String(pmu.taux) : '—';
-            if (pmuRecord) pmuRecord.textContent = formaterRecordCompact(pmu);
+            const pmuTauxAffichable = Number(pmu.total ?? 0) >= 5;
+            if (pmuTaux) pmuTaux.textContent = pmuTauxAffichable ? String(pmu.taux) : '—';
+            if (pmuRecord) pmuRecord.textContent = formaterRecordPmuVitrine(pmu);
             if (pmuRoi) {
-                pmuRoi.textContent = pmu.total > 0 ? formatVeloraRoi(pmu.roi_pct) : '—';
-                appliquerClasseFinanciere(pmuRoi, pmu.roi_pct, 'kpi-roi');
+                pmuRoi.textContent = afficherFinance && pmu.total > 0 ? formatVeloraRoi(pmu.roi_pct) : '—';
+                appliquerClasseFinanciere(pmuRoi, afficherFinance ? pmu.roi_pct : 0, 'kpi-roi');
             }
             if (pmuProfit) {
-                pmuProfit.textContent = pmu.total > 0 ? formatVeloraEuro(pmu.profit_net) : '—';
-                appliquerClasseFinanciere(pmuProfit, pmu.profit_net, 'kpi-profit');
+                pmuProfit.textContent = afficherFinance && pmu.total > 0 ? formatVeloraEuro(pmu.profit_net) : '—';
+                appliquerClasseFinanciere(pmuProfit, afficherFinance ? pmu.profit_net : 0, 'kpi-profit');
             }
             if (pmuCompteur) pmuCompteur.textContent = formaterCompteurHistoriquePmu(pmu);
             rendreVitrinePmuDetail(pmu);
@@ -2561,19 +2816,24 @@
             if (footTaux) footTaux.textContent = foot.total > 0 ? String(foot.taux) : '—';
             if (footRecord) footRecord.textContent = formaterRecordCompact(foot);
             if (footRoi) {
-                footRoi.textContent = foot.total > 0 ? formatVeloraRoi(foot.roi_pct) : '—';
-                appliquerClasseFinanciere(footRoi, foot.roi_pct, 'kpi-roi');
+                footRoi.textContent = afficherFinance && foot.total > 0 ? formatVeloraRoi(foot.roi_pct) : '—';
+                appliquerClasseFinanciere(footRoi, afficherFinance ? foot.roi_pct : 0, 'kpi-roi');
             }
             if (footProfit) {
-                footProfit.textContent = foot.total > 0 ? formatVeloraEuro(foot.profit_net) : '—';
-                appliquerClasseFinanciere(footProfit, foot.profit_net, 'kpi-profit');
+                footProfit.textContent = afficherFinance && foot.total > 0 ? formatVeloraEuro(foot.profit_net) : '—';
+                appliquerClasseFinanciere(footProfit, afficherFinance ? foot.profit_net : 0, 'kpi-profit');
             }
             if (footCompteur) footCompteur.textContent = formaterCompteurFoot(foot);
-            if (footApercu) footApercu.classList.toggle('hidden', foot.total > 0);
+            if (footApercu) {
+                footApercu.textContent = 'Données Foot en cours de collecte';
+                footApercu.classList.toggle('hidden', foot.total > 0);
+            }
             rendreVitrineFootDetail(foot);
+            window.__dernieresStatsCommunaute = stats;
+            majVitrineCta(stats);
 
             if (animer) {
-                pulseVitrineTaux([kpiTaux, pmuTaux, footTaux]);
+                pulseVitrineTaux([kpiTaux, pmuTaux, footTaux, kpiRoi]);
             }
             const nbHist = (pmu.historique_courses?.length || 0) + (foot.historique_matchs?.length || 0);
             if (nbHist > 0 && !window.__vitrineDetailAutoOuvert) {
@@ -3991,6 +4251,9 @@
             quitterFootOppSiNonPremium();
             syncFootModeUi();
             mettreAJourUiAnalyseAuth();
+            if (window.__dernieresStatsCommunaute) {
+                majVitrineCta(window.__dernieresStatsCommunaute);
+            }
         }
 
         function initialiserAuthUi() {
@@ -7652,6 +7915,28 @@
         navSportFoot?.addEventListener('click', () => changerSport('foot'));
         document.getElementById('btnVitrineDetail')?.addEventListener('click', () => {
             toggleVitrineDetailPanel();
+        });
+        document.getElementById('btnVitrineCtaPrimary')?.addEventListener('click', () => {
+            const action = document.getElementById('btnVitrineCtaPrimary')?.dataset?.vitrineAction || 'signup';
+            ouvrirOffreVitrinePremium(action);
+        });
+        document.getElementById('btnVitrineCtaSecondary')?.addEventListener('click', () => {
+            const action = document.getElementById('btnVitrineCtaSecondary')?.dataset?.vitrineAction || 'premium';
+            ouvrirOffreVitrinePremium(action === 'premium' ? 'premium_foot' : action);
+        });
+        const vitrineKpiPremium = document.getElementById('vitrineKpiCardPremium');
+        vitrineKpiPremium?.addEventListener('click', () => {
+            if (typeof estMembreConnecte === 'function' && estMembreConnecte()) {
+                ouvrirOffreVitrinePremium('premium_foot');
+            } else {
+                ouvrirOffreVitrinePremium('signup');
+            }
+        });
+        vitrineKpiPremium?.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault();
+                vitrineKpiPremium.click();
+            }
         });
         document.getElementById('footFiltreOutsidersSearch')?.addEventListener('click', toggleFootFiltreOutsiders);
         document.getElementById('footFiltreOutsidersOpp')?.addEventListener('click', toggleFootFiltreOutsiders);
