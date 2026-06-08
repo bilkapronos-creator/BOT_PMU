@@ -2488,20 +2488,35 @@
             return pmuN + footN;
         }
 
-        function meilleurTauxVitrine(pmu, foot) {
+        function tauxVitrinePourSport(pmu, foot, sport) {
+            const actif = sport === 'foot' ? 'foot' : 'pmu';
             const footN = Number(foot?.total ?? 0);
             const footTaux = Number(foot?.taux ?? 0);
-            const pmuFinanceN = Number(pmu?.total ?? 0);
+            const pmuN = Number(pmu?.total ?? 0);
             const pmuTaux = Number(pmu?.taux ?? 0);
-            if (footN >= 5 && footTaux > 0) {
-                return { taux: footTaux, label: 'Taux Foot' };
+            const ch = pmu?.compteur_historique || {};
+            const pmuAnalyses = Number(ch.courses_analysees ?? pmu?.compteur_analyses ?? 0);
+            const pmuVictoires = Number(ch.victoires ?? pmu?.victoires ?? 0);
+            const pmuTauxCompteur = pmuAnalyses > 0
+                ? Math.round((pmuVictoires / pmuAnalyses) * 100)
+                : 0;
+
+            const blocPmu = () => {
+                if (pmuN > 0 && pmuTaux > 0) return { taux: pmuTaux, label: 'Taux PMU' };
+                if (pmuAnalyses >= 3 && pmuTauxCompteur > 0) {
+                    return { taux: pmuTauxCompteur, label: 'Taux PMU' };
+                }
+                return null;
+            };
+            const blocFoot = () => {
+                if (footN > 0 && footTaux > 0) return { taux: footTaux, label: 'Taux Foot' };
+                return null;
+            };
+
+            if (actif === 'pmu') {
+                return blocPmu() || blocFoot();
             }
-            if (pmuFinanceN >= 5 && pmuTaux > 0) {
-                return { taux: pmuTaux, label: 'Taux PMU' };
-            }
-            if (footTaux > 0) return { taux: footTaux, label: 'Taux Foot' };
-            if (pmuTaux > 0) return { taux: pmuTaux, label: 'Taux PMU' };
-            return null;
+            return blocFoot() || blocPmu();
         }
 
         function formaterRecordPmuVitrine(pmu) {
@@ -2756,7 +2771,8 @@
             appliquerVisibiliteFinanceVitrine(afficherFinance);
 
             const activite = compterActiviteVitrine(pmu, foot);
-            const meilleurTaux = meilleurTauxVitrine(pmu, foot);
+            const sportVitrine = typeof sportActif !== 'undefined' ? sportActif : 'pmu';
+            const tauxSport = tauxVitrinePourSport(pmu, foot, sportVitrine);
             const hasGlobal = global.total > 0;
 
             if (afficherFinance) {
@@ -2782,20 +2798,23 @@
                 }
             } else {
                 if (labelActivite) labelActivite.textContent = 'Activité';
-                if (labelTaux) labelTaux.textContent = meilleurTaux?.label || 'Taux';
+                if (labelTaux) labelTaux.textContent = tauxSport?.label || (sportVitrine === 'foot' ? 'Taux Foot' : 'Taux PMU');
                 if (kpiUnit) kpiUnit.classList.add('hidden');
-                if (kpiUnitSecond) kpiUnitSecond.classList.toggle('hidden', !meilleurTaux);
+                if (kpiUnitSecond) kpiUnitSecond.classList.toggle('hidden', !tauxSport);
                 if (kpiTaux) kpiTaux.textContent = activite > 0 ? String(activite) : '—';
                 if (kpiRoi) {
-                    kpiRoi.textContent = meilleurTaux ? String(meilleurTaux.taux) : '—';
+                    kpiRoi.textContent = tauxSport ? String(tauxSport.taux) : '—';
                     kpiRoi.classList.remove('kpi-roi--neg', 'kpi-roi--pos', 'kpi-roi--neutral');
-                    if (meilleurTaux && meilleurTaux.taux >= 50) {
+                    kpiRoi.style.color = '';
+                    if (tauxSport && tauxSport.taux >= 50) {
                         kpiRoi.classList.add('vitrine-taux-val');
                         kpiRoi.style.color = 'rgb(253, 224, 71)';
                     }
                 }
                 if (kpiSubtitle) {
-                    kpiSubtitle.textContent = 'Track record en cours · ROI publié à partir de 100 matchs Foot';
+                    kpiSubtitle.textContent = sportVitrine === 'foot'
+                        ? 'Track record en cours · ROI publié à partir de 100 matchs Foot'
+                        : 'Track record en cours · pronostics PMU suivis par la communauté';
                 }
             }
 
@@ -4838,6 +4857,9 @@
             afficherSection(sectionActive);
             if (sectionActive === 'pronostic' && !estMembreConnecte()) {
                 afficherBandeauConnexionAnalyse({ scroll: false });
+            }
+            if (window.__dernieresStatsCommunaute) {
+                injecterStatsCommunauteUI(window.__dernieresStatsCommunaute, { animer: false });
             }
         }
 
