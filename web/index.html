@@ -1560,7 +1560,7 @@
                             <p class="vitrine-kpi-value">
                                 <span id="vitrineKpiTaux" class="vitrine-taux-val">—</span><span class="vitrine-kpi-unit">%</span>
                             </p>
-                    </div>
+                        </div>
                         <div class="vitrine-kpi-card vitrine-kpi-card--roi">
                             <span class="vitrine-kpi-label">ROI</span>
                             <p class="vitrine-kpi-value">
@@ -2164,6 +2164,10 @@
         function pmuDepuisSupabase(row) {
             if (!row) return null;
             const c = lireCompteursPlateforme(row);
+            const hasFinance = row.pmu_mises_cumulees != null
+                || row.pmu_profit_net != null
+                || row.pmu_roi_pct != null;
+            if (!hasFinance && c.courses === 0 && c.victoires === 0) return null;
             return normaliserBlocSport(
                 {
                     /* velora_stats = compteur « courses comptabilisées » (vitrine historique) */
@@ -2327,9 +2331,22 @@
             }
             foot = enrichirBlocFoot(foot, communaute, extras.historiqueFootLocal || []);
 
-            const global = fusionnerStatsGlobales(pmu, foot);
+            let global = fusionnerStatsGlobales(pmu, foot);
+            if (communaute?.global && typeof communaute.global === 'object') {
+                const gJson = normaliserBlocSport(communaute.global, 'communaute');
+                if (gJson.total > 0) global = gJson;
+            }
 
             return { pmu, foot, global, source_pmu: pmu.source };
+        }
+
+        /** Vitrine publique depuis api_velora_communaute.json (sans attendre Supabase). */
+        async function chargerVitrineDepuisJson(options = {}) {
+            const communaute = await lireCommunauteJson();
+            if (!communaute) return false;
+            const stats = resoudreStatsCommunaute(null, communaute, null, {});
+            injecterStatsCommunauteUI(stats, options);
+            return true;
         }
 
         function formaterRecordCompact(stats) {
@@ -2680,21 +2697,29 @@
             if (section) section.classList.remove('hidden');
 
             masquerErreurSync('vitrineSyncErreur');
-            const [{ row, erreur }, communaute, statsPub, historiqueFootLocal] = await Promise.all([
-                lireVeloraStatsSupabase(),
-                lireCommunauteJson(),
-                lireStatsPubliques(),
-                preparerHistoriqueFootCommunaute(),
-            ]);
-            const stats = resoudreStatsCommunaute(row, communaute, statsPub?.stats, { historiqueFootLocal });
-            injecterStatsCommunauteUI(stats, options);
-            if (erreur && !communaute && !statsPub?.stats) {
-                afficherErreurSync(
-                    'vitrineSyncErreur',
-                    erreur || 'Statistiques communautaires indisponibles.',
-                );
-            } else if (erreur && (communaute || statsPub?.stats)) {
-                masquerErreurSync('vitrineSyncErreur');
+            try {
+                const [{ row, erreur }, communaute, statsPub, historiqueFootLocal] = await Promise.all([
+                    lireVeloraStatsSupabase().catch(() => ({ row: null, erreur: 'Supabase indisponible' })),
+                    lireCommunauteJson(),
+                    lireStatsPubliques().catch(() => ({ stats: null, erreur: 'API stats indisponible' })),
+                    preparerHistoriqueFootCommunaute().catch(() => []),
+                ]);
+                const stats = resoudreStatsCommunaute(row, communaute, statsPub?.stats, { historiqueFootLocal });
+                injecterStatsCommunauteUI(stats, options);
+                if (erreur && !communaute && !statsPub?.stats) {
+                    afficherErreurSync(
+                        'vitrineSyncErreur',
+                        erreur || 'Statistiques communautaires indisponibles.',
+                    );
+                } else if (erreur && (communaute || statsPub?.stats)) {
+                    masquerErreurSync('vitrineSyncErreur');
+                }
+            } catch (err) {
+                console.warn('[Velora] chargerStatsPlateforme :', err);
+                const ok = await chargerVitrineDepuisJson(options);
+                if (!ok) {
+                    afficherErreurSync('vitrineSyncErreur', 'Statistiques communautaires indisponibles.');
+                }
             }
         }
 
@@ -4256,6 +4281,9 @@
                 masquerSplashApp();
                 return;
             }
+            const statsPromise = chargerStatsPlateforme().catch((err) => {
+                console.warn('[Velora] Stats plateforme au démarrage :', err);
+            });
             try {
                 initModeAdminVelora();
                 gererErreurRetourAuthAuDemarrage();
@@ -4287,9 +4315,7 @@
                 appliquerEtatAuth();
             } finally {
                 masquerSplashApp();
-                chargerStatsPlateforme().catch((err) => {
-                    console.warn('[Velora] Stats plateforme au démarrage :', err);
-                });
+                await statsPromise;
                 demarrerAutoRefreshVelora();
             }
         }
@@ -8199,6 +8225,12 @@
             mettreAJourZoneVidePronostic();
 
             if (!exigerConnexionPourAnalyser()) {
+                if (zoneResultats) {
+                    zoneResultats.innerHTML = genererHtmlConnexionRequise();
+                    zoneResultats.querySelector('.velora-btn-connexion-analyse')
+                        ?.addEventListener('click', () => ouvrirModalAuth('login'), { once: true });
+                }
+                mettreAJourZoneVidePronostic();
                 return;
             }
 
@@ -8309,6 +8341,16 @@
                 memoriserResultatPronostic();
             }
         }
+        window.lancerAnalyse = lancerAnalyse;
+
+        document.getElementById('submitBtn')?.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            lancerAnalyse();
+        });
+
+        chargerVitrineDepuisJson().catch((err) => {
+            console.warn('[Velora] Vitrine communauté (chargement initial) :', err);
+        });
     </script>
 </body>
 </html>
