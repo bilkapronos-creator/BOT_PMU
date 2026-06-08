@@ -50,12 +50,12 @@
     "membres_actifs": 2
   },
   "foot": {
-    "taux": 43,
-    "victoires": 12,
+    "taux": 50,
+    "victoires": 14,
     "total": 28,
     "mises_cumulees": 280.0,
-    "profit_net": -117.9,
-    "roi_pct": -42.1,
+    "profit_net": -97.7,
+    "roi_pct": -34.9,
     "detail_par_type_pari": {
       "Pronostic 1N2": {
         "total": 2,
@@ -67,10 +67,15 @@
         "succes": 3,
         "taux": 100
       },
-      "Score exact": {
-        "total": 5,
+      "Score exact (top 3)": {
+        "total": 3,
         "succes": 0,
         "taux": 0
+      },
+      "Score exact 0-1": {
+        "total": 2,
+        "succes": 2,
+        "taux": 100
       },
       "Over 2.5": {
         "total": 12,
@@ -107,11 +112,11 @@
         "profit_net": -8.1
       },
       "score_exact": {
-        "label": "Score exact",
+        "label": "Score exact (top 3)",
         "total": 5,
-        "succes": 0,
-        "taux": 0,
-        "profit_net": -50.0
+        "succes": 2,
+        "taux": 40,
+        "profit_net": -29.8
       },
       "over_25": {
         "label": "Over 2.5",
@@ -144,18 +149,18 @@
         "btts": 1.06,
         "team_goals_home": 1.08,
         "team_goals_away": 1.08,
-        "score_exact": 1.23
+        "score_exact": 1.17
       },
       "suggestions": [
         {
           "marche": "score_exact",
-          "label": "Score exact",
+          "label": "Score exact (top 3)",
           "edge_key": "score_exact",
           "edge_actuel": 1.15,
-          "edge_suggere": 1.23,
-          "taux_pct": 0,
+          "edge_suggere": 1.17,
+          "taux_pct": 40,
           "echantillon": 5,
-          "raison": "0% de réussite sur 5 matchs — seuil relevé"
+          "raison": "40% de réussite sur 5 matchs — seuil relevé"
         },
         {
           "marche": "over_25",
@@ -178,6 +183,7 @@
         "type_pari_foot": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
         "reussi_foot": null,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": true,
         "match_start_ts": 1780944300
       },
@@ -188,6 +194,7 @@
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780858800
       },
@@ -198,6 +205,7 @@
         "type_pari_foot": "1N2 Extérieur",
         "reussi_foot": true,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780858800
       },
@@ -208,6 +216,7 @@
         "type_pari_foot": "Score exact 3-0 @ 7",
         "reussi_foot": null,
         "marche": "score_exact",
+        "scores_proposes": [],
         "en_attente": true,
         "match_start_ts": 1780944300
       },
@@ -218,6 +227,7 @@
         "type_pari_foot": "1N2 Extérieur",
         "reussi_foot": true,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780858800
       },
@@ -228,6 +238,7 @@
         "type_pari_foot": "1N2 Extérieur",
         "reussi_foot": true,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780855200
       },
@@ -238,6 +249,11 @@
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "score_exact",
+        "scores_proposes": [
+          "2-1",
+          "1-0",
+          "3-1"
+        ],
         "en_attente": false,
         "match_start_ts": 1780858800
       },
@@ -248,6 +264,7 @@
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780849800
       },
@@ -258,6 +275,7 @@
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "over_25",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780426800
       },
@@ -265,9 +283,14 @@
         "equipe_domicile": "Grèce",
         "equipe_exterieur": "Italie",
         "score_final": "0-1",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
+        "type_pari_foot": "Score exact 0-1",
+        "reussi_foot": true,
         "marche": "score_exact",
+        "scores_proposes": [
+          "1-2",
+          "0-1",
+          "1-3"
+        ],
         "en_attente": false,
         "match_start_ts": 1780858800
       },
@@ -278,6 +301,7 @@
         "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780339500
       },
@@ -288,22 +312,23 @@
         "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
         "marche": "1n2",
+        "scores_proposes": [],
         "en_attente": false,
         "match_start_ts": 1780333200
       }
     ]
   },
   "global": {
-    "taux": 42,
-    "victoires": 13,
+    "taux": 48,
+    "victoires": 15,
     "total": 31,
     "mises_cumulees": 310.0,
-    "profit_net": -122.9,
-    "roi_pct": -39.6
+    "profit_net": -102.7,
+    "roi_pct": -33.1
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-08T18:55:43.009766+00:00",
+    "genere_at": "2026-06-08T19:41:09.382525+00:00",
     "archives_foot": 28,
     "nouvelles_validations": 5,
     "sync_winamax": {
@@ -318,6 +343,7 @@
       "encore_attente": 2,
       "scores_recuperes": 0,
       "erreur": null
-    }
+    },
+    "reval_score_exact_top3": 5
   }
 }

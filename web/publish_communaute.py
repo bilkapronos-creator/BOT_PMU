@@ -67,6 +67,7 @@ def _extraire_historique_foot(archives: list, limit: int = 12) -> list[dict]:
                 "type_pari_foot": type_pari if en_attente else (a.get("type_pari_foot") or type_pari),
                 "reussi_foot": None if en_attente else a.get("reussi_foot"),
                 "marche": a.get("marche") or a.get("opportunite_type") or "",
+                "scores_proposes": a.get("scores_proposes") or [],
                 "en_attente": en_attente,
                 "match_start_ts": a.get("match_start_ts") or a.get("timestamp") or 0,
             }

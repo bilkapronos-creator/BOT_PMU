@@ -2654,6 +2654,7 @@
             const lower = text.toLowerCase();
             let cls = 'vitrine-pmu-badge--ok';
             if (/perdu/i.test(lower)) cls = 'vitrine-pmu-badge--ko';
+            else if (/score exact/i.test(lower)) cls = 'vitrine-pmu-badge--tierce';
             else if (/tiercé|tierce|super\s*4|multi/i.test(lower)) cls = 'vitrine-pmu-badge--tierce';
             return `<span class="vitrine-pmu-badge ${cls}">${text}</span>`;
         }
@@ -2707,16 +2708,22 @@
             const score = match.score_final ? ` · ${match.score_final}` : '';
             const enAttente = !!match.en_attente
                 || (match.reussi_foot == null && !match.score_final && !/perdu/i.test(String(match.type_pari_foot || '')));
+            const proposes = Array.isArray(match.scores_proposes) ? match.scores_proposes.join(', ') : '';
+            const sousTitre = proposes && String(match.marche || '').toLowerCase() === 'score_exact'
+                ? `<span class="block text-[10px] text-cyan-500/70 mt-0.5">Top 3 : ${proposes}</span>`
+                : '';
             let badge;
             if (enAttente) {
                 badge = '<span class="vitrine-pmu-badge text-cyan-200/90 border border-cyan-500/30 bg-cyan-500/10">En attente</span>';
+            } else if (match.reussi_foot === true && /score exact/i.test(String(match.type_pari_foot || ''))) {
+                badge = htmlVitrineBadgePmu(match.type_pari_foot);
             } else {
                 const type = match.type_pari_foot || match.marche || '';
                 badge = type && type !== 'Perdu' ? htmlVitrineBadgePmu(type) : htmlVitrineBadgePmu('Perdu');
             }
             return `
                 <li class="vitrine-pmu-historique-item">
-                    <span class="font-semibold text-gray-200">${titre}${score}</span>
+                    <span class="font-semibold text-gray-200">${titre}${score}${sousTitre}</span>
                     <span>${badge}</span>
                 </li>`;
         }

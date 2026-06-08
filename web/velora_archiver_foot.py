@@ -254,7 +254,14 @@ def _cote_buteur(match: dict) -> float | None:
     return None
 
 
-def _cote_score_exact(match: dict) -> float | None:
+SCORE_EXACT_TOP_N = 3
+
+
+def _cote_score_exact(match: dict, score_tuple: tuple[int, int] | None = None) -> float | None:
+    if score_tuple:
+        for row in _liste_scores_exact_proposes(match, limit=8):
+            if (row["dom"], row["ext"]) == score_tuple:
+                return row.get("cote")
     scores = match.get("score_exact")
     if isinstance(scores, list) and scores:
         return _safe_float(scores[0].get("cote"))
@@ -263,6 +270,66 @@ def _cote_score_exact(match: dict) -> float | None:
     if m:
         return _safe_float(m.group(1))
     return None
+
+
+def _liste_scores_exact_proposes(match: dict, limit: int = SCORE_EXACT_TOP_N) -> list[dict]:
+    """
+    Top N scores exacts affichés par Velora (pas de pari principal unique).
+    Déduplique par score, trie par probabilité décroissante.
+    """
+    rows = [
+        s for s in _scores_exact_liste_match(match)
+        if isinstance(s, dict) and str(s.get("score") or "").strip()
+    ]
+    if not rows:
+        prop = _extraire_proposition_score_exact(match)
+        if prop:
+            return [{
+                "score": prop["score_label"],
+                "cote": prop.get("cote"),
+                "dom": prop["dom"],
+                "ext": prop["ext"],
+            }]
+        proposes = match.get("scores_proposes")
+        if isinstance(proposes, list):
+            out = []
+            for label in proposes[:limit]:
+                parsed = parse_score_reel(str(label))
+                if parsed:
+                    dom, ext = parsed
+                    out.append({"score": f"{dom}-{ext}", "cote": None, "dom": dom, "ext": ext})
+            return out
+        return []
+
+    rows.sort(key=lambda s: -(float(s.get("prob") or 0)))
+    seen: set[tuple[int, int]] = set()
+    out: list[dict] = []
+    for row in rows:
+        parsed = parse_score_reel(str(row.get("score") or ""))
+        if not parsed or parsed in seen:
+            continue
+        seen.add(parsed)
+        dom, ext = parsed
+        out.append({
+            "score": f"{dom}-{ext}",
+            "cote": _safe_float(row.get("cote")),
+            "dom": dom,
+            "ext": ext,
+        })
+        if len(out) >= limit:
+            break
+    return out
+
+
+def _evaluer_score_exact_top3(
+    match: dict, dom: int, ext: int,
+) -> tuple[bool, str | None, float | None, list[str]]:
+    propositions = _liste_scores_exact_proposes(match)
+    labels = [p["score"] for p in propositions]
+    for row in propositions:
+        if (row["dom"], row["ext"]) == (dom, ext):
+            return True, row["score"], row.get("cote"), labels
+    return False, None, None, labels
 
 
 def _score_exact_attendu(match: dict) -> tuple[int, int] | None:
@@ -317,7 +384,84 @@ def _iter_value_bets(match: dict):
                     yield vb
 
 
+def _outcome_1n2_from_score(home: int, away: int) -> str:
+    if home > away:
+        return "1"
+    if home < away:
+        return "2"
+    return "N"
+
+
+def _score_coherent_avec_pronostic(score_str: str, pick: str | None) -> bool:
+    parsed = parse_score_reel(score_str)
+    if not parsed or not pick:
+        return True
+    home, away = parsed
+    outcome = _outcome_1n2_from_score(home, away)
+    if pick in ("1", "N", "2"):
+        return outcome == pick
+    if pick == "dc_1x":
+        return home >= away
+    if pick == "dc_x2":
+        return home <= away
+    return True
+
+
+def _filtrer_scores_selon_pronostic(match: dict, scores: list) -> list[dict]:
+    pick = _pick_1n2(match)
+    if not pick:
+        return [s for s in scores if isinstance(s, dict)]
+    return [
+        s for s in scores
+        if isinstance(s, dict)
+        and _score_coherent_avec_pronostic(str(s.get("score") or ""), pick)
+    ]
+
+
+def _scores_affichables_pour_match(match: dict, limit: int = SCORE_EXACT_TOP_N) -> list[dict]:
+    """
+    Même logique que scoresAffichablesPourMatch() dans index.html :
+    top_scores_modele filtré par pronostic 1N2, sinon score_exact bookmaker.
+    """
+    pick = _pick_1n2(match)
+    free = match.get("free_analysis") or {}
+    modele = free.get("top_scores_modele")
+    if isinstance(modele, list) and modele:
+        alignee = _filtrer_scores_selon_pronostic(match, modele)
+        if alignee:
+            alignee.sort(key=lambda s: -(float(s.get("prob") or 0)))
+            return alignee[:limit]
+
+    exact = match.get("score_exact")
+    if isinstance(exact, list) and exact and pick:
+        alignee = _filtrer_scores_selon_pronostic(match, exact)
+        if alignee:
+            alignee.sort(key=lambda s: -(float(s.get("prob") or 0)))
+            return alignee[:limit]
+
+    top = match.get("top_scores")
+    if isinstance(top, list) and top:
+        sans_autre = [
+            s for s in top
+            if isinstance(s, dict) and str(s.get("score") or "").strip().lower() != "autre"
+        ]
+        if sans_autre:
+            alignee = _filtrer_scores_selon_pronostic(match, sans_autre)
+            if alignee:
+                alignee.sort(key=lambda s: -(float(s.get("prob") or 0)))
+                return alignee[:limit]
+
+    if isinstance(modele, list) and modele:
+        fallback = sorted(modele, key=lambda s: -(float(s.get("prob") or 0)))
+        return fallback[:limit]
+    return []
+
+
 def _scores_exact_liste_match(match: dict) -> list[dict]:
+    """Scores exacts tels qu'affichés à l'utilisateur (priorité modèle Poisson)."""
+    affichables = _scores_affichables_pour_match(match, limit=8)
+    if affichables:
+        return affichables
     scores = match.get("score_exact")
     if isinstance(scores, list) and scores:
         return scores
@@ -327,10 +471,6 @@ def _scores_exact_liste_match(match: dict) -> list[dict]:
     prem_top = ((match.get("premium_analysis") or {}).get("score_exact") or {}).get("top3")
     if isinstance(prem_top, list) and prem_top:
         return prem_top
-    free = match.get("free_analysis") or {}
-    modele = free.get("top_scores_modele")
-    if isinstance(modele, list) and modele:
-        return modele
     top = match.get("top_scores")
     return top if isinstance(top, list) else []
 
@@ -372,15 +512,25 @@ def _extraire_proposition_score_exact(match: dict) -> dict | None:
     return {"dom": dom, "ext": ext, "score_label": score_label, "cote": cote, "detail": detail}
 
 
-def _archive_score_exact_depuis_match(match: dict, prop: dict) -> dict:
+def _archive_score_exact_depuis_match(match: dict, prop: dict | None = None) -> dict:
     arch = construire_archive_foot_en_attente(match)
+    propositions = _liste_scores_exact_proposes(match)
+    labels = [p["score"] for p in propositions]
+    detail = (
+        "Scores exacts proposés : " + ", ".join(labels)
+        if labels
+        else (prop or {}).get("detail") or "Score exact"
+    )
     arch["marche"] = "score_exact"
     arch["opportunite_type"] = "score_exact"
-    arch["opportunite_detail"] = prop["detail"]
-    arch["conseil"] = prop["detail"]
+    arch["opportunite_detail"] = detail
+    arch["conseil"] = detail
+    arch["selection"] = "Top 3 scores exacts"
+    arch["scores_proposes"] = labels
+    arch["validation_mode"] = "top3_ui"
     scores_list = _scores_exact_liste_match(match)
     arch["score_exact"] = scores_list if scores_list else [
-        {"score": prop["score_label"], "cote": prop.get("cote")}
+        {"score": p["score"], "cote": p.get("cote")} for p in propositions
     ]
     return arch
 
@@ -502,14 +652,19 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
         return None
 
     elif marche == "score_exact":
-        attendu = _score_exact_attendu(match)
-        if attendu is None:
+        propositions = _liste_scores_exact_proposes(match)
+        if not propositions:
             return None
-        gagne = (dom, ext) == attendu
-        cote = _cote_score_exact(match)
-        ad, ae = attendu
-        type_pari = f"Score exact {ad}-{ae}"
-        selection = type_pari
+        gagne, score_label, cote_match, labels = _evaluer_score_exact_top3(match, dom, ext)
+        labels_txt = ", ".join(labels)
+        if gagne and score_label:
+            type_pari = f"Score exact {score_label}"
+            cote = cote_match
+        else:
+            type_pari = "Perdu"
+            cote = None
+        selection = labels_txt or "Top 3 scores exacts"
+        scores_proposes = labels
 
     else:
         issue = _issue_1n2(dom, ext)
@@ -537,7 +692,7 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
     financier = calculer_resultat_financier(gagne, cote)
     statut_pari = "GAGNANT" if gagne else "PERDANT"
 
-    return {
+    resultat: dict[str, Any] = {
         "sport": "foot",
         "id_match": str(match.get("id_match") or ""),
         "equipe_domicile": match.get("equipe_domicile") or "?",
@@ -562,6 +717,12 @@ def valider_foot(match: dict, resultat_reel) -> dict | None:
         "timestamp": int(datetime.now(tz=timezone.utc).timestamp() * 1000),
         "valide_at": datetime.now(tz=timezone.utc).isoformat(),
     }
+    if marche == "score_exact":
+        resultat["scores_proposes"] = scores_proposes
+        resultat["validation_mode"] = "top3_ui"
+        if isinstance(match.get("score_exact"), list):
+            resultat["score_exact"] = match["score_exact"]
+    return resultat
 
 
 def _normaliser_statut_pari(val: Any) -> str:
@@ -920,13 +1081,12 @@ def _assurer_archives_coup_envoi(
 
         if marche_principal == "score_exact":
             continue
-        prop = _extraire_proposition_score_exact(match)
-        if not prop:
+        if not _liste_scores_exact_proposes(match):
             continue
         cle_exact = f"{mid}:score_exact"
         if not _peut_ajouter_archive(par_id, cle_exact):
             continue
-        arch_exact = _archive_score_exact_depuis_match(match, prop)
+        arch_exact = _archive_score_exact_depuis_match(match)
         arch_exact["archive_key"] = cle_exact
         par_id[cle_exact] = arch_exact
         ajouts += 1
@@ -950,17 +1110,39 @@ def _assurer_archives_score_exact_retroactif(
             continue
         if _marche_effectif(match) == "score_exact":
             continue
-        prop = _extraire_proposition_score_exact(match)
-        if not prop:
+        if not _liste_scores_exact_proposes(match):
             continue
         cle_exact = f"{mid}:score_exact"
         if not _peut_ajouter_archive(par_id, cle_exact):
             continue
-        arch_exact = _archive_score_exact_depuis_match(match, prop)
+        arch_exact = _archive_score_exact_depuis_match(match)
         arch_exact["archive_key"] = cle_exact
         par_id[cle_exact] = arch_exact
         ajouts += 1
     return ajouts
+
+
+def _revalider_archives_score_exact_top3(
+    par_id: dict[str, dict],
+    snapshots: list,
+    catalogue: list,
+) -> int:
+    """Réévalue les archives score exact avec la règle top 3 (pas un seul score principal)."""
+    reval = 0
+    for key, arch in list(par_id.items()):
+        if str(arch.get("marche") or "").lower() != "score_exact":
+            continue
+        score_final = arch.get("score_final")
+        if parse_score_reel(score_final) is None:
+            continue
+        match = _enrichir_match_pour_validation(arch, snapshots, catalogue)
+        validee = valider_foot(match, score_final)
+        if not validee:
+            continue
+        validee["archive_key"] = key
+        par_id[key] = validee
+        reval += 1
+    return reval
 
 
 def _enrichir_match_pour_validation(archive: dict, snapshots: list, catalogue: list) -> dict:
@@ -977,11 +1159,14 @@ def _enrichir_match_pour_validation(archive: dict, snapshots: list, catalogue: l
         "over_under_25",
         "marches_supplementaires",
         "score_exact",
+        "top_scores",
+        "scores_proposes",
         "buteurs",
         "velora_pick_1n2",
         "indice_velora",
+        "free_analysis",
     ):
-        val = snap.get(cle)
+        val = snap.get(cle) if cle != "scores_proposes" else (snap.get(cle) or archive.get(cle))
         if val is not None and val != "" and val != {} and val != []:
             out[cle] = val
     if not out.get("marche"):
@@ -1433,6 +1618,10 @@ def traiter_archives_foot() -> dict[str, Any]:
     catalogue = _lire_json(MATCHS_JSON_PATH, [])
     if not isinstance(catalogue, list):
         catalogue = []
+
+    reval_top3 = _revalider_archives_score_exact_top3(par_id, snapshots, catalogue)
+    if reval_top3:
+        print(f"[archiver-foot] {reval_top3} archive(s) score exact réévaluée(s) (règle top 3)")
 
     nouvelles = resolve_stats.get("resolus", 0)
 

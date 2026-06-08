@@ -24,7 +24,7 @@ MARCHE_LABELS: dict[str, str] = {
     "over_25": "Over 2.5",
     "under_25": "Under 2.5",
     "btts": "BTTS",
-    "score_exact": "Score exact",
+    "score_exact": "Score exact (top 3)",
     "double_chance": "Double chance",
     "autre": "Autre",
 }
