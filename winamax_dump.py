@@ -14,6 +14,13 @@ from typing import Any
 
 from playwright.sync_api import sync_playwright
 
+from velora_engine.scrape.winamax_state import (
+    playwright_proxy_from_url,
+    proxy_interactive_enabled,
+    proxy_user_data_dir,
+    wait_for_proxy_authentication,
+)
+
 URLS = (
     "https://www.winamax.fr/paris-sportifs/sports/1",
     "https://www.winamax.fr/paris-sportifs",
@@ -113,7 +120,7 @@ def _normalize_state(data: object) -> tuple[dict | None, str]:
 def _extract_via_evaluate(page) -> tuple[object | None, str]:
     print(f"[winamax_dump] page.evaluate() (timeout {EVALUATE_TIMEOUT_MS}ms)...")
     try:
-        result = page.evaluate(_EVALUATE_JS, timeout=EVALUATE_TIMEOUT_MS)
+        result = page.evaluate(_EVALUATE_JS)
     except Exception as e:
         print(f"[winamax_dump] evaluate() échoué ou timeout: {e}", file=sys.stderr)
         return None, ""
@@ -415,8 +422,22 @@ def main() -> None:
         return
 
     print("[winamax_dump] Demarrage Chromium (SSR)...")
-    headless = _chromium_headless()
     proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
+    interactive_proxy = proxy_interactive_enabled() and bool(proxy_url)
+    headless = False if interactive_proxy else _chromium_headless()
+    proxy_cfg = playwright_proxy_from_url(proxy_url)
+    context_kwargs: dict[str, Any] = {
+        "user_agent": UA,
+        "locale": "fr-FR",
+        "timezone_id": "Europe/Paris",
+        "viewport": {"width": 1920, "height": 1080},
+        "extra_http_headers": {"Accept-Language": "fr-FR,fr;q=0.9"},
+    }
+    if proxy_cfg:
+        context_kwargs["proxy"] = proxy_cfg
+        mode = "interactif (login dans Chromium)" if interactive_proxy else "automatique"
+        print(f"[winamax_dump] Proxy ({mode}): {proxy_cfg.get('server')}")
+
     launch_kwargs: dict[str, Any] = {
         "headless": headless,
         "args": [
@@ -425,9 +446,6 @@ def main() -> None:
             "--disable-dev-shm-usage",
         ],
     }
-    if proxy_url:
-        launch_kwargs["proxy"] = {"server": proxy_url}
-        print(f"[winamax_dump] Proxy: {proxy_url}")
 
     browser = None
     context = None
@@ -437,16 +455,23 @@ def main() -> None:
     try:
         with sync_playwright() as p:
             print(f"[winamax_dump] chromium headless={headless}")
-            browser = p.chromium.launch(**launch_kwargs)
-            context = browser.new_context(
-                user_agent=UA,
-                locale="fr-FR",
-                timezone_id="Europe/Paris",
-                viewport={"width": 1920, "height": 1080},
-                extra_http_headers={"Accept-Language": "fr-FR,fr;q=0.9"},
-            )
-            page = context.new_page()
+            if interactive_proxy:
+                profile = proxy_user_data_dir()
+                profile.mkdir(parents=True, exist_ok=True)
+                context = p.chromium.launch_persistent_context(
+                    str(profile),
+                    **launch_kwargs,
+                    **context_kwargs,
+                )
+                page = context.pages[0] if context.pages else context.new_page()
+            else:
+                browser = p.chromium.launch(**launch_kwargs)
+                context = browser.new_context(**context_kwargs)
+                page = context.new_page()
             page.set_default_timeout(min(EVALUATE_TIMEOUT_MS, 60_000))
+
+            if interactive_proxy:
+                wait_for_proxy_authentication(page, URLS[0], label="winamax_dump")
 
             last_err: WinamaxDumpError | None = None
             for url in URLS:

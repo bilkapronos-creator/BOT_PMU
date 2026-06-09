@@ -2,10 +2,95 @@
 
 from __future__ import annotations
 
+import os
 import re
+import sys
+import time
+from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 OU_MAX_COTE_SANE = 5.0
+
+
+def proxy_user_data_dir() -> Path:
+    root = Path(__file__).resolve().parents[2]
+    return root / ".velora_proxy_profile"
+
+
+def proxy_interactive_enabled() -> bool:
+    """Auth proxy via fenêtre Chromium (dialogue identifiant / mot de passe)."""
+    flag = os.environ.get("VELORA_PROXY_INTERACTIVE", "").strip().lower()
+    if flag in ("0", "false", "no"):
+        return False
+    if flag in ("1", "true", "yes"):
+        return True
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
+        return False
+    if os.environ.get("CI", "").strip().lower() in ("1", "true"):
+        return False
+    return bool(os.environ.get("VELORA_PROXY_URL", "").strip())
+
+
+def _proxy_url_parts(proxy_url: str) -> tuple[str, str | None, str | None]:
+    raw = (proxy_url or "").strip()
+    if not raw:
+        return "", None, None
+    parsed = urlparse(raw)
+    if not parsed.hostname:
+        return raw, None, None
+    scheme = parsed.scheme or "http"
+    port = parsed.port or 6645
+    server = f"{scheme}://{parsed.hostname}:{port}"
+    user = unquote(parsed.username) if parsed.username else None
+    pwd = unquote(parsed.password) if parsed.password else None
+    user = user or os.environ.get("VELORA_PROXY_USER", "").strip() or None
+    pwd = pwd or os.environ.get("VELORA_PROXY_PASS", "").strip() or None
+    return server, user, pwd
+
+
+def playwright_proxy_from_url(proxy_url: str, *, interactive: bool | None = None) -> dict[str, str] | None:
+    """
+    Format Playwright : server + username/password séparés.
+    Évite ERR_INVALID_AUTH_CREDENTIALS quand user:pass est dans l'URL.
+    """
+    server, user, pwd = _proxy_url_parts(proxy_url)
+    if not server:
+        return None
+    use_interactive = proxy_interactive_enabled() if interactive is None else interactive
+    if use_interactive:
+        return {"server": server}
+    out: dict[str, str] = {"server": server}
+    if user:
+        out["username"] = user
+    if pwd:
+        out["password"] = pwd
+    return out
+
+
+def wait_for_proxy_authentication(page, test_url: str, *, label: str = "winamax_dump") -> None:
+    """
+    Ouvre Winamax et attend que l'utilisateur se connecte au proxy
+    (dialogue Chromium identifiant / mot de passe).
+    """
+    print(f"\n[{label}] " + "=" * 56)
+    print(f"[{label}] AUTHENTIFICATION PROXY — fenêtre Chromium")
+    print(f"[{label}] Si une popup demande identifiant / mot de passe proxy :")
+    print(f"[{label}]   saisissez vos identifiants puis validez.")
+    print(f"[{label}] Attendez que Winamax se charge dans la fenêtre.")
+    print(f"[{label}] " + "=" * 56 + "\n")
+    try:
+        page.goto(test_url, wait_until="domcontentloaded", timeout=120_000)
+    except Exception as exc:
+        print(f"[{label}] Navigation initiale (proxy) : {exc}", file=sys.stderr)
+    if sys.stdin.isatty():
+        try:
+            input(f"[{label}] >>> Appuyez sur ENTRÉE une fois le proxy connecté… ")
+        except EOFError:
+            time.sleep(20)
+    else:
+        print(f"[{label}] Mode non interactif — pause 25s pour auth proxy…")
+        time.sleep(25)
 
 
 def lookup(mapping: dict, key: Any) -> dict | None:

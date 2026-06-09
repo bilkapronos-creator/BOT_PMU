@@ -36,6 +36,12 @@ from velora_intel import (
     extract_intel_from_state,
 )
 from velora_engine.analysis.match_scores import ensure_match_scores_coherent
+from velora_engine.scrape.winamax_state import (
+    playwright_proxy_from_url,
+    proxy_interactive_enabled,
+    proxy_user_data_dir,
+    wait_for_proxy_authentication,
+)
 from velora_engine.analysis.model_poisson import align_top_scores_for_pick
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -56,11 +62,13 @@ def _chromium_headless() -> bool:
     return os.environ.get("CI", "").strip().lower() in ("1", "true")
 
 
-def _launch_browser(playwright):
-    headless = _chromium_headless()
-    print(f"[sniper] chromium headless={headless}")
+def _open_playwright_session(playwright) -> tuple[object | None, object, object]:
+    """Retourne (browser ou None, context, page)."""
     proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
-    kwargs = {
+    interactive_proxy = proxy_interactive_enabled() and bool(proxy_url)
+    headless = False if interactive_proxy else _chromium_headless()
+    print(f"[sniper] chromium headless={headless}")
+    launch_kwargs = {
         "headless": headless,
         "args": [
             "--disable-blink-features=AutomationControlled",
@@ -68,9 +76,33 @@ def _launch_browser(playwright):
             "--disable-dev-shm-usage",
         ],
     }
-    if proxy_url:
-        kwargs["proxy"] = {"server": proxy_url}
-    return playwright.chromium.launch(**kwargs)
+    proxy_cfg = playwright_proxy_from_url(proxy_url)
+    if proxy_cfg:
+        launch_kwargs["proxy"] = proxy_cfg
+        mode = "interactif" if interactive_proxy else "automatique"
+        print(f"[sniper] Proxy ({mode}): {proxy_cfg.get('server')}")
+    if interactive_proxy:
+        profile = proxy_user_data_dir()
+        profile.mkdir(parents=True, exist_ok=True)
+        context = playwright.chromium.launch_persistent_context(
+            str(profile),
+            user_agent=UA,
+            locale="fr-FR",
+            timezone_id="Europe/Paris",
+            viewport={"width": 1920, "height": 1080},
+            **launch_kwargs,
+        )
+        page = context.pages[0] if context.pages else context.new_page()
+        return None, context, page
+    browser = playwright.chromium.launch(**launch_kwargs)
+    context = browser.new_context(
+        user_agent=UA,
+        locale="fr-FR",
+        timezone_id="Europe/Paris",
+        extra_http_headers={"Accept-Language": "fr-FR,fr;q=0.9"},
+    )
+    page = context.new_page()
+    return browser, context, page
 
 IN_PATH = Path(__file__).resolve().parent / "api_velora_matchs.json"
 OUT_PATH = Path(__file__).resolve().parent / "api_velora_premium.json"
@@ -824,14 +856,14 @@ def main() -> None:
         return
 
     with sync_playwright() as p:
-        browser = _launch_browser(p)
-        context = browser.new_context(
-            user_agent=UA,
-            locale="fr-FR",
-            timezone_id="Europe/Paris",
-            extra_http_headers={"Accept-Language": "fr-FR,fr;q=0.9"},
-        )
-        page = context.new_page()
+        browser, context, page = _open_playwright_session(p)
+        if proxy_interactive_enabled() and os.environ.get("VELORA_PROXY_URL", "").strip():
+            first_mid = batch[0].get("id_match")
+            wait_for_proxy_authentication(
+                page,
+                MATCH_URL.format(id_match=first_mid),
+                label="sniper",
+            )
 
         for i, match in enumerate(batch, 1):
             mid = match.get("id_match")
@@ -878,7 +910,8 @@ def main() -> None:
                 time.sleep(PAUSE_SECONDS)
 
         context.close()
-        browser.close()
+        if browser is not None:
+            browser.close()
 
     by_id = {str(m.get("id_match")): m for m in all_matches}
     by_id.update(updates)
