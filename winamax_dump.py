@@ -15,9 +15,9 @@ from typing import Any
 from playwright.sync_api import sync_playwright
 
 from velora_engine.scrape.winamax_state import (
-    playwright_proxy_from_url,
     proxy_interactive_enabled,
     proxy_user_data_dir,
+    resolve_playwright_proxy_config,
     wait_for_proxy_authentication,
 )
 
@@ -362,7 +362,14 @@ def _chromium_headless() -> bool:
 
 def _fail(msg: str, code: int = 1) -> None:
     print(f"[winamax_dump] ECHEC: {msg}", file=sys.stderr)
-    OUT.write_text("{}", encoding="utf-8")
+    if OUT.is_file() and OUT.stat().st_size > 10:
+        print(
+            f"[winamax_dump] Conservation du dump existant ({OUT.name}) — "
+            "échec scrape sans écraser les données.",
+            file=sys.stderr,
+        )
+    else:
+        OUT.write_text("{}", encoding="utf-8")
     sys.exit(code)
 
 
@@ -425,7 +432,7 @@ def main() -> None:
     proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
     interactive_proxy = proxy_interactive_enabled() and bool(proxy_url)
     headless = False if interactive_proxy else _chromium_headless()
-    proxy_cfg = playwright_proxy_from_url(proxy_url)
+    proxy_cfg = resolve_playwright_proxy_config()
     context_kwargs: dict[str, Any] = {
         "user_agent": UA,
         "locale": "fr-FR",

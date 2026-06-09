@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import getpass
 import os
 import re
 import sys
@@ -49,6 +50,34 @@ def _proxy_url_parts(proxy_url: str) -> tuple[str, str | None, str | None]:
     return server, user, pwd
 
 
+def resolve_playwright_proxy_config() -> dict[str, str] | None:
+    """
+    Config proxy Playwright. En mode interactif, demande login/mot de passe
+    dans le terminal si absents de l'URL / .env.
+    """
+    proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
+    if not proxy_url:
+        return None
+    server, user, pwd = _proxy_url_parts(proxy_url)
+    if proxy_interactive_enabled() and sys.stdin.isatty():
+        if not user:
+            try:
+                user = input("[proxy] Login proxy : ").strip() or None
+            except EOFError:
+                user = None
+        if not pwd:
+            try:
+                pwd = getpass.getpass("[proxy] Mot de passe proxy : ").strip() or None
+            except EOFError:
+                pwd = None
+    out: dict[str, str] = {"server": server}
+    if user:
+        out["username"] = user
+    if pwd:
+        out["password"] = pwd
+    return out
+
+
 def playwright_proxy_from_url(proxy_url: str, *, interactive: bool | None = None) -> dict[str, str] | None:
     """
     Format Playwright : server + username/password séparés.
@@ -74,10 +103,8 @@ def wait_for_proxy_authentication(page, test_url: str, *, label: str = "winamax_
     (dialogue Chromium identifiant / mot de passe).
     """
     print(f"\n[{label}] " + "=" * 56)
-    print(f"[{label}] AUTHENTIFICATION PROXY — fenêtre Chromium")
-    print(f"[{label}] Si une popup demande identifiant / mot de passe proxy :")
-    print(f"[{label}]   saisissez vos identifiants puis validez.")
-    print(f"[{label}] Attendez que Winamax se charge dans la fenêtre.")
+    print(f"[{label}] Vérification connexion proxy → Winamax")
+    print(f"[{label}] La fenêtre Chromium doit afficher Winamax (pas d'erreur proxy).")
     print(f"[{label}] " + "=" * 56 + "\n")
     try:
         page.goto(test_url, wait_until="domcontentloaded", timeout=120_000)

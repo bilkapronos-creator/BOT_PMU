@@ -37,9 +37,9 @@ from velora_intel import (
 )
 from velora_engine.analysis.match_scores import ensure_match_scores_coherent
 from velora_engine.scrape.winamax_state import (
-    playwright_proxy_from_url,
     proxy_interactive_enabled,
     proxy_user_data_dir,
+    resolve_playwright_proxy_config,
     wait_for_proxy_authentication,
 )
 from velora_engine.analysis.model_poisson import align_top_scores_for_pick
@@ -76,7 +76,7 @@ def _open_playwright_session(playwright) -> tuple[object | None, object, object]
             "--disable-dev-shm-usage",
         ],
     }
-    proxy_cfg = playwright_proxy_from_url(proxy_url)
+    proxy_cfg = resolve_playwright_proxy_config()
     if proxy_cfg:
         launch_kwargs["proxy"] = proxy_cfg
         mode = "interactif" if interactive_proxy else "automatique"
