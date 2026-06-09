@@ -471,6 +471,17 @@ def _fichier_json_recent(path: Path, max_heures: float) -> bool:
     return age_h <= max_heures
 
 
+def _match_kickoff_paris(match: dict):
+    """datetime Europe/Paris du coup d'envoi, ou None."""
+    from datetime import datetime as _dt
+    from zoneinfo import ZoneInfo
+
+    ts = _match_start_ts_unix(match)
+    if ts is None:
+        return None
+    return _dt.fromtimestamp(ts, tz=ZoneInfo("Europe/Paris"))
+
+
 def _match_start_ts_unix(match: dict) -> float | None:
     raw = match.get("match_start_ts")
     if raw is not None:
@@ -496,9 +507,41 @@ def _match_start_ts_unix(match: dict) -> float | None:
         return None
 
 
+def _json_contient_match_journee_pari(path: Path) -> bool:
+    """Vrai si au moins un match est dans la fenêtre betting_day (alignée parser Winamax)."""
+    if not path.is_file():
+        return False
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    matchs = data if isinstance(data, list) else data.get("matchs") or []
+    if not matchs:
+        return False
+    from parser_winamax import is_kickoff_in_betting_day
+
+    for m in matchs:
+        if not isinstance(m, dict):
+            continue
+        kickoff = _match_kickoff_paris(m)
+        if kickoff is not None and is_kickoff_in_betting_day(kickoff):
+            return True
+    return False
+
+
+def _json_skip_scraper_ci(path: Path, max_heures: float) -> bool:
+    """Skip proactif CI : fichier récent ET matchs de la journée de paris en cours."""
+    if not path.is_file() or path.stat().st_size < 4:
+        return False
+    age_h = (time.time() - path.stat().st_mtime) / 3600.0
+    if age_h > max_heures:
+        return False
+    return _json_contient_match_journee_pari(path)
+
+
 def _json_matchs_semantiquement_frais(path: Path, max_heures: float) -> bool:
-    """Vrai si au moins un match du JSON est futur ou récent (évite repli CI sur vieux JSON checkout)."""
-    if not path.is_file() or path.stat().st_size < 80:
+    """Vrai si au moins un match du JSON est futur ou récent (repli CI après échec scrape)."""
+    if not path.is_file() or path.stat().st_size < 4:
         return False
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -533,21 +576,22 @@ def _synchroniser_premium_depuis_web() -> bool:
     return PREMIUM_SRC.is_file()
 
 
-def _mode_repli_scraper_ci() -> str | None:
+def _mode_repli_scraper_ci(*, proactif: bool = False) -> str | None:
     """premium | dump | matchs | None — données déjà présentes dans le dépôt."""
-    max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "72"))
-    if _json_matchs_semantiquement_frais(PREMIUM_SRC, max_h):
+    max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "6"))
+    frais = _json_skip_scraper_ci if proactif else _json_matchs_semantiquement_frais
+    if frais(PREMIUM_SRC, max_h):
         return "premium"
     assert WEB_ROOT is not None
     premium_web = WEB_ROOT / "api_velora_premium.json"
-    if _json_matchs_semantiquement_frais(premium_web, max_h):
+    if frais(premium_web, max_h):
         return "premium_web"
     if _fichier_json_recent(DUMP_HTML, max_h):
         return "dump"
-    if _json_matchs_semantiquement_frais(MATCHS_JSON, max_h):
+    if frais(MATCHS_JSON, max_h):
         return "matchs"
     matchs_web = WEB_ROOT / "api_velora_matchs.json"
-    if _json_matchs_semantiquement_frais(matchs_web, max_h):
+    if frais(matchs_web, max_h):
         return "matchs_web"
     return None
 
@@ -566,13 +610,13 @@ def executer_phase_scraper() -> bool:
 
     debut = 0
     if _ci_scraper_optionnel():
-        mode = _mode_repli_scraper_ci()
+        mode = _mode_repli_scraper_ci(proactif=True)
         if mode in ("premium", "premium_web"):
             if mode == "premium_web":
                 _synchroniser_premium_depuis_web()
             log(
-                "CI : scraper Winamax ignoré — JSON premium récent conservé "
-                f"({PREMIUM_SRC.name}, < {os.environ.get('VELORA_CI_SCRAPER_MAX_AGE_H', '72')} h). "
+                "CI : scraper Winamax ignoré — premium à jour "
+                f"(journée de paris + fichier < {os.environ.get('VELORA_CI_SCRAPER_MAX_AGE_H', '6')} h). "
                 "Résolution PMU/Foot et publication communauté continuent.",
             )
             return True

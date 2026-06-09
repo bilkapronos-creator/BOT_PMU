@@ -30,7 +30,14 @@ def proxy_interactive_enabled() -> bool:
         return False
     if os.environ.get("CI", "").strip().lower() in ("1", "true"):
         return False
-    return bool(os.environ.get("VELORA_PROXY_URL", "").strip())
+    proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
+    if not proxy_url:
+        return False
+    # Identifiants déjà dans l'URL ou VELORA_PROXY_USER/PASS → auth Playwright auto
+    _, user, pwd = _proxy_url_parts(proxy_url)
+    if user and pwd:
+        return False
+    return True
 
 
 def _proxy_url_parts(proxy_url: str) -> tuple[str, str | None, str | None]:
