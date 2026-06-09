@@ -1,7 +1,7 @@
 {
   "version": 1,
   "edge_thresholds": {
-    "1n2": 1.05,
+    "1n2": 1.11,
     "dc_1x": 1.05,
     "dc_x2": 1.05,
     "ou_total": 1.08,
@@ -17,9 +17,19 @@
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
       "edge_suggere": 1.17,
-      "taux_pct": 38,
-      "echantillon": 8,
-      "raison": "38% de réussite sur 8 matchs — seuil relevé"
+      "taux_pct": 33,
+      "echantillon": 12,
+      "raison": "33% de réussite sur 12 matchs — seuil relevé"
+    },
+    {
+      "marche": "value_1n2",
+      "label": "Value 1N2",
+      "edge_key": "1n2",
+      "edge_actuel": 1.05,
+      "edge_suggere": 1.11,
+      "taux_pct": 20,
+      "echantillon": 5,
+      "raison": "20% de réussite sur 5 matchs — seuil relevé"
     },
     {
       "marche": "over_25",
@@ -33,19 +43,33 @@
     }
   ],
   "detail_par_marche": {
-    "pronostic_1n2": {
-      "label": "Pronostic 1N2",
-      "total": 10,
-      "succes": 7,
-      "taux": 70,
-      "profit_net": -17.9
+    "double_chance": {
+      "label": "Double chance",
+      "total": 2,
+      "succes": 1,
+      "taux": 50,
+      "profit_net": -3.8
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 8,
-      "succes": 3,
-      "taux": 38,
-      "profit_net": 80.1
+      "total": 12,
+      "succes": 4,
+      "taux": 33,
+      "profit_net": 92.1
+    },
+    "value_1n2": {
+      "label": "Value 1N2",
+      "total": 5,
+      "succes": 1,
+      "taux": 20,
+      "profit_net": -16.5
+    },
+    "pronostic_1n2": {
+      "label": "Pronostic 1N2",
+      "total": 11,
+      "succes": 7,
+      "taux": 64,
+      "profit_net": -27.9
     },
     "over_25": {
       "label": "Over 2.5",
@@ -53,20 +77,6 @@
       "succes": 5,
       "taux": 42,
       "profit_net": -69.5
-    },
-    "value_1n2": {
-      "label": "Value 1N2",
-      "total": 3,
-      "succes": 1,
-      "taux": 33,
-      "profit_net": 3.5
-    },
-    "double_chance": {
-      "label": "Double chance",
-      "total": 1,
-      "succes": 1,
-      "taux": 100,
-      "profit_net": 6.2
     }
   }
 }
