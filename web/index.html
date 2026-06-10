@@ -1543,8 +1543,8 @@
                     class="foot-toggle-opp foot-toggle-opp--vip-locked mb-4 flex w-full flex-wrap items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-bold text-gray-300 transition hover:border-amber-500/35 hover:bg-amber-500/10">
                     <span aria-hidden="true">🔥</span>
                     <span>Mode Opportunités (Value Bets)</span>
-                    <span class="foot-opp-pro-badge" title="Réservé Premium">PRO</span>
-                    <span class="text-[10px] opacity-70" aria-hidden="true">🔒</span>
+                    <span id="footToggleOppPro" class="foot-opp-pro-badge js-foot-premium-lock" title="Réservé Premium">PRO</span>
+                    <span id="footToggleOppLock" class="js-foot-premium-lock text-[10px] opacity-70" aria-hidden="true">🔒</span>
                 </button>
                 <div id="footOppToolbar" class="mb-4 hidden flex flex-col gap-2 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2">
                     <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1576,7 +1576,7 @@
                         class="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-500/35 bg-cyan-500/10 py-2.5 px-4 text-sm font-semibold text-cyan-200 transition hover:border-cyan-400/50 hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-60"
                         title="Afficher tous les matchs du jour — Pass Premium Foot">
                         Voir tous les matchs
-                        <span class="foot-opp-pro-badge" title="Réservé Premium Foot">PRO</span>
+                        <span id="btnFootVoirTousPro" class="foot-opp-pro-badge js-foot-premium-lock" title="Réservé Premium Foot">PRO</span>
                     </button>
                 </div>
                 <p id="footSearchMeta" class="mt-3 text-center text-xs text-gray-500">Chargement des matchs…</p>
@@ -4907,12 +4907,41 @@
                     guide.innerHTML = 'Mode <span class="font-semibold text-amber-300">Opportunités</span> : le site affiche automatiquement les pépites premium (value bets &amp; 4–5★). Désactivez le toggle pour revenir au moteur de recherche.';
                 } else if (!peutUtiliserRadarFootOpp()) {
                     guide.innerHTML = 'Le <span class="font-semibold text-amber-300">Mode Opportunités</span> est réservé aux membres connectés avec le <span class="font-semibold text-amber-300">Pass Premium Foot</span>. Utilisez le moteur de recherche ci-dessous pour l\'analyse gratuite.';
+                } else if (estVeloraPremiumFoot()) {
+                    guide.innerHTML = 'Pass Foot actif — <span class="font-semibold text-cyan-300">recherche</span> par équipe, <span class="font-semibold text-cyan-300">Voir tous les matchs</span> ou <span class="font-semibold text-amber-300">Mode Opportunités</span> pour le radar value bets.';
                 } else {
                     guide.innerHTML = 'Mode <span class="font-semibold text-cyan-300">recherche</span> : saisissez une équipe à gauche puis cliquez sur <span class="font-semibold text-cyan-300">Générer l\'analyse</span>. Une seule carte match s\'affiche avec le pronostic Velora. Activez <span class="font-semibold text-amber-300">Mode Opportunités</span> pour le radar premium.';
                 }
             } else {
                 guide.innerHTML = 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.';
             }
+        }
+
+        function restaurerLibelleBtnFootVoirTous() {
+            const btn = document.getElementById('btnFootVoirTous');
+            if (!btn) return;
+            if (estVeloraPremiumFoot()) {
+                btn.textContent = 'Voir tous les matchs';
+                return;
+            }
+            btn.innerHTML = 'Voir tous les matchs <span id="btnFootVoirTousPro" class="foot-opp-pro-badge js-foot-premium-lock" title="Réservé Premium Foot">PRO</span>';
+        }
+
+        /** Masque cadenas / badge PRO Foot quand le Pass Premium Foot est actif. */
+        function majFootIndicateursPremiumUi() {
+            const premium = estVeloraPremiumFoot();
+            document.querySelectorAll('.js-foot-premium-lock').forEach((el) => {
+                el.classList.toggle('hidden', premium);
+            });
+            const btnVoirTous = document.getElementById('btnFootVoirTous');
+            if (btnVoirTous) {
+                btnVoirTous.classList.toggle('opacity-75', !premium);
+            }
+            const toggle = document.getElementById('footToggleOpp');
+            if (toggle && premium) {
+                toggle.classList.remove('foot-toggle-opp--vip-locked');
+            }
+            restaurerLibelleBtnFootVoirTous();
         }
 
         function syncFootModeUi() {
@@ -4953,7 +4982,6 @@
                 btnVoirTous.title = premium
                     ? 'Afficher tous les matchs du jour (journée + nocturnes)'
                     : 'Pass Premium Foot requis pour voir tous les matchs';
-                btnVoirTous.classList.toggle('opacity-75', !premium);
             }
             const meta = document.getElementById('footSearchMeta');
             if (meta) {
@@ -4966,6 +4994,7 @@
             }
             mettreAJourGuideFoot();
             majFootFiltresUi();
+            majFootIndicateursPremiumUi();
         }
 
         function aujourdhuiIsoLocal() {
@@ -5240,7 +5269,7 @@
             } finally {
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = 'Voir tous les matchs <span class="foot-opp-pro-badge" title="Réservé Premium Foot">PRO</span>';
+                    restaurerLibelleBtnFootVoirTous();
                 }
                 syncFootModeUi();
             }
@@ -7906,7 +7935,7 @@
             if (footVoirTousMatchs && estVeloraPremiumFoot()) {
                 const liste = listeFootCartesAffichees();
                 meta.textContent = liste.length
-                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} du jour — vue complète Premium`
+                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} du jour — vue complète`
                     : 'Aucun match du jour actif pour le moment';
                 return;
             }
