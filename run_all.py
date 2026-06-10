@@ -539,26 +539,17 @@ def _json_skip_scraper_ci(path: Path, max_heures: float) -> bool:
     return _json_contient_match_journee_pari(path)
 
 
-def _json_matchs_semantiquement_frais(path: Path, max_heures: float) -> bool:
-    """Vrai si au moins un match du JSON est futur ou récent (repli CI après échec scrape)."""
+def _json_utilisable_ci(path: Path, max_heures: float) -> bool:
+    """
+    Repli CI : fichier récent ET au moins un match dans la fenêtre betting_day (Paris).
+    Évite de garder une veille de matchs déjà terminés quand le scraper Winamax échoue.
+    """
     if not path.is_file() or path.stat().st_size < 4:
         return False
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+    age_h = (time.time() - path.stat().st_mtime) / 3600.0
+    if age_h > max_heures:
         return False
-    matchs = data if isinstance(data, list) else data.get("matchs") or []
-    if not matchs:
-        return False
-    now = time.time()
-    horizon = max_heures * 3600.0
-    for m in matchs:
-        if not isinstance(m, dict):
-            continue
-        ts = _match_start_ts_unix(m)
-        if ts is not None and ts >= now - horizon:
-            return True
-    return False
+    return _json_contient_match_journee_pari(path)
 
 
 def _synchroniser_premium_depuis_web() -> bool:
@@ -579,7 +570,7 @@ def _synchroniser_premium_depuis_web() -> bool:
 def _mode_repli_scraper_ci(*, proactif: bool = False) -> str | None:
     """premium | dump | matchs | None — données déjà présentes dans le dépôt."""
     max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "6"))
-    frais = _json_skip_scraper_ci if proactif else _json_matchs_semantiquement_frais
+    frais = _json_skip_scraper_ci if proactif else _json_utilisable_ci
     if frais(PREMIUM_SRC, max_h):
         return "premium"
     assert WEB_ROOT is not None
@@ -596,8 +587,50 @@ def _mode_repli_scraper_ci(*, proactif: bool = False) -> str | None:
     return None
 
 
+def _log_etat_matchs_json(path: Path) -> None:
+    """Diagnostic : journée de paris vs matchs périmés (recherche Foot vide côté site)."""
+    from parser_winamax import is_kickoff_in_betting_day
+
+    if not path.is_file():
+        log(f"[matchs] {path.name} absent.")
+        return
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        log(f"[matchs] {path.name} illisible : {exc}")
+        return
+    matchs = data if isinstance(data, list) else data.get("matchs") or []
+    jour = sum(
+        1
+        for m in matchs
+        if isinstance(m, dict)
+        and _match_kickoff_paris(m) is not None
+        and is_kickoff_in_betting_day(_match_kickoff_paris(m))
+    )
+    futurs = sum(
+        1
+        for m in matchs
+        if isinstance(m, dict)
+        and _match_start_ts_unix(m) is not None
+        and _match_start_ts_unix(m) > time.time()
+    )
+    log(
+        f"[matchs] {path.name} : {len(matchs)} entrée(s), "
+        f"{jour} dans la journée de paris, {futurs} à venir."
+    )
+    if matchs and jour == 0:
+        log(
+            "[matchs] Aucun match du jour — le moteur de recherche Foot sera vide "
+            "jusqu'à un scrape Winamax réussi (proxy France requis sur GitHub Actions)."
+        )
+
+
 def executer_phase_scraper() -> bool:
     """Étapes 1–3 : dump → parser → sniper (repli CI si géoblocage Winamax)."""
+    _log_etat_matchs_json(MATCHS_JSON)
+    assert WEB_ROOT is not None
+    _log_etat_matchs_json(WEB_ROOT / "api_velora_matchs.json")
+
     etapes = [
         ("winamax_dump.py", "Étape 1/5 : extraction SSR Winamax", None),
         ("parser_winamax.py", "Étape 2/5 : structuration JSON", None),

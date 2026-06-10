@@ -77,6 +77,39 @@ jobs:
           VELORA_BETTING_DAY_END_HOUR: "8"
         run: xvfb-run -a python run_all.py
 
+      - name: Vérifier matchs du jour (recherche Foot vide si 0)
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from parser_winamax import is_kickoff_in_betting_day
+          from run_all import _match_kickoff_paris
+
+          paths = [
+              Path("api_velora_matchs.json"),
+              Path("web/api_velora_matchs.json"),
+          ]
+          for path in paths:
+              if not path.is_file():
+                  continue
+              raw = json.loads(path.read_text(encoding="utf-8"))
+              matchs = raw if isinstance(raw, list) else raw.get("matchs") or []
+              jour = sum(
+                  1
+                  for m in matchs
+                  if isinstance(m, dict)
+                  and _match_kickoff_paris(m)
+                  and is_kickoff_in_betting_day(_match_kickoff_paris(m))
+              )
+              print(f"{path}: {len(matchs)} match(s), {jour} dans la journée de paris")
+              if matchs and jour == 0:
+                  print(
+                      "::warning::Aucun match du jour — recherche Foot vide. "
+                      "Vérifier VELORA_PROXY_URL (proxy France) si le scrape a échoué."
+                  )
+          PY
+
       - name: Commit et push JSON (web/ + racine → Vercel)
         if: success()
         run: |

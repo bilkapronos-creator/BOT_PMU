@@ -7781,6 +7781,13 @@
             if (!el || footModeOpportunites || !footMatchsCharges) return;
             const n = footMatchsRecherchables().length;
             const total = footMatchs.length;
+            const fm = footMetaDonneesMatchs();
+            if (n === 0 && total > 0) {
+                const quand = fm.derniereDate ? ` (dernier : ${fm.derniereDate})` : '';
+                el.innerHTML = `Les matchs en base sont passés${quand}. Velora recharge Winamax <strong class="text-amber-200/90">toutes les 30&nbsp;min</strong> — patientez puis saisissez une équipe et <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootAlerteDonneesPerimees()}`;
+                majFootAlerteDonneesUi();
+                return;
+            }
             const baseLabel = n > 0
                 ? `${n} match${n > 1 ? 's' : ''} Winamax (journée + nocturnes)`
                 : (total > 0
