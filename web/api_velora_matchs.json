@@ -1,1158 +1,669 @@
-[
-  {
-    "id_match": "71889066",
-    "date_match": "09/06/2026 à 14:30",
-    "match_start_ts": 1781008200,
-    "equipe_domicile": "Livyi Bereg Kiev",
-    "equipe_exterieur": "Oleksandria",
-    "cotes": {
-      "1": 2.05,
-      "N": 3.1,
-      "2": 3.05
-    },
-    "probabilites": {
-      "1": 70,
-      "N": 20,
-      "2": 10
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
+{
+  "schema_version": 2,
+  "meta": {
+    "generated_at": "2026-06-10T14:43:00.173463+02:00",
+    "engine": "velora-pro-2",
+    "match_count": 4
   },
-  {
-    "id_match": "71889086",
-    "date_match": "09/06/2026 à 17:00",
-    "match_start_ts": 1781017200,
-    "equipe_domicile": "Agrobiznes Volochisk",
-    "equipe_exterieur": "Kudrivka Irpin",
-    "cotes": {
-      "1": 3.2,
-      "N": 2.95,
-      "2": 2.05
-    },
-    "probabilites": {
-      "1": 18,
-      "N": 12,
-      "2": 70
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+  "matchs": [
+    {
+      "id_match": "71853284",
+      "date_match": "10/06/2026 à 21:00",
+      "match_start_ts": 1781118000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Malaga",
+      "equipe_exterieur": "Las Palmas",
+      "meta_match": {
+        "competition": {
+          "name": "Espagne — LaLiga2",
+          "type": "league",
+          "round": "1/2 retour",
+          "stakes_tier": "medium",
+          "category_id": "32",
+          "tournament_id": "16255"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65621108",
-    "date_match": "09/06/2026 à 18:00",
-    "match_start_ts": 1781020800,
-    "equipe_domicile": "Norvège (F)",
-    "equipe_exterieur": "Autriche (F)",
-    "cotes": {
-      "1": 1.47,
-      "N": 3.8,
-      "2": 5.1
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 50,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : DC 1X"
-  },
-  {
-    "id_match": "65621110",
-    "date_match": "09/06/2026 à 18:00",
-    "match_start_ts": 1781020800,
-    "equipe_domicile": "Slovénie (F)",
-    "equipe_exterieur": "Allemagne (F)",
-    "cotes": {
-      "1": 16.0,
-      "N": 8.0,
-      "2": 1.05
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 0,
-      "2": 50
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.05,
+          "N": 3.1,
+          "2": 2.9
+        },
+        "probabilites": {
+          "1": 43,
+          "N": 25,
+          "2": 32
+        },
+        "probabilites_marche": {
+          "1": 42,
+          "N": 28,
+          "2": 30
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.251,
+          "away": 1.058
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 13
+          },
+          {
+            "score": "0-0",
+            "prob": 10
+          },
+          {
+            "score": "2-2",
+            "prob": 4
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 41,
+        "prob_btts_modele": 47,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.9,
+            "prob_pct": 62,
+            "edge": 1.798,
+            "score": 1.1544,
+            "tier": "excellent",
+            "raison": "Proba 62% × cote 2.90 → edge 1.80 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 2.05,
+            "prob_pct": 70,
+            "edge": 1.435,
+            "score": 0.6115,
+            "tier": "excellent",
+            "raison": "Proba 70% × cote 2.05 → edge 1.44 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 2.05,
+            "prob_pct": 68,
+            "edge": 1.394,
+            "score": 0.5515,
+            "tier": "excellent",
+            "raison": "Proba 68% × cote 2.05 → edge 1.39 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 2.9,
+          "prob_pct": 62,
+          "edge": 1.798,
+          "score": 1.1544,
+          "tier": "excellent",
+          "raison": "Proba 62% × cote 2.90 → edge 1.80 — bon équilibre proba/rendement",
+          "stars": 5
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "71899604",
-    "date_match": "09/06/2026 à 18:00",
-    "match_start_ts": 1781020800,
-    "equipe_domicile": "US Yacoub Mansour",
-    "equipe_exterieur": "CODM Meknes",
-    "cotes": {
-      "1": 2.1,
-      "N": 2.85,
-      "2": 3.25
-    },
-    "probabilites": {
-      "1": 64,
-      "N": 15,
-      "2": 21
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65454464",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Pays de Galles (F)",
-    "equipe_exterieur": "République Tchèque (F)",
-    "cotes": {
-      "1": 2.1,
-      "N": 3.1,
-      "2": 2.9
-    },
-    "probabilites": {
-      "1": 60,
-      "N": 31,
-      "2": 9
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 13
+        },
+        {
+          "score": "0-0",
+          "prob": 10
+        },
+        {
+          "score": "2-2",
+          "prob": 4
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "velora_pick_1n2": "N",
+      "probabilites": {
+        "1": 43,
+        "N": 25,
+        "2": 32
+      }
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65454468",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Albanie (F)",
-    "equipe_exterieur": "Montenegro (F)",
-    "cotes": {
-      "1": 1.88,
-      "N": 3.2,
-      "2": 3.25
-    },
-    "probabilites": {
-      "1": 86,
-      "N": 11,
-      "2": 3
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+    {
+      "id_match": "71325934",
+      "date_match": "10/06/2026 à 21:45",
+      "match_start_ts": 1781120700,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Portugal",
+      "equipe_exterieur": "Nigeria",
+      "meta_match": {
+        "competition": {
+          "name": "International — Matchs Amicaux",
+          "type": "friendly",
+          "stakes_tier": "low",
+          "category_id": "4",
+          "tournament_id": "66"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65454470",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Géorgie (F)",
-    "equipe_exterieur": "Grèce (F)",
-    "cotes": {
-      "1": 9.5,
-      "N": 6.0,
-      "2": 1.13
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 0,
-      "2": 50
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "velora_score": 56.4,
+        "indice_velora": 3,
+        "base_confidence": 0.564,
+        "adjusted_confidence": 0.264,
+        "modifiers": [
+          {
+            "code": "friendly_match",
+            "delta": -0.3,
+            "label": "Match amical — confiance réduite"
+          }
+        ]
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65804892",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Suède (F)",
-    "equipe_exterieur": "Italie (F)",
-    "cotes": {
-      "1": 1.58,
-      "N": 3.5,
-      "2": 4.2
-    },
-    "probabilites": {
-      "1": 71,
-      "N": 15,
-      "2": 14
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.25,
+          "N": 5.8,
+          "2": 8.5
+        },
+        "probabilites": {
+          "1": 58,
+          "N": 19,
+          "2": 23
+        },
+        "probabilites_marche": {
+          "1": 73,
+          "N": 16,
+          "2": 11
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Nigeria",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 2.54,
+          "away": 0.986
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 4
+          },
+          {
+            "score": "0-1",
+            "prob": 3
+          },
+          {
+            "score": "2-3",
+            "prob": 2
+          },
+          {
+            "score": "0-2",
+            "prob": 1
+          },
+          {
+            "score": "1-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 67,
+        "prob_btts_modele": 57,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 8.5,
+            "prob_pct": 42,
+            "edge": 3.57,
+            "score": 3.4514,
+            "tier": "excellent",
+            "raison": "Proba 42% × cote 8.50 → edge 3.57 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Nigeria",
+            "cote": 8.5,
+            "prob_pct": 23,
+            "edge": 1.955,
+            "score": 1.2274,
+            "tier": "excellent",
+            "raison": "Proba 23% × cote 8.50 → edge 1.96 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 8.5,
+          "prob_pct": 42,
+          "edge": 3.57,
+          "score": 3.4514,
+          "tier": "excellent",
+          "raison": "Proba 42% × cote 8.50 → edge 3.57 — bon équilibre proba/rendement",
+          "stars": 5
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65804894",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Serbie (F)",
-    "equipe_exterieur": "Danemark (F)",
-    "cotes": {
-      "1": 7.0,
-      "N": 4.9,
-      "2": 1.23
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 50,
-      "2": 50
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : DC X2"
-  },
-  {
-    "id_match": "65805606",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Irlande du Nord (F)",
-    "equipe_exterieur": "Suisse (F)",
-    "cotes": {
-      "1": 7.25,
-      "N": 4.7,
-      "2": 1.27
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 50,
-      "2": 50
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "_legacy": {
+        "conseil": "Victoire Nigeria — forme favorable Nigeria",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "top_scores": [
+        {
+          "score": "1-2",
+          "prob": 4
+        },
+        {
+          "score": "0-1",
+          "prob": 3
+        },
+        {
+          "score": "2-3",
+          "prob": 2
+        },
+        {
+          "score": "0-2",
+          "prob": 1
+        },
+        {
+          "score": "1-3",
+          "prob": 1
+        }
+      ],
+      "velora_pick_1n2": "2"
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : DC X2"
-  },
-  {
-    "id_match": "65805608",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Malte (F)",
-    "equipe_exterieur": "Turquie (F)",
-    "cotes": {
-      "1": 9.5,
-      "N": 5.5,
-      "2": 1.15
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 100
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+    {
+      "id_match": "68686014",
+      "date_match": "11/06/2026 à 01:00",
+      "match_start_ts": 1781132400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Forge",
+      "equipe_exterieur": "HFX Wanderers",
+      "meta_match": {
+        "competition": {
+          "name": "Canada — Canadian Premier League",
+          "type": "league",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "388",
+          "tournament_id": "80244"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65805630",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Finlande (F)",
-    "equipe_exterieur": "Portugal (F)",
-    "cotes": {
-      "1": 2.3,
-      "N": 3.05,
-      "2": 2.5
-    },
-    "probabilites": {
-      "1": 3,
-      "N": 7,
-      "2": 90
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65805632",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Lettonie (F)",
-    "equipe_exterieur": "Slovaquie (F)",
-    "cotes": {
-      "1": 6.0,
-      "N": 4.1,
-      "2": 1.33
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 0,
-      "2": 50
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.37,
+          "N": 4.0,
+          "2": 5.6
+        },
+        "probabilites": {
+          "1": 55,
+          "N": 26,
+          "2": 19
+        },
+        "probabilites_marche": {
+          "1": 63,
+          "N": 22,
+          "2": 15
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.878,
+          "away": 0.917
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-0",
+            "prob": 11
+          },
+          {
+            "score": "2-0",
+            "prob": 11
+          },
+          {
+            "score": "2-1",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 7
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 51,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.37,
+            "prob_pct": 81,
+            "edge": 1.11,
+            "score": 0.122,
+            "tier": "prudent",
+            "raison": "Proba 81% × cote 1.37 → edge 1.11 — cote faible (<1.50), gain limité",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.37,
+          "prob_pct": 81,
+          "edge": 1.11,
+          "score": 0.122,
+          "tier": "prudent",
+          "raison": "Proba 81% × cote 1.37 → edge 1.11 — cote faible (<1.50), gain limité",
+          "stars": 3
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65805814",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Luxembourg (F)",
-    "equipe_exterieur": "Belgique (F)",
-    "cotes": {
-      "1": null,
-      "N": null,
-      "2": null
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double Chance DC 1X"
-  },
-  {
-    "id_match": "65805854",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Israël (F)",
-    "equipe_exterieur": "Écosse (F)",
-    "cotes": {
-      "1": null,
-      "N": null,
-      "2": null
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
+      "top_scores": [
+        {
+          "score": "1-0",
+          "prob": 11
+        },
+        {
+          "score": "2-0",
+          "prob": 11
+        },
+        {
+          "score": "2-1",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 7
+        },
+        {
+          "score": "3-1",
+          "prob": 6
+        }
+      ],
+      "velora_pick_1n2": "1"
     },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double Chance DC 1X"
-  },
-  {
-    "id_match": "65806138",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Estonie (F)",
-    "equipe_exterieur": "Bosnie-Herzégovine (F)",
-    "cotes": {
-      "1": 7.75,
-      "N": 5.0,
-      "2": 1.24
-    },
-    "probabilites": {
-      "1": 4,
-      "N": 0,
-      "2": 96
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+    {
+      "id_match": "68686016",
+      "date_match": "11/06/2026 à 01:30",
+      "match_start_ts": 1781134200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Inter Toronto",
+      "equipe_exterieur": "Cavalry",
+      "meta_match": {
+        "competition": {
+          "name": "Canada — Canadian Premier League",
+          "type": "league",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "388",
+          "tournament_id": "80244"
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65806140",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Lituanie (F)",
-    "equipe_exterieur": "Liechtenstein (F)",
-    "cotes": {
-      "1": null,
-      "N": null,
-      "2": null
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double Chance DC 1X"
-  },
-  {
-    "id_match": "65806170",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Croatie (F)",
-    "equipe_exterieur": "Bulgarie (F)",
-    "cotes": {
-      "1": 1.19,
-      "N": 5.2,
-      "2": 9.0
-    },
-    "probabilites": {
-      "1": 100,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 3.35,
+          "N": 3.15,
+          "2": 1.84
+        },
+        "probabilites": {
+          "1": 27,
+          "N": 30,
+          "2": 43
+        },
+        "probabilites_marche": {
+          "1": 26,
+          "N": 27,
+          "2": 47
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Ext",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.186,
+          "away": 1.595
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 12
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 6
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 52,
+        "prob_btts_modele": 55,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 3.35,
+            "prob_pct": 70,
+            "edge": 2.345,
+            "score": 2.0163,
+            "tier": "excellent",
+            "raison": "Proba 70% × cote 3.35 → edge 2.35 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 3.35,
+            "prob_pct": 57,
+            "edge": 1.909,
+            "score": 1.325,
+            "tier": "excellent",
+            "raison": "Proba 57% × cote 3.35 → edge 1.91 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 1.84,
+            "prob_pct": 73,
+            "edge": 1.343,
+            "score": 0.4781,
+            "tier": "excellent",
+            "raison": "Proba 73% × cote 1.84 → edge 1.34 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 3.35,
+          "prob_pct": 70,
+          "edge": 2.345,
+          "score": 2.0163,
+          "tier": "excellent",
+          "raison": "Proba 70% × cote 3.35 → edge 2.35 — bon équilibre proba/rendement",
+          "stars": 5
+        }
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65806172",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Gibraltar (F)",
-    "equipe_exterieur": "Kosovo (F)",
-    "cotes": {
-      "1": 22.0,
-      "N": 10.5,
-      "2": 1.0
-    },
-    "probabilites": {
-      "1": 79,
-      "N": 21,
-      "2": 0
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65806202",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Hongrie (F)",
-    "equipe_exterieur": "Andorre (F)",
-    "cotes": {
-      "1": null,
-      "N": null,
-      "2": null
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Ext",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
       },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double Chance DC 1X"
-  },
-  {
-    "id_match": "65806276",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Macédoine du Nord (F)",
-    "equipe_exterieur": "Azerbaïdjan (F)",
-    "cotes": {
-      "1": 11.0,
-      "N": 6.5,
-      "2": 1.12
-    },
-    "probabilites": {
-      "1": 2,
-      "N": 0,
-      "2": 98
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65806444",
-    "date_match": "09/06/2026 à 19:00",
-    "match_start_ts": 1781024400,
-    "equipe_domicile": "Chypre (F)",
-    "equipe_exterieur": "Moldavie (F)",
-    "cotes": {
-      "1": 1.6,
-      "N": 3.55,
-      "2": 4.3
-    },
-    "probabilites": {
-      "1": 62,
-      "N": 10,
-      "2": 28
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "71899606",
-    "date_match": "09/06/2026 à 20:00",
-    "match_start_ts": 1781028000,
-    "equipe_domicile": "Renaissance Zemamra",
-    "equipe_exterieur": "Union Touarga",
-    "cotes": {
-      "1": 2.2,
-      "N": 2.7,
-      "2": 3.0
-    },
-    "probabilites": {
-      "1": 87,
-      "N": 10,
-      "2": 3
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "71899608",
-    "date_match": "09/06/2026 à 20:00",
-    "match_start_ts": 1781028000,
-    "equipe_domicile": "KAC Marrakech",
-    "equipe_exterieur": "Raja Casablanca",
-    "cotes": {
-      "1": 4.0,
-      "N": 2.8,
-      "2": 1.8
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 2,
-      "2": 48
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "65621330",
-    "date_match": "09/06/2026 à 21:00",
-    "match_start_ts": 1781031600,
-    "equipe_domicile": "Angleterre (F)",
-    "equipe_exterieur": "Ukraine (F)",
-    "cotes": {
-      "1": null,
-      "N": null,
-      "2": null
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 0
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double Chance DC 1X"
-  },
-  {
-    "id_match": "65621332",
-    "date_match": "09/06/2026 à 21:00",
-    "match_start_ts": 1781031600,
-    "equipe_domicile": "Islande (F)",
-    "equipe_exterieur": "Espagne (F)",
-    "cotes": {
-      "1": 12.0,
-      "N": 7.5,
-      "2": 1.06
-    },
-    "probabilites": {
-      "1": 0,
-      "N": 0,
-      "2": 100
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65805516",
-    "date_match": "09/06/2026 à 21:00",
-    "match_start_ts": 1781031600,
-    "equipe_domicile": "France (F)",
-    "equipe_exterieur": "Irlande (F)",
-    "cotes": {
-      "1": 1.12,
-      "N": 6.25,
-      "2": 11.0
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 0,
-      "2": 50
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "65805518",
-    "date_match": "09/06/2026 à 21:00",
-    "match_start_ts": 1781031600,
-    "equipe_domicile": "Pays-Bas (F)",
-    "equipe_exterieur": "Pologne (F)",
-    "cotes": {
-      "1": 1.14,
-      "N": 6.0,
-      "2": 10.5
-    },
-    "probabilites": {
-      "1": 50,
-      "N": 0,
-      "2": 50
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "71853260",
-    "date_match": "09/06/2026 à 21:00",
-    "match_start_ts": 1781031600,
-    "equipe_domicile": "Almeria",
-    "equipe_exterieur": "Castellon",
-    "cotes": {
-      "1": 2.1,
-      "N": 3.3,
-      "2": 2.6
-    },
-    "probabilites": {
-      "1": 88,
-      "N": 8,
-      "2": 4
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  },
-  {
-    "id_match": "71899610",
-    "date_match": "09/06/2026 à 22:00",
-    "match_start_ts": 1781035200,
-    "equipe_domicile": "MAS Fès",
-    "equipe_exterieur": "FAR Rabat",
-    "cotes": {
-      "1": 3.2,
-      "N": 2.85,
-      "2": 2.0
-    },
-    "probabilites": {
-      "1": 12,
-      "N": 23,
-      "2": 65
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Ext"
-  },
-  {
-    "id_match": "64801252",
-    "date_match": "10/06/2026 à 01:00",
-    "match_start_ts": 1781046000,
-    "equipe_domicile": "Paraguay (F)",
-    "equipe_exterieur": "Colombie (F)",
-    "cotes": {
-      "1": 6.75,
-      "N": 4.6,
-      "2": 1.3
-    },
-    "probabilites": {
-      "1": 2,
-      "N": 50,
-      "2": 48
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Nul"
-  },
-  {
-    "id_match": "68686012",
-    "date_match": "10/06/2026 à 01:00",
-    "match_start_ts": 1781046000,
-    "equipe_domicile": "Atlético Ottawa",
-    "equipe_exterieur": "Supra du Québec",
-    "cotes": {
-      "1": 1.78,
-      "N": 3.35,
-      "2": 3.3
-    },
-    "probabilites": {
-      "1": 48,
-      "N": 50,
-      "2": 2
-    },
-    "tendance_buts": "Match Tactique",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Nul"
-  },
-  {
-    "id_match": "71182044",
-    "date_match": "10/06/2026 à 02:30",
-    "match_start_ts": 1781051400,
-    "equipe_domicile": "Brésil (F)",
-    "equipe_exterieur": "États-Unis (F)",
-    "cotes": {
-      "1": 2.8,
-      "N": 3.1,
-      "2": 2.05
-    },
-    "probabilites": {
-      "1": 61,
-      "N": 7,
-      "2": 32
-    },
-    "tendance_buts": "Match Offensif",
-    "top_scores": [],
-    "match_status": "PREMATCH",
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": null,
-        "2.5": null,
-        "3.5": null
-      },
-      "buteur_match": null,
-      "buteur_mi_temps": null,
-      "buteur_multiple": null
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "🔥 Value Bet Détecté : Dom"
-  }
-]
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 12
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 6
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "velora_pick_1n2": "N"
+    }
+  ]
+}
