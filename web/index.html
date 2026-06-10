@@ -1572,6 +1572,12 @@
                         class="rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-400 hover:to-emerald-400 disabled:cursor-not-allowed disabled:opacity-60">
                         Générer l'analyse
                     </button>
+                    <button type="button" id="btnFootVoirTous"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan-500/35 bg-cyan-500/10 py-2.5 px-4 text-sm font-semibold text-cyan-200 transition hover:border-cyan-400/50 hover:bg-cyan-500/15 disabled:cursor-not-allowed disabled:opacity-60"
+                        title="Afficher tous les matchs du jour — Pass Premium Foot">
+                        Voir tous les matchs
+                        <span class="foot-opp-pro-badge" title="Réservé Premium Foot">PRO</span>
+                    </button>
                 </div>
                 <p id="footSearchMeta" class="mt-3 text-center text-xs text-gray-500">Chargement des matchs…</p>
                 <div id="footFiltresRow" class="mt-2 hidden flex flex-wrap justify-center gap-1.5">
@@ -3525,6 +3531,7 @@
             }
             if (layout) layout.classList.add('layout-invite-analyse');
             footAnalyseAffichee = false;
+            footVoirTousMatchs = false;
             if (sportActif === 'foot') renderFootMatchs();
             const zoneResultats = document.getElementById('resultats');
             const titre = document.getElementById('titreResultats');
@@ -4676,6 +4683,8 @@
         const VELORA_ADMIN_LS = 'velora_admin_mode';
         /** True uniquement après clic sur « Générer l'analyse » (comme PMU). */
         let footAnalyseAffichee = false;
+        /** Vue liste complète — Premium Foot uniquement (bouton « Voir tous les matchs »). */
+        let footVoirTousMatchs = false;
         let footModeOpportunites = false;
         const VELORA_SEARCH_COUNT_KEY = 'velora_search_count';
         const VELORA_SEARCH_DATE_KEY = 'velora_last_search_date';
@@ -4937,6 +4946,15 @@
                 searchInput.disabled = oppActif;
                 searchInput.tabIndex = oppActif ? -1 : 0;
             }
+            const btnVoirTous = document.getElementById('btnFootVoirTous');
+            if (btnVoirTous) {
+                const premium = estVeloraPremiumFoot();
+                btnVoirTous.disabled = oppActif;
+                btnVoirTous.title = premium
+                    ? 'Afficher tous les matchs du jour (journée + nocturnes)'
+                    : 'Pass Premium Foot requis pour voir tous les matchs';
+                btnVoirTous.classList.toggle('opacity-75', !premium);
+            }
             const meta = document.getElementById('footSearchMeta');
             if (meta) {
                 meta.classList.toggle('text-amber-300/90', oppActif);
@@ -5142,6 +5160,7 @@
         function onFootSearchInput(e) {
             if (footModeOpportunites) return;
             const trimmed = (e.target.value || '').trim();
+            footVoirTousMatchs = false;
             if (!trimmed) {
                 footFiltre = '';
                 footAnalyseAffichee = false;
@@ -5150,6 +5169,83 @@
             }
             renderFootMatchs();
         }
+
+        function footPeutAfficherResultats() {
+            if (!footAnalyseAffichee) return false;
+            if (footVoirTousMatchs && estVeloraPremiumFoot()) return true;
+            return Boolean(footFiltre.trim());
+        }
+
+        /** Cartes Foot : une analyse ciblée ou liste complète (Premium). */
+        function listeFootCartesAffichees() {
+            if (footVoirTousMatchs && estVeloraPremiumFoot()) {
+                let liste = footMatchsRecherchables();
+                if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
+                const q = normaliserTexteRechercheFoot(footFiltre);
+                if (q) {
+                    liste = liste.filter((m) => {
+                        const blob = normaliserTexteRechercheFoot(
+                            `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
+                        );
+                        return blob.includes(q);
+                    });
+                }
+                return liste.sort(
+                    (a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0),
+                );
+            }
+            return footMatchAnalyseUnique();
+        }
+
+        async function afficherTousLesMatchsFoot() {
+            if (footModeOpportunites) return;
+            if (!exigerConnexionPourAnalyser()) return;
+            if (!estVeloraPremiumFoot()) {
+                showPaywallModal('premium_offer_foot');
+                return;
+            }
+
+            if (sportActif !== 'foot') changerSport('foot');
+            if (sectionActive !== 'pronostic') afficherSection('pronostic');
+
+            const btn = document.getElementById('btnFootVoirTous');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Chargement…';
+            }
+            try {
+                await rechargerFootMatchsServeur({ force: true, silent: true });
+                footMatchsCharges = true;
+                footVoirTousMatchs = true;
+                footAnalyseAffichee = true;
+                footFiltre = '';
+                const input = document.getElementById('footSearchInput');
+                if (input) input.value = '';
+                renderFootMatchs();
+                const liste = listeFootCartesAffichees();
+                if (liste.length) {
+                    synchroniserArchivesFootDepuisMatchs(liste);
+                    preparerHistoriqueFootCommunaute()
+                        .then(() => chargerStatsPlateforme({ animer: false }))
+                        .catch(() => {});
+                    defilerVersResultatsFoot();
+                }
+            } catch (err) {
+                console.error('[Velora] Voir tous les matchs :', err);
+                const erreur = document.getElementById('footErreur');
+                if (erreur) {
+                    erreur.textContent = 'Impossible de charger les matchs. Réessayez dans un instant.';
+                    erreur.classList.remove('hidden');
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Voir tous les matchs <span class="foot-opp-pro-badge" title="Réservé Premium Foot">PRO</span>';
+                }
+                syncFootModeUi();
+            }
+        }
+        window.afficherTousLesMatchsFoot = afficherTousLesMatchsFoot;
 
         function defilerVersResultatsFoot() {
             const cible = document.getElementById('footResultats')
@@ -5173,6 +5269,7 @@
             if (!trimmed) {
                 footFiltre = '';
                 footAnalyseAffichee = false;
+                footVoirTousMatchs = false;
                 renderFootMatchs();
                 const meta = document.getElementById('footSearchMeta');
                 if (meta) {
@@ -5180,6 +5277,8 @@
                 }
                 return;
             }
+
+            footVoirTousMatchs = false;
 
             if (trimmed.length < FOOT_SEARCH_MIN_LEN) {
                 const meta = document.getElementById('footSearchMeta');
@@ -5212,7 +5311,7 @@
                 footFiltre = trimmed;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
-                const liste = footMatchAnalyseUnique();
+                const liste = listeFootCartesAffichees();
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
                     preparerHistoriqueFootCommunaute()
@@ -5634,8 +5733,9 @@
                 return;
             }
             await assurerFootMatchsCharges({ force });
-            if (!preserveAnalyse && !(footAnalyseAffichee && footFiltre.trim())) {
+            if (!preserveAnalyse && !(footAnalyseAffichee && (footFiltre.trim() || footVoirTousMatchs))) {
                 footAnalyseAffichee = false;
+                footVoirTousMatchs = false;
             }
             if (!options.skipRender) {
                 majFootMeta();
@@ -7786,7 +7886,7 @@
                 meta.textContent = 'Connectez-vous pour générer une analyse Foot';
                 return;
             }
-            if (!footAnalyseAffichee || !q) {
+            if (!footPeutAfficherResultats()) {
                 const totalBase = footMatchs.length;
                 const fm = footMetaDonneesMatchs();
                 const majHint = fm.genereAt && (fm.genereAgeH == null || fm.genereAgeH >= 1)
@@ -7797,7 +7897,17 @@
                     : (totalBase > 0
                         ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto ~15 min`
                         : '0 match aujourd\'hui');
-                meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
+                const voirTousHint = estVeloraPremiumFoot()
+                    ? ' · ou Voir tous les matchs'
+                    : ' · Voir tous les matchs = Premium';
+                meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${voirTousHint}${quotaHint}`;
+                return;
+            }
+            if (footVoirTousMatchs && estVeloraPremiumFoot()) {
+                const liste = listeFootCartesAffichees();
+                meta.textContent = liste.length
+                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} du jour — vue complète Premium`
+                    : 'Aucun match du jour actif pour le moment';
                 return;
             }
             const liste = footMatchAnalyseUnique();
@@ -7841,7 +7951,10 @@
                 : (total > 0
                     ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
                     : 'Aucun match aujourd\'hui');
-            el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
+            const voirTous = estVeloraPremiumFoot()
+                ? ' ou <span class="text-cyan-400">Voir tous les matchs</span>'
+                : ' (<span class="text-amber-200/90">Voir tous les matchs</span> = Premium)';
+            el.innerHTML = `${baseLabel} — cliquez une équipe ou <span class="text-cyan-400">Générer l'analyse</span>${voirTous}.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
             majFootAlerteDonneesUi();
         }
 
@@ -7919,7 +8032,7 @@
             majFootAlerteDonneesUi();
             majFootOppZonesVides(-1);
 
-            if (!footAnalyseAffichee || !q) {
+            if (!footPeutAfficherResultats()) {
                 zone.innerHTML = '';
                 zone.classList.add('hidden');
                 if (videClassique) videClassique.classList.add('hidden');
@@ -7930,8 +8043,10 @@
             }
 
             if (accueil) accueil.classList.add('hidden');
-            const liste = footMatchAnalyseUnique();
-            zone.className = 'foot-resultats-panel space-y-4';
+            const liste = listeFootCartesAffichees();
+            zone.className = liste.length > 1
+                ? 'foot-resultats-panel space-y-5'
+                : 'foot-resultats-panel space-y-4';
             const erreur = document.getElementById('footErreur');
             try {
                 zone.innerHTML = liste.map(carteFootMatch).join('');
@@ -8351,6 +8466,7 @@
         });
         document.getElementById('footSearchInput')?.addEventListener('input', onFootSearchInput);
         document.getElementById('btnFootAnalyser')?.addEventListener('click', lancerAnalyseFoot);
+        document.getElementById('btnFootVoirTous')?.addEventListener('click', afficherTousLesMatchsFoot);
         document.getElementById('footZoneAccueil')?.addEventListener('click', (ev) => {
             const chip = ev.target.closest('.foot-equipe-chip');
             if (!chip || footModeOpportunites) return;
