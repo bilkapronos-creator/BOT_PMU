@@ -1802,7 +1802,7 @@
                 <div id="footZoneAccueil" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-500/25 bg-cyan-500/5 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔎</div>
                     <p class="text-sm font-semibold text-cyan-100">Moteur de recherche Velora</p>
-                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Saisissez une équipe à gauche (ex. <span class="font-medium text-gray-300">Croatie</span>, <span class="font-medium text-gray-300">Canada</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span> pour afficher la carte du match et son pronostic Velora.</p>
+                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Cliquez sur <span class="text-cyan-400">Générer l'analyse</span> pour voir les matchs du jour, ou saisissez une équipe (ex. <span class="font-medium text-gray-300">Portugal</span>, <span class="font-medium text-gray-300">Malaga</span>) pour cibler un match précis.</p>
                 </div>
                 <div id="footZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">⚽</div>
@@ -4662,6 +4662,8 @@
         let footPremiumIndexPromise = null;
         const MATCH_FINISHED_GRACE_MS = 120 * 60 * 1000;
         const MATCH_DONNEES_PERIMEES_MS = 36 * 60 * 60 * 1000;
+        /** Aligné parser_winamax / CI (journée + nocturnes jusqu'à 8h Paris). */
+        const VELORA_BETTING_DAY_END_HOUR = 8;
         const MATCH_ENDED_STATUSES = new Set(['ENDED', 'CLOSED', 'FINISHED', 'CANCELLED', 'CANCELED']);
         const MATCH_LIVE_STATUSES = new Set(['LIVE', 'RUNNING', 'INPLAY', 'IN_PLAY']);
         const MATCH_PREMATCH_STATUSES = new Set(['PREMATCH', 'NOT_STARTED', 'SCHEDULED', 'UPCOMING']);
@@ -5169,11 +5171,41 @@
             const trimmed = raw.trim();
 
             if (!trimmed) {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = 'Chargement…';
+                }
+                try {
+                    await rechargerFootMatchsServeur({ force: true, silent: true });
+                    const actifs = footMatchsRecherchables();
+                    if (actifs.length) {
+                        footFiltre = '';
+                        footAnalyseAffichee = true;
+                        renderFootMatchs();
+                        synchroniserArchivesFootDepuisMatchs(actifs);
+                        preparerHistoriqueFootCommunaute()
+                            .then(() => chargerStatsPlateforme({ animer: false }))
+                            .catch(() => {});
+                        defilerVersResultatsFoot();
+                        return;
+                    }
+                } catch (err) {
+                    console.warn('[Velora] Liste matchs du jour :', err);
+                } finally {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = 'Générer l\'analyse';
+                    }
+                }
                 footFiltre = '';
                 footAnalyseAffichee = false;
                 renderFootMatchs();
                 const meta = document.getElementById('footSearchMeta');
-                if (meta) meta.textContent = 'Saisissez le nom d\'une équipe ou d\'un club, puis cliquez sur Générer l\'analyse.';
+                if (meta) {
+                    meta.textContent = footMatchs.length
+                        ? 'Aucun match du jour actif pour le moment — réessayez dans quelques minutes.'
+                        : 'Aucun match en base — actualisation Winamax en cours, réessayez sous ~15 min.';
+                }
                 return;
             }
 
@@ -5203,11 +5235,12 @@
                 btn.textContent = 'Génération…';
             }
             try {
-                await assurerFootMatchsCharges();
+                await rechargerFootMatchsServeur({ force: true, silent: true });
+                footMatchsCharges = true;
                 footFiltre = trimmed;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
-                const liste = footMatchAnalyseUnique();
+                const liste = listeFootAnalyseAffichee();
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
                     preparerHistoriqueFootCommunaute()
@@ -5514,7 +5547,7 @@
         }
 
         const VELORA_AUTO_REFRESH_MS = 30 * 60 * 1000;
-        const VELORA_AUTO_REFRESH_PROBE_MS = 5 * 60 * 1000;
+        const VELORA_AUTO_REFRESH_PROBE_MS = 3 * 60 * 1000;
         let veloraAutoRefreshTimer = null;
 
         /**
@@ -5602,7 +5635,7 @@
                 if (!ok && !footMatchsCharges) {
                     footMatchs = [];
                     if (erreur) {
-                        erreur.textContent = 'Impossible de charger api_velora_matchs.json. Mise à jour automatique toutes les 30 min.';
+                        erreur.textContent = 'Impossible de charger api_velora_matchs.json. Réessayez ou patientez ~15 min.';
                         erreur.classList.remove('hidden');
                     }
                 }
@@ -6047,6 +6080,49 @@
             return Number.isFinite(ms) ? ms : null;
         }
 
+        function parisDayKey(ms) {
+            return new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Paris',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }).format(new Date(ms));
+        }
+
+        function nextParisCalendarDayKey(nowMs) {
+            const startKey = parisDayKey(nowMs);
+            for (let i = 1; i <= 48; i += 1) {
+                const key = parisDayKey(nowMs + i * 3600000);
+                if (key !== startKey) return key;
+            }
+            return null;
+        }
+
+        function parisHourFromMs(ms) {
+            return Number(
+                new Intl.DateTimeFormat('en-GB', {
+                    timeZone: 'Europe/Paris',
+                    hour: 'numeric',
+                    hourCycle: 'h23',
+                }).format(new Date(ms)),
+            );
+        }
+
+        /** Fenêtre « journée + nocturnes » Paris — même logique que parser_winamax. */
+        function isKickoffInBettingDayParis(m) {
+            const startMs = parseMatchStartMs(m);
+            if (startMs == null) return false;
+            const nowMs = Date.now();
+            if (startMs < nowMs - MATCH_FINISHED_GRACE_MS) return false;
+            const kickKey = parisDayKey(startMs);
+            if (kickKey === parisDayKey(nowMs)) return true;
+            const tomorrowKey = nextParisCalendarDayKey(nowMs);
+            if (tomorrowKey && kickKey === tomorrowKey) {
+                return parisHourFromMs(startMs) < VELORA_BETTING_DAY_END_HOUR;
+            }
+            return false;
+        }
+
         function estMatchEnDirect(m) {
             const status = String(m?.match_status || '').trim().toUpperCase();
             if (MATCH_LIVE_STATUSES.has(status)) return true;
@@ -6107,16 +6183,16 @@
             const meta = footMetaDonneesMatchs();
             if (!meta.perime) return '';
             const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
-            return `<p class="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/95">⚠️ Tous les matchs en base sont passés${quand}. Aucune analyse à venir tant que le scraper Winamax n'a pas tourné (automatique toutes les 30&nbsp;min).</p>`;
+            return `<p class="mt-3 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-[11px] leading-relaxed text-amber-100/95">⚠️ Tous les matchs en base sont passés${quand}. Réessayez dans ~15&nbsp;min ou cliquez <strong>Générer l'analyse</strong> pour forcer le rechargement.</p>`;
         }
 
         function footMatchsActifs() {
             return footMatchs.filter((m) => !estMatchTermine(m) && !estMatchEnDirect(m));
         }
 
-        /** Mode recherche normal : à venir + en direct (hors matchs terminés). */
+        /** Matchs du jour (Paris) non terminés — base affichée au clic « Générer l'analyse ». */
         function footMatchsRecherchables() {
-            return footMatchs.filter(estMatchAVenirOuLive);
+            return footMatchs.filter((m) => isKickoffInBettingDayParis(m) && estMatchAVenirOuLive(m));
         }
 
         function equipesFootRecherchables() {
@@ -6189,6 +6265,17 @@
                 return (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0);
             });
             return [pool[0]];
+        }
+
+        /** Cartes affichées après « Générer l'analyse » : tous les matchs du jour ou un seul si recherche. */
+        function listeFootAnalyseAffichee() {
+            const q = normaliserTexteRechercheFoot(footFiltre);
+            if (q) return footMatchAnalyseUnique();
+            let liste = footMatchsRecherchables();
+            if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
+            return liste.sort(
+                (a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0),
+            );
         }
 
         const OPP_VELORA_SCORE_MIN = 58;
@@ -7747,19 +7834,24 @@
                 const baseInfo = actifs.length > 0
                     ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (journée + nocturnes)${majHint}`
                     : (totalBase > 0
-                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto 30 min`
+                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto ~15 min`
                         : '0 match aujourd\'hui');
-                meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
+                meta.textContent = `${baseInfo} — Générer l'analyse (tous les matchs) ou saisissez une équipe${quotaHint}`;
                 return;
             }
-            const liste = footMatchAnalyseUnique();
+            const liste = listeFootAnalyseAffichee();
             const total = footMatchsFiltres().length;
             const totalBase = footMatchs.length;
+            const qNorm = normaliserTexteRechercheFoot(q);
             meta.textContent = liste.length
-                ? (total > 1
-                    ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
-                    : `Analyse pour « ${q} »`)
-                : `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`;
+                ? (qNorm
+                    ? (total > 1
+                        ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
+                        : `Analyse pour « ${q} »`)
+                    : `${liste.length} match${liste.length > 1 ? 's' : ''} du jour affiché${liste.length > 1 ? 's' : ''}`)
+                : (qNorm
+                    ? `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`
+                    : 'Aucun match du jour actif — réessayez dans quelques minutes.');
         }
 
         function majFootAlerteDonneesUi() {
@@ -7772,7 +7864,7 @@
                 return;
             }
             const quand = meta.derniereDate ? ` (dernier match : ${meta.derniereDate})` : '';
-            el.innerHTML = `⚠️ Matchs en base dépassés${quand} — aucun match à venir affiché. Le moteur Winamax se réactualise automatiquement toutes les 30&nbsp;min.`;
+            el.innerHTML = `⚠️ Matchs en base dépassés${quand} — aucun match à venir affiché. Winamax se réactualise automatiquement plusieurs fois par heure.`;
             el.classList.remove('hidden');
         }
 
@@ -7784,7 +7876,7 @@
             const fm = footMetaDonneesMatchs();
             if (n === 0 && total > 0) {
                 const quand = fm.derniereDate ? ` (dernier : ${fm.derniereDate})` : '';
-                el.innerHTML = `Les matchs en base sont passés${quand}. Velora recharge Winamax <strong class="text-amber-200/90">toutes les 30&nbsp;min</strong> — patientez puis saisissez une équipe et <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootAlerteDonneesPerimees()}`;
+                el.innerHTML = `Les matchs en base sont passés${quand}. Patientez ~15&nbsp;min ou cliquez <span class="text-cyan-400">Générer l'analyse</span> pour recharger.${htmlFootAlerteDonneesPerimees()}`;
                 majFootAlerteDonneesUi();
                 return;
             }
@@ -7793,7 +7885,7 @@
                 : (total > 0
                     ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
                     : 'Aucun match aujourd\'hui');
-            el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
+            el.innerHTML = `${baseLabel} — <span class="text-cyan-400">Générer l'analyse</span> pour tous les matchs, ou cliquez une équipe ci-dessous.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
             majFootAlerteDonneesUi();
         }
 
@@ -7812,8 +7904,8 @@
                 if (meta.perime && titre && sous) {
                     titre.textContent = 'Aucun match à venir — base Winamax périmée';
                     sous.textContent = meta.derniereDate
-                        ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous 30 min.`
-                        : 'Prochaine mise à jour automatique sous 30 min.';
+                        ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous ~15 min.`
+                        : 'Prochaine mise à jour automatique sous ~15 min.';
                 } else if (titre && sous) {
                     titre.textContent = 'Aucune opportunité majeure détectée pour le moment.';
                     sous.textContent = 'Revenez plus tard !';
@@ -7833,7 +7925,7 @@
                 titre.textContent = 'Aucun match à venir en base';
                 sous.textContent = meta.derniereDate
                     ? `Les matchs du ${meta.derniereDate} sont passés. Attendez la prochaine extraction Winamax.`
-                    : 'Attendez la prochaine extraction Winamax (toutes les 30 min).';
+                    : 'Attendez la prochaine extraction Winamax (~15 min) ou cliquez Générer l\'analyse.';
             } else if (titre && sous) {
                 titre.textContent = 'Aucun match pour cette recherche';
                 sous.textContent = 'Essayez un autre nom d\'équipe ou vérifiez l\'orthographe.';
@@ -7882,8 +7974,10 @@
             }
 
             if (accueil) accueil.classList.add('hidden');
-            const liste = footMatchAnalyseUnique();
-            zone.className = 'foot-resultats-panel space-y-4';
+            const liste = listeFootAnalyseAffichee();
+            zone.className = liste.length > 1
+                ? 'foot-resultats-panel space-y-5'
+                : 'foot-resultats-panel space-y-4';
             const erreur = document.getElementById('footErreur');
             try {
                 zone.innerHTML = liste.map(carteFootMatch).join('');
