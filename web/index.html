@@ -6707,29 +6707,60 @@
             return null;
         }
 
-        function scoresExactFromMatch(m) {
+        function normaliserCleScore(score) {
+            return String(score || '')
+                .trim()
+                .replace(/\s+/g, '')
+                .replace(/[–—]/g, '-');
+        }
+
+        function dedupliquerScoresExact(rows) {
+            const seen = new Set();
+            const out = [];
+            for (const s of rows || []) {
+                if (!s?.score) continue;
+                const key = normaliserCleScore(s.score);
+                if (!key || seen.has(key)) continue;
+                seen.add(key);
+                out.push(s);
+            }
+            return out;
+        }
+
+        /** Cotes Winamax scores exacts (bookmaker) — pas les % du modèle Poisson. */
+        function scoresExactCotesWinamax(m) {
+            const collect = [];
             const premTop = m?.premium_analysis?.score_exact?.top3;
-            if (Array.isArray(premTop) && premTop.length) {
-                const rows = premTop.filter((s) => s && String(s.score || '').trim());
-                const aligned = filtrerScoresSelonPronostic(m, rows);
-                if (aligned.length) return aligned;
+            if (Array.isArray(premTop)) {
+                for (const s of premTop) {
+                    if (s?.score && fmtCoteMarche(s.cote) != null) collect.push(s);
+                }
             }
-            if (Array.isArray(m?.score_exact) && m.score_exact.length) {
-                const rows = m.score_exact.filter((s) => s && s.score);
-                const aligned = filtrerScoresSelonPronostic(m, rows);
-                if (aligned.length) return aligned.slice(0, 4);
+            if (Array.isArray(m?.score_exact)) {
+                for (const s of m.score_exact) {
+                    if (s?.score && fmtCoteMarche(s.cote) != null) collect.push(s);
+                }
             }
-            const modele = m?.free_analysis?.top_scores_modele;
-            if (Array.isArray(modele) && modele.length) {
-                return filtrerScoresSelonPronostic(m, modele).slice(0, 4);
+            let rows = dedupliquerScoresExact(collect);
+            if (!rows.length && Array.isArray(m?.top_scores)) {
+                rows = dedupliquerScoresExact(
+                    m.top_scores.filter((s) => s?.score && fmtCoteMarche(s.cote) != null),
+                );
             }
-            const top = m?.top_scores;
-            if (!Array.isArray(top)) return [];
-            const rows = [...top]
-                .filter((s) => s && s.score && fmtCoteMarche(s.cote) != null)
-                .sort((a, b) => Number(a.cote) - Number(b.cote));
+            if (!rows.length) return [];
+            rows.sort((a, b) => Number(a.cote) - Number(b.cote));
             const aligned = filtrerScoresSelonPronostic(m, rows);
-            return (aligned.length ? aligned : rows).slice(0, 4);
+            return (aligned.length ? aligned : rows).slice(0, 6);
+        }
+
+        /** Alias historique — scores exacts bookmaker uniquement. */
+        function scoresExactFromMatch(m) {
+            return scoresExactCotesWinamax(m);
+        }
+
+        /** Probabilités modèle Velora (Poisson), alignées au pronostic 1N2. */
+        function scoresProbablesModele(m) {
+            return scoresAffichablesPourMatch(m);
         }
 
         function primaryPickFromMatch(m) {
@@ -7248,18 +7279,30 @@
         function htmlBlocScoresExactListe(scores, theme) {
             if (!scores.length) return '';
             const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
-            const items = scores.slice(0, 4).map((s) => {
+            const items = scores.slice(0, 6).map((s) => {
                 const cote = fmtCoteMarche(s.cote);
-                const prob = s.prob != null ? `<span class="text-gray-500">${escHtml(s.prob)}%</span>` : '';
+                const prob = scoreProbEstFiable(s?.prob)
+                    ? `<span class="text-[10px] text-gray-500">${escHtml(s.prob)}%</span>`
+                    : '';
                 const coteHtml = cote != null
-                    ? `<span class="font-bold text-cyan-300/90">${cote}</span>`
-                    : prob;
-                return `<li class="flex justify-between gap-2 text-xs text-gray-300"><span>${escHtml(s.score)}</span>${coteHtml || prob}</li>`;
+                    ? `<span class="font-bold text-cyan-300/90">${cote}</span>${prob ? ` ${prob}` : ''}`
+                    : (prob || '<span class="text-[10px] text-gray-500">—</span>');
+                const label = String(s.score || '').replace(/-/g, ' - ');
+                return `<li class="flex justify-between gap-2 text-xs text-gray-300"><span>${escHtml(label)}</span>${coteHtml}</li>`;
             }).join('');
             return `
                 <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Scores exacts</p>
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Scores exacts — cotes Winamax</p>
                     <ul class="space-y-1">${items}</ul>
+                </div>`;
+        }
+
+        function htmlBlocScoresExactIndispo(theme) {
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="mb-1 text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Scores exacts — cotes Winamax</p>
+                    <p class="text-[11px] leading-relaxed text-gray-500">Marché non publié par Winamax pour ce match. Consultez <span class="text-gray-400">Scores probables (modèle)</span> ci-dessous.</p>
                 </div>`;
         }
 
@@ -7380,7 +7423,7 @@
             const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
             return `
                 <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
-                    <p class="foot-premium-section-title ${titleCls}">Top 3 scores exacts</p>
+                    <p class="foot-premium-section-title ${titleCls}">Top 3 scores exacts (cotes)</p>
                     <ul class="space-y-1">${items}</ul>
                 </div>`;
         }
@@ -7555,7 +7598,7 @@
             const enr = footMatchEnrichiPremium(m);
             const prem = enr?.premium_analysis;
             const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
-            const topScores = scoresExactFromMatch(enr).slice(0, 3);
+            const topScores = scoresExactCotesWinamax(enr).slice(0, 3);
             const buteurs = buteursFromMatch(enr).slice(0, 4);
             const buteursMiTemps = buteursMiTempsFromMatch(enr).slice(0, 4);
             const doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
@@ -7716,7 +7759,8 @@
             const enr = footMatchEnrichiPremium(m);
             const buteurs = buteursFromMatch(enr);
             const buteursMt = buteursMiTempsFromMatch(enr);
-            const scores = scoresExactFromMatch(enr);
+            const scores = scoresExactCotesWinamax(enr);
+            const scoresModele = scoresProbablesModele(enr);
             const legacyMs = enr.marches_supplementaires;
             const legacyBm = !buteurs.length
                 ? htmlBlocScorersMarches(legacyMs, 'buteur_match', 'Buteurs match', theme)
@@ -7724,7 +7768,7 @@
             const legacyMt = !buteursMt.length
                 ? htmlBlocScorersMarches(legacyMs, 'buteur_mi_temps', 'Buteurs mi-temps', theme)
                 : '';
-            if (!buteurs.length && !buteursMt.length && !scores.length && !legacyBm && !legacyMt) return '';
+            if (!buteurs.length && !buteursMt.length && !scores.length && !scoresModele.length && !legacyBm && !legacyMt) return '';
 
             const badgeCls = theme === 'opp'
                 ? 'velora-buteur-badge border-amber-500/25 text-amber-100/95'
@@ -7738,7 +7782,9 @@
                 : '');
             const buteursHtml = blocScorers(buteurs, 'Buteurs match') || legacyBm;
             const buteursMtHtml = blocScorers(buteursMt, 'Buteurs mi-temps') || legacyMt;
-            const scoresHtml = htmlBlocScoresExactListe(scores, theme);
+            const scoresHtml = scores.length
+                ? htmlBlocScoresExactListe(scores, theme)
+                : (scoresModele.length ? htmlBlocScoresExactIndispo(theme) : '');
             const nbCols = [buteursHtml, buteursMtHtml, scoresHtml].filter(Boolean).length;
             const cols = nbCols > 1 ? 'sm:grid-cols-2' : 'grid-cols-1';
             const borderCls = theme === 'opp' ? 'border-amber-500/20 bg-amber-500/[0.04]' : 'border-white/10 bg-white/[0.02]';
@@ -7820,11 +7866,11 @@
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
             const p2 = Number(p['2']) || 0;
-            const scoresAlignes = scoresAffichablesPourMatch(m);
+            const scoresAlignes = scoresProbablesModele(m);
             const scoresMoteurHtml = typeof scoresAlignes === 'string'
                 ? `<li class="text-xs text-gray-500">${escHtml(scoresAlignes)}</li>`
                 : Array.isArray(scoresAlignes) && scoresAlignes.length
-                    ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(s.score)}</span>${htmlScoreProbCell(s)}</li>`).join('')
+                    ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(String(s.score || '').replace(/-/g, ' - '))}</span>${htmlScoreProbCell(s)}</li>`).join('')
                     : '';
             const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
@@ -7869,7 +7915,7 @@
                         ${htmlVeloraAdminTechnique(m)}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
-                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Scores probables</summary>
+                            <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Scores probables (modèle Velora)</summary>
                             <ul class="mt-2 space-y-1 border-t border-white/10 pt-2">${scoresMoteurHtml}</ul>
                         </details>` : ''}
                     </div>
