@@ -3,8 +3,20 @@ name: Velora Auto-Sniper & Archiver
 
 on:
   schedule:
-    # Toutes les 30 min (équilibre réactivité / quota minutes GitHub Actions)
-    - cron: "*/30 * * * *"
+    # Décalés (pas :00) — GitHub Actions reporte/saute souvent les crons à l'heure pile
+    - cron: "12 * * * *"
+    - cron: "27 * * * *"
+    - cron: "42 * * * *"
+    - cron: "57 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "run_all.py"
+      - "winamax_dump.py"
+      - "winamax_sniper.py"
+      - "parser_winamax.py"
+      - ".github/workflows/velora_cron.yml"
+      - "velora_engine/**"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +28,7 @@ env:
   VELORA_HEADLESS: "0"
   # Runners GitHub = IP hors France → géoblocage Winamax sans proxy
   VELORA_CI_SCRAPER_OPTIONAL: "1"
-  # Skip scrape seulement si JSON < 6 h ET matchs betting_day (voir run_all._json_skip_scraper_ci)
+  # Skip scrape seulement si JSON/dump < 6 h ET matchs betting_day
   VELORA_CI_SCRAPER_MAX_AGE_H: "6"
   VELORA_PROXY_INTERACTIVE: "0"
   VELORA_DUMP_WAIT_MS: "90000"
@@ -25,6 +37,9 @@ jobs:
   velora-pipeline:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    concurrency:
+      group: velora-pipeline-main
+      cancel-in-progress: false
 
     steps:
       - name: Checkout
@@ -65,13 +80,29 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Diagnostic proxy (secret présent, sans afficher les identifiants)
+        env:
+          VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.parse import urlparse
+
+          url = os.environ.get("VELORA_PROXY_URL", "").strip()
+          if not url:
+              print("::warning::VELORA_PROXY_URL vide — géoblocage Winamax probable (runner US).")
+          else:
+              p = urlparse(url)
+              port = p.port or "défaut 6645"
+              auth = "oui" if p.username or os.environ.get("VELORA_PROXY_USER") else "non"
+              print(f"[CI] VELORA_PROXY_URL OK — host={p.hostname} port={port} auth={auth}")
+          PY
+
       - name: Exécuter run_all.py (xvfb + Chromium classique)
         env:
           VELORA_HEADLESS: "0"
           VELORA_SKIP_GIT_PUSH: "1"
-          # Secret repo (Settings → Secrets) : URL proxy France, ex. http://user:pass@host:port
           VELORA_PROXY_URL: ${{ secrets.VELORA_PROXY_URL }}
-          # football-data.org — en-tête X-Auth-Token (plan gratuit)
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
           VELORA_PARSER_HORIZON_MODE: betting_day
           VELORA_BETTING_DAY_END_HOUR: "8"
@@ -84,7 +115,19 @@ jobs:
           import json
           from pathlib import Path
           from parser_winamax import is_kickoff_in_betting_day
-          from run_all import _match_kickoff_paris
+          from run_all import (
+              _dump_contient_match_journee_pari,
+              _match_kickoff_paris,
+          )
+
+          dump = Path("dump_winamax_html.json")
+          if dump.is_file():
+              jour_dump = _dump_contient_match_journee_pari(dump)
+              print(f"{dump}: journée de paris={'oui' if jour_dump else 'non'}")
+              if not jour_dump:
+                  print(
+                      "::warning::Dump Winamax sans match du jour — scrape périmé ou échoué."
+                  )
 
           paths = [
               Path("api_velora_matchs.json"),
@@ -118,6 +161,7 @@ jobs:
           for f in \
             api_velora_matchs.json \
             api_velora_premium.json \
+            dump_winamax_html.json \
             web/api_velora_matchs.json \
             web/api_velora_premium.json \
             web/api_velora_communaute.json \

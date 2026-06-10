@@ -410,14 +410,29 @@ def _try_http_regex() -> tuple[dict | None, str]:
     return None, ""
 
 
+def _log_proxy_ci() -> None:
+    """Diagnostic secret proxy (host/port uniquement, jamais les identifiants)."""
+    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() != "true":
+        return
+    proxy_url = os.environ.get("VELORA_PROXY_URL", "").strip()
+    if not proxy_url:
+        print(
+            "[winamax_dump] CI sans VELORA_PROXY_URL : risque de géoblocage Winamax "
+            "(runner hors France). Ajoutez un proxy FR en secret GitHub.",
+            file=sys.stderr,
+        )
+        return
+    from urllib.parse import urlparse
+
+    parsed = urlparse(proxy_url)
+    host = parsed.hostname or "(host invalide)"
+    port = parsed.port or "défaut 6645"
+    auth = "oui" if parsed.username or os.environ.get("VELORA_PROXY_USER") else "non"
+    print(f"[winamax_dump] CI proxy configuré — host={host} port={port} auth={auth}")
+
+
 def main() -> None:
-    if os.environ.get("GITHUB_ACTIONS", "").strip().lower() == "true":
-        if not os.environ.get("VELORA_PROXY_URL", "").strip():
-            print(
-                "[winamax_dump] CI sans VELORA_PROXY_URL : risque de géoblocage Winamax "
-                "(runner hors France). Ajoutez un proxy FR en secret GitHub.",
-                file=sys.stderr,
-            )
+    _log_proxy_ci()
 
     data, source = _try_http_regex()
     if data is not None:

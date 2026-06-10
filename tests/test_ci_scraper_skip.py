@@ -73,3 +73,34 @@ def test_json_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypa
     os.utime(aujourd_hui, (recent, recent))
 
     assert run_all._json_skip_scraper_ci(aujourd_hui, 6.0) is True
+
+
+def test_dump_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypatch):
+    import run_all
+
+    now = datetime.now(tz=TZ)
+    hier = now - timedelta(days=1)
+    dump = tmp_path / "dump.json"
+    kick_hier = int(hier.replace(hour=15, minute=0).timestamp())
+    dump.write_text(
+        json.dumps({"matches": {"1": {"matchId": 1, "matchStart": kick_hier}}}),
+        encoding="utf-8",
+    )
+    old = time.time() - 2 * 3600
+    os.utime(dump, (old, old))
+    monkeypatch.setenv("VELORA_CI_SCRAPER_MAX_AGE_H", "6")
+
+    assert run_all._dump_skip_scraper_ci(dump, 6.0) is False
+
+    kick = now.replace(hour=18, minute=0, second=0, microsecond=0)
+    if kick <= now:
+        kick += timedelta(hours=2)
+    dump_jour = tmp_path / "dump_jour.json"
+    dump_jour.write_text(
+        json.dumps({"matches": {"2": {"matchId": 2, "matchStart": int(kick.timestamp())}}}),
+        encoding="utf-8",
+    )
+    recent = time.time() - 1800
+    os.utime(dump_jour, (recent, recent))
+
+    assert run_all._dump_skip_scraper_ci(dump_jour, 6.0) is True

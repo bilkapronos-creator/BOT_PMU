@@ -552,6 +552,50 @@ def _json_utilisable_ci(path: Path, max_heures: float) -> bool:
     return _json_contient_match_journee_pari(path)
 
 
+def _dump_contient_match_journee_pari(path: Path) -> bool:
+    """Vrai si le dump Winamax contient au moins un match dans la fenêtre betting_day."""
+    if not path.is_file():
+        return False
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    matches = data.get("matches") or {}
+    if not isinstance(matches, dict):
+        return False
+    from datetime import datetime as _dt
+    from zoneinfo import ZoneInfo
+
+    from parser_winamax import format_match_start, is_kickoff_in_betting_day
+
+    tz = ZoneInfo("Europe/Paris")
+    for m in matches.values():
+        if not isinstance(m, dict):
+            continue
+        ts, _ = format_match_start(m.get("matchStart") or m.get("matchStartDate"))
+        if ts is None:
+            continue
+        kickoff = _dt.fromtimestamp(float(ts), tz=tz)
+        if is_kickoff_in_betting_day(kickoff):
+            return True
+    return False
+
+
+def _dump_skip_scraper_ci(path: Path, max_heures: float) -> bool:
+    """Skip proactif CI : dump récent ET matchs betting_day (évite veille sans re-scrape)."""
+    if not path.is_file() or path.stat().st_size < 80:
+        return False
+    age_h = (time.time() - path.stat().st_mtime) / 3600.0
+    if age_h > max_heures:
+        return False
+    return _dump_contient_match_journee_pari(path)
+
+
+def _dump_utilisable_ci(path: Path, max_heures: float) -> bool:
+    """Repli CI : dump récent avec matchs betting_day."""
+    return _dump_skip_scraper_ci(path, max_heures)
+
+
 def _synchroniser_premium_depuis_web() -> bool:
     """Copie web/api_velora_premium.json → racine si le dépôt n'a pas été régénéré."""
     assert WEB_ROOT is not None
@@ -571,13 +615,14 @@ def _mode_repli_scraper_ci(*, proactif: bool = False) -> str | None:
     """premium | dump | matchs | None — données déjà présentes dans le dépôt."""
     max_h = float(os.environ.get("VELORA_CI_SCRAPER_MAX_AGE_H", "6"))
     frais = _json_skip_scraper_ci if proactif else _json_utilisable_ci
+    dump_frais = _dump_skip_scraper_ci if proactif else _dump_utilisable_ci
     if frais(PREMIUM_SRC, max_h):
         return "premium"
     assert WEB_ROOT is not None
     premium_web = WEB_ROOT / "api_velora_premium.json"
     if frais(premium_web, max_h):
         return "premium_web"
-    if _fichier_json_recent(DUMP_HTML, max_h):
+    if dump_frais(DUMP_HTML, max_h):
         return "dump"
     if frais(MATCHS_JSON, max_h):
         return "matchs"
@@ -625,8 +670,34 @@ def _log_etat_matchs_json(path: Path) -> None:
         )
 
 
+def _log_etat_dump_winamax(path: Path) -> None:
+    """Diagnostic dump Winamax : réutilisation CI vs scrape frais."""
+    if not path.is_file():
+        log(f"[dump] {path.name} absent.")
+        return
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        log(f"[dump] {path.name} illisible : {exc}")
+        return
+    matches = data.get("matches") or {}
+    total = len(matches) if isinstance(matches, dict) else 0
+    jour = _dump_contient_match_journee_pari(path)
+    age_h = (time.time() - path.stat().st_mtime) / 3600.0
+    log(
+        f"[dump] {path.name} : {total} match(s) Winamax, "
+        f"journée de paris={'oui' if jour else 'non'}, âge {age_h:.1f} h."
+    )
+    if total and not jour:
+        log(
+            "[dump] Dump périmé (veille) — le CI ne doit pas s'en contenter "
+            "sans nouveau scrape Winamax."
+        )
+
+
 def executer_phase_scraper() -> bool:
     """Étapes 1–3 : dump → parser → sniper (repli CI si géoblocage Winamax)."""
+    _log_etat_dump_winamax(DUMP_HTML)
     _log_etat_matchs_json(MATCHS_JSON)
     assert WEB_ROOT is not None
     _log_etat_matchs_json(WEB_ROOT / "api_velora_matchs.json")
