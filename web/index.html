@@ -5672,6 +5672,9 @@
                 ) {
                     return false;
                 }
+                if (estVeloraPremiumFoot()) {
+                    await ensureFootPremiumIndex();
+                }
                 footMatchsMeta = payload?.meta && typeof payload.meta === 'object' ? payload.meta : null;
                 footMatchs = parseVeloraMatchsPayload(payload);
                 footMatchsCharges = true;
@@ -7334,45 +7337,106 @@
             return footPremiumIndexPromise;
         }
 
-        /** Fusionne premium_analysis v2 ou api_velora_premium.json (transition). */
+        function mergePremiumScorerTop(baseBlock, extraBlock) {
+            const base = baseBlock && typeof baseBlock === 'object' ? baseBlock : {};
+            const extra = extraBlock && typeof extraBlock === 'object' ? extraBlock : {};
+            const baseTop = Array.isArray(base.top) ? base.top : [];
+            const extraTop = Array.isArray(extra.top) ? extra.top : [];
+            const top = baseTop.length
+                ? baseTop
+                : extraTop.filter((b) => b && b.joueur && fmtCoteMarche(b.cote) != null);
+            return { ...extra, ...base, top };
+        }
+
+        /** Fusionne premium_analysis v2 + api_velora_premium.json + marches_supplementaires. */
         function footMatchEnrichiPremium(m) {
-            if (m?.premium_analysis && typeof m.premium_analysis === 'object') {
-                const prem = m.premium_analysis;
-                const msBase = m.marches_supplementaires || {};
-                const buteurLegacy = premiumScorersList(prem, 'buteur_match');
-                const mtLegacy = premiumScorersList(prem, 'buteur_mi_temps');
-                return {
-                    ...m,
-                    premium_analysis: prem,
-                    buteurs: buteurLegacy.length ? buteurLegacy : m.buteurs,
-                    buteurs_mi_temps: mtLegacy.length ? mtLegacy : m.buteurs_mi_temps,
+            if (!m) return m;
+            const id = String(m?.id_match || '').trim();
+            const premRow = id && footPremiumIndex ? footPremiumIndex.get(id) : null;
+            const normPrem = premRow ? normalizeFootMatch(premRow) : null;
+
+            const msBase = m.marches_supplementaires || {};
+            const msPrem = normPrem?.marches_supplementaires || {};
+            const pickScorersMarche = (key) => {
+                const fromPrem = msPrem[key];
+                if (buteursMatchUtilisables(fromPrem)) return fromPrem;
+                const fromBase = msBase[key];
+                if (buteursMatchUtilisables(fromBase)) return fromBase;
+                return fromPrem ?? fromBase;
+            };
+
+            let premium_analysis = m.premium_analysis && typeof m.premium_analysis === 'object'
+                ? { ...m.premium_analysis }
+                : {};
+            if (normPrem?.premium_analysis) {
+                const e = normPrem.premium_analysis;
+                const baseTop3 = premium_analysis.score_exact?.top3;
+                const extraTop3 = e.score_exact?.top3;
+                premium_analysis = {
+                    ...e,
+                    ...premium_analysis,
+                    score_exact: {
+                        ...(e.score_exact || {}),
+                        ...(premium_analysis.score_exact || {}),
+                        top3: (Array.isArray(baseTop3) && baseTop3.length ? baseTop3 : extraTop3) || [],
+                    },
+                    buteur_match: mergePremiumScorerTop(premium_analysis.buteur_match, e.buteur_match),
+                    buteur_mi_temps: mergePremiumScorerTop(premium_analysis.buteur_mi_temps, e.buteur_mi_temps),
+                    buteur_double: mergePremiumScorerTop(premium_analysis.buteur_double, e.buteur_double),
+                    value_bets: (premium_analysis.value_bets?.length
+                        ? premium_analysis.value_bets
+                        : e.value_bets) || [],
                 };
             }
-            const id = String(m?.id_match || '').trim();
-            if (!id || !footPremiumIndex) return m;
-            const prem = footPremiumIndex.get(id);
-            if (!prem) return m;
-            const normPrem = normalizeFootMatch(prem);
-            const msBase = m.marches_supplementaires || {};
-            const msPrem = normPrem.marches_supplementaires || {};
+
+            const msMerged = {
+                ...msBase,
+                ...msPrem,
+                plus_moins_buts: msPrem.plus_moins_buts || msBase.plus_moins_buts,
+                buteur_match: pickScorersMarche('buteur_match'),
+                buteur_mi_temps: pickScorersMarche('buteur_mi_temps'),
+            };
+            const buteurFromMs = scorersListFromMarches(msMerged, 'buteur_match');
+            const mtFromMs = scorersListFromMarches(msMerged, 'buteur_mi_temps');
+            if (!premiumScorersList(premium_analysis, 'buteur_match').length && buteurFromMs.length) {
+                premium_analysis.buteur_match = {
+                    ...(premium_analysis.buteur_match || {}),
+                    top: buteurFromMs,
+                };
+            }
+            if (!premiumScorersList(premium_analysis, 'buteur_mi_temps').length && mtFromMs.length) {
+                premium_analysis.buteur_mi_temps = {
+                    ...(premium_analysis.buteur_mi_temps || {}),
+                    top: mtFromMs,
+                };
+            }
+
+            const buteurLegacy = premiumScorersList(premium_analysis, 'buteur_match');
+            const mtLegacy = premiumScorersList(premium_analysis, 'buteur_mi_temps');
+
             return {
                 ...m,
-                premium_analysis: normPrem.premium_analysis || prem.premium_analysis,
-                score_exact: normPrem.score_exact ?? prem.score_exact,
-                buteurs: normPrem.buteurs ?? prem.buteurs,
-                btts: normPrem.btts ?? prem.btts,
-                over_under_25: normPrem.over_under_25 ?? prem.over_under_25,
-                les_deux_marquent: normPrem.les_deux_marquent ?? prem.les_deux_marquent,
-                top_scores: (Array.isArray(normPrem.top_scores) && normPrem.top_scores.length)
-                    ? normPrem.top_scores
-                    : m.top_scores,
-                marches_supplementaires: {
-                    ...msBase,
-                    ...msPrem,
-                    plus_moins_buts: msPrem.plus_moins_buts || msBase.plus_moins_buts,
-                    buteur_match: msPrem.buteur_match ?? msBase.buteur_match,
-                    buteur_mi_temps: msPrem.buteur_mi_temps ?? msBase.buteur_mi_temps,
-                },
+                ...(normPrem ? {
+                    score_exact: (Array.isArray(normPrem.score_exact) && normPrem.score_exact.length)
+                        ? normPrem.score_exact
+                        : m.score_exact,
+                    btts: normPrem.btts ?? m.btts,
+                    over_under_25: normPrem.over_under_25 ?? m.over_under_25,
+                    les_deux_marquent: normPrem.les_deux_marquent ?? m.les_deux_marquent,
+                    top_scores: (Array.isArray(normPrem.top_scores) && normPrem.top_scores.length)
+                        ? normPrem.top_scores
+                        : m.top_scores,
+                } : {}),
+                premium_analysis,
+                buteurs: buteurLegacy.length
+                    ? buteurLegacy
+                    : (Array.isArray(normPrem?.buteurs) && normPrem.buteurs.length ? normPrem.buteurs : m.buteurs),
+                buteurs_mi_temps: mtLegacy.length
+                    ? mtLegacy
+                    : (Array.isArray(normPrem?.buteurs_mi_temps) && normPrem.buteurs_mi_temps.length
+                        ? normPrem.buteurs_mi_temps
+                        : m.buteurs_mi_temps),
+                marches_supplementaires: msMerged,
             };
         }
 

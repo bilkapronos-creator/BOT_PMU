@@ -38,6 +38,7 @@ from velora_engine.scrape.winamax_state import (
 # --- Filtres paris (alignés parser_winamax) ---
 
 SCORER_BET_FILTER_NAMES = frozenset({"buteur", "buteurs", "marqueur", "marqueurs"})
+SCORER_BET_FILTER_IDS = frozenset({26})
 SCORER_BET_FORBIDDEN = (
     "double chance",
     "résultat",
@@ -178,6 +179,12 @@ def _is_scorer_market_bet(bet: dict) -> bool:
     ):
         return False
     if filter_name in SCORER_BET_FILTER_NAMES:
+        return True
+    try:
+        fid = int(bet.get("betFilterId") or 0)
+    except (TypeError, ValueError):
+        fid = 0
+    if fid in SCORER_BET_FILTER_IDS:
         return True
     if any(t in template for t in ("goalscorer", "scorer", "anytimegoalscorer")):
         return True

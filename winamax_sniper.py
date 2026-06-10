@@ -754,7 +754,113 @@ def enrich_from_state(match: dict, state: dict | None, page=None) -> dict:
             updated["les_deux_marquent"] = UNAVAILABLE
         updated["marches_supplementaires"] = default_marches_supplementaires()
 
-    return ensure_match_scores_coherent(updated)
+    return _sync_premium_analysis_from_marches(
+        ensure_match_scores_coherent(updated)
+    )
+
+
+def _scorer_rows_from_value(val) -> list[dict]:
+    if isinstance(val, list) and val:
+        return [r for r in val if isinstance(r, dict) and r.get("joueur")]
+    return []
+
+
+def _sync_premium_analysis_from_marches(match: dict) -> dict:
+    """Recopie buteurs / scores exacts enrichis dans premium_analysis (UI v2)."""
+    updated = dict(match)
+    ms = updated.get("marches_supplementaires") or {}
+    prem = dict(updated.get("premium_analysis") or {})
+
+    def _set_scorer_block(key: str, rows: list[dict], limit: int) -> None:
+        block = dict(prem.get(key) or {})
+        if rows and not block.get("top"):
+            block["top"] = rows[:limit]
+        prem[key] = block
+
+    bm = _scorer_rows_from_value(ms.get("buteur_match"))
+    if not bm:
+        bm = _scorer_rows_from_value(updated.get("buteurs"))
+    _set_scorer_block("buteur_match", bm, 5)
+
+    mt = _scorer_rows_from_value(ms.get("buteur_mi_temps"))
+    if not mt:
+        mt = _scorer_rows_from_value(updated.get("buteurs_mi_temps"))
+    _set_scorer_block("buteur_mi_temps", mt, 3)
+
+    dbl = _scorer_rows_from_value(ms.get("buteur_multiple"))
+    _set_scorer_block("buteur_double", dbl, 3)
+
+    score_block = dict(prem.get("score_exact") or {})
+    if not score_block.get("top3"):
+        se = updated.get("score_exact")
+        if isinstance(se, list) and se:
+            score_block["top3"] = [
+                s for s in se if isinstance(s, dict) and s.get("score")
+            ][:3]
+    prem["score_exact"] = score_block
+    updated["premium_analysis"] = prem
+    return updated
+
+
+def _state_has_scorer_bets(state: dict, match_id) -> bool:
+    mbets = bets_for_match(state.get("bets") or {}, match_id)
+    return any(_is_scorer_market_bet(b) for b in mbets)
+
+
+def _activate_scorer_markets(page) -> None:
+    """Ouvre le filtre Buteurs (marchés lazy-loaded sur la page match)."""
+    try:
+        clicked = page.evaluate(
+            """() => {
+                const norm = (s) => String(s || '').trim().toLowerCase();
+                const targets = ['buteurs', 'buteur'];
+                const nodes = Array.from(
+                    document.querySelectorAll('button,a,[role="tab"],[role="button"],span,div')
+                );
+                for (const t of targets) {
+                    const el = nodes.find((e) => norm(e.textContent) === t);
+                    if (el) {
+                        el.click();
+                        return t;
+                    }
+                }
+                return null;
+            }"""
+        )
+        if clicked:
+            page.wait_for_timeout(1200)
+    except Exception:
+        pass
+
+
+def ensure_scorer_markets_state(
+    page, match_id, state: dict | None
+) -> dict | None:
+    if state and _state_has_scorer_bets(state, match_id):
+        return state
+    _activate_scorer_markets(page)
+    try:
+        page.wait_for_function(
+            """(mid) => {
+                const s = window.PRELOADED_STATE;
+                if (!s || !s.bets) return false;
+                for (const b of Object.values(s.bets)) {
+                    if (!b || String(b.matchId) !== String(mid)) continue;
+                    const fn = (b.betFilterName || '').toLowerCase();
+                    if (fn === 'buteur' || fn === 'buteurs' || fn === 'marqueur') return true;
+                    const fid = Number(b.betFilterId || 0);
+                    if (fid === 26) return true;
+                    const tn = (b.betTypeName || b.betTitle || '').toLowerCase();
+                    if (tn.includes('buteur du match') || tn.includes('marqueur du match')) return true;
+                }
+                return false;
+            }""",
+            arg=str(match_id),
+            timeout=12000,
+        )
+    except Exception:
+        pass
+    return fetch_preloaded_state(page) or state
 
 
 def fetch_preloaded_state(page) -> dict | None:
@@ -805,6 +911,49 @@ def load_matches() -> list[dict]:
         return []
 
 
+def _load_matchs_document() -> tuple[list[dict], dict | list | None]:
+    try:
+        data = json.loads(IN_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return [], None
+    if isinstance(data, list):
+        return data, data
+    if isinstance(data, dict) and isinstance(data.get("matchs"), list):
+        return data["matchs"], data
+    return [], data if isinstance(data, dict) else None
+
+
+def _write_outputs(all_matches: list[dict], updates: dict[str, dict]) -> list[dict]:
+    """Écrit premium + fusionne l'enrichissement dans api_velora_matchs.json."""
+    by_id = {str(m.get("id_match")): m for m in all_matches}
+    by_id.update(updates)
+    stamped: list[dict] = []
+    for m in all_matches:
+        rec = dict(by_id[str(m.get("id_match"))])
+        rec.setdefault("marches_supplementaires", default_marches_supplementaires())
+        stamped.append(rec)
+
+    OUT_PATH.write_text(
+        json.dumps(stamped, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    _, doc = _load_matchs_document()
+    if isinstance(doc, dict) and isinstance(doc.get("matchs"), list):
+        doc = dict(doc)
+        doc["matchs"] = stamped
+        IN_PATH.write_text(
+            json.dumps(doc, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    else:
+        IN_PATH.write_text(
+            json.dumps(stamped, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    return stamped
+
+
 def main() -> None:
     print("[sniper] Chargement api_velora_matchs.json...")
     all_matches = load_matches()
@@ -834,17 +983,7 @@ def main() -> None:
     )
 
     if not batch:
-        by_id = {str(m.get("id_match")): m for m in all_matches}
-        by_id.update(updates)
-        stamped = []
-        for m in all_matches:
-            rec = dict(by_id[str(m.get("id_match"))])
-            rec.setdefault("marches_supplementaires", default_marches_supplementaires())
-            stamped.append(rec)
-        OUT_PATH.write_text(
-            json.dumps(stamped, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        stamped = _write_outputs(all_matches, updates)
         skipped_n = len(updates)
         if skipped_n:
             print(
@@ -880,6 +1019,8 @@ def main() -> None:
                 except Exception:
                     pass
                 state = fetch_preloaded_state(page)
+                if page is not None:
+                    state = ensure_scorer_markets_state(page, mid, state)
             except Exception as e:
                 print(f"  ATTENTION navigation: {e}")
 
@@ -913,23 +1054,11 @@ def main() -> None:
         if browser is not None:
             browser.close()
 
-    by_id = {str(m.get("id_match")): m for m in all_matches}
-    by_id.update(updates)
-    premium = []
-    for m in all_matches:
-        rec = dict(by_id[str(m.get("id_match"))])
-        if "marches_supplementaires" not in rec:
-            rec["marches_supplementaires"] = default_marches_supplementaires()
-        premium.append(rec)
-
-    OUT_PATH.write_text(
-        json.dumps(premium, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+    stamped = _write_outputs(all_matches, updates)
     http_n = len(updates) - len(out_of_window)
     print(
         f"[sniper] SUCCES — {http_n} match(s) enrichi(s) via HTTP, "
-        f"{len(out_of_window)} ignoré(s) (hors fenêtre) -> {OUT_PATH.name}"
+        f"{len(out_of_window)} ignoré(s) (hors fenêtre) -> {OUT_PATH.name} + {IN_PATH.name}"
     )
 
 
