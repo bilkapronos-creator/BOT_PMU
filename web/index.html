@@ -1802,7 +1802,7 @@
                 <div id="footZoneAccueil" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-cyan-500/25 bg-cyan-500/5 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">🔎</div>
                     <p class="text-sm font-semibold text-cyan-100">Moteur de recherche Velora</p>
-                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Cliquez sur <span class="text-cyan-400">Générer l'analyse</span> pour voir les matchs du jour, ou saisissez une équipe (ex. <span class="font-medium text-gray-300">Portugal</span>, <span class="font-medium text-gray-300">Malaga</span>) pour cibler un match précis.</p>
+                    <p id="footZoneAccueilTexte" class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Saisissez une équipe (ex. <span class="font-medium text-gray-300">Portugal</span>, <span class="font-medium text-gray-300">Malaga</span>) puis cliquez sur <span class="text-cyan-400">Générer l'analyse</span> — 3 recherches gratuites par jour.</p>
                 </div>
                 <div id="footZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[320px]">
                     <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-500/30 bg-cyan-500/10 text-2xl" aria-hidden="true">⚽</div>
@@ -5171,40 +5171,12 @@
             const trimmed = raw.trim();
 
             if (!trimmed) {
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = 'Chargement…';
-                }
-                try {
-                    await rechargerFootMatchsServeur({ force: true, silent: true });
-                    const actifs = footMatchsRecherchables();
-                    if (actifs.length) {
-                        footFiltre = '';
-                        footAnalyseAffichee = true;
-                        renderFootMatchs();
-                        synchroniserArchivesFootDepuisMatchs(actifs);
-                        preparerHistoriqueFootCommunaute()
-                            .then(() => chargerStatsPlateforme({ animer: false }))
-                            .catch(() => {});
-                        defilerVersResultatsFoot();
-                        return;
-                    }
-                } catch (err) {
-                    console.warn('[Velora] Liste matchs du jour :', err);
-                } finally {
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.textContent = 'Générer l\'analyse';
-                    }
-                }
                 footFiltre = '';
                 footAnalyseAffichee = false;
                 renderFootMatchs();
                 const meta = document.getElementById('footSearchMeta');
                 if (meta) {
-                    meta.textContent = footMatchs.length
-                        ? 'Aucun match du jour actif pour le moment — réessayez dans quelques minutes.'
-                        : 'Aucun match en base — actualisation Winamax en cours, réessayez sous ~15 min.';
+                    meta.textContent = 'Saisissez le nom d\'une équipe ou d\'un club, puis cliquez sur Générer l\'analyse.';
                 }
                 return;
             }
@@ -5240,7 +5212,7 @@
                 footFiltre = trimmed;
                 footAnalyseAffichee = true;
                 renderFootMatchs();
-                const liste = listeFootAnalyseAffichee();
+                const liste = footMatchAnalyseUnique();
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
                     preparerHistoriqueFootCommunaute()
@@ -6265,17 +6237,6 @@
                 return (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0);
             });
             return [pool[0]];
-        }
-
-        /** Cartes affichées après « Générer l'analyse » : tous les matchs du jour ou un seul si recherche. */
-        function listeFootAnalyseAffichee() {
-            const q = normaliserTexteRechercheFoot(footFiltre);
-            if (q) return footMatchAnalyseUnique();
-            let liste = footMatchsRecherchables();
-            if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
-            return liste.sort(
-                (a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0),
-            );
         }
 
         const OPP_VELORA_SCORE_MIN = 58;
@@ -7836,22 +7797,17 @@
                     : (totalBase > 0
                         ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto ~15 min`
                         : '0 match aujourd\'hui');
-                meta.textContent = `${baseInfo} — Générer l'analyse (tous les matchs) ou saisissez une équipe${quotaHint}`;
+                meta.textContent = `${baseInfo} — saisissez une équipe puis Générer l'analyse${quotaHint}`;
                 return;
             }
-            const liste = listeFootAnalyseAffichee();
+            const liste = footMatchAnalyseUnique();
             const total = footMatchsFiltres().length;
             const totalBase = footMatchs.length;
-            const qNorm = normaliserTexteRechercheFoot(q);
             meta.textContent = liste.length
-                ? (qNorm
-                    ? (total > 1
-                        ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
-                        : `Analyse pour « ${q} »`)
-                    : `${liste.length} match${liste.length > 1 ? 's' : ''} du jour affiché${liste.length > 1 ? 's' : ''}`)
-                : (qNorm
-                    ? `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`
-                    : 'Aucun match du jour actif — réessayez dans quelques minutes.');
+                ? (total > 1
+                    ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
+                    : `Analyse pour « ${q} »`)
+                : `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`;
         }
 
         function majFootAlerteDonneesUi() {
@@ -7876,7 +7832,7 @@
             const fm = footMetaDonneesMatchs();
             if (n === 0 && total > 0) {
                 const quand = fm.derniereDate ? ` (dernier : ${fm.derniereDate})` : '';
-                el.innerHTML = `Les matchs en base sont passés${quand}. Patientez ~15&nbsp;min ou cliquez <span class="text-cyan-400">Générer l'analyse</span> pour recharger.${htmlFootAlerteDonneesPerimees()}`;
+                el.innerHTML = `Les matchs en base sont passés${quand}. Patientez ~15&nbsp;min puis saisissez une équipe et <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootAlerteDonneesPerimees()}`;
                 majFootAlerteDonneesUi();
                 return;
             }
@@ -7885,7 +7841,7 @@
                 : (total > 0
                     ? `${total} match${total > 1 ? 's' : ''} en base (aucun actif)`
                     : 'Aucun match aujourd\'hui');
-            el.innerHTML = `${baseLabel} — <span class="text-cyan-400">Générer l'analyse</span> pour tous les matchs, ou cliquez une équipe ci-dessous.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
+            el.innerHTML = `${baseLabel} — cliquez une équipe ou saisissez un nom puis <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootEquipesAccueilChips()}${htmlFootAlerteDonneesPerimees()}`;
             majFootAlerteDonneesUi();
         }
 
@@ -7974,10 +7930,8 @@
             }
 
             if (accueil) accueil.classList.add('hidden');
-            const liste = listeFootAnalyseAffichee();
-            zone.className = liste.length > 1
-                ? 'foot-resultats-panel space-y-5'
-                : 'foot-resultats-panel space-y-4';
+            const liste = footMatchAnalyseUnique();
+            zone.className = 'foot-resultats-panel space-y-4';
             const erreur = document.getElementById('footErreur');
             try {
                 zone.innerHTML = liste.map(carteFootMatch).join('');
