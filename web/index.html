@@ -5727,12 +5727,16 @@
                 skipRender: false,
             });
             const archivesChanged = await rafraichirArchivesFootEtRoi({ silent, force: true });
-            const tasks = [chargerStatsPlateforme({ animer: archivesChanged })];
+            const pmuArchivesChanged = await rafraichirArchivesPmuEnAttente({ silent });
+            const tasks = [chargerStatsPlateforme({ animer: archivesChanged || pmuArchivesChanged })];
             if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
                 tasks.push(chargerOppMatchs({ force: true, skipRender: false }));
             }
             if (matchsChanged && sportActif === 'foot' && sectionActive === 'pronostic') {
                 renderFootMatchs();
+            }
+            if (sectionActive === 'archives') {
+                tasks.push(chargerArchivesPourSportActif());
             }
             await Promise.all(tasks);
         }
@@ -7216,12 +7220,41 @@
                 if (!options.silent && archivesResolues) {
                     console.info('[Velora] Archives Foot mises à jour — résultats intégrés au ROI.');
                 }
-                if (sectionActive === 'archives' && sportActif === 'foot') {
-                    await chargerArchivesFoot();
-                }
                 return true;
             }
             return false;
+        }
+
+        /** En arrière-plan : vérifie les courses PMU encore « en attente » (API PMU). */
+        async function rafraichirArchivesPmuEnAttente(options = {}) {
+            if (!estMembreConnecte()) return false;
+            await migrerArchivesLocalStorage();
+            restaurerArchivesDepuisBackupSession();
+            const archives = lireArchivesLocal();
+            const aVerifier = archives.filter((a) =>
+                a?.statut === 'En attente'
+                || !estArchiveTerminee(a)
+                || !a?.badges_pmu?.length,
+            );
+            if (!aVerifier.length) return false;
+
+            let changed = false;
+            const evaluations = await Promise.all(aVerifier.map((a) => verifierResultatArchive(a)));
+            for (const ev of evaluations) {
+                if (ev.erreur) {
+                    if (!options.silent) console.warn('[Velora] PMU archive :', ev.erreur);
+                    continue;
+                }
+                const avant = archives.find((x) => cleCourseArchive(x) === cleCourseArchive(ev.archive));
+                if (JSON.stringify(avant) !== JSON.stringify(ev.archive)) {
+                    changed = true;
+                }
+                sauvegarderArchiveLocal(ev.archive);
+            }
+            if (changed && !options.silent) {
+                console.info('[Velora] Archives PMU mises à jour (résultats intégrés).');
+            }
+            return changed;
         }
 
         function label1n2Velora(m, pick) {
