@@ -923,6 +923,16 @@ def _load_matchs_document() -> tuple[list[dict], dict | list | None]:
     return [], data if isinstance(data, dict) else None
 
 
+def _touch_matchs_document_meta(doc: dict, match_count: int) -> dict:
+    """Horodate meta.generated_at pour que le front détecte les MAJ auto."""
+    out = dict(doc)
+    meta = dict(out.get("meta") or {})
+    meta["generated_at"] = datetime.now(tz=TZ_PARIS).isoformat()
+    meta["match_count"] = match_count
+    out["meta"] = meta
+    return out
+
+
 def _write_outputs(all_matches: list[dict], updates: dict[str, dict]) -> list[dict]:
     """Écrit premium + fusionne l'enrichissement dans api_velora_matchs.json."""
     by_id = {str(m.get("id_match")): m for m in all_matches}
@@ -940,7 +950,7 @@ def _write_outputs(all_matches: list[dict], updates: dict[str, dict]) -> list[di
 
     _, doc = _load_matchs_document()
     if isinstance(doc, dict) and isinstance(doc.get("matchs"), list):
-        doc = dict(doc)
+        doc = _touch_matchs_document_meta(dict(doc), len(stamped))
         doc["matchs"] = stamped
         IN_PATH.write_text(
             json.dumps(doc, ensure_ascii=False, indent=2),

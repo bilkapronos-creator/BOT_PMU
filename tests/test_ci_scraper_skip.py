@@ -75,6 +75,24 @@ def test_json_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypa
     assert run_all._json_skip_scraper_ci(aujourd_hui, 6.0) is True
 
 
+def test_json_skip_scraper_ci_refuse_si_matchs_journee_termines(tmp_path):
+    import run_all
+
+    now = datetime.now(tz=TZ)
+    kick = now - timedelta(hours=4)
+    fichier = tmp_path / "termines.json"
+    fichier.write_text(
+        json.dumps([_match_row(kick, home="Terminé")], ensure_ascii=False),
+        encoding="utf-8",
+    )
+    recent = time.time() - 1800
+    os.utime(fichier, (recent, recent))
+
+    assert run_all._json_contient_match_journee_pari(fichier) is True
+    assert run_all._json_contient_matchs_a_venir_journee(fichier) is False
+    assert run_all._json_skip_scraper_ci(fichier, 6.0) is False
+
+
 def test_dump_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypatch):
     import run_all
 

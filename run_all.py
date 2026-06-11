@@ -507,6 +507,12 @@ def _match_start_ts_unix(match: dict) -> float | None:
         return None
 
 
+MATCH_ENDED_STATUSES = frozenset(
+    {"ENDED", "CLOSED", "FINISHED", "CANCELLED", "CANCELED"}
+)
+MATCH_FINISHED_GRACE_SEC = 120 * 60
+
+
 def _json_contient_match_journee_pari(path: Path) -> bool:
     """Vrai si au moins un match est dans la fenêtre betting_day (alignée parser Winamax)."""
     if not path.is_file():
@@ -529,14 +535,73 @@ def _json_contient_match_journee_pari(path: Path) -> bool:
     return False
 
 
+def _match_est_termine_ou_live(match: dict) -> bool:
+    status = str(match.get("match_status") or "").strip().upper().replace(" ", "_")
+    if status in MATCH_ENDED_STATUSES:
+        return True
+    if status in {"LIVE", "RUNNING", "INPLAY", "IN_PLAY"}:
+        return False
+    ts = _match_start_ts_unix(match)
+    if ts is None:
+        return False
+    return ts < time.time() - MATCH_FINISHED_GRACE_SEC
+
+
+def _json_contient_matchs_a_venir_journee(path: Path) -> bool:
+    """Matchs betting_day encore à jouer (ou en direct) — sinon re-scrape requis."""
+    if not path.is_file():
+        return False
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    matchs = data if isinstance(data, list) else data.get("matchs") or []
+    if not matchs:
+        return False
+    from parser_winamax import is_kickoff_in_betting_day
+
+    for m in matchs:
+        if not isinstance(m, dict):
+            continue
+        kickoff = _match_kickoff_paris(m)
+        if kickoff is None or not is_kickoff_in_betting_day(kickoff):
+            continue
+        if not _match_est_termine_ou_live(m):
+            return True
+    return False
+
+
+def _json_meta_age_hours(path: Path) -> float | None:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            return None
+        raw = (data.get("meta") or {}).get("generated_at")
+        if not raw:
+            return None
+        from datetime import datetime as _dt
+
+        dt = _dt.fromisoformat(str(raw).replace("Z", "+00:00"))
+        return (time.time() - dt.timestamp()) / 3600.0
+    except (OSError, json.JSONDecodeError, TypeError, ValueError):
+        return None
+
+
+def _json_effective_age_hours(path: Path) -> float:
+    file_age = (time.time() - path.stat().st_mtime) / 3600.0
+    meta_age = _json_meta_age_hours(path)
+    if meta_age is not None:
+        return max(file_age, meta_age)
+    return file_age
+
+
 def _json_skip_scraper_ci(path: Path, max_heures: float) -> bool:
-    """Skip proactif CI : fichier récent ET matchs de la journée de paris en cours."""
+    """Skip proactif CI : fichier récent, meta fraîche ET matchs du jour encore à jouer."""
     if not path.is_file() or path.stat().st_size < 4:
         return False
-    age_h = (time.time() - path.stat().st_mtime) / 3600.0
-    if age_h > max_heures:
+    if _json_effective_age_hours(path) > max_heures:
         return False
-    return _json_contient_match_journee_pari(path)
+    return _json_contient_matchs_a_venir_journee(path)
 
 
 def _json_utilisable_ci(path: Path, max_heures: float) -> bool:

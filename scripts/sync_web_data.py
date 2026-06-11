@@ -15,10 +15,18 @@ if str(WEB) not in sys.path:
 
 
 def _sanitize_json_file(path: Path) -> None:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
     from velora_engine.analysis.match_scores import sanitize_matchs_document
 
     raw = json.loads(path.read_text(encoding="utf-8"))
     clean = sanitize_matchs_document(raw)
+    if isinstance(clean, dict) and isinstance(clean.get("matchs"), list):
+        meta = dict(clean.get("meta") or {})
+        meta["generated_at"] = datetime.now(ZoneInfo("Europe/Paris")).isoformat()
+        meta["match_count"] = len(clean["matchs"])
+        clean["meta"] = meta
     path.write_text(json.dumps(clean, ensure_ascii=False, indent=2), encoding="utf-8")
 
 

@@ -28,8 +28,8 @@ env:
   VELORA_HEADLESS: "0"
   # Runners GitHub = IP hors France → géoblocage Winamax sans proxy
   VELORA_CI_SCRAPER_OPTIONAL: "1"
-  # Skip scrape seulement si JSON/dump < 6 h ET matchs betting_day
-  VELORA_CI_SCRAPER_MAX_AGE_H: "6"
+  # Skip scrape seulement si JSON/dump < 2 h ET matchs du jour encore à jouer
+  VELORA_CI_SCRAPER_MAX_AGE_H: "2"
   VELORA_PROXY_INTERACTIVE: "0"
   VELORA_DUMP_WAIT_MS: "90000"
 

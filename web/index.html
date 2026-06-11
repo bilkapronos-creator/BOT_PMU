@@ -5648,13 +5648,31 @@
 
         const VELORA_AUTO_REFRESH_MS = 30 * 60 * 1000;
         const VELORA_AUTO_REFRESH_PROBE_MS = 3 * 60 * 1000;
+        const VELORA_AUTO_REFRESH_FORCE_MS = 15 * 60 * 1000;
         let veloraAutoRefreshTimer = null;
+        let footLastAutoForceMs = 0;
+        let footResultatsSyncAt = null;
+
+        function doitForcerRefreshFootMatchs() {
+            const fm = footMetaDonneesMatchs();
+            if (fm.perime) return true;
+            if (footMatchsCharges && footMatchs.length > 0 && footMatchsRecherchables().length === 0) {
+                return true;
+            }
+            if (fm.genereAgeH != null && fm.genereAgeH >= 0.5) return true;
+            if (Date.now() - footLastAutoForceMs >= VELORA_AUTO_REFRESH_FORCE_MS) {
+                footLastAutoForceMs = Date.now();
+                return true;
+            }
+            return false;
+        }
 
         /**
          * Recharge api_velora_matchs.json (cache-bust). Retourne true si les données ont changé.
          */
         async function rechargerFootMatchsServeur(options = {}) {
             const { force = false, silent = false, skipRender = false } = options;
+            const forceLoad = force || doitForcerRefreshFootMatchs();
             try {
                 await chargerOddsHistory();
                 const payload = await fetchVeloraJson(VELORA_JSON_MATCHS);
@@ -5664,7 +5682,7 @@
                     : (Array.isArray(payload) ? payload.length : 0);
                 const countPrev = footMatchs.length;
                 if (
-                    !force
+                    !forceLoad
                     && footMatchsCharges
                     && newGen
                     && footMatchsMeta?.generated_at === newGen
@@ -5672,6 +5690,8 @@
                 ) {
                     return false;
                 }
+                footPremiumIndex = null;
+                footPremiumIndexPromise = null;
                 if (estVeloraPremiumFoot()) {
                     await ensureFootPremiumIndex();
                 }
@@ -5701,11 +5721,18 @@
 
         async function rafraichirDonneesVeloraAuto(options = {}) {
             const silent = options.silent !== false;
-            await rechargerFootMatchsServeur({ force: false, silent, skipRender: false });
-            await rafraichirArchivesFootEtRoi({ silent });
-            const tasks = [chargerStatsPlateforme({ animer: false })];
+            const matchsChanged = await rechargerFootMatchsServeur({
+                force: options.forceMatchs === true,
+                silent,
+                skipRender: false,
+            });
+            const archivesChanged = await rafraichirArchivesFootEtRoi({ silent, force: true });
+            const tasks = [chargerStatsPlateforme({ animer: archivesChanged })];
             if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
                 tasks.push(chargerOppMatchs({ force: true, skipRender: false }));
+            }
+            if (matchsChanged && sportActif === 'foot' && sectionActive === 'pronostic') {
+                renderFootMatchs();
             }
             await Promise.all(tasks);
         }
@@ -7061,11 +7088,16 @@
 
         async function chargerResultatsFootServeur() {
             try {
-                footResultatsCache = await fetchVeloraJson(VELORA_JSON_FOOT_RESULTATS);
+                const data = await fetchVeloraJson(VELORA_JSON_FOOT_RESULTATS);
+                const syncAt = data?.meta?.derniere_sync || data?.meta?.generated_at || null;
+                const changed = syncAt && syncAt !== footResultatsSyncAt;
+                footResultatsSyncAt = syncAt || footResultatsSyncAt;
+                footResultatsCache = data;
+                return { data, changed: !!changed };
             } catch {
                 footResultatsCache = null;
+                return { data: null, changed: false };
             }
-            return footResultatsCache;
         }
 
         function scoreDepuisResultatsFoot(idMatch) {
@@ -7162,23 +7194,28 @@
             } catch {
                 /* footMatchs peut être vide */
             }
+
             const enAttenteAvant = lireArchivesFootLocal().filter(archiveFootEstEnAttente).length;
-            if (enAttenteAvant === 0) return false;
+            const { changed: resultatsChanged } = await chargerResultatsFootServeur();
 
             const archivesServeur = await chargerArchivesFootServeur();
             let archives = fusionnerArchivesFoot(lireArchivesFootLocal(), archivesServeur);
-            archives = await resoudreArchivesFootEnAttente(archives);
+
+            if (enAttenteAvant > 0 || options.force) {
+                archives = await resoudreArchivesFootEnAttente(archives);
+            }
+
             const enAttenteApres = archives.filter(archiveFootEstEnAttente).length;
 
             if (archives.length) {
                 ecrireArchivesFootLocal(archives);
             }
 
-            if (enAttenteApres < enAttenteAvant) {
-                if (!options.silent) {
+            const archivesResolues = enAttenteApres < enAttenteAvant;
+            if (archivesResolues || resultatsChanged) {
+                if (!options.silent && archivesResolues) {
                     console.info('[Velora] Archives Foot mises à jour — résultats intégrés au ROI.');
                 }
-                await chargerStatsPlateforme({ animer: true });
                 if (sectionActive === 'archives' && sportActif === 'foot') {
                     await chargerArchivesFoot();
                 }
