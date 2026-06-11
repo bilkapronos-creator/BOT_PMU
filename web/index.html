@@ -1513,7 +1513,8 @@
                 aria-current="page">🐎 PMU</button>
             <button type="button" id="navSportFoot"
                 class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-gray-400 transition hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-300">⚽ Foot</button>
-            <span class="cursor-not-allowed rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-500 opacity-50 select-none backdrop-blur-sm" aria-disabled="true" title="Bientôt disponible">🎾 Tennis</span>
+            <button type="button" id="navSportTennis"
+                class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-gray-400 transition hover:border-lime-500/40 hover:bg-lime-500/10 hover:text-lime-300">🎾 Tennis</button>
             <span class="cursor-not-allowed rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-500 opacity-50 select-none backdrop-blur-sm" aria-disabled="true" title="Bientôt disponible">🏎️ F1</span>
         </nav>
 
@@ -1583,6 +1584,21 @@
                 <div id="footFiltresRow" class="mt-2 hidden flex flex-wrap justify-center gap-1.5">
                     <button type="button" id="footFiltreOutsidersSearch" class="foot-filtre-chip" aria-pressed="false">💎 Outsiders value</button>
                 </div>
+            </div>
+            <div id="blocTennisGauche" class="hidden glass-card rounded-2xl border border-lime-500/25 p-5 shadow-lg shadow-black/20 lg:p-6">
+                <p class="mb-3 text-[10px] font-semibold uppercase tracking-widest text-lime-400/80">Tennis Winamax</p>
+                <div class="grid grid-cols-1 gap-3">
+                    <label class="block">
+                        <span class="mb-1 block text-xs text-gray-500">Joueur ou adversaire</span>
+                        <input type="search" id="tennisSearchInput" autocomplete="off" placeholder="Ex. Djokovic, Swiatek, Alcaraz…"
+                            class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm text-white transition">
+                    </label>
+                    <button type="button" id="btnTennisAnalyser"
+                        class="rounded-lg bg-gradient-to-r from-lime-500 to-emerald-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-lime-500/20 transition hover:from-lime-400 hover:to-emerald-400 disabled:cursor-not-allowed disabled:opacity-60">
+                        Générer l'analyse
+                    </button>
+                </div>
+                <p id="tennisSearchMeta" class="mt-3 text-center text-[11px] leading-relaxed text-gray-500">ATP / WTA — vainqueur, sets &amp; jeux (Winamax).</p>
             </div>
             <div id="blocPmuGauche" class="flex flex-col gap-6">
             <div id="analyseCourseCarte" class="glass-card rounded-2xl border border-white/10 p-5 shadow-lg shadow-black/20 lg:p-6">
@@ -1821,6 +1837,23 @@
                     <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-500">Revenez plus tard !</p>
                 </div>
                 <div id="footResultats" class="foot-resultats-panel space-y-4"></div>
+            </section>
+
+            <section id="sectionTennis" class="hidden flex h-full min-h-[280px] flex-col gap-4">
+                <div id="tennisLoading" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-lime-500/25 px-6 py-14 lg:min-h-[420px]">
+                    <p class="text-sm font-semibold text-lime-300">Chargement des matchs tennis…</p>
+                </div>
+                <div id="tennisErreur" class="hidden glass-card rounded-xl border border-red-500/30 bg-red-950/40 p-4 text-center text-sm text-red-300" role="alert"></div>
+                <div id="tennisZoneAccueil" class="glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-lime-500/25 bg-lime-500/5 px-6 py-16 text-center lg:min-h-[320px]">
+                    <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-lime-500/30 bg-lime-500/10 text-2xl" aria-hidden="true">🎾</div>
+                    <p class="text-sm font-semibold text-lime-100">Analyses Tennis Velora</p>
+                    <p class="mt-2 max-w-sm text-xs leading-relaxed text-gray-400">Saisissez un nom de joueur puis cliquez sur <span class="text-lime-400">Générer l'analyse</span>.</p>
+                </div>
+                <div id="tennisZoneVide" class="hidden glass-card flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 px-6 py-16 text-center lg:min-h-[320px]">
+                    <p class="text-sm font-semibold text-gray-300">Aucun match pour cette recherche</p>
+                    <p class="mt-2 text-xs text-gray-500">Vérifiez l'orthographe ou essayez le nom complet.</p>
+                </div>
+                <div id="tennisResultats" class="space-y-4"></div>
             </section>
 
             <section id="sectionArchives" class="hidden flex flex-col gap-4">
@@ -4651,14 +4684,23 @@
 
         const sectionPronostic = document.getElementById('sectionPronostic');
         const sectionFootball = document.getElementById('sectionFootball');
+        const sectionTennis = document.getElementById('sectionTennis');
         const sectionArchives = document.getElementById('sectionArchives');
         const tabPronostic = document.getElementById('tabPronostic');
         const blocPmuGauche = document.getElementById('blocPmuGauche');
         const blocFootGauche = document.getElementById('blocFootGauche');
+        const blocTennisGauche = document.getElementById('blocTennisGauche');
         const navSportPmu = document.getElementById('navSportPmu');
         const navSportFoot = document.getElementById('navSportFoot');
+        const navSportTennis = document.getElementById('navSportTennis');
 
         let sportActif = 'pmu';
+        const VELORA_JSON_TENNIS = '/api_velora_matchs_tennis.json';
+        let tennisMatchs = [];
+        let tennisMatchsMeta = null;
+        let tennisMatchsCharges = false;
+        let tennisFiltre = '';
+        let tennisAnalyseAffichee = false;
         let sectionActive = 'pronostic';
         let footMatchs = [];
         let footMatchsMeta = null;
@@ -4815,6 +4857,9 @@
             if (sectionFootball) {
                 sectionFootball.classList.toggle('hidden', !pronosticActif || sportActif !== 'foot');
             }
+            if (sectionTennis) {
+                sectionTennis.classList.toggle('hidden', !pronosticActif || sportActif !== 'tennis');
+            }
             if (sectionArchives) {
                 sectionArchives.classList.toggle('hidden', pronosticActif);
             }
@@ -4823,6 +4868,9 @@
             }
             if (blocFootGauche) {
                 blocFootGauche.classList.toggle('hidden', sportActif !== 'foot');
+            }
+            if (blocTennisGauche) {
+                blocTennisGauche.classList.toggle('hidden', sportActif !== 'tennis');
             }
 
             tabPronostic.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${pronosticActif ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 font-bold text-white shadow' : 'font-semibold text-gray-400 hover:text-gray-200'}`;
@@ -4839,6 +4887,8 @@
                     restaurerResultatPronostic();
                 } else if (sportActif === 'foot') {
                     renderFootMatchs();
+                } else if (sportActif === 'tennis') {
+                    renderTennisMatchs();
                 }
             } else {
                 chargerArchivesPourSportActif();
@@ -4866,8 +4916,14 @@
                 : 'rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-gray-400 transition hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-300';
         }
 
+        function navTennisClasses(actif) {
+            return actif
+                ? 'glass-card rounded-xl border border-lime-500/40 bg-lime-500/10 px-4 py-2 text-sm font-semibold text-lime-300 shadow-sm transition'
+                : 'rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-gray-400 transition hover:border-lime-500/40 hover:bg-lime-500/10 hover:text-lime-300';
+        }
+
         function changerSport(sport) {
-            sportActif = sport === 'foot' ? 'foot' : 'pmu';
+            sportActif = sport === 'foot' ? 'foot' : sport === 'tennis' ? 'tennis' : 'pmu';
             if (sectionActive === 'archives') {
                 majUiArchivesSport(sportActif);
             }
@@ -4880,8 +4936,14 @@
                 navSportFoot.className = navFootClasses(sportActif === 'foot');
                 navSportFoot.setAttribute('aria-current', sportActif === 'foot' ? 'page' : 'false');
             }
+            if (navSportTennis) {
+                navSportTennis.className = navTennisClasses(sportActif === 'tennis');
+                navSportTennis.setAttribute('aria-current', sportActif === 'tennis' ? 'page' : 'false');
+            }
             mettreAJourGuideFoot();
-            if (sportActif === 'foot') {
+            if (sportActif === 'tennis') {
+                chargerTennisMatchs();
+            } else if (sportActif === 'foot') {
                 if (quitterFootOppSiNonPremium()) {
                     chargerFootMatchs();
                 } else if (footModeOpportunites) {
@@ -5734,6 +5796,9 @@
             }
             if (matchsChanged && sportActif === 'foot' && sectionActive === 'pronostic') {
                 renderFootMatchs();
+            }
+            if (sportActif === 'tennis') {
+                tasks.push(rechargerTennisMatchsServeur({ silent }));
             }
             if (sectionActive === 'archives') {
                 tasks.push(chargerArchivesPourSportActif());
@@ -8638,9 +8703,208 @@
                 </article>`;
         }
 
+        async function rechargerTennisMatchsServeur(options = {}) {
+            const silent = options.silent !== false;
+            try {
+                const payload = await fetchVeloraJson(VELORA_JSON_TENNIS);
+                const newGen = payload?.meta?.generated_at || null;
+                const countNext = Array.isArray(payload?.matchs) ? payload.matchs.length : 0;
+                if (
+                    !options.force
+                    && tennisMatchsCharges
+                    && newGen
+                    && tennisMatchsMeta?.generated_at === newGen
+                    && countNext === tennisMatchs.length
+                ) {
+                    return false;
+                }
+                tennisMatchsMeta = payload?.meta && typeof payload.meta === 'object' ? payload.meta : null;
+                tennisMatchs = Array.isArray(payload?.matchs) ? payload.matchs : [];
+                tennisMatchsCharges = true;
+                majTennisMeta();
+                if (!options.skipRender) renderTennisMatchs();
+                if (!silent) console.info('[Velora] Tennis mis à jour', countNext);
+                return true;
+            } catch (e) {
+                if (!silent) console.warn('[Velora] Tennis :', e);
+                return false;
+            }
+        }
+
+        async function chargerTennisMatchs() {
+            const loading = document.getElementById('tennisLoading');
+            if (loading) loading.classList.toggle('hidden', tennisMatchsCharges);
+            if (!tennisMatchsCharges) {
+                if (loading) loading.classList.remove('hidden');
+                await rechargerTennisMatchsServeur({ force: true, silent: true });
+                if (loading) loading.classList.add('hidden');
+            }
+            majTennisMeta();
+            renderTennisMatchs();
+        }
+
+        function majTennisMeta() {
+            const meta = document.getElementById('tennisSearchMeta');
+            if (!meta) return;
+            const n = tennisMatchs.length;
+            const gen = tennisMatchsMeta?.generated_at;
+            const genTxt = gen ? ` · MAJ ${new Date(gen).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}` : '';
+            if (!estMembreConnecte()) {
+                meta.textContent = 'Connectez-vous pour analyser un match tennis';
+                return;
+            }
+            meta.textContent = n
+                ? `${n} match(s) tennis chargé(s)${genTxt}`
+                : `Aucun match tennis — prochaine extraction Winamax${genTxt}`;
+        }
+
+        function tennisMatchsFiltres() {
+            const q = tennisFiltre.trim().toLowerCase();
+            if (!q || q.length < 2) return [];
+            return tennisMatchs.filter((m) => {
+                const a = String(m.joueur_1 || m.equipe_domicile || '').toLowerCase();
+                const b = String(m.joueur_2 || m.equipe_exterieur || '').toLowerCase();
+                return a.includes(q) || b.includes(q);
+            });
+        }
+
+        function fmtCoteTennis(v) {
+            const n = Number(v);
+            return Number.isFinite(n) && n >= 1.01 ? n.toFixed(2) : null;
+        }
+
+        function htmlCarteTennis(m) {
+            const fa = m.free_analysis || {};
+            const c = fa.cotes_2way || m.cotes || {};
+            const p = fa.probabilites || m.probabilites || {};
+            const j1 = m.joueur_1 || m.equipe_domicile || 'Joueur 1';
+            const j2 = m.joueur_2 || m.equipe_exterieur || 'Joueur 2';
+            const comp = m.meta_match?.competition?.name || 'Tennis';
+            const meilleur = fa.meilleur_conseil;
+            const conseils = (fa.conseils_intelligents || []).slice(0, 4);
+            const marches = fa.marches || {};
+            const sets = marches.sets_total || {};
+            const games = marches.games_total || {};
+            const scoresSets = marches.score_exact_sets || [];
+
+            const ouLine = (bucket, label) => {
+                if (!bucket || typeof bucket !== 'object') return '';
+                const parts = [];
+                for (const [line, ou] of Object.entries(bucket)) {
+                    if (!ou || typeof ou !== 'object') continue;
+                    const plus = fmtCoteTennis(ou.plus_cote);
+                    const moins = fmtCoteTennis(ou.moins_cote);
+                    if (plus) parts.push(`+${line} @ ${plus}`);
+                    if (moins) parts.push(`-${line} @ ${moins}`);
+                }
+                if (!parts.length) return '';
+                return `<p class="text-[11px] text-gray-400"><span class="text-lime-400/90">${label}:</span> ${escHtml(parts.slice(0, 4).join(' · '))}</p>`;
+            };
+
+            const conseilsHtml = conseils.map((c) => {
+                const tier = c.tier === 'excellent' ? 'text-lime-300' : 'text-gray-300';
+                return `<li class="text-xs ${tier}">• ${escHtml(c.label || '')} ${c.cote ? `<span class="text-lime-400/80">@ ${fmtCoteTennis(c.cote)}</span>` : ''}</li>`;
+            }).join('');
+
+            const scoresHtml = scoresSets.slice(0, 3).map((s) =>
+                `<span class="velora-marche-pill">${escHtml(String(s.score || '').replace(/-/g, ' '))} @ ${fmtCoteTennis(s.cote)}</span>`
+            ).join('');
+
+            return `
+                <article class="glass-card rounded-2xl border border-lime-500/25 bg-lime-950/10 p-4 shadow-lg shadow-black/20 sm:p-5">
+                    <header class="mb-3 flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                            <p class="text-[10px] font-semibold uppercase tracking-widest text-lime-400/80">${escHtml(comp)}</p>
+                            <h3 class="mt-1 text-base font-bold text-white sm:text-lg">${escHtml(j1)} <span class="text-gray-500">vs</span> ${escHtml(j2)}</h3>
+                            <p class="mt-1 text-xs text-gray-500">${escHtml(m.date_match || '')}</p>
+                        </div>
+                        <div class="text-right text-sm">
+                            <p><span class="text-gray-500">1</span> <span class="font-bold text-lime-300">${fmtCoteTennis(c['1']) || '—'}</span> <span class="text-gray-600">(${p['1'] || 0}%)</span></p>
+                            <p><span class="text-gray-500">2</span> <span class="font-bold text-lime-300">${fmtCoteTennis(c['2']) || '—'}</span> <span class="text-gray-600">(${p['2'] || 0}%)</span></p>
+                        </div>
+                    </header>
+                    ${meilleur ? `<div class="mb-3 rounded-lg border border-lime-500/30 bg-lime-500/10 px-3 py-2">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-lime-400/90">Pronostic Velora</p>
+                        <p class="text-sm font-semibold text-lime-100">${escHtml(meilleur.label || fa.pronostic_label || '')}</p>
+                        ${meilleur.raison ? `<p class="mt-1 text-[11px] text-gray-400">${escHtml(meilleur.raison)}</p>` : ''}
+                    </div>` : ''}
+                    ${conseilsHtml ? `<ul class="mb-3 space-y-1">${conseilsHtml}</ul>` : ''}
+                    ${ouLine(sets, 'Sets')}
+                    ${ouLine(games, 'Jeux')}
+                    ${scoresHtml ? `<div class="mt-2 flex flex-wrap gap-1">${scoresHtml}</div>` : ''}
+                </article>`;
+        }
+
+        function renderTennisMatchs() {
+            const zone = document.getElementById('tennisResultats');
+            const accueil = document.getElementById('tennisZoneAccueil');
+            const vide = document.getElementById('tennisZoneVide');
+            const erreur = document.getElementById('tennisErreur');
+            if (!zone) return;
+
+            if (!estMembreConnecte()) {
+                zone.innerHTML = '';
+                if (accueil) accueil.classList.remove('hidden');
+                if (vide) vide.classList.add('hidden');
+                return;
+            }
+
+            if (!tennisAnalyseAffichee || !tennisFiltre.trim()) {
+                zone.innerHTML = '';
+                if (accueil) accueil.classList.remove('hidden');
+                if (vide) vide.classList.add('hidden');
+                return;
+            }
+
+            const liste = tennisMatchsFiltres().slice(0, 1);
+            if (accueil) accueil.classList.add('hidden');
+            if (liste.length) {
+                zone.innerHTML = liste.map(htmlCarteTennis).join('');
+                if (vide) vide.classList.add('hidden');
+                if (erreur) erreur.classList.add('hidden');
+            } else {
+                zone.innerHTML = '';
+                if (vide) vide.classList.remove('hidden');
+            }
+        }
+
+        async function lancerAnalyseTennis() {
+            if (!exigerConnexionPourAnalyser()) return;
+            const input = document.getElementById('tennisSearchInput');
+            const btn = document.getElementById('btnTennisAnalyser');
+            const trimmed = (input?.value || '').trim();
+            if (!trimmed) {
+                tennisFiltre = '';
+                tennisAnalyseAffichee = false;
+                renderTennisMatchs();
+                return;
+            }
+            if (trimmed.length < 2) {
+                const meta = document.getElementById('tennisSearchMeta');
+                if (meta) meta.textContent = 'Au moins 2 caractères requis.';
+                return;
+            }
+            if (sportActif !== 'tennis') changerSport('tennis');
+            if (sectionActive !== 'pronostic') afficherSection('pronostic');
+            if (btn) { btn.disabled = true; btn.textContent = 'Génération…'; }
+            try {
+                await rechargerTennisMatchsServeur({ force: true, silent: true });
+                tennisFiltre = trimmed;
+                tennisAnalyseAffichee = true;
+                renderTennisMatchs();
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = 'Générer l\'analyse'; }
+            }
+        }
+
         document.getElementById('tabPronostic')?.addEventListener('click', onTabPronosticClick);
         navSportPmu?.addEventListener('click', () => changerSport('pmu'));
         navSportFoot?.addEventListener('click', () => changerSport('foot'));
+        navSportTennis?.addEventListener('click', () => changerSport('tennis'));
+        document.getElementById('btnTennisAnalyser')?.addEventListener('click', lancerAnalyseTennis);
+        document.getElementById('tennisSearchInput')?.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') lancerAnalyseTennis();
+        });
         document.getElementById('btnVitrineDetail')?.addEventListener('click', () => {
             toggleVitrineDetailPanel();
         });

@@ -38,6 +38,7 @@ PREMIUM_SRC = ROOT / "api_velora_premium.json"
 GIT_COMMIT_MSG = "Mise à jour automatique Velora Data"
 GIT_JSON_FILES = (
     "api_velora_matchs.json",
+    "api_velora_matchs_tennis.json",
     "api_velora_premium.json",
     "api_velora_communaute.json",
     "velora_foot_resultats.json",
@@ -769,7 +770,8 @@ def executer_phase_scraper() -> bool:
 
     etapes = [
         ("winamax_dump.py", "Étape 1/5 : extraction SSR Winamax", None),
-        ("parser_winamax.py", "Étape 2/5 : structuration JSON", None),
+        ("parser_winamax.py", "Étape 2/5 : structuration JSON Foot", None),
+        ("parser_winamax_tennis.py", "Étape 2b/5 : structuration JSON Tennis", None),
         (
             "winamax_sniper.py",
             f"Étape 3/5 : enrichissement sniper (max {SNIPER_LIMIT})",
@@ -822,7 +824,10 @@ def executer_phase_scraper() -> bool:
             if not run_step("parser_winamax.py", etapes[1][1], etapes[1][2]):
                 return False
             log(f"{etapes[1][1]} — terminée.\n")
-            if not run_step("winamax_sniper.py", etapes[2][1], etapes[2][2]):
+            if not run_step("parser_winamax_tennis.py", etapes[2][1], etapes[2][2]):
+                return False
+            log(f"{etapes[2][1]} — terminée.\n")
+            if not run_step("winamax_sniper.py", etapes[3][1], etapes[3][2]):
                 return False
             log(f"{etapes[2][1]} — terminée.\n")
             return True

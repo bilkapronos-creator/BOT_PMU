@@ -31,7 +31,7 @@ def _sanitize_json_file(path: Path) -> None:
 
 
 def main() -> int:
-    for name in ("api_velora_matchs.json", "api_velora_premium.json"):
+    for name in ("api_velora_matchs.json", "api_velora_matchs_tennis.json", "api_velora_premium.json"):
         src = ROOT / name
         if src.is_file():
             _sanitize_json_file(src)

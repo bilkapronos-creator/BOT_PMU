@@ -160,9 +160,11 @@ jobs:
           added=0
           for f in \
             api_velora_matchs.json \
+            api_velora_matchs_tennis.json \
             api_velora_premium.json \
             dump_winamax_html.json \
             web/api_velora_matchs.json \
+            web/api_velora_matchs_tennis.json \
             web/api_velora_premium.json \
             web/api_velora_communaute.json \
             web/velora_archives_foot.json \

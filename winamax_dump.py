@@ -23,6 +23,7 @@ from velora_engine.scrape.winamax_state import (
 
 URLS = (
     "https://www.winamax.fr/paris-sportifs/sports/1",
+    "https://www.winamax.fr/paris-sportifs/sports/5",
     "https://www.winamax.fr/paris-sportifs",
 )
 OUT = Path(__file__).resolve().parent / "dump_winamax_html.json"
@@ -280,6 +281,27 @@ def _close_browser(browser, context) -> None:
             print(f"[winamax_dump] {name}.close() erreur: {e}", file=sys.stderr)
 
 
+def _merge_winamax_states(base: dict | None, extra: dict) -> dict:
+    """Fusionne matches/bets/outcomes/odds (foot + tennis sur une session)."""
+    if not base:
+        return extra
+    out = dict(base)
+    for key in ("matches", "bets", "outcomes", "odds", "filters", "categories", "tournaments", "sports"):
+        a = out.get(key)
+        b = extra.get(key)
+        if isinstance(a, dict) and isinstance(b, dict):
+            merged = dict(a)
+            merged.update(b)
+            out[key] = merged
+        elif b and not a:
+            out[key] = b
+    ids = set(out.get("sportIds") or [])
+    ids.update(extra.get("sportIds") or [])
+    if ids:
+        out["sportIds"] = sorted(ids, key=lambda x: int(x) if str(x).isdigit() else x)
+    return out
+
+
 def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
     print(f"[winamax_dump] Navigation -> {url}")
     captured: list[dict] = []
@@ -390,6 +412,8 @@ def _try_http_regex() -> tuple[dict | None, str]:
         handlers.append(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
     opener = urllib.request.build_opener(*handlers)
 
+    merged: dict | None = None
+    sources: list[str] = []
     for url in URLS:
         print(f"[winamax_dump] HTTP GET -> {url}")
         try:
@@ -406,7 +430,10 @@ def _try_http_regex() -> tuple[dict | None, str]:
             continue
         norm, label = _normalize_state(data)
         if norm is not None:
-            return norm, f"HTTP {url} ({source} {label})"
+            merged = _merge_winamax_states(merged, norm)
+            sources.append(f"{url} ({source} {label})")
+    if merged is not None:
+        return merged, "HTTP merge: " + "; ".join(sources)
     return None, ""
 
 
@@ -438,9 +465,13 @@ def main() -> None:
     if data is not None:
         OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
         n_matches = len(data.get("matches", {}))
+        n_tennis = sum(
+            1 for m in (data.get("matches") or {}).values()
+            if isinstance(m, dict) and m.get("sportId") == 5
+        )
         print("[winamax_dump] SUCCES (HTTP, sans Chromium)")
         print(f"  Source  : {source}")
-        print(f"  Matchs  : {n_matches}")
+        print(f"  Matchs  : {n_matches} (tennis: {n_tennis})")
         return
 
     print("[winamax_dump] Demarrage Chromium (SSR)...")
@@ -496,18 +527,22 @@ def main() -> None:
                 wait_for_proxy_authentication(page, URLS[0], label="winamax_dump")
 
             last_err: WinamaxDumpError | None = None
+            sources: list[str] = []
             for url in URLS:
                 try:
-                    data, source = _try_url(page, url, state_ready=False)
-                    if data is not None:
-                        print(f"[winamax_dump] OK via {source}")
-                        break
+                    chunk, src = _try_url(page, url, state_ready=False)
+                    if chunk is not None:
+                        data = _merge_winamax_states(data, chunk)
+                        sources.append(f"{url} ({src})")
+                        print(f"[winamax_dump] OK via {src} — {url}")
                 except WinamaxDumpError as e:
                     last_err = e
                     print(f"[winamax_dump] {url} — {e}", file=sys.stderr)
                 except Exception as e:
                     print(f"[winamax_dump] URL {url} ignorée: {e}", file=sys.stderr)
 
+            if data is not None and sources:
+                source = " + ".join(sources)
             if data is None and last_err is not None:
                 raise last_err
 
