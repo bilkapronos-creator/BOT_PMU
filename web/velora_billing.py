@@ -807,7 +807,7 @@ def creer_session_checkout_stripe(
     customer_email: Optional[str] = None,
     plan: str = "pmu",
 ) -> dict[str, str]:
-    """Crée une session Checkout Stripe (mode abonnement Live). plan: pmu | foot."""
+    """Crée une session Checkout Stripe (mode abonnement Live). plan: pmu | foot | tennis."""
     _stripe_configure()
     import stripe
 
@@ -820,6 +820,10 @@ def creer_session_checkout_stripe(
         price_id = (os.environ.get("STRIPE_PRICE_ID_FOOT") or "").strip()
         if not price_id:
             raise BillingConfigError("STRIPE_PRICE_ID_FOOT non configurée sur Render.")
+    elif plan_norm == "tennis":
+        price_id = (os.environ.get("STRIPE_PRICE_ID_TENNIS") or "").strip()
+        if not price_id:
+            raise BillingConfigError("STRIPE_PRICE_ID_TENNIS non configurée sur Render.")
     else:
         plan_norm = "pmu"
         price_id = (os.environ.get("STRIPE_PRICE_ID") or "").strip()

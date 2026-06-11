@@ -1093,11 +1093,14 @@ def create_checkout_session(
         os.environ.get("VELORA_FRONTEND_URL", "https://velora-pronos.com").rstrip("/")
     )
     plan = str(body.get("plan") or "pmu").strip().lower()
-    if plan not in ("pmu", "foot"):
+    if plan not in ("pmu", "foot", "tennis"):
         plan = "pmu"
     if plan == "foot":
         default_ok = f"{frontend_base}/?premium_foot=success"
         default_ko = f"{frontend_base}/?premium_foot=cancel"
+    elif plan == "tennis":
+        default_ok = f"{frontend_base}/?premium_tennis=success"
+        default_ko = f"{frontend_base}/?premium_tennis=cancel"
     else:
         default_ok = f"{frontend_base}/?premium_pmu=success"
         default_ko = f"{frontend_base}/?premium_pmu=cancel"

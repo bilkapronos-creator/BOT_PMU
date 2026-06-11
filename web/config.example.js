@@ -14,4 +14,6 @@ window.VELORA_ENV = Object.freeze({
   VELORA_ADMIN_PASSWORD: 'ChoisissezUnMotDePasseFort',
   /** Optionnel : hash SHA-256 du mot de passe (prioritaire sur VELORA_ADMIN_PASSWORD) */
   VELORA_ADMIN_PASSWORD_HASH: '',
+  /** Stripe Payment Link Pass Tennis — redirection succès : ?premium_tennis=success */
+  STRIPE_CHECKOUT_URL_TENNIS: '',
 });

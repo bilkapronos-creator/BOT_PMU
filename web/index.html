@@ -1597,6 +1597,12 @@
                         class="rounded-lg bg-gradient-to-r from-lime-500 to-emerald-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-lime-500/20 transition hover:from-lime-400 hover:to-emerald-400 disabled:cursor-not-allowed disabled:opacity-60">
                         Générer l'analyse
                     </button>
+                    <button type="button" id="btnTennisVoirTous"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg border border-lime-500/35 bg-lime-500/10 py-2.5 px-4 text-sm font-semibold text-lime-200 transition hover:border-lime-400/50 hover:bg-lime-500/15 disabled:cursor-not-allowed disabled:opacity-60"
+                        title="Afficher tous les matchs du jour — Pass Premium Tennis">
+                        Voir tous les matchs
+                        <span id="btnTennisVoirTousPro" class="foot-opp-pro-badge js-tennis-premium-lock" title="Réservé Premium Tennis">PRO</span>
+                    </button>
                 </div>
                 <p id="tennisSearchMeta" class="mt-3 text-center text-[11px] leading-relaxed text-gray-500">ATP / WTA — vainqueur, sets &amp; jeux (Winamax).</p>
             </div>
@@ -2546,7 +2552,7 @@
         }
 
         function tauxVitrinePourSport(pmu, foot, sport) {
-            const actif = sport === 'foot' ? 'foot' : 'pmu';
+            const actif = sport === 'foot' ? 'foot' : sport === 'tennis' ? 'tennis' : 'pmu';
             const footN = Number(foot?.total ?? 0);
             const footTaux = Number(foot?.taux ?? 0);
             const pmuN = Number(pmu?.total ?? 0);
@@ -2572,6 +2578,9 @@
 
             if (actif === 'pmu') {
                 return blocPmu() || blocFoot();
+            }
+            if (actif === 'tennis') {
+                return blocFoot() || blocPmu();
             }
             return blocFoot() || blocPmu();
         }
@@ -2605,12 +2614,11 @@
             if (!bloc || !texte || !btnPrimary) return;
 
             const connecte = typeof estMembreConnecte === 'function' && estMembreConnecte();
-            const premiumComplet = typeof estVeloraPremiumPmu === 'function'
-                && typeof estVeloraPremiumFoot === 'function'
-                && estVeloraPremiumPmu()
-                && estVeloraPremiumFoot();
+            const offreFootVitrine = connecte && typeof estVeloraPremiumFoot === 'function' && !estVeloraPremiumFoot();
+            const offrePmuVitrine = connecte && typeof estVeloraPremiumPmu === 'function' && !estVeloraPremiumPmu();
+            const offreTennisVitrine = connecte && typeof estVeloraPremiumTennis === 'function' && !estVeloraPremiumTennis();
 
-            if (premiumComplet) {
+            if (connecte && !offreFootVitrine && !offrePmuVitrine && !offreTennisVitrine) {
                 bloc.classList.add('hidden');
                 return;
             }
@@ -2620,8 +2628,8 @@
 
             if (!connecte) {
                 texte.textContent = activite > 0
-                    ? `Rejoignez la communauté : ${activite}+ analyses & matchs déjà suivis. Compte gratuit — 3 essais PMU & Foot par jour.`
-                    : 'Créez un compte gratuit : 3 analyses PMU et 3 recherches Foot par jour, sans carte bancaire.';
+                    ? `Rejoignez la communauté : ${activite}+ analyses & matchs déjà suivis. Compte gratuit — 3 essais PMU, Foot & Tennis par jour.`
+                    : 'Créez un compte gratuit : 3 analyses PMU, 3 recherches Foot et 3 Tennis par jour, sans carte bancaire.';
                 btnPrimary.textContent = 'Créer mon compte gratuit';
                 btnPrimary.dataset.vitrineAction = 'signup';
                 if (btnSecondary) {
@@ -2633,13 +2641,18 @@
             }
 
             const sport = typeof sportActif !== 'undefined' ? sportActif : 'foot';
-            const offreFoot = typeof estVeloraPremiumFoot === 'function' && !estVeloraPremiumFoot();
-            const offrePmu = typeof estVeloraPremiumPmu === 'function' && !estVeloraPremiumPmu();
+            const offreFoot = offreFootVitrine;
+            const offrePmu = offrePmuVitrine;
+            const offreTennis = offreTennisVitrine;
 
             if (offreFoot && offrePmu) {
-                texte.textContent = 'Passez Premium : analyses illimitées, radar Value Bets Foot et archives complètes.';
+                texte.textContent = 'Passez Premium : analyses illimitées, radar Value Bets Foot, Tennis et archives complètes.';
                 btnPrimary.textContent = 'Pack Intégral · -25 %';
                 btnPrimary.dataset.vitrineAction = 'bundle';
+            } else if (sport === 'tennis' && offreTennis) {
+                texte.textContent = 'Débloquez les recherches Tennis illimitées, sets/jeux et scores exacts Winamax.';
+                btnPrimary.textContent = 'Pass Tennis · 19,99 €/mois';
+                btnPrimary.dataset.vitrineAction = 'premium_tennis';
             } else if (sport === 'pmu' && offrePmu) {
                 texte.textContent = 'Débloquez les analyses PMU illimitées et conservez toutes vos archives.';
                 btnPrimary.textContent = 'Pass PMU illimité';
@@ -2670,10 +2683,16 @@
                 showPaywallModal('premium_offer_pmu');
                 return;
             }
+            if (action === 'premium_tennis') {
+                showPaywallModal('premium_offer_tennis');
+                return;
+            }
             showPaywallModal(
                 typeof sportActif !== 'undefined' && sportActif === 'pmu'
                     ? 'premium_offer_pmu'
-                    : 'premium_offer_foot',
+                    : typeof sportActif !== 'undefined' && sportActif === 'tennis'
+                        ? 'premium_offer_tennis'
+                        : 'premium_offer_foot',
             );
         }
 
@@ -2862,7 +2881,10 @@
                 }
             } else {
                 if (labelActivite) labelActivite.textContent = 'Activité';
-                if (labelTaux) labelTaux.textContent = tauxSport?.label || (sportVitrine === 'foot' ? 'Taux Foot' : 'Taux PMU');
+                if (labelTaux) {
+                    labelTaux.textContent = tauxSport?.label
+                        || (sportVitrine === 'foot' ? 'Taux Foot' : sportVitrine === 'tennis' ? 'Taux Foot' : 'Taux PMU');
+                }
                 if (kpiUnit) kpiUnit.classList.add('hidden');
                 if (kpiUnitSecond) kpiUnitSecond.classList.toggle('hidden', !tauxSport);
                 if (kpiTaux) kpiTaux.textContent = activite > 0 ? String(activite) : '—';
@@ -2878,7 +2900,9 @@
                 if (kpiSubtitle) {
                     kpiSubtitle.textContent = sportVitrine === 'foot'
                         ? 'Track record en cours · ROI publié à partir de 100 matchs Foot'
-                        : 'Track record en cours · pronostics PMU suivis par la communauté';
+                        : sportVitrine === 'tennis'
+                            ? 'Track record en cours · analyses Tennis Winamax (ATP / WTA)'
+                            : 'Track record en cours · pronostics PMU suivis par la communauté';
                 }
             }
 
@@ -3137,7 +3161,7 @@
         const USER_ID_BACKUP_KEY = 'velora_user_id_backup';
         const ARCHIVES_LIMIT = 200;
         const MSG_SYNC_ERREUR = 'Erreur de synchronisation ou accès refusé.';
-        const MSG_CONNEXION_REQUISE = 'Connectez-vous ou créez un compte gratuit pour lancer une analyse PMU ou Foot.';
+        const MSG_CONNEXION_REQUISE = 'Connectez-vous ou créez un compte gratuit pour lancer une analyse PMU, Foot ou Tennis.';
         const MSG_QUOTA_ATTEINT = 'Vous avez épuisé vos 3 analyses gratuites du jour. Revenez demain pour de nouvelles analyses, ou passez Premium pour débloquer un accès illimité immédiat !';
         const QUOTA_JOURNALIER_UI = 3;
 
@@ -3149,10 +3173,19 @@
         const PLANS_PASS_FOOT_DB = new Set([
             'foot', 'premium_foot', 'bundle', 'integral', 'pack_integral', 'pmu_foot',
         ]);
+        const VELORA_PREMIUM_TENNIS_LS_KEY = 'velora_is_premium_tennis';
+        const VELORA_PREMIUM_TENNIS_UID_KEY = 'velora_premium_tennis_uid';
+        const PLANS_PASS_TENNIS_DB = new Set([
+            'tennis', 'premium_tennis', 'integral', 'pack_integral',
+        ]);
         const VELORA_GODMODE_EMAIL = 'loudamou14@gmail.com';
         /** Lien Stripe Payment Link — Pass Premium Foot (succès : ?premium_foot=success dans le dashboard Stripe). */
         const STRIPE_CHECKOUT_URL_FOOT = 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00';
         const STRIPE_CHECKOUT_URL_BUNDLE = 'https://buy.stripe.com/9B6dR9dqtbA7aej5gWgEg01';
+        /** Pass Tennis — configurer dans config.js (STRIPE_CHECKOUT_URL_TENNIS) ; succès : ?premium_tennis=success */
+        const STRIPE_CHECKOUT_URL_TENNIS = String(
+            (window.VELORA_ENV && window.VELORA_ENV.STRIPE_CHECKOUT_URL_TENNIS) || '',
+        ).trim();
 
         function normaliserEmailVelora(email) {
             return String(email || '').trim().toLowerCase();
@@ -3172,6 +3205,11 @@
         function effacerPassFootLocal() {
             localStorage.removeItem(VELORA_PREMIUM_FOOT_LS_KEY);
             localStorage.removeItem(VELORA_PREMIUM_FOOT_UID_KEY);
+        }
+
+        function effacerPassTennisLocal() {
+            localStorage.removeItem(VELORA_PREMIUM_TENNIS_LS_KEY);
+            localStorage.removeItem(VELORA_PREMIUM_TENNIS_UID_KEY);
         }
 
         /** Pass Foot lié au compte Supabase connecté (évite LS orphelin / autre navigateur). */
@@ -3204,11 +3242,41 @@
             return PLANS_PASS_FOOT_DB.has(plan);
         }
 
+        function marquerPassTennisLocal(actif = true) {
+            const uid = window.VeloraAuth?.getUserId?.();
+            if (!uid) return false;
+            if (actif) {
+                localStorage.setItem(VELORA_PREMIUM_TENNIS_LS_KEY, 'true');
+                localStorage.setItem(VELORA_PREMIUM_TENNIS_UID_KEY, String(uid));
+            } else {
+                effacerPassTennisLocal();
+            }
+            return true;
+        }
+
+        function passTennisLieAuCompteActuel() {
+            if (!estMembreConnecte()) return false;
+            if (localStorage.getItem(VELORA_PREMIUM_TENNIS_LS_KEY) !== 'true') return false;
+            const uidLie = localStorage.getItem(VELORA_PREMIUM_TENNIS_UID_KEY);
+            const uid = String(window.VeloraAuth?.getUserId?.() || '');
+            return Boolean(uid && uidLie && uidLie === uid);
+        }
+
+        function profilDbAutorisePassTennis() {
+            const p = window.VeloraAuth?.getProfile?.();
+            if (!p) return false;
+            const role = String(p.role || '').toLowerCase();
+            if (role === 'admin') return true;
+            const plan = String(p.plan_type || '').toLowerCase();
+            return PLANS_PASS_TENNIS_DB.has(plan);
+        }
+
         function forcerGodModePremiumLocal() {
             if (!estEmailVeloraGodMode()) return false;
             if (!estMembreConnecte()) return false;
             localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
             marquerPassFootLocal(true);
+            marquerPassTennisLocal(true);
             return true;
         }
 
@@ -3251,16 +3319,28 @@
             return passFootLieAuCompteActuel();
         }
 
+        /** Pass Tennis : membre connecté + abonnement Tennis (profil ou LS lié au compte). */
+        function estVeloraPremiumTennis() {
+            if (!estMembreConnecte()) return false;
+            migrerAncienneClePremiumUnifiee();
+            if (estEmailVeloraGodMode() && forcerGodModePremiumLocal()) return true;
+            if (profilDbAutorisePassTennis()) {
+                marquerPassTennisLocal(true);
+                return true;
+            }
+            return passTennisLieAuCompteActuel();
+        }
+
         const BADGE_PLAN_PREMIUM_CLASS = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
 
         function aPackIntegralVelora() {
             return estVeloraPremiumPmu() && estVeloraPremiumFoot();
         }
 
-        /** Au moins un pass actif (PMU, Foot ou profil Stripe PMU). */
+        /** Au moins un pass actif (PMU, Foot, Tennis ou profil Stripe PMU). */
         function aAccesPremiumVelora() {
             if (!estMembreConnecte()) return false;
-            return estVeloraPremiumPmu() || estVeloraPremiumFoot();
+            return estVeloraPremiumPmu() || estVeloraPremiumFoot() || estVeloraPremiumTennis();
         }
 
         function libelleBadgePlanVelora() {
@@ -3272,6 +3352,9 @@
             }
             if (estVeloraPremiumFoot()) {
                 return { text: '👑 Pass Foot', className: BADGE_PLAN_PREMIUM_CLASS };
+            }
+            if (estVeloraPremiumTennis()) {
+                return { text: '👑 Pass Tennis', className: BADGE_PLAN_PREMIUM_CLASS };
             }
             return null;
         }
@@ -3305,11 +3388,14 @@
         function appliquerStatutPremiumGlobal() {
             const pmu = estVeloraPremiumPmu();
             const foot = estVeloraPremiumFoot();
+            const tennis = estVeloraPremiumTennis();
             if (!peutUtiliserRadarFootOpp() && footModeOpportunites) {
                 footModeOpportunites = false;
             }
             if (typeof syncFootModeUi === 'function') syncFootModeUi();
-            return { pmu, foot };
+            if (typeof majTennisMeta === 'function') majTennisMeta();
+            if (typeof majTennisIndicateursPremiumUi === 'function') majTennisIndicateursPremiumUi();
+            return { pmu, foot, tennis };
         }
 
         /** Le mode Opportunités est réservé aux membres connectés avec Pass Foot Premium. */
@@ -3329,6 +3415,7 @@
 
         window.estVeloraPremiumPmu = estVeloraPremiumPmu;
         window.estVeloraPremiumFoot = estVeloraPremiumFoot;
+        window.estVeloraPremiumTennis = estVeloraPremiumTennis;
         window.getCurrentUserEmail = getCurrentUserEmail;
 
         function getMtechApiKey() {
@@ -3537,7 +3624,7 @@
                 <div class="glass-card rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-6 text-center shadow-lg shadow-cyan-500/10">
                     <p class="text-xs font-semibold uppercase tracking-widest text-cyan-400/90">Espace Parieur</p>
                     <p class="mt-3 text-base font-semibold leading-relaxed text-white">${MSG_CONNEXION_REQUISE}</p>
-                    <p class="mt-2 text-xs text-gray-400">Compte gratuit — 3 analyses PMU par jour, moteur Foot et archives incluses.</p>
+                    <p class="mt-2 text-xs text-gray-400">Compte gratuit — 3 analyses PMU, 3 recherches Foot et 3 Tennis par jour.</p>
                     <button type="button" class="velora-btn-connexion-analyse mt-5 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:from-emerald-400 hover:to-cyan-400 sm:w-auto">
                         Connexion / Inscription
                     </button>
@@ -3565,7 +3652,10 @@
             if (layout) layout.classList.add('layout-invite-analyse');
             footAnalyseAffichee = false;
             footVoirTousMatchs = false;
+            tennisAnalyseAffichee = false;
+            tennisVoirTousMatchs = false;
             if (sportActif === 'foot') renderFootMatchs();
+            if (sportActif === 'tennis') renderTennisMatchs();
             const zoneResultats = document.getElementById('resultats');
             const titre = document.getElementById('titreResultats');
             const zoneVide = document.getElementById('zoneVidePronostic');
@@ -3621,9 +3711,11 @@
             }
 
             if (guide) {
-                guide.innerHTML = connecte
-                    ? 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.'
-                    : 'Choisissez <span class="font-medium text-emerald-400">PMU</span> ou <span class="font-medium text-cyan-400">Foot</span>, puis connectez-vous pour lancer une analyse.';
+                if (connecte) {
+                    mettreAJourGuideSport();
+                } else {
+                    guide.innerHTML = 'Choisissez <span class="font-medium text-emerald-400">PMU</span>, <span class="font-medium text-cyan-400">Foot</span> ou <span class="font-medium text-lime-400">Tennis</span>, puis connectez-vous pour lancer une analyse.';
+                }
             }
 
             if (submitBtn) {
@@ -3632,6 +3724,8 @@
             }
             const btnFoot = document.getElementById('btnFootAnalyser');
             if (btnFoot) btnFoot.title = connecte ? '' : MSG_CONNEXION_REQUISE;
+            const btnTennis = document.getElementById('btnTennisAnalyser');
+            if (btnTennis) btnTennis.title = connecte ? '' : MSG_CONNEXION_REQUISE;
             if (connecte) {
                 masquerBandeauConnexionAnalyse();
             }
@@ -3725,11 +3819,15 @@
                 return;
             }
             const sport = typeof sportActif !== 'undefined' ? sportActif : 'pmu';
-            let context = sport === 'foot' ? 'premium_offer_foot' : 'premium_offer_pmu';
+            let context = sport === 'foot' ? 'premium_offer_foot'
+                : sport === 'tennis' ? 'premium_offer_tennis'
+                    : 'premium_offer_pmu';
             if (sport === 'pmu' && estVeloraPremiumPmu() && !estVeloraPremiumFoot()) {
                 context = 'premium_offer_foot';
             } else if (sport === 'foot' && estVeloraPremiumFoot() && !estVeloraPremiumPmu()) {
                 context = 'premium_offer_pmu';
+            } else if (sport === 'tennis' && estVeloraPremiumTennis()) {
+                context = estVeloraPremiumFoot() ? 'premium_offer_foot' : 'premium_offer_pmu';
             }
             if (typeof showPaywallModal === 'function') {
                 showPaywallModal(context);
@@ -4508,6 +4606,11 @@
                 mettreAJourUiPlanUtilisateur();
                 quitterFootOppSiNonPremium();
                 syncFootModeUi();
+                majTennisIndicateursPremiumUi();
+                if (sportActif === 'tennis') {
+                    majTennisMeta();
+                    renderTennisMatchs();
+                }
             });
 
             window.VeloraAuth.getClient?.()?.auth.onAuthStateChange((event) => {
@@ -4576,7 +4679,8 @@
             const bundleOk = params.get('premium_bundle') === 'success';
             const pmuOk = params.get('premium_pmu') === 'success' || params.get('premium') === 'success';
             const footOk = params.get('premium_foot') === 'success';
-            if (!pmuOk && !footOk && !bundleOk) return;
+            const tennisOk = params.get('premium_tennis') === 'success';
+            if (!pmuOk && !footOk && !bundleOk && !tennisOk) return;
 
             if (bundleOk) {
                 if (!estMembreConnecte()) {
@@ -4616,6 +4720,16 @@
                     marquerPassFootLocal(true);
                     afficherToastVelora('⚽ Pass Premium Foot activé — radar et recherches débloqués.');
                 }
+
+                if (tennisOk) {
+                    if (!estMembreConnecte()) {
+                        ouvrirModalAuth('login');
+                        afficherToastVelora('Connectez-vous pour activer votre Pass Tennis.', 8000);
+                        return;
+                    }
+                    marquerPassTennisLocal(true);
+                    afficherToastVelora('🎾 Pass Premium Tennis activé — recherches illimitées.');
+                }
             }
 
             closePaywallModal();
@@ -4624,6 +4738,9 @@
             mettreAJourUiPlanUtilisateur();
             if (typeof sportActif !== 'undefined' && sportActif === 'foot' && typeof renderFootMatchs === 'function') {
                 renderFootMatchs();
+            }
+            if (typeof sportActif !== 'undefined' && sportActif === 'tennis' && typeof renderTennisMatchs === 'function') {
+                renderTennisMatchs();
             }
             window.history.replaceState({}, document.title, window.location.pathname);
         }
@@ -4701,6 +4818,8 @@
         let tennisMatchsCharges = false;
         let tennisFiltre = '';
         let tennisAnalyseAffichee = false;
+        /** Vue liste complète — Premium Tennis uniquement (bouton « Voir tous les matchs »). */
+        let tennisVoirTousMatchs = false;
         let sectionActive = 'pronostic';
         let footMatchs = [];
         let footMatchsMeta = null;
@@ -4731,8 +4850,13 @@
         const VELORA_SEARCH_COUNT_KEY = 'velora_search_count';
         const VELORA_SEARCH_DATE_KEY = 'velora_last_search_date';
         const VELORA_LAST_SEARCH_QUERY_KEY = 'velora_last_search_query';
+        const VELORA_TENNIS_SEARCH_COUNT_KEY = 'velora_tennis_search_count';
+        const VELORA_TENNIS_SEARCH_DATE_KEY = 'velora_tennis_last_search_date';
+        const VELORA_TENNIS_LAST_SEARCH_QUERY_KEY = 'velora_tennis_last_search_query';
         const FOOT_SEARCH_QUOTA_FREE = 3;
+        const TENNIS_SEARCH_QUOTA_FREE = 3;
         const FOOT_SEARCH_MIN_LEN = 2;
+        const TENNIS_SEARCH_MIN_LEN = 2;
         const VELORA_PAYWALL_OFFRE_SIMPLE = {
             foot: {
                 label: 'Pass Premium Foot',
@@ -4748,6 +4872,14 @@
                     'Analyses de courses illimitées',
                     'Archives & historique complet',
                     'Indice Velora sans quota journalier',
+                ],
+            },
+            tennis: {
+                label: 'Pass Premium Tennis',
+                benefits: [
+                    'Recherches joueurs illimitées',
+                    'Vainqueur, sets & jeux Winamax',
+                    'Scores exact sets & value bets',
                 ],
             },
         };
@@ -4795,6 +4927,18 @@
                 showWait: false,
                 produit: 'pmu',
                 showPortal: true,
+            },
+            tennis_search_limit: {
+                titre: '🔒 Limite quotidienne atteinte',
+                texte: "Vous avez épuisé vos 3 recherches Tennis gratuites pour aujourd'hui. Revenez demain ou passez Premium Tennis.",
+                showWait: true,
+                produit: 'tennis',
+            },
+            premium_offer_tennis: {
+                titre: '⭐ Passez Premium Velora',
+                texte: 'Débloquez recherches illimitées, sets/jeux et scores exacts Tennis. Choisissez le Pass Tennis ou complétez avec Foot / PMU.',
+                showWait: false,
+                produit: 'tennis',
             },
         };
         let veloraPaywallProduitActif = 'foot';
@@ -4878,7 +5022,9 @@
                 tabArchives.classList.remove('hidden');
                 const gradArch = sportActif === 'foot'
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-500'
-                    : 'bg-gradient-to-r from-emerald-500 to-cyan-500';
+                    : sportActif === 'tennis'
+                        ? 'bg-gradient-to-r from-lime-500 to-emerald-500'
+                        : 'bg-gradient-to-r from-emerald-500 to-cyan-500';
                 tabArchives.className = `flex-1 rounded-lg px-4 py-2.5 text-sm transition ${!pronosticActif ? `${gradArch} font-bold text-white shadow` : 'font-semibold text-gray-400 hover:text-gray-200'}`;
             }
 
@@ -4940,8 +5086,9 @@
                 navSportTennis.className = navTennisClasses(sportActif === 'tennis');
                 navSportTennis.setAttribute('aria-current', sportActif === 'tennis' ? 'page' : 'false');
             }
-            mettreAJourGuideFoot();
+            mettreAJourGuideSport();
             if (sportActif === 'tennis') {
+                majTennisIndicateursPremiumUi();
                 chargerTennisMatchs();
             } else if (sportActif === 'foot') {
                 if (quitterFootOppSiNonPremium()) {
@@ -4958,10 +5105,11 @@
             }
             if (window.__dernieresStatsCommunaute) {
                 injecterStatsCommunauteUI(window.__dernieresStatsCommunaute, { animer: false });
+                majVitrineCta(window.__dernieresStatsCommunaute);
             }
         }
 
-        function mettreAJourGuideFoot() {
+        function mettreAJourGuideSport() {
             const guide = document.getElementById('guideRapideTexte');
             if (!guide) return;
             if (sportActif === 'foot') {
@@ -4973,6 +5121,12 @@
                     guide.innerHTML = 'Pass Foot actif — <span class="font-semibold text-cyan-300">recherche</span> par équipe, <span class="font-semibold text-cyan-300">Voir tous les matchs</span> ou <span class="font-semibold text-amber-300">Mode Opportunités</span> pour le radar value bets.';
                 } else {
                     guide.innerHTML = 'Mode <span class="font-semibold text-cyan-300">recherche</span> : saisissez une équipe à gauche puis cliquez sur <span class="font-semibold text-cyan-300">Générer l\'analyse</span>. Une seule carte match s\'affiche avec le pronostic Velora. Activez <span class="font-semibold text-amber-300">Mode Opportunités</span> pour le radar premium.';
+                }
+            } else if (sportActif === 'tennis') {
+                if (estVeloraPremiumTennis()) {
+                    guide.innerHTML = 'Pass Tennis actif — <span class="font-semibold text-lime-300">recherches illimitées</span> par joueur, vainqueur, sets &amp; jeux Winamax.';
+                } else {
+                    guide.innerHTML = 'Mode <span class="font-semibold text-lime-300">recherche</span> : saisissez un joueur à gauche puis <span class="font-semibold text-lime-300">Générer l\'analyse</span>. <span class="text-gray-400">3 recherches gratuites par jour</span> — Pass Tennis pour l\'illimité.';
                 }
             } else {
                 guide.innerHTML = 'Entrez votre <span class="font-medium text-gray-300">Réunion</span> et <span class="font-medium text-gray-300">Course</span>, puis consultez le classement Velora dans le panneau de droite.';
@@ -4987,6 +5141,29 @@
                 return;
             }
             btn.innerHTML = 'Voir tous les matchs <span id="btnFootVoirTousPro" class="foot-opp-pro-badge js-foot-premium-lock" title="Réservé Premium Foot">PRO</span>';
+        }
+
+        function restaurerLibelleBtnTennisVoirTous() {
+            const btn = document.getElementById('btnTennisVoirTous');
+            if (!btn) return;
+            if (estVeloraPremiumTennis()) {
+                btn.textContent = 'Voir tous les matchs';
+                return;
+            }
+            btn.innerHTML = 'Voir tous les matchs <span id="btnTennisVoirTousPro" class="foot-opp-pro-badge js-tennis-premium-lock" title="Réservé Premium Tennis">PRO</span>';
+        }
+
+        /** Masque badge PRO Tennis quand le Pass Premium Tennis est actif. */
+        function majTennisIndicateursPremiumUi() {
+            const premium = estVeloraPremiumTennis();
+            document.querySelectorAll('.js-tennis-premium-lock').forEach((el) => {
+                el.classList.toggle('hidden', premium);
+            });
+            const btnVoirTous = document.getElementById('btnTennisVoirTous');
+            if (btnVoirTous) {
+                btnVoirTous.disabled = false;
+                restaurerLibelleBtnTennisVoirTous();
+            }
         }
 
         /** Masque cadenas / badge PRO Foot quand le Pass Premium Foot est actif. */
@@ -5054,7 +5231,7 @@
                 loading.classList.toggle('border-amber-500/25', oppActif);
                 loading.classList.toggle('border-cyan-500/25', !oppActif);
             }
-            mettreAJourGuideFoot();
+            mettreAJourGuideSport();
             majFootFiltresUi();
             majFootIndicateursPremiumUi();
         }
@@ -5112,6 +5289,47 @@
             return { allowed: true };
         }
 
+        function reinitialiserQuotaRechercheTennisSiNouveauJour() {
+            const today = aujourdhuiIsoLocal();
+            const stored = localStorage.getItem(VELORA_TENNIS_SEARCH_DATE_KEY) || '';
+            if (stored !== today) {
+                localStorage.setItem(VELORA_TENNIS_SEARCH_DATE_KEY, today);
+                localStorage.setItem(VELORA_TENNIS_SEARCH_COUNT_KEY, '0');
+                localStorage.removeItem(VELORA_TENNIS_LAST_SEARCH_QUERY_KEY);
+            }
+        }
+
+        function getTennisSearchCount() {
+            reinitialiserQuotaRechercheTennisSiNouveauJour();
+            const n = parseInt(localStorage.getItem(VELORA_TENNIS_SEARCH_COUNT_KEY) || '0', 10);
+            return Number.isFinite(n) ? Math.max(0, n) : 0;
+        }
+
+        function getTennisRecherchesRestantes() {
+            if (!estMembreConnecte()) return null;
+            if (estVeloraPremiumTennis()) return null;
+            return Math.max(0, TENNIS_SEARCH_QUOTA_FREE - getTennisSearchCount());
+        }
+
+        function consommerTentativeRechercheTennis(queryNorm) {
+            if (!estMembreConnecte()) return { allowed: false, reason: 'auth' };
+            reinitialiserQuotaRechercheTennisSiNouveauJour();
+            if (estVeloraPremiumTennis()) return { allowed: true };
+            const count = getTennisSearchCount();
+            const lastQ = (localStorage.getItem(VELORA_TENNIS_LAST_SEARCH_QUERY_KEY) || '').toLowerCase();
+            if (queryNorm.toLowerCase() === lastQ) {
+                return { allowed: count < TENNIS_SEARCH_QUOTA_FREE };
+            }
+            if (count >= TENNIS_SEARCH_QUOTA_FREE) {
+                return { allowed: false, reason: 'limit' };
+            }
+            const next = count + 1;
+            localStorage.setItem(VELORA_TENNIS_SEARCH_COUNT_KEY, String(next));
+            localStorage.setItem(VELORA_TENNIS_LAST_SEARCH_QUERY_KEY, queryNorm);
+            localStorage.setItem(VELORA_TENNIS_SEARCH_DATE_KEY, aujourdhuiIsoLocal());
+            return { allowed: true };
+        }
+
         function majCartePaywallSimple(produit) {
             const offre = VELORA_PAYWALL_OFFRE_SIMPLE[produit] || VELORA_PAYWALL_OFFRE_SIMPLE.foot;
             const labelEl = document.getElementById('veloraPaywallSimpleLabel');
@@ -5128,7 +5346,9 @@
             const overlay = document.getElementById('veloraPaywallOverlay');
             const cfg = VELORA_PAYWALL_CONTEXTS[context] || VELORA_PAYWALL_CONTEXTS.search_limit;
             veloraPaywallProduitActif = cfg.produit
-                || (typeof sportActif !== 'undefined' && sportActif === 'pmu' ? 'pmu' : 'foot');
+                || (typeof sportActif !== 'undefined' && sportActif === 'pmu' ? 'pmu'
+                    : typeof sportActif !== 'undefined' && sportActif === 'tennis' ? 'tennis'
+                        : 'foot');
             majCartePaywallSimple(veloraPaywallProduitActif);
             const titre = document.getElementById('veloraPaywallTitre');
             const texte = document.getElementById('veloraPaywallTexte');
@@ -5173,6 +5393,26 @@
             window.location.href = STRIPE_CHECKOUT_URL_FOOT;
         }
 
+        function lancerCheckoutPremiumTennis() {
+            const errEl = document.getElementById('veloraPaywallCheckoutErreur');
+            if (estVeloraPremiumTennis()) {
+                if (errEl) {
+                    errEl.textContent = 'Vous avez déjà le Pass Premium Tennis.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+            if (!STRIPE_CHECKOUT_URL_TENNIS) {
+                if (errEl) {
+                    errEl.textContent = 'Lien Stripe Tennis non configuré — contactez le support.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+            if (errEl) errEl.classList.add('hidden');
+            window.location.href = STRIPE_CHECKOUT_URL_TENNIS;
+        }
+
         function lancerCheckoutPassSimple() {
             const errEl = document.getElementById('veloraPaywallCheckoutErreur');
             if (veloraPaywallProduitActif === 'pmu') {
@@ -5185,6 +5425,10 @@
                 }
                 if (errEl) errEl.classList.add('hidden');
                 lancerCheckoutPremium();
+                return;
+            }
+            if (veloraPaywallProduitActif === 'tennis') {
+                lancerCheckoutPremiumTennis();
                 return;
             }
             lancerCheckoutPremiumFoot();
@@ -5213,6 +5457,7 @@
         }
         window.passerPremiumFoot = passerPremiumFoot;
         window.lancerCheckoutPremiumFoot = lancerCheckoutPremiumFoot;
+        window.lancerCheckoutPremiumTennis = lancerCheckoutPremiumTennis;
         window.lancerCheckoutPassSimple = lancerCheckoutPassSimple;
         window.lancerCheckoutBundle = lancerCheckoutBundle;
 
@@ -5797,8 +6042,12 @@
             if (matchsChanged && sportActif === 'foot' && sectionActive === 'pronostic') {
                 renderFootMatchs();
             }
-            if (sportActif === 'tennis') {
-                tasks.push(rechargerTennisMatchsServeur({ silent }));
+            const tennisChanged = await rechargerTennisMatchsServeur({
+                silent,
+                skipRender: sportActif !== 'tennis',
+            });
+            if (tennisChanged && sportActif === 'tennis' && sectionActive === 'pronostic') {
+                renderTennisMatchs();
             }
             if (sectionActive === 'archives') {
                 tasks.push(chargerArchivesPourSportActif());
@@ -8749,13 +8998,113 @@
             const n = tennisMatchs.length;
             const gen = tennisMatchsMeta?.generated_at;
             const genTxt = gen ? ` · MAJ ${new Date(gen).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}` : '';
+            const quotaHint = estVeloraPremiumTennis()
+                ? ' · Pass Tennis — recherches illimitées'
+                : (() => {
+                    const rest = getTennisRecherchesRestantes();
+                    return rest != null
+                        ? ` · ${rest} recherche${rest > 1 ? 's' : ''} gratuite${rest > 1 ? 's' : ''} restante${rest > 1 ? 's' : ''} aujourd'hui`
+                        : '';
+                })();
             if (!estMembreConnecte()) {
                 meta.textContent = 'Connectez-vous pour analyser un match tennis';
                 return;
             }
-            meta.textContent = n
-                ? `${n} match(s) tennis chargé(s)${genTxt}`
-                : `Aucun match tennis — prochaine extraction Winamax${genTxt}`;
+            if (!tennisPeutAfficherResultats()) {
+                const baseInfo = n
+                    ? `${n} match(s) Winamax tennis${genTxt}`
+                    : `Aucun match tennis — prochaine extraction Winamax${genTxt}`;
+                const voirTousHint = estVeloraPremiumTennis()
+                    ? ' · ou Voir tous les matchs'
+                    : ' · Voir tous les matchs = Premium';
+                meta.textContent = `${baseInfo} — saisissez un joueur puis Générer l'analyse${voirTousHint}${quotaHint}`;
+                return;
+            }
+            if (tennisVoirTousMatchs && estVeloraPremiumTennis()) {
+                const liste = listeTennisCartesAffichees();
+                meta.textContent = liste.length
+                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} tennis du jour — vue complète`
+                    : 'Aucun match tennis du jour pour le moment';
+                return;
+            }
+            const q = tennisFiltre.trim();
+            const total = tennisMatchsFiltres().length;
+            meta.textContent = total
+                ? (total > 1
+                    ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
+                    : `Analyse pour « ${q} »`)
+                : `Aucun résultat pour « ${q} » (${n} match${n > 1 ? 's' : ''} en base)${quotaHint}`;
+        }
+
+        function tennisPeutAfficherResultats() {
+            if (!tennisAnalyseAffichee) return false;
+            if (tennisVoirTousMatchs && estVeloraPremiumTennis()) return true;
+            return Boolean(tennisFiltre.trim());
+        }
+
+        function listeTennisCartesAffichees() {
+            if (tennisVoirTousMatchs && estVeloraPremiumTennis()) {
+                const q = tennisFiltre.trim().toLowerCase();
+                if (!q || q.length < 2) return tennisMatchs.slice();
+                return tennisMatchs.filter((m) => {
+                    const a = String(m.joueur_1 || m.equipe_domicile || '').toLowerCase();
+                    const b = String(m.joueur_2 || m.equipe_exterieur || '').toLowerCase();
+                    return a.includes(q) || b.includes(q);
+                });
+            }
+            return tennisMatchsFiltres().slice(0, 1);
+        }
+
+        async function afficherTousLesMatchsTennis() {
+            if (!exigerConnexionPourAnalyser()) return;
+            if (!estVeloraPremiumTennis()) {
+                showPaywallModal('premium_offer_tennis');
+                return;
+            }
+            if (sportActif !== 'tennis') changerSport('tennis');
+            if (sectionActive !== 'pronostic') afficherSection('pronostic');
+
+            const btn = document.getElementById('btnTennisVoirTous');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Chargement…';
+            }
+            try {
+                await rechargerTennisMatchsServeur({ force: true, silent: true });
+                tennisMatchsCharges = true;
+                tennisVoirTousMatchs = true;
+                tennisAnalyseAffichee = true;
+                tennisFiltre = '';
+                const input = document.getElementById('tennisSearchInput');
+                if (input) input.value = '';
+                renderTennisMatchs();
+                majTennisMeta();
+            } catch (err) {
+                console.error('[Velora] Tennis voir tous :', err);
+                const erreur = document.getElementById('tennisErreur');
+                if (erreur) {
+                    erreur.textContent = 'Impossible de charger les matchs tennis. Réessayez dans un instant.';
+                    erreur.classList.remove('hidden');
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    restaurerLibelleBtnTennisVoirTous();
+                }
+            }
+        }
+
+        function onTennisSearchInput(e) {
+            const trimmed = (e.target.value || '').trim();
+            tennisVoirTousMatchs = false;
+            if (!trimmed) {
+                tennisFiltre = '';
+                tennisAnalyseAffichee = false;
+            } else {
+                tennisAnalyseAffichee = false;
+            }
+            renderTennisMatchs();
+            majTennisMeta();
         }
 
         function tennisMatchsFiltres() {
@@ -8849,14 +9198,14 @@
                 return;
             }
 
-            if (!tennisAnalyseAffichee || !tennisFiltre.trim()) {
+            if (!tennisPeutAfficherResultats()) {
                 zone.innerHTML = '';
                 if (accueil) accueil.classList.remove('hidden');
                 if (vide) vide.classList.add('hidden');
                 return;
             }
 
-            const liste = tennisMatchsFiltres().slice(0, 1);
+            const liste = listeTennisCartesAffichees();
             if (accueil) accueil.classList.add('hidden');
             if (liste.length) {
                 zone.innerHTML = liste.map(htmlCarteTennis).join('');
@@ -8876,14 +9225,31 @@
             if (!trimmed) {
                 tennisFiltre = '';
                 tennisAnalyseAffichee = false;
+                tennisVoirTousMatchs = false;
                 renderTennisMatchs();
+                majTennisMeta();
                 return;
             }
-            if (trimmed.length < 2) {
+
+            tennisVoirTousMatchs = false;
+            if (trimmed.length < TENNIS_SEARCH_MIN_LEN) {
                 const meta = document.getElementById('tennisSearchMeta');
-                if (meta) meta.textContent = 'Au moins 2 caractères requis.';
+                if (meta) {
+                    meta.textContent = `Au moins ${TENNIS_SEARCH_MIN_LEN} caractères requis (ex. « Djokovic »).`;
+                }
                 return;
             }
+
+            const attempt = consommerTentativeRechercheTennis(trimmed);
+            if (!attempt.allowed) {
+                if (attempt.reason === 'auth') {
+                    exigerConnexionPourAnalyser();
+                } else {
+                    showPaywallModal('tennis_search_limit');
+                }
+                return;
+            }
+
             if (sportActif !== 'tennis') changerSport('tennis');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
             if (btn) { btn.disabled = true; btn.textContent = 'Génération…'; }
@@ -8892,6 +9258,7 @@
                 tennisFiltre = trimmed;
                 tennisAnalyseAffichee = true;
                 renderTennisMatchs();
+                majTennisMeta();
             } finally {
                 if (btn) { btn.disabled = false; btn.textContent = 'Générer l\'analyse'; }
             }
@@ -8902,6 +9269,8 @@
         navSportFoot?.addEventListener('click', () => changerSport('foot'));
         navSportTennis?.addEventListener('click', () => changerSport('tennis'));
         document.getElementById('btnTennisAnalyser')?.addEventListener('click', lancerAnalyseTennis);
+        document.getElementById('btnTennisVoirTous')?.addEventListener('click', afficherTousLesMatchsTennis);
+        document.getElementById('tennisSearchInput')?.addEventListener('input', onTennisSearchInput);
         document.getElementById('tennisSearchInput')?.addEventListener('keydown', (ev) => {
             if (ev.key === 'Enter') lancerAnalyseTennis();
         });
@@ -8919,7 +9288,9 @@
         const vitrineKpiPremium = document.getElementById('vitrineKpiCardPremium');
         vitrineKpiPremium?.addEventListener('click', () => {
             if (typeof estMembreConnecte === 'function' && estMembreConnecte()) {
-                ouvrirOffreVitrinePremium('premium_foot');
+                const sport = typeof sportActif !== 'undefined' ? sportActif : 'foot';
+                const action = sport === 'pmu' ? 'premium_pmu' : sport === 'tennis' ? 'premium_tennis' : 'premium_foot';
+                ouvrirOffreVitrinePremium(action);
             } else {
                 ouvrirOffreVitrinePremium('signup');
             }
