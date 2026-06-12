@@ -1,84 +1,84 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-11T23:38:05.540322+02:00",
+    "generated_at": "2026-06-12T14:00:21.156612+02:00",
     "engine": "velora-pro-2",
-    "match_count": 2
+    "match_count": 15
   },
   "matchs": [
     {
-      "id_match": "66456904",
-      "date_match": "11/06/2026 à 21:00",
-      "match_start_ts": 1781204400,
+      "id_match": "68492560",
+      "date_match": "12/06/2026 à 17:00",
+      "match_start_ts": 1781276400,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Mexique",
-      "equipe_exterieur": "Afrique du Sud",
+      "equipe_domicile": "Tukums 2000",
+      "equipe_exterieur": "BFC Daugavpils",
       "meta_match": {
         "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
+          "name": "Lettonie — Virsliga",
+          "type": "league",
+          "round": "J17",
           "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
+          "category_id": "163",
+          "tournament_id": "1279"
         }
       },
       "confidence": {
-        "velora_score": 63.4,
-        "indice_velora": 3,
-        "base_confidence": 0.634,
-        "adjusted_confidence": 0.634,
+        "velora_score": 45.8,
+        "indice_velora": 2,
+        "base_confidence": 0.458,
+        "adjusted_confidence": 0.458,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.39,
-          "N": 4.4,
-          "2": 7.25
+          "1": 2.65,
+          "N": 3.2,
+          "2": 2.05
         },
         "probabilites": {
-          "1": 69,
-          "N": 20,
-          "2": 11
+          "1": 25,
+          "N": 26,
+          "2": 49
         },
         "probabilites_marche": {
-          "1": 66,
-          "N": 21,
-          "2": 13
+          "1": 32,
+          "N": 27,
+          "2": 41
         },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Mexique",
-        "confiance_niveau": "haute",
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire BFC Daugavpils",
+        "confiance_niveau": "moyenne",
         "poisson_lambdas": {
-          "home": 2.511,
-          "away": 1.114
+          "home": 1.676,
+          "away": 1.897
         },
         "top_scores_modele": [
           {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "2-0",
+            "score": "1-2",
             "prob": 8
           },
           {
-            "score": "3-1",
-            "prob": 8
+            "score": "1-3",
+            "prob": 5
           },
           {
-            "score": "3-0",
-            "prob": 7
+            "score": "0-1",
+            "prob": 5
           },
           {
-            "score": "1-0",
-            "prob": 7
+            "score": "0-2",
+            "prob": 5
+          },
+          {
+            "score": "2-3",
+            "prob": 4
           }
         ],
         "prob_over_25_modele": 69,
-        "prob_btts_modele": 61,
-        "football_data_enriched": true,
+        "prob_btts_modele": 69,
+        "football_data_enriched": false,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
@@ -87,40 +87,40 @@
         "display_badges": [],
         "conseils_intelligents": [
           {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "cote": 1.39,
-            "prob_pct": 89,
-            "edge": 1.237,
-            "score": 0.2733,
-            "tier": "prudent",
-            "raison": "Proba 89% × cote 1.39 → edge 1.24 — cote faible (<1.50), gain limité",
-            "stars": 5
-          },
-          {
             "market": "dc_12",
             "pick": "12",
             "label": "Double chance 12",
-            "cote": 1.39,
-            "prob_pct": 80,
-            "edge": 1.112,
-            "score": 0.1268,
-            "tier": "prudent",
-            "raison": "Proba 80% × cote 1.39 → edge 1.11 — cote faible (<1.50), gain limité",
-            "stars": 3
+            "cote": 2.65,
+            "prob_pct": 74,
+            "edge": 1.961,
+            "score": 1.4097,
+            "tier": "excellent",
+            "raison": "Proba 74% × cote 2.65 → edge 1.96 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.05,
+            "prob_pct": 75,
+            "edge": 1.537,
+            "score": 0.7629,
+            "tier": "excellent",
+            "raison": "Proba 75% × cote 2.05 → edge 1.54 — bon équilibre proba/rendement",
+            "stars": 5
           }
         ],
         "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "cote": 1.39,
-          "prob_pct": 89,
-          "edge": 1.237,
-          "score": 0.2733,
-          "tier": "prudent",
-          "raison": "Proba 89% × cote 1.39 → edge 1.24 — cote faible (<1.50), gain limité",
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.65,
+          "prob_pct": 74,
+          "edge": 1.961,
+          "score": 1.4097,
+          "tier": "excellent",
+          "raison": "Proba 74% × cote 2.65 → edge 1.96 — bon équilibre proba/rendement",
           "stars": 5
         }
       },
@@ -140,7 +140,1603 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Mexique — forme favorable Mexique",
+        "conseil": "Victoire BFC Daugavpils — forme favorable BFC Daugavpils — Classement 8e vs 6e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-2",
+          "prob": 8
+        },
+        {
+          "score": "1-3",
+          "prob": 5
+        },
+        {
+          "score": "0-1",
+          "prob": 5
+        },
+        {
+          "score": "0-2",
+          "prob": 5
+        },
+        {
+          "score": "2-3",
+          "prob": 4
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "2"
+    },
+    {
+      "id_match": "70906800",
+      "date_match": "12/06/2026 à 17:00",
+      "match_start_ts": 1781276400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Iberia 1999",
+      "equipe_exterieur": "FC Spaeri",
+      "meta_match": {
+        "competition": {
+          "name": "Géorgie — Erovnuli Liga",
+          "type": "league",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "270",
+          "tournament_id": "3012"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.47,
+          "N": 3.6,
+          "2": 4.6
+        },
+        "probabilites": {
+          "1": 51,
+          "N": 28,
+          "2": 21
+        },
+        "probabilites_marche": {
+          "1": 58,
+          "N": 24,
+          "2": 18
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Dom",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.795,
+          "away": 1.0
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 11
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 5
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 53,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 4.6,
+            "prob_pct": 49,
+            "edge": 2.254,
+            "score": 1.7298,
+            "tier": "excellent",
+            "raison": "Proba 49% × cote 4.60 → edge 2.25 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.47,
+            "prob_pct": 79,
+            "edge": 1.161,
+            "score": 0.1983,
+            "tier": "prudent",
+            "raison": "Proba 79% × cote 1.47 → edge 1.16 — cote faible (<1.50), gain limité",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 4.6,
+          "prob_pct": 49,
+          "edge": 2.254,
+          "score": 1.7298,
+          "tier": "excellent",
+          "raison": "Proba 49% × cote 4.60 → edge 2.25 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Dom",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 11
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 5
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "N"
+    },
+    {
+      "id_match": "68954868",
+      "date_match": "12/06/2026 à 17:30",
+      "match_start_ts": 1781278200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Panevėžys",
+      "equipe_exterieur": "TransINVEST",
+      "meta_match": {
+        "competition": {
+          "name": "Lituanie — A Lyga",
+          "type": "other",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "160",
+          "tournament_id": "1260"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.7,
+          "N": 3.3,
+          "2": 1.96
+        },
+        "probabilites": {
+          "1": 32,
+          "N": 25,
+          "2": 43
+        },
+        "probabilites_marche": {
+          "1": 31,
+          "N": 26,
+          "2": 43
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Nul",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.283,
+          "away": 1.512
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 12
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 6
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 56,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 2.7,
+            "prob_pct": 70,
+            "edge": 1.89,
+            "score": 1.2977,
+            "tier": "excellent",
+            "raison": "Proba 70% × cote 2.70 → edge 1.89 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 2.7,
+            "prob_pct": 60,
+            "edge": 1.62,
+            "score": 0.8848,
+            "tier": "excellent",
+            "raison": "Proba 60% × cote 2.70 → edge 1.62 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 1.96,
+            "prob_pct": 70,
+            "edge": 1.372,
+            "score": 0.5197,
+            "tier": "excellent",
+            "raison": "Proba 70% × cote 1.96 → edge 1.37 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.7,
+          "prob_pct": 70,
+          "edge": 1.89,
+          "score": 1.2977,
+          "tier": "excellent",
+          "raison": "Proba 70% × cote 2.70 → edge 1.89 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Nul",
+        "tendance_buts": "Match Tactique",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 12
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 6
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "N",
+      "probabilites": {
+        "1": 32,
+        "N": 25,
+        "2": 43
+      }
+    },
+    {
+      "id_match": "68492562",
+      "date_match": "12/06/2026 à 18:00",
+      "match_start_ts": 1781280000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "FK Liepaja",
+      "equipe_exterieur": "Super Nova",
+      "meta_match": {
+        "competition": {
+          "name": "Lettonie — Virsliga",
+          "type": "league",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "163",
+          "tournament_id": "1279"
+        }
+      },
+      "confidence": {
+        "velora_score": 49.9,
+        "indice_velora": 2,
+        "base_confidence": 0.499,
+        "adjusted_confidence": 0.499,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.58,
+          "N": 3.5,
+          "2": 3.8
+        },
+        "probabilites": {
+          "1": 59,
+          "N": 24,
+          "2": 17
+        },
+        "probabilites_marche": {
+          "1": 54,
+          "N": 24,
+          "2": 22
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire FK Liepaja",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 2.393,
+          "away": 1.527
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 7
+          },
+          {
+            "score": "2-0",
+            "prob": 6
+          },
+          {
+            "score": "3-2",
+            "prob": 5
+          },
+          {
+            "score": "1-0",
+            "prob": 5
+          }
+        ],
+        "prob_over_25_modele": 74,
+        "prob_btts_modele": 70,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.58,
+            "prob_pct": 83,
+            "edge": 1.311,
+            "score": 0.4013,
+            "tier": "excellent",
+            "raison": "Proba 83% × cote 1.58 → edge 1.31 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 1.58,
+            "prob_pct": 76,
+            "edge": 1.201,
+            "score": 0.2556,
+            "tier": "excellent",
+            "raison": "Proba 76% × cote 1.58 → edge 1.20 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.58,
+          "prob_pct": 83,
+          "edge": 1.311,
+          "score": 0.4013,
+          "tier": "excellent",
+          "raison": "Proba 83% × cote 1.58 → edge 1.31 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire FK Liepaja — forme favorable FK Liepaja — Classement 4e vs 5e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 7
+        },
+        {
+          "score": "2-0",
+          "prob": 6
+        },
+        {
+          "score": "3-2",
+          "prob": 5
+        },
+        {
+          "score": "1-0",
+          "prob": 5
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "1"
+    },
+    {
+      "id_match": "68954864",
+      "date_match": "12/06/2026 à 18:00",
+      "match_start_ts": 1781280000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Džiugas",
+      "equipe_exterieur": "Šiauliai",
+      "meta_match": {
+        "competition": {
+          "name": "Lituanie — A Lyga",
+          "type": "other",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "160",
+          "tournament_id": "1260"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.66,
+          "N": 3.4,
+          "2": 3.6
+        },
+        "probabilites": {
+          "1": 46,
+          "N": 29,
+          "2": 25
+        },
+        "probabilites_marche": {
+          "1": 51,
+          "N": 25,
+          "2": 24
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Ext",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.658,
+          "away": 1.137
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 12
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 5
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 55,
+        "football_data_enriched": false,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 3.6,
+            "prob_pct": 54,
+            "edge": 1.944,
+            "score": 1.3795,
+            "tier": "excellent",
+            "raison": "Proba 54% × cote 3.60 → edge 1.94 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.66,
+            "prob_pct": 75,
+            "edge": 1.245,
+            "score": 0.3381,
+            "tier": "excellent",
+            "raison": "Proba 75% × cote 1.66 → edge 1.25 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 1.66,
+            "prob_pct": 71,
+            "edge": 1.179,
+            "score": 0.2449,
+            "tier": "excellent",
+            "raison": "Proba 71% × cote 1.66 → edge 1.18 — bon équilibre proba/rendement",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 3.6,
+          "prob_pct": 54,
+          "edge": 1.944,
+          "score": 1.3795,
+          "tier": "excellent",
+          "raison": "Proba 54% × cote 3.60 → edge 1.94 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Ext",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 12
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 5
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "N"
+    },
+    {
+      "id_match": "67912714",
+      "date_match": "12/06/2026 à 19:00",
+      "match_start_ts": 1781283600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Dinamo Batoumi",
+      "equipe_exterieur": "Dila Gori",
+      "meta_match": {
+        "competition": {
+          "name": "Géorgie — Erovnuli Liga",
+          "type": "league",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "270",
+          "tournament_id": "3012"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 3.4,
+          "N": 3.3,
+          "2": 1.74
+        },
+        "probabilites": {
+          "1": 26,
+          "N": 30,
+          "2": 44
+        },
+        "probabilites_marche": {
+          "1": 25,
+          "N": 26,
+          "2": 49
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "🔥 Value Bet Détecté : Nul",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 1.165,
+          "away": 1.63
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-1",
+            "prob": 12
+          },
+          {
+            "score": "0-0",
+            "prob": 6
+          },
+          {
+            "score": "2-2",
+            "prob": 6
+          },
+          {
+            "score": "3-3",
+            "prob": 1
+          }
+        ],
+        "prob_over_25_modele": 53,
+        "prob_btts_modele": 55,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 3.4,
+            "prob_pct": 70,
+            "edge": 2.38,
+            "score": 2.0727,
+            "tier": "excellent",
+            "raison": "Proba 70% × cote 3.40 → edge 2.38 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 3.4,
+            "prob_pct": 56,
+            "edge": 1.904,
+            "score": 1.3173,
+            "tier": "excellent",
+            "raison": "Proba 56% × cote 3.40 → edge 1.90 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 1.74,
+            "prob_pct": 74,
+            "edge": 1.288,
+            "score": 0.3992,
+            "tier": "excellent",
+            "raison": "Proba 74% × cote 1.74 → edge 1.29 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 3.4,
+          "prob_pct": 70,
+          "edge": 2.38,
+          "score": 2.0727,
+          "tier": "excellent",
+          "raison": "Proba 70% × cote 3.40 → edge 2.38 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Nul",
+        "tendance_buts": "Match Tactique",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 12
+        },
+        {
+          "score": "0-0",
+          "prob": 6
+        },
+        {
+          "score": "2-2",
+          "prob": 6
+        },
+        {
+          "score": "3-3",
+          "prob": 1
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "N"
+    },
+    {
+      "id_match": "68954862",
+      "date_match": "12/06/2026 à 19:00",
+      "match_start_ts": 1781283600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Žalgiris",
+      "equipe_exterieur": "FK Riteriai",
+      "meta_match": {
+        "competition": {
+          "name": "Lituanie — A Lyga",
+          "type": "other",
+          "round": "J17",
+          "stakes_tier": "medium",
+          "category_id": "160",
+          "tournament_id": "1260"
+        }
+      },
+      "confidence": {
+        "indice_velora": 0,
+        "indice_label": "Non calculable",
+        "base_confidence": 0.5,
+        "adjusted_confidence": 0.5,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.07,
+          "N": 6.25,
+          "2": 11.5
+        },
+        "probabilites": {
+          "1": 68,
+          "N": 19,
+          "2": 13
+        },
+        "probabilites_marche": {
+          "1": 79,
+          "N": 14,
+          "2": 7
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "🔥 Value Bet Détecté : Ext",
+        "confiance_niveau": "faible",
+        "poisson_lambdas": {
+          "home": 2.827,
+          "away": 0.841
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-0",
+            "prob": 10
+          },
+          {
+            "score": "3-0",
+            "prob": 10
+          },
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "1-0",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 52,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Value Bet Détecté : Ext",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "2-0",
+          "prob": 10
+        },
+        {
+          "score": "3-0",
+          "prob": 10
+        },
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 8
+        },
+        {
+          "score": "1-0",
+          "prob": 7
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "1"
+    },
+    {
+      "id_match": "66854076",
+      "date_match": "12/06/2026 à 20:45",
+      "match_start_ts": 1781289900,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Derry City",
+      "equipe_exterieur": "Bohemians",
+      "meta_match": {
+        "competition": {
+          "name": "Irlande — Premier Division",
+          "type": "league",
+          "round": "J20",
+          "stakes_tier": "medium",
+          "category_id": "51",
+          "tournament_id": "79"
+        }
+      },
+      "confidence": {
+        "velora_score": 78.0,
+        "indice_velora": 4,
+        "base_confidence": 0.78,
+        "adjusted_confidence": 0.78,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.6,
+          "N": 3.0,
+          "2": 2.15
+        },
+        "probabilites": {
+          "1": 26,
+          "N": 22,
+          "2": 52
+        },
+        "probabilites_marche": {
+          "1": 33,
+          "N": 28,
+          "2": 39
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "🔥 Victoire Bohemians",
+        "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 1.701,
+          "away": 1.849
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 8
+          },
+          {
+            "score": "0-1",
+            "prob": 5
+          },
+          {
+            "score": "1-3",
+            "prob": 5
+          },
+          {
+            "score": "0-2",
+            "prob": 5
+          },
+          {
+            "score": "2-3",
+            "prob": 4
+          }
+        ],
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 68,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Bohemians",
+            "cote": 2.15,
+            "edge": 1.118,
+            "stars": 3,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.6,
+          "conseil_short": "🎯 Double chance 12 @ 2.60"
+        },
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 2.6,
+            "prob_pct": 78,
+            "edge": 2.028,
+            "score": 1.5169,
+            "tier": "excellent",
+            "raison": "Proba 78% × cote 2.60 → edge 2.03 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.15,
+            "prob_pct": 74,
+            "edge": 1.591,
+            "score": 0.8432,
+            "tier": "excellent",
+            "raison": "Proba 74% × cote 2.15 → edge 1.59 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Bohemians",
+            "cote": 2.15,
+            "prob_pct": 52,
+            "edge": 1.118,
+            "score": 0.1605,
+            "tier": "bon",
+            "raison": "Proba 52% × cote 2.15 → edge 1.12",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.6,
+          "prob_pct": 78,
+          "edge": 2.028,
+          "score": 1.5169,
+          "tier": "excellent",
+          "raison": "Proba 78% × cote 2.60 → edge 2.03 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "🔥 Victoire Bohemians — forme favorable Bohemians — Classement 6e vs 2e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": true
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-2",
+          "prob": 8
+        },
+        {
+          "score": "0-1",
+          "prob": 5
+        },
+        {
+          "score": "1-3",
+          "prob": 5
+        },
+        {
+          "score": "0-2",
+          "prob": 5
+        },
+        {
+          "score": "2-3",
+          "prob": 4
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "2"
+    },
+    {
+      "id_match": "66854078",
+      "date_match": "12/06/2026 à 20:45",
+      "match_start_ts": 1781289900,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Galway United",
+      "equipe_exterieur": "Dundalk",
+      "meta_match": {
+        "competition": {
+          "name": "Irlande — Premier Division",
+          "type": "league",
+          "round": "J20",
+          "stakes_tier": "medium",
+          "category_id": "51",
+          "tournament_id": "79"
+        }
+      },
+      "confidence": {
+        "velora_score": 47.7,
+        "indice_velora": 2,
+        "base_confidence": 0.477,
+        "adjusted_confidence": 0.477,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.5,
+          "N": 3.25,
+          "2": 2.05
+        },
+        "probabilites": {
+          "1": 26,
+          "N": 24,
+          "2": 50
+        },
+        "probabilites_marche": {
+          "1": 33,
+          "N": 26,
+          "2": 41
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Dundalk",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 2.054,
+          "away": 2.29
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 7
+          },
+          {
+            "score": "2-3",
+            "prob": 5
+          },
+          {
+            "score": "1-3",
+            "prob": 5
+          },
+          {
+            "score": "0-2",
+            "prob": 3
+          },
+          {
+            "score": "2-4",
+            "prob": 3
+          }
+        ],
+        "prob_over_25_modele": 79,
+        "prob_btts_modele": 77,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 2.5,
+            "prob_pct": 76,
+            "edge": 1.9,
+            "score": 1.3157,
+            "tier": "excellent",
+            "raison": "Proba 76% × cote 2.50 → edge 1.90 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.05,
+            "prob_pct": 74,
+            "edge": 1.517,
+            "score": 0.7329,
+            "tier": "excellent",
+            "raison": "Proba 74% × cote 2.05 → edge 1.52 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.5,
+          "prob_pct": 76,
+          "edge": 1.9,
+          "score": 1.3157,
+          "tier": "excellent",
+          "raison": "Proba 76% × cote 2.50 → edge 1.90 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Dundalk — forme favorable Dundalk — Classement 7e vs 4e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-2",
+          "prob": 7
+        },
+        {
+          "score": "2-3",
+          "prob": 5
+        },
+        {
+          "score": "1-3",
+          "prob": 5
+        },
+        {
+          "score": "0-2",
+          "prob": 3
+        },
+        {
+          "score": "2-4",
+          "prob": 3
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "2"
+    },
+    {
+      "id_match": "66854082",
+      "date_match": "12/06/2026 à 20:45",
+      "match_start_ts": 1781289900,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "St Patrick's",
+      "equipe_exterieur": "Drogheda",
+      "meta_match": {
+        "competition": {
+          "name": "Irlande — Premier Division",
+          "type": "league",
+          "round": "J20",
+          "stakes_tier": "medium",
+          "category_id": "51",
+          "tournament_id": "79"
+        }
+      },
+      "confidence": {
+        "velora_score": 45.6,
+        "indice_velora": 2,
+        "base_confidence": 0.456,
+        "adjusted_confidence": 0.456,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.26,
+          "N": 4.2,
+          "2": 6.75
+        },
+        "probabilites": {
+          "1": 67,
+          "N": 22,
+          "2": 11
+        },
+        "probabilites_marche": {
+          "1": 67,
+          "N": 20,
+          "2": 13
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire St Patrick's",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 2.471,
+          "away": 1.088
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "2-0",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "3-0",
+            "prob": 7
+          },
+          {
+            "score": "1-0",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 60,
+        "football_data_enriched": false,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.26,
+            "prob_pct": 89,
+            "edge": 1.121,
+            "score": 0.1199,
+            "tier": "prudent",
+            "raison": "Proba 89% × cote 1.26 → edge 1.12 — cote faible (<1.50), gain limité",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.26,
+          "prob_pct": 89,
+          "edge": 1.121,
+          "score": 0.1199,
+          "tier": "prudent",
+          "raison": "Proba 89% × cote 1.26 → edge 1.12 — cote faible (<1.50), gain limité",
+          "stars": 4
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire St Patrick's — Classement 3e vs 8e",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -162,7 +1758,7 @@
         },
         {
           "score": "2-0",
-          "prob": 8
+          "prob": 9
         },
         {
           "score": "3-1",
@@ -185,136 +1781,115 @@
       "velora_pick_1n2": "1"
     },
     {
-      "id_match": "66456906",
-      "date_match": "12/06/2026 à 04:00",
-      "match_start_ts": 1781229600,
+      "id_match": "66854084",
+      "date_match": "12/06/2026 à 20:45",
+      "match_start_ts": 1781289900,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Corée du Sud",
-      "equipe_exterieur": "République Tchèque",
+      "equipe_domicile": "Waterford",
+      "equipe_exterieur": "Sligo Rovers",
       "meta_match": {
         "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
+          "name": "Irlande — Premier Division",
+          "type": "league",
+          "round": "J20",
           "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
+          "category_id": "51",
+          "tournament_id": "79"
         }
       },
       "confidence": {
-        "velora_score": 63.4,
-        "indice_velora": 3,
-        "base_confidence": 0.634,
-        "adjusted_confidence": 0.634,
+        "velora_score": 38.0,
+        "indice_velora": 1,
+        "base_confidence": 0.38,
+        "adjusted_confidence": 0.38,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 2.45,
-          "N": 3.15,
-          "2": 2.75
+          "1": 2.0,
+          "N": 3.1,
+          "2": 2.7
         },
         "probabilites": {
-          "1": 30,
-          "N": 24,
-          "2": 46
-        },
-        "probabilites_marche": {
-          "1": 38,
-          "N": 29,
+          "1": 39,
+          "N": 28,
           "2": 33
         },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire République Tchèque",
-        "confiance_niveau": "haute",
+        "probabilites_marche": {
+          "1": 42,
+          "N": 27,
+          "2": 31
+        },
+        "pronostic_1n2": "N",
+        "pronostic_label": "Match nul",
+        "confiance_niveau": "faible",
         "poisson_lambdas": {
-          "home": 2.466,
-          "away": 2.298
+          "home": 1.914,
+          "away": 1.645
         },
         "top_scores_modele": [
           {
-            "score": "1-2",
-            "prob": 6
+            "score": "1-1",
+            "prob": 9
           },
           {
-            "score": "2-3",
-            "prob": 5
+            "score": "2-2",
+            "prob": 7
           },
           {
-            "score": "1-3",
-            "prob": 4
-          },
-          {
-            "score": "2-4",
+            "score": "0-0",
             "prob": 3
           },
           {
-            "score": "3-4",
+            "score": "3-3",
             "prob": 2
           }
         ],
-        "prob_over_25_modele": 83,
-        "prob_btts_modele": 80,
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 68,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
           "team_goals": {}
         },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire République Tchèque",
-            "cote": 2.75,
-            "edge": 1.265,
-            "stars": 5,
-            "is_primary": true
-          }
-        ],
-        "primary_pick": {
-          "market": "dc_x2",
-          "pick": "x2",
-          "label": "Double chance X2",
-          "cote": 2.75,
-          "conseil_short": "🎯 Double chance X2 @ 2.75"
-        },
+        "value_bets": [],
         "display_badges": [],
         "conseils_intelligents": [
           {
             "market": "dc_x2",
             "pick": "x2",
             "label": "Double chance X2",
-            "cote": 2.75,
-            "prob_pct": 70,
-            "edge": 1.925,
-            "score": 1.3519,
+            "cote": 2.7,
+            "prob_pct": 61,
+            "edge": 1.647,
+            "score": 0.9253,
             "tier": "excellent",
-            "raison": "Proba 70% × cote 2.75 → edge 1.93 — bon équilibre proba/rendement",
+            "raison": "Proba 61% × cote 2.70 → edge 1.65 — bon équilibre proba/rendement",
             "stars": 5
           },
           {
             "market": "dc_12",
             "pick": "12",
             "label": "Double chance 12",
-            "cote": 2.45,
-            "prob_pct": 76,
-            "edge": 1.862,
-            "score": 1.2568,
+            "cote": 2.0,
+            "prob_pct": 72,
+            "edge": 1.44,
+            "score": 0.619,
             "tier": "excellent",
-            "raison": "Proba 76% × cote 2.45 → edge 1.86 — bon équilibre proba/rendement",
+            "raison": "Proba 72% × cote 2.00 → edge 1.44 — bon équilibre proba/rendement",
             "stars": 5
           },
           {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire République Tchèque",
-            "cote": 2.75,
-            "prob_pct": 46,
-            "edge": 1.265,
-            "score": 0.3675,
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 2.0,
+            "prob_pct": 67,
+            "edge": 1.34,
+            "score": 0.4733,
             "tier": "excellent",
-            "raison": "Proba 46% × cote 2.75 → edge 1.26 — bon équilibre proba/rendement",
+            "raison": "Proba 67% × cote 2.00 → edge 1.34 — bon équilibre proba/rendement",
             "stars": 5
           }
         ],
@@ -322,12 +1897,12 @@
           "market": "dc_x2",
           "pick": "x2",
           "label": "Double chance X2",
-          "cote": 2.75,
-          "prob_pct": 70,
-          "edge": 1.925,
-          "score": 1.3519,
+          "cote": 2.7,
+          "prob_pct": 61,
+          "edge": 1.647,
+          "score": 0.9253,
           "tier": "excellent",
-          "raison": "Proba 70% × cote 2.75 → edge 1.93 — bon équilibre proba/rendement",
+          "raison": "Proba 61% × cote 2.70 → edge 1.65 — bon équilibre proba/rendement",
           "stars": 5
         }
       },
@@ -347,7 +1922,210 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire République Tchèque — forme favorable République Tchèque",
+        "conseil": "Match nul — Classement 10e vs 9e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-1",
+          "prob": 9
+        },
+        {
+          "score": "2-2",
+          "prob": 7
+        },
+        {
+          "score": "0-0",
+          "prob": 3
+        },
+        {
+          "score": "3-3",
+          "prob": 2
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "N"
+    },
+    {
+      "id_match": "66456916",
+      "date_match": "12/06/2026 à 21:00",
+      "match_start_ts": 1781290800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Canada",
+      "equipe_exterieur": "Bosnie-Herzégovine",
+      "meta_match": {
+        "competition": {
+          "name": "International — Coupe du Monde 2026",
+          "type": "cup",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "4",
+          "tournament_id": "900001750"
+        }
+      },
+      "confidence": {
+        "velora_score": 54.1,
+        "indice_velora": 3,
+        "base_confidence": 0.541,
+        "adjusted_confidence": 0.541,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.76,
+          "N": 3.7,
+          "2": 4.1
+        },
+        "probabilites": {
+          "1": 45,
+          "N": 25,
+          "2": 30
+        },
+        "probabilites_marche": {
+          "1": 52,
+          "N": 25,
+          "2": 23
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Bosnie-Herzégovine",
+        "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 2.096,
+          "away": 1.394
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 6
+          },
+          {
+            "score": "0-1",
+            "prob": 4
+          },
+          {
+            "score": "2-3",
+            "prob": 3
+          },
+          {
+            "score": "0-2",
+            "prob": 3
+          },
+          {
+            "score": "1-3",
+            "prob": 3
+          }
+        ],
+        "prob_over_25_modele": 67,
+        "prob_btts_modele": 65,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Bosnie-Herzégovine",
+            "cote": 4.1,
+            "edge": 1.23,
+            "stars": 5,
+            "is_primary": true
+          }
+        ],
+        "primary_pick": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 4.1,
+          "conseil_short": "🎯 Double chance X2 @ 4.10"
+        },
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 4.1,
+            "prob_pct": 55,
+            "edge": 2.255,
+            "score": 1.8681,
+            "tier": "excellent",
+            "raison": "Proba 55% × cote 4.10 → edge 2.25 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 1.76,
+            "prob_pct": 75,
+            "edge": 1.32,
+            "score": 0.4452,
+            "tier": "excellent",
+            "raison": "Proba 75% × cote 1.76 → edge 1.32 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "1n2",
+            "pick": "2",
+            "label": "Victoire Bosnie-Herzégovine",
+            "cote": 4.1,
+            "prob_pct": 30,
+            "edge": 1.23,
+            "score": 0.3235,
+            "tier": "excellent",
+            "raison": "Proba 30% × cote 4.10 → edge 1.23 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_x2",
+          "pick": "x2",
+          "label": "Double chance X2",
+          "cote": 4.1,
+          "prob_pct": 55,
+          "edge": 2.255,
+          "score": 1.8681,
+          "tier": "excellent",
+          "raison": "Proba 55% × cote 4.10 → edge 2.25 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Bosnie-Herzégovine — forme favorable Bosnie-Herzégovine",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "opportunite_type": "dc_x2",
@@ -369,20 +2147,20 @@
           "prob": 6
         },
         {
-          "score": "2-3",
-          "prob": 5
-        },
-        {
-          "score": "1-3",
+          "score": "0-1",
           "prob": 4
         },
         {
-          "score": "2-4",
+          "score": "2-3",
           "prob": 3
         },
         {
-          "score": "3-4",
-          "prob": 2
+          "score": "0-2",
+          "prob": 3
+        },
+        {
+          "score": "1-3",
+          "prob": 3
         }
       ],
       "les_deux_marquent": "Données indisponibles",
@@ -391,6 +2169,541 @@
       "velora_score": null,
       "conseil": "Double Chance DC 1X",
       "velora_pick_1n2": "2"
+    },
+    {
+      "id_match": "66854080",
+      "date_match": "12/06/2026 à 21:00",
+      "match_start_ts": 1781290800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Shelbourne",
+      "equipe_exterieur": "Shamrock Rovers",
+      "meta_match": {
+        "competition": {
+          "name": "Irlande — Premier Division",
+          "type": "league",
+          "round": "J20",
+          "stakes_tier": "medium",
+          "category_id": "51",
+          "tournament_id": "79"
+        }
+      },
+      "confidence": {
+        "velora_score": 52.4,
+        "indice_velora": 2,
+        "base_confidence": 0.524,
+        "adjusted_confidence": 0.524,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 2.4,
+          "N": 2.95,
+          "2": 2.35
+        },
+        "probabilites": {
+          "1": 28,
+          "N": 27,
+          "2": 45
+        },
+        "probabilites_marche": {
+          "1": 35,
+          "N": 29,
+          "2": 36
+        },
+        "pronostic_1n2": "2",
+        "pronostic_label": "Victoire Shamrock Rovers",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 1.793,
+          "away": 1.819
+        },
+        "top_scores_modele": [
+          {
+            "score": "1-2",
+            "prob": 8
+          },
+          {
+            "score": "0-1",
+            "prob": 5
+          },
+          {
+            "score": "1-3",
+            "prob": 5
+          },
+          {
+            "score": "0-2",
+            "prob": 4
+          },
+          {
+            "score": "2-3",
+            "prob": 4
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 69,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 2.4,
+            "prob_pct": 73,
+            "edge": 1.752,
+            "score": 1.0865,
+            "tier": "excellent",
+            "raison": "Proba 73% × cote 2.40 → edge 1.75 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_x2",
+            "pick": "x2",
+            "label": "Double chance X2",
+            "cote": 2.35,
+            "prob_pct": 72,
+            "edge": 1.692,
+            "score": 0.9949,
+            "tier": "excellent",
+            "raison": "Proba 72% × cote 2.35 → edge 1.69 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "cote": 2.4,
+          "prob_pct": 73,
+          "edge": 1.752,
+          "score": 1.0865,
+          "tier": "excellent",
+          "raison": "Proba 73% × cote 2.40 → edge 1.75 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Shamrock Rovers — Classement 5e vs 1e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "opportunite_type": "dc_12",
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "1-2",
+          "prob": 8
+        },
+        {
+          "score": "0-1",
+          "prob": 5
+        },
+        {
+          "score": "1-3",
+          "prob": 5
+        },
+        {
+          "score": "0-2",
+          "prob": 4
+        },
+        {
+          "score": "2-3",
+          "prob": 4
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "2"
+    },
+    {
+      "id_match": "67681902",
+      "date_match": "13/06/2026 à 02:00",
+      "match_start_ts": 1781308800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Audax Italiano",
+      "equipe_exterieur": "La Serena",
+      "meta_match": {
+        "competition": {
+          "name": "Chili — Primera Division",
+          "type": "other",
+          "round": "J15",
+          "stakes_tier": "medium",
+          "category_id": "49",
+          "tournament_id": "67280"
+        }
+      },
+      "confidence": {
+        "velora_score": 45.2,
+        "indice_velora": 2,
+        "base_confidence": 0.452,
+        "adjusted_confidence": 0.452,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.7,
+          "N": 3.25,
+          "2": 3.4
+        },
+        "probabilites": {
+          "1": 55,
+          "N": 25,
+          "2": 20
+        },
+        "probabilites_marche": {
+          "1": 49,
+          "N": 26,
+          "2": 25
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire Audax Italiano",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 2.177,
+          "away": 1.555
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          },
+          {
+            "score": "2-0",
+            "prob": 6
+          },
+          {
+            "score": "1-0",
+            "prob": 5
+          },
+          {
+            "score": "3-2",
+            "prob": 5
+          }
+        ],
+        "prob_over_25_modele": 71,
+        "prob_btts_modele": 69,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.7,
+            "prob_pct": 80,
+            "edge": 1.36,
+            "score": 0.5037,
+            "tier": "excellent",
+            "raison": "Proba 80% × cote 1.70 → edge 1.36 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 1.7,
+            "prob_pct": 75,
+            "edge": 1.275,
+            "score": 0.3808,
+            "tier": "excellent",
+            "raison": "Proba 75% × cote 1.70 → edge 1.27 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.7,
+          "prob_pct": 80,
+          "edge": 1.36,
+          "score": 0.5037,
+          "tier": "excellent",
+          "raison": "Proba 80% × cote 1.70 → edge 1.36 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Audax Italiano — forme favorable Audax Italiano — Classement 13e vs 12e",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 6
+        },
+        {
+          "score": "2-0",
+          "prob": 6
+        },
+        {
+          "score": "1-0",
+          "prob": 5
+        },
+        {
+          "score": "3-2",
+          "prob": 5
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "1"
+    },
+    {
+      "id_match": "66456940",
+      "date_match": "13/06/2026 à 03:00",
+      "match_start_ts": 1781312400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "États-Unis",
+      "equipe_exterieur": "Paraguay",
+      "meta_match": {
+        "competition": {
+          "name": "International — Coupe du Monde 2026",
+          "type": "cup",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "4",
+          "tournament_id": "900001750"
+        }
+      },
+      "confidence": {
+        "velora_score": 43.7,
+        "indice_velora": 2,
+        "base_confidence": 0.437,
+        "adjusted_confidence": 0.437,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.94,
+          "N": 3.35,
+          "2": 3.65
+        },
+        "probabilites": {
+          "1": 45,
+          "N": 28,
+          "2": 27
+        },
+        "probabilites_marche": {
+          "1": 48,
+          "N": 27,
+          "2": 25
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire États-Unis",
+        "confiance_niveau": "moyenne",
+        "poisson_lambdas": {
+          "home": 2.166,
+          "away": 1.563
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 6
+          },
+          {
+            "score": "2-0",
+            "prob": 6
+          },
+          {
+            "score": "1-0",
+            "prob": 5
+          },
+          {
+            "score": "3-2",
+            "prob": 5
+          }
+        ],
+        "prob_over_25_modele": 71,
+        "prob_btts_modele": 69,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": [
+          {
+            "market": "dc_1x",
+            "pick": "1x",
+            "label": "Double chance 1X",
+            "cote": 1.94,
+            "prob_pct": 73,
+            "edge": 1.416,
+            "score": 0.5841,
+            "tier": "excellent",
+            "raison": "Proba 73% × cote 1.94 → edge 1.42 — bon équilibre proba/rendement",
+            "stars": 5
+          },
+          {
+            "market": "dc_12",
+            "pick": "12",
+            "label": "Double chance 12",
+            "cote": 1.94,
+            "prob_pct": 72,
+            "edge": 1.397,
+            "score": 0.5562,
+            "tier": "excellent",
+            "raison": "Proba 72% × cote 1.94 → edge 1.40 — bon équilibre proba/rendement",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "cote": 1.94,
+          "prob_pct": 73,
+          "edge": 1.416,
+          "score": 0.5841,
+          "tier": "excellent",
+          "raison": "Proba 73% × cote 1.94 → edge 1.42 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire États-Unis",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 6
+        },
+        {
+          "score": "2-0",
+          "prob": 6
+        },
+        {
+          "score": "1-0",
+          "prob": 5
+        },
+        {
+          "score": "3-2",
+          "prob": 5
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Double Chance DC 1X",
+      "velora_pick_1n2": "1"
     }
   ]
 }
