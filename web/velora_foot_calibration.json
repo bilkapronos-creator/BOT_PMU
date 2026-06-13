@@ -2,7 +2,7 @@
   "version": 1,
   "edge_thresholds": {
     "1n2": 1.07,
-    "dc_1x": 1.07,
+    "dc_1x": 1.05,
     "dc_x2": 1.05,
     "ou_total": 1.08,
     "btts": 1.06,
@@ -12,24 +12,14 @@
   },
   "suggestions": [
     {
-      "marche": "double_chance",
-      "label": "Double chance",
-      "edge_key": "dc_1x",
-      "edge_actuel": 1.05,
-      "edge_suggere": 1.07,
-      "taux_pct": 42,
-      "echantillon": 12,
-      "raison": "42% de réussite sur 12 matchs — seuil relevé"
-    },
-    {
       "marche": "score_exact",
       "label": "Score exact (top 3)",
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
       "edge_suggere": 1.19,
-      "taux_pct": 27,
-      "echantillon": 26,
-      "raison": "27% de réussite sur 26 matchs — seuil relevé"
+      "taux_pct": 25,
+      "echantillon": 32,
+      "raison": "25% de réussite sur 32 matchs — seuil relevé"
     },
     {
       "marche": "value_1n2",
@@ -55,17 +45,17 @@
   "detail_par_marche": {
     "double_chance": {
       "label": "Double chance",
-      "total": 12,
-      "succes": 5,
-      "taux": 42,
-      "profit_net": -63.4
+      "total": 18,
+      "succes": 8,
+      "taux": 44,
+      "profit_net": -93.1
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 26,
-      "succes": 7,
-      "taux": 27,
-      "profit_net": -17.6
+      "total": 32,
+      "succes": 8,
+      "taux": 25,
+      "profit_net": -67.5
     },
     "value_1n2": {
       "label": "Value 1N2",
