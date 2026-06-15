@@ -172,14 +172,18 @@ def suggerer_calibration(
 def build_foot_stats_payload(archives: list[dict]) -> dict[str, Any]:
     par_marche = agreger_par_marche(archives)
     calibration = suggerer_calibration(par_marche)
-    # Compat vitrine : detail_par_type_pari (libellés fins)
+    # Compat vitrine : detail_par_type_pari (libellés fins sauf score exact → bucket top 3)
     detail_fine: dict[str, dict[str, Any]] = {}
     for archive in archives:
         if archive.get("reussi_foot") is None and not archive.get("statut_pari"):
             continue
-        label = str(archive.get("type_pari_foot") or archive.get("selection") or "Foot")
-        if label.strip().lower() == "perdu":
-            label = classifier_marche_archive(archive)[1]
+        cle_coarse, label_coarse = classifier_marche_archive(archive)
+        if cle_coarse == "score_exact":
+            label = label_coarse
+        else:
+            label = str(archive.get("type_pari_foot") or archive.get("selection") or label_coarse)
+            if label.strip().lower() == "perdu":
+                label = label_coarse
         if label not in detail_fine:
             detail_fine[label] = {"total": 0, "succes": 0, "taux": 0}
         detail_fine[label]["total"] += 1

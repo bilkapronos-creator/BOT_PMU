@@ -57,45 +57,50 @@
     "profit_net": -97.7,
     "roi_pct": -34.9,
     "detail_par_type_pari": {
-      "Pronostic 1N2": {
-        "total": 2,
+      "Double chance": {
+        "total": 22,
         "succes": 0,
         "taux": 0
       },
-      "1N2 Extérieur": {
+      "Score exact (top 3)": {
+        "total": 56,
+        "succes": 12,
+        "taux": 21
+      },
+      "Double chance 1X": {
         "total": 3,
         "succes": 3,
         "taux": 100
       },
-      "Score exact (top 3)": {
-        "total": 3,
+      "1N2 Domicile": {
+        "total": 12,
+        "succes": 12,
+        "taux": 100
+      },
+      "1N2 Extérieur": {
+        "total": 12,
+        "succes": 12,
+        "taux": 100
+      },
+      "1N2 Nul": {
+        "total": 5,
+        "succes": 5,
+        "taux": 100
+      },
+      "Value 1N2": {
+        "total": 11,
         "succes": 0,
         "taux": 0
       },
-      "Score exact 0-1": {
-        "total": 2,
-        "succes": 2,
-        "taux": 100
+      "Pronostic 1N2": {
+        "total": 4,
+        "succes": 0,
+        "taux": 0
       },
       "Over 2.5": {
         "total": 12,
         "succes": 5,
         "taux": 42
-      },
-      "1N2 Domicile": {
-        "total": 2,
-        "succes": 2,
-        "taux": 100
-      },
-      "1N2 Nul": {
-        "total": 1,
-        "succes": 1,
-        "taux": 100
-      },
-      "Value 1N2": {
-        "total": 2,
-        "succes": 0,
-        "taux": 0
       },
       "Double chance X2": {
         "total": 1,
@@ -104,19 +109,33 @@
       }
     },
     "detail_par_marche": {
-      "pronostic_1n2": {
-        "label": "Pronostic 1N2",
-        "total": 7,
-        "succes": 5,
-        "taux": 71,
-        "profit_net": -8.1
+      "double_chance": {
+        "label": "Double chance",
+        "total": 42,
+        "succes": 20,
+        "taux": 48,
+        "profit_net": -211.9
       },
       "score_exact": {
         "label": "Score exact (top 3)",
-        "total": 5,
-        "succes": 2,
-        "taux": 40,
-        "profit_net": -29.8
+        "total": 56,
+        "succes": 12,
+        "taux": 21,
+        "profit_net": -267.1
+      },
+      "value_1n2": {
+        "label": "Value 1N2",
+        "total": 17,
+        "succes": 6,
+        "taux": 35,
+        "profit_net": 198.1
+      },
+      "pronostic_1n2": {
+        "label": "Pronostic 1N2",
+        "total": 11,
+        "succes": 7,
+        "taux": 64,
+        "profit_net": -27.9
       },
       "over_25": {
         "label": "Over 2.5",
@@ -124,32 +143,18 @@
         "succes": 5,
         "taux": 42,
         "profit_net": -69.5
-      },
-      "value_1n2": {
-        "label": "Value 1N2",
-        "total": 3,
-        "succes": 1,
-        "taux": 33,
-        "profit_net": 3.5
-      },
-      "double_chance": {
-        "label": "Double chance",
-        "total": 1,
-        "succes": 1,
-        "taux": 100,
-        "profit_net": 6.2
       }
     },
     "calibration": {
       "edge_thresholds": {
-        "1n2": 1.05,
+        "1n2": 1.07,
         "dc_1x": 1.05,
         "dc_x2": 1.05,
         "ou_total": 1.08,
         "btts": 1.06,
         "team_goals_home": 1.08,
         "team_goals_away": 1.08,
-        "score_exact": 1.17
+        "score_exact": 1.21
       },
       "suggestions": [
         {
@@ -157,10 +162,20 @@
           "label": "Score exact (top 3)",
           "edge_key": "score_exact",
           "edge_actuel": 1.15,
-          "edge_suggere": 1.17,
-          "taux_pct": 40,
-          "echantillon": 5,
-          "raison": "40% de réussite sur 5 matchs — seuil relevé"
+          "edge_suggere": 1.21,
+          "taux_pct": 21,
+          "echantillon": 56,
+          "raison": "21% de réussite sur 56 matchs — seuil relevé"
+        },
+        {
+          "marche": "value_1n2",
+          "label": "Value 1N2",
+          "edge_key": "1n2",
+          "edge_actuel": 1.05,
+          "edge_suggere": 1.07,
+          "taux_pct": 35,
+          "echantillon": 17,
+          "raison": "35% de réussite sur 17 matchs — seuil relevé"
         },
         {
           "marche": "over_25",

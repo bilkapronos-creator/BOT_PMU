@@ -674,8 +674,32 @@ def _align_display_scores_for_pick(match: dict) -> dict:
     return updated
 
 
+def _sync_legacy_fields_from_free_analysis(match: dict) -> dict:
+    """Aligne cotes/probas racine (v1) depuis free_analysis (v2) avant apply_velora_analysis."""
+    updated = dict(match)
+    free = updated.get("free_analysis") or {}
+    if not isinstance(free, dict):
+        return updated
+    cotes = free.get("cotes_1n2")
+    if isinstance(cotes, dict) and any(cotes.get(k) for k in ("1", "N", "2")):
+        updated["cotes"] = {
+            "1": cotes.get("1"),
+            "N": cotes.get("N"),
+            "2": cotes.get("2"),
+        }
+    probs = free.get("probabilites")
+    if isinstance(probs, dict) and sum(int(probs.get(k) or 0) for k in ("1", "N", "2")) >= 50:
+        updated["probabilites"] = {
+            "1": probs.get("1", 0),
+            "N": probs.get("N", 0),
+            "2": probs.get("2", 0),
+        }
+    return updated
+
+
 def _apply_velora_engine(updated: dict, state: dict | None, page=None) -> dict:
     """Indice Velora = score pondéré historique ; pas de fallback cotes."""
+    updated = _sync_legacy_fields_from_free_analysis(updated)
     mid = updated.get("id_match")
     intel = (
         extract_intel_from_page(page, mid)

@@ -244,6 +244,16 @@ def build_match_v2(
             conseil_short=conseil_short,
         )
 
+    legacy_conseil = pronostic_label or None
+    if meilleur and meilleur.label:
+        legacy_conseil = (
+            f"{meilleur.label} @ {meilleur.cote:.2f}"
+            if meilleur.cote
+            else meilleur.label
+        )
+    if legacy_conseil:
+        legacy["conseil"] = legacy_conseil
+
     free = FreeAnalysis(
         cotes_1n2=cotes_out,
         probabilites=probs_modele,

@@ -609,11 +609,26 @@ def apply_velora_analysis(record: dict) -> dict:
             _set_opportunite_expert(record, expert)
             return record
 
-        probs = record.get("probabilites") or {}
-        cotes = record.get("cotes") or {}
-        tendance = record.get("tendance_buts")
-        _, value_key = calc_value_metrics(probs, cotes)
-        record["conseil"] = build_conseil(probs, cotes, tendance, value_key)
+        free = record.get("free_analysis") or {}
+        probs = record.get("probabilites") or free.get("probabilites") or {}
+        cotes = record.get("cotes") or free.get("cotes_1n2") or {}
+        tendance = record.get("tendance_buts") or (
+            (record.get("_legacy") or {}).get("tendance_buts")
+        )
+        if free.get("pronostic_label"):
+            meilleur = free.get("meilleur_conseil") or {}
+            pick_label = str(free.get("pronostic_label") or "").strip()
+            if isinstance(meilleur, dict) and meilleur.get("label"):
+                lbl = str(meilleur["label"]).strip()
+                cote = meilleur.get("cote")
+                record["conseil"] = (
+                    f"{lbl} @ {float(cote):.2f}" if cote else lbl
+                )
+            else:
+                record["conseil"] = pick_label
+        else:
+            _, value_key = calc_value_metrics(probs, cotes)
+            record["conseil"] = build_conseil(probs, cotes, tendance, value_key)
         record.pop("value_bet_type", None)
         _clear_opportunite(record)
         record["indice_velora"] = INDICE_NON_CALCULABLE
@@ -637,6 +652,8 @@ def build_conseil(
         p1 = int(probs.get("1", 0) or 0)
         pn = int(probs.get("N", 0) or 0)
         p2 = int(probs.get("2", 0) or 0)
+        if p1 + pn + p2 < 50:
+            return _truncate_conseil("Analyse indisponible")
         offensive = tendance_buts == "Match Offensif"
 
         value_hits: list[tuple[float, str, str]] = []

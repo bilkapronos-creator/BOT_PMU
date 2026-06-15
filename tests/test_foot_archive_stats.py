@@ -39,6 +39,40 @@ def test_agregation_taux():
     assert par["over_25"]["total"] == 1
 
 
+def test_score_exact_top3_agrege_victoires_et_perdus():
+    from foot_archive_stats import build_foot_stats_payload
+
+    archives = [
+        {
+            "marche": "score_exact",
+            "type_pari_foot": "Score exact 0-1",
+            "reussi_foot": True,
+            "statut_pari": "GAGNANT",
+        },
+        {
+            "marche": "score_exact",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": False,
+            "statut_pari": "PERDANT",
+        },
+        {
+            "marche": "score_exact",
+            "type_pari_foot": "Score exact 2-0",
+            "reussi_foot": True,
+            "statut_pari": "GAGNANT",
+        },
+    ]
+    payload = build_foot_stats_payload(archives)
+    coarse = payload["detail_par_marche"]["score_exact"]
+    assert coarse["total"] == 3
+    assert coarse["succes"] == 2
+    assert coarse["taux"] == 67
+    fine = payload["detail_par_type_pari"]["Score exact (top 3)"]
+    assert fine["total"] == 3
+    assert fine["succes"] == 2
+    assert "Score exact 0-1" not in payload["detail_par_type_pari"]
+
+
 def test_calibration_monte_seuil_si_mauvais():
     par = {
         "over_25": {"label": "Over 2.5", "total": 8, "succes": 2, "taux": 25},
