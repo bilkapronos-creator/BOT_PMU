@@ -26,6 +26,8 @@ URLS = (
     "https://www.winamax.fr/paris-sportifs/sports/5",
     "https://www.winamax.fr/paris-sportifs",
 )
+TENNIS_SPORT_ID = 5
+TENNIS_URL = URLS[1]
 OUT = Path(__file__).resolve().parent / "dump_winamax_html.json"
 DEBUG_HTML = Path(__file__).resolve().parent / "dump_winamax_debug.html"
 UA = (
@@ -302,8 +304,74 @@ def _merge_winamax_states(base: dict | None, extra: dict) -> dict:
     return out
 
 
+def _count_matches_by_sport_id(data: dict) -> dict[int, int]:
+    counts: dict[int, int] = {}
+    for match in (data.get("matches") or {}).values():
+        if not isinstance(match, dict):
+            continue
+        sid = match.get("sportId")
+        try:
+            key = int(sid)
+        except (TypeError, ValueError):
+            continue
+        counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
+def _expected_sport_id_for_url(url: str) -> int | None:
+    m = re.search(r"/sports/(\d+)", url)
+    if not m:
+        return None
+    try:
+        return int(m.group(1))
+    except ValueError:
+        return None
+
+
+def _sport_match_count(data: dict, sport_id: int) -> int:
+    return sum(
+        1
+        for match in (data.get("matches") or {}).values()
+        if isinstance(match, dict) and match.get("sportId") == sport_id
+    )
+
+
+def _pick_best_state(candidates: list[dict], expected_sport: int | None) -> dict:
+    if not candidates:
+        raise ValueError("candidates vide")
+    if expected_sport is None:
+        return candidates[-1]
+    best = candidates[-1]
+    best_n = _sport_match_count(best, expected_sport)
+    for chunk in candidates:
+        n = _sport_match_count(chunk, expected_sport)
+        if n > best_n:
+            best = chunk
+            best_n = n
+    return best
+
+
+def _write_dump_and_log(data: dict, source: str) -> None:
+    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    n_matches = len(data.get("matches", {}))
+    by_sport = _count_matches_by_sport_id(data)
+    n_foot = by_sport.get(1, 0)
+    n_tennis = by_sport.get(TENNIS_SPORT_ID, 0)
+    print("[winamax_dump] SUCCES")
+    print(f"  Source  : {source}")
+    print(f"  Fichier : {OUT}")
+    print(f"  Matchs  : {n_matches} (foot={n_foot}, tennis={n_tennis})")
+    if n_tennis == 0:
+        print(
+            "[winamax_dump] ATTENTION: 0 match tennis (sportId=5) — "
+            "vérifier scrape sports/5 et VELORA_PROXY_URL.",
+            file=sys.stderr,
+        )
+
+
 def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
     print(f"[winamax_dump] Navigation -> {url}")
+    expected_sport = _expected_sport_id_for_url(url)
     captured: list[dict] = []
 
     def on_response(response) -> None:
@@ -321,53 +389,60 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
     page.on("response", on_response)
 
     try:
-        page.goto(url, timeout=GOTO_TIMEOUT_MS, wait_until="domcontentloaded")
-    except Exception as e:
-        print(f"[winamax_dump] ATTENTION chargement: {e}")
+        wait_until = "networkidle" if expected_sport == TENNIS_SPORT_ID else "domcontentloaded"
+        try:
+            page.goto(url, timeout=GOTO_TIMEOUT_MS, wait_until=wait_until)
+        except Exception as e:
+            print(f"[winamax_dump] ATTENTION chargement ({wait_until}): {e}")
+            page.goto(url, timeout=GOTO_TIMEOUT_MS, wait_until="domcontentloaded")
 
-    _dismiss_cookie_banner(page)
+        _dismiss_cookie_banner(page)
 
-    if not state_ready:
-        state_ready = _wait_for_sport_state(page)
+        if not state_ready:
+            state_ready = _wait_for_sport_state(page)
 
-    if not state_ready and _strict_on_wait_timeout():
-        raise WinamaxDumpError(
-            f"PRELOADED_STATE indisponible après {WAIT_STATE_MS}ms sur {url}. "
-            "Winamax n'a pas exposé les matchs (géoblocage, cookies, ou page vide). "
-            "Essayez VELORA_PROXY_URL ou relancez plus tard."
-        )
+        if not state_ready and _strict_on_wait_timeout():
+            raise WinamaxDumpError(
+                f"PRELOADED_STATE indisponible après {WAIT_STATE_MS}ms sur {url}. "
+                "Winamax n'a pas exposé les matchs (géoblocage, cookies, ou page vide). "
+                "Essayez VELORA_PROXY_URL ou relancez plus tard."
+            )
 
-    time.sleep(1)
+        time.sleep(2.5 if expected_sport == TENNIS_SPORT_ID else 1.0)
 
-    if captured:
-        n = len(captured[-1].get("matches") or {})
-        return captured[-1], f"réponse réseau ({n} matchs)"
+        if captured:
+            best = _pick_best_state(captured, expected_sport)
+            n = len(best.get("matches") or {})
+            n_target = _sport_match_count(best, expected_sport) if expected_sport else n
+            return best, f"réponse réseau ({n} matchs, sport cible={n_target})"
 
-    data, source = _extract_via_evaluate(page)
-    if data is not None:
-        norm, label = _normalize_state(data)
-        if norm is not None:
-            return norm, f"{source} {label}"
+        data, source = _extract_via_evaluate(page)
+        if data is not None:
+            norm, label = _normalize_state(data)
+            if norm is not None:
+                return norm, f"{source} {label}"
 
-    if not state_ready:
-        raise WinamaxDumpError(
-            f"État sport introuvable après timeout {WAIT_STATE_MS}ms (evaluate vide)."
-        )
+        if not state_ready:
+            raise WinamaxDumpError(
+                f"État sport introuvable après timeout {WAIT_STATE_MS}ms (evaluate vide)."
+            )
 
-    print("[winamax_dump] fallback regex (limité)...")
-    try:
-        html = page.content()
-    except Exception as e:
-        raise WinamaxDumpError(f"Impossible de lire le HTML: {e}") from e
-    print(f"[winamax_dump] Taille HTML: {len(html):,} caracteres")
-    deadline = time.monotonic() + REGEX_MAX_SECONDS
-    data, source = _extract_via_regex(html, deadline)
-    if data is None:
-        _diagnose_html(html, page)
-        if os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"):
-            DEBUG_HTML.write_text(html, encoding="utf-8")
-            print(f"[winamax_dump] HTML debug: {DEBUG_HTML}")
-    return data, source
+        print("[winamax_dump] fallback regex (limité)...")
+        try:
+            html = page.content()
+        except Exception as e:
+            raise WinamaxDumpError(f"Impossible de lire le HTML: {e}") from e
+        print(f"[winamax_dump] Taille HTML: {len(html):,} caracteres")
+        deadline = time.monotonic() + REGEX_MAX_SECONDS
+        data, source = _extract_via_regex(html, deadline)
+        if data is None:
+            _diagnose_html(html, page)
+            if os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"):
+                DEBUG_HTML.write_text(html, encoding="utf-8")
+                print(f"[winamax_dump] HTML debug: {DEBUG_HTML}")
+        return data, source
+    finally:
+        page.remove_listener("response", on_response)
 
 
 def _chromium_headless() -> bool:
@@ -463,15 +538,10 @@ def main() -> None:
 
     data, source = _try_http_regex()
     if data is not None:
-        OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        n_matches = len(data.get("matches", {}))
-        n_tennis = sum(
-            1 for m in (data.get("matches") or {}).values()
-            if isinstance(m, dict) and m.get("sportId") == 5
-        )
-        print("[winamax_dump] SUCCES (HTTP, sans Chromium)")
-        print(f"  Source  : {source}")
-        print(f"  Matchs  : {n_matches} (tennis: {n_tennis})")
+        norm, _ = _normalize_state(data)
+        if norm is None:
+            _fail("JSON HTTP trouvé mais sans matches/outcomes valides")
+        _write_dump_and_log(norm, source)
         return
 
     print("[winamax_dump] Demarrage Chromium (SSR)...")
@@ -534,12 +604,39 @@ def main() -> None:
                     if chunk is not None:
                         data = _merge_winamax_states(data, chunk)
                         sources.append(f"{url} ({src})")
-                        print(f"[winamax_dump] OK via {src} — {url}")
+                        by_sport = _count_matches_by_sport_id(data)
+                        print(
+                            f"[winamax_dump] OK via {src} — {url} "
+                            f"(merge foot={by_sport.get(1, 0)}, tennis={by_sport.get(TENNIS_SPORT_ID, 0)})"
+                        )
                 except WinamaxDumpError as e:
                     last_err = e
                     print(f"[winamax_dump] {url} — {e}", file=sys.stderr)
                 except Exception as e:
                     print(f"[winamax_dump] URL {url} ignorée: {e}", file=sys.stderr)
+
+            tennis_retries = int(os.environ.get("VELORA_DUMP_TENNIS_RETRIES", "2"))
+            for attempt in range(1, tennis_retries + 1):
+                if data is None:
+                    break
+                if _count_matches_by_sport_id(data).get(TENNIS_SPORT_ID, 0) > 0:
+                    break
+                print(
+                    f"[winamax_dump] Tennis absent — retry {attempt}/{tennis_retries} sur {TENNIS_URL}",
+                    file=sys.stderr,
+                )
+                try:
+                    chunk, src = _try_url(page, TENNIS_URL, state_ready=False)
+                    if chunk is not None:
+                        before = _count_matches_by_sport_id(data).get(TENNIS_SPORT_ID, 0)
+                        data = _merge_winamax_states(data, chunk)
+                        after = _count_matches_by_sport_id(data).get(TENNIS_SPORT_ID, 0)
+                        sources.append(f"tennis-retry-{attempt} ({src})")
+                        print(f"[winamax_dump] Retry tennis: {before} -> {after} match(s)")
+                except WinamaxDumpError as e:
+                    print(f"[winamax_dump] retry tennis — {e}", file=sys.stderr)
+                except Exception as e:
+                    print(f"[winamax_dump] retry tennis ignoré: {e}", file=sys.stderr)
 
             if data is not None and sources:
                 source = " + ".join(sources)
@@ -565,12 +662,7 @@ def main() -> None:
         _fail("JSON trouvé mais sans matches/outcomes valides")
     data = norm
 
-    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-    n_matches = len(data.get("matches", {}))
-    print("[winamax_dump] SUCCES")
-    print(f"  Source  : {source}")
-    print(f"  Fichier : {OUT}")
-    print(f"  Matchs  : {n_matches}")
+    _write_dump_and_log(data, source)
 
 
 if __name__ == "__main__":

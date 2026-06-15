@@ -128,6 +128,18 @@ jobs:
                   print(
                       "::warning::Dump Winamax sans match du jour — scrape périmé ou échoué."
                   )
+              raw_dump = json.loads(dump.read_text(encoding="utf-8"))
+              tennis_dump = sum(
+                  1
+                  for m in (raw_dump.get("matches") or {}).values()
+                  if isinstance(m, dict) and m.get("sportId") == 5
+              )
+              print(f"{dump}: {tennis_dump} match(s) tennis (sportId=5)")
+              if tennis_dump == 0:
+                  print(
+                      "::warning::Dump sans tennis — sports/5 non scrapé. "
+                      "Vérifier logs winamax_dump et VELORA_PROXY_URL."
+                  )
 
           paths = [
               Path("api_velora_matchs.json"),
@@ -150,6 +162,22 @@ jobs:
                   print(
                       "::warning::Aucun match du jour — recherche Foot vide. "
                       "Vérifier VELORA_PROXY_URL (proxy France) si le scrape a échoué."
+                  )
+
+          tennis_paths = [
+              Path("api_velora_matchs_tennis.json"),
+              Path("web/api_velora_matchs_tennis.json"),
+          ]
+          for path in tennis_paths:
+              if not path.is_file():
+                  continue
+              raw = json.loads(path.read_text(encoding="utf-8"))
+              n = int((raw.get("meta") or {}).get("match_count") or len(raw.get("matchs") or []))
+              print(f"{path}: {n} match(s) tennis")
+              if n == 0:
+                  print(
+                      "::warning::JSON tennis vide — onglet Tennis inactif. "
+                      "Le dump doit contenir sportId=5."
                   )
           PY
 
