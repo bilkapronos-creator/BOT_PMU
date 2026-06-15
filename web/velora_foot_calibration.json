@@ -17,9 +17,9 @@
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
       "edge_suggere": 1.19,
-      "taux_pct": 25,
-      "echantillon": 48,
-      "raison": "25% de réussite sur 48 matchs — seuil relevé"
+      "taux_pct": 23,
+      "echantillon": 52,
+      "raison": "23% de réussite sur 52 matchs — seuil relevé"
     },
     {
       "marche": "value_1n2",
@@ -45,17 +45,17 @@
   "detail_par_marche": {
     "double_chance": {
       "label": "Double chance",
-      "total": 34,
-      "succes": 18,
-      "taux": 53,
-      "profit_net": -152.1
+      "total": 38,
+      "succes": 19,
+      "taux": 50,
+      "profit_net": -182.0
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 48,
+      "total": 52,
       "succes": 12,
-      "taux": 25,
-      "profit_net": -187.1
+      "taux": 23,
+      "profit_net": -227.1
     },
     "value_1n2": {
       "label": "Value 1N2",
