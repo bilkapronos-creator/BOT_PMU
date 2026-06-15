@@ -539,6 +539,11 @@
             border-radius: 9999px;
             background: rgba(255, 255, 255, 0.06);
         }
+        .foot-prob-seg-dom,
+        .foot-prob-seg-nul,
+        .foot-prob-seg-ext {
+            min-width: 3px;
+        }
         .foot-prob-seg-dom { background: linear-gradient(90deg, #10b981, #34d399); }
         .foot-prob-seg-nul { background: linear-gradient(90deg, #eab308, #facc15); }
         .foot-prob-seg-ext { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
@@ -6841,14 +6846,35 @@
 
         function libelleIndiceVelora(m) {
             const label = String(m?.indice_velora_label || '').trim();
-            if (label === 'Non calculable' || Number(m?.indice_velora) === 0) {
-                return 'Non calculable';
-            }
             const score = m?.velora_score;
-            if (score != null && !Number.isNaN(Number(score))) {
+            if (score != null && !Number.isNaN(Number(score)) && Number(m?.indice_velora) > 0) {
                 return `${etoilesVelora(m.indice_velora)} · ${Math.round(Number(score))}/100`;
             }
+            if (label === 'Non calculable' || Number(m?.indice_velora) === 0) {
+                const fa = m?.free_analysis || {};
+                const best = fa.meilleur_conseil || (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents[0] : null);
+                if (best && Number(best.stars) > 0) {
+                    return `${'⭐'.repeat(Math.min(5, Number(best.stars)))} · Modèle actif`;
+                }
+                const probs = m?.probabilites || fa.probabilites || {};
+                const maxP = Math.max(Number(probs['1']) || 0, Number(probs.N) || 0, Number(probs['2']) || 0);
+                if (maxP >= 45) {
+                    return `Modèle · ${maxP}% max`;
+                }
+                return 'Stats requises';
+            }
             return etoilesVelora(m.indice_velora);
+        }
+
+        function conseilVeloraRedondant(m) {
+            const conseil = String(m?.conseil || '').trim();
+            if (!conseil) return true;
+            const lower = conseil.toLowerCase();
+            if (/^double chance\s+dc\s*(1x|x2|12)/i.test(conseil)) return true;
+            if (lower === 'double chance dc 1x' || lower === 'double chance dc x2') return true;
+            const pronostic = libellePronosticCarte(m);
+            if (pronostic && lower.includes(pronostic.toLowerCase().slice(0, 12))) return true;
+            return false;
         }
 
         function etoilesVelora(n) {
@@ -8047,43 +8073,68 @@
             const prem = enr?.premium_analysis;
             const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
             const topScores = scoresExactCotesWinamax(enr).slice(0, 3);
+            const modelScores = scoresProbablesModele(enr).slice(0, 5);
             const buteurs = buteursFromMatch(enr).slice(0, 4);
             const buteursMiTemps = buteursMiTempsFromMatch(enr).slice(0, 4);
             const doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
             const hasScores = topScores.length > 0;
+            const hasModelScores = modelScores.length > 0;
             const hasButeurs = buteurs.length > 0;
             const hasButeursMiTemps = buteursMiTemps.length > 0;
             const hasDoubles = doubles.length > 0;
             const hasValueBets = valueBets.length > 0;
             const hasAny = hasScores || hasButeurs || hasButeursMiTemps || hasDoubles || hasValueBets;
+            const hasAnyAffichable = hasAny || hasModelScores;
             if (!enrich) {
                 return {
                     hasScores,
+                    hasModelScores,
                     hasButeurs,
                     hasButeursMiTemps,
                     hasDoubles,
                     hasValueBets,
                     hasAny,
+                    hasAnyAffichable,
                 };
             }
             return {
                 topScores,
+                modelScores,
                 buteurs,
                 buteursMiTemps,
                 doubles,
                 valueBets,
                 hasScores,
+                hasModelScores,
                 hasButeurs,
                 hasButeursMiTemps,
                 hasDoubles,
                 hasValueBets,
                 hasAny,
+                hasAnyAffichable,
             };
         }
 
-        function htmlPremiumUnavailableMessage() {
+        function htmlPremiumModelScoresPanel(scores, theme) {
+            const items = (scores || []).slice(0, 5).map((s) => {
+                const prob = s.prob != null ? `<span class="text-gray-500">${escHtml(s.prob)}%</span>` : '';
+                return `<li class="flex justify-between gap-2 text-xs text-gray-300"><span>${escHtml(String(s.score || '').replace(/-/g, ' - '))}</span>${prob}</li>`;
+            }).join('');
+            const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
+            return `
+                <div class="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
+                    <p class="foot-premium-section-title ${titleCls}">Scores probables (modèle Velora)</p>
+                    <ul class="space-y-1">${items}</ul>
+                </div>`;
+        }
+
+        function htmlPremiumUnavailableMessage(options = {}) {
+            const avecModele = Boolean(options.avecModele);
+            const hint = avecModele
+                ? 'Winamax n’a pas publié les cotes buteurs / scores exacts pour ce match. Estimations modèle ci-dessous.'
+                : 'Winamax n’a pas publié les marchés buteurs ni scores exacts pour ce match. Les scores du modèle Velora restent visibles dans la carte.';
             return `<div class="foot-premium-unavailable">
-                <p class="foot-premium-unavailable-text">Analyse premium indisponible pour ce match (marchés buteurs / scores exacts non publiés par le bookmaker).</p>
+                <p class="foot-premium-unavailable-text">${escHtml(hint)}</p>
             </div>`;
         }
 
@@ -8106,10 +8157,14 @@
             if (isPremiumUser) {
                 const data = readPremiumAnalysisRaw(m, { enrich: true });
                 if (!data.hasAny) {
+                    const modelPanel = data.hasModelScores
+                        ? htmlPremiumModelScoresPanel(data.modelScores, 'foot')
+                        : '';
                     return `
                         <div class="rounded-xl border border-cyan-500/20 bg-cyan-950/20 p-3" role="region" aria-label="Analyse premium">
                             <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Analyse Premium</p>
-                            ${htmlPremiumUnavailableMessage()}
+                            ${htmlPremiumUnavailableMessage({ avecModele: data.hasModelScores })}
+                            ${modelPanel}
                         </div>`;
                 }
                 const scoresPanel = htmlPremiumScoresPanel(data.topScores, 'foot');
@@ -8232,7 +8287,7 @@
             const buteursMtHtml = blocScorers(buteursMt, 'Buteurs mi-temps') || legacyMt;
             const scoresHtml = scores.length
                 ? htmlBlocScoresExactListe(scores, theme)
-                : (scoresModele.length ? htmlBlocScoresExactIndispo(theme) : '');
+                : '';
             const nbCols = [buteursHtml, buteursMtHtml, scoresHtml].filter(Boolean).length;
             const cols = nbCols > 1 ? 'sm:grid-cols-2' : 'grid-cols-1';
             const borderCls = theme === 'opp' ? 'border-amber-500/20 bg-amber-500/[0.04]' : 'border-white/10 bg-white/[0.02]';
@@ -8340,7 +8395,7 @@
                             ${signalBadges}
                         </div>
                         <div class="shrink-0 text-right">
-                            <p class="text-[10px] uppercase tracking-widest text-amber-400/80">Indice Velora (stats)</p>
+                            <p class="text-[10px] uppercase tracking-widest text-amber-400/80">Indice Velora</p>
                             <p class="text-sm leading-none" title="${escHtml(String(m.indice_velora_label || (m.velora_score != null ? m.velora_score + '/100' : (Number(m.indice_velora) || 0) + '/5')))}">${libelleIndiceVelora(m)}</p>
                         </div>
                     </div>
@@ -8348,16 +8403,16 @@
                         <div>
                             <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Nos probabilités</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
-                                <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
-                                <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
-                                <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
+                                <span class="foot-prob-seg-dom" style="flex:${Math.max(p1, 1)} 1 0"></span>
+                                <span class="foot-prob-seg-nul" style="flex:${Math.max(pn, 1)} 1 0"></span>
+                                <span class="foot-prob-seg-ext" style="flex:${Math.max(p2, 1)} 1 0"></span>
                             </div>
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${blocsPronosticValue}
                         ${htmlConseilsIntelligents(m)}
                         ${htmlOddsMovement(m)}
-                        ${htmlConseilVelora(m.conseil, 'foot')}
+                        ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
                         ${plusParis}
                         ${htmlVeloraAdminTechnique(m)}
@@ -8904,9 +8959,9 @@
                         <div>
                             <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Nos probabilités</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
-                                <span class="foot-prob-seg-dom" style="width:${p1}%"></span>
-                                <span class="foot-prob-seg-nul" style="width:${pn}%"></span>
-                                <span class="foot-prob-seg-ext" style="width:${p2}%"></span>
+                                <span class="foot-prob-seg-dom" style="flex:${Math.max(p1, 1)} 1 0"></span>
+                                <span class="foot-prob-seg-nul" style="flex:${Math.max(pn, 1)} 1 0"></span>
+                                <span class="foot-prob-seg-ext" style="flex:${Math.max(p2, 1)} 1 0"></span>
                             </div>
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>

@@ -66,8 +66,61 @@ def test_double_chance_scrapee():
     assert dc_labels
 
 
+def test_dc_same_cote_ne_garde_qu_un():
+    markets = MarketsRaw(
+        double_chance={
+            "1x": MarketOutcome(cote=1.86, prob=82),
+            "12": MarketOutcome(cote=1.86, prob=74),
+        },
+    )
+    conseils, _ = build_intelligent_conseils(
+        cotes_1n2={"1": 1.86, "N": 3.5, "2": 4.0},
+        probs={"1": 58, "N": 24, "2": 18},
+        markets=markets,
+        home="A",
+        away="B",
+    )
+    dc_labels = [c.label for c in conseils if c.market.startswith("dc_")]
+    assert len(dc_labels) <= 1
+
+
+def test_dc_12_sans_scrape_ignore_faux_edge():
+    """Sans marché DC Winamax, ne pas proposer DC 12 avec la cote 1N2 domicile."""
+    markets = MarketsRaw()
+    conseils, _ = build_intelligent_conseils(
+        cotes_1n2={"1": 6.50, "N": 4.0, "2": 1.41},
+        probs={"1": 14, "N": 22, "2": 64},
+        markets=markets,
+        home="Arabie Saoudite",
+        away="Uruguay",
+    )
+    dc12 = [c for c in conseils if c.market == "dc_12"]
+    assert not dc12
+
+
+def test_prudent_tier_cap_stars():
+    markets = MarketsRaw(
+        double_chance={
+            "x2": MarketOutcome(cote=1.41, prob=86),
+        },
+    )
+    conseils, best = build_intelligent_conseils(
+        cotes_1n2={"1": 6.50, "N": 4.0, "2": 1.41},
+        probs={"1": 14, "N": 22, "2": 64},
+        markets=markets,
+        home="A",
+        away="B",
+    )
+    x2 = next((c for c in conseils if c.market == "dc_x2"), None)
+    assert x2 is not None
+    assert x2.stars <= 3
+
+
 if __name__ == "__main__":
     test_favori_1_20_exclu_si_edge_faible()
     test_over_2_5_prefere_a_favori_bas()
     test_double_chance_scrapee()
+    test_dc_same_cote_ne_garde_qu_un()
+    test_dc_12_sans_scrape_ignore_faux_edge()
+    test_prudent_tier_cap_stars()
     print("OK — test_bet_advisor")

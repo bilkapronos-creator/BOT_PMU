@@ -183,17 +183,34 @@ def _collect_1n2_and_dc(
             cote=mo.cote,
             prob_pct=mo.prob or dc_model.get(pk),
         )
-    if not markets.double_chance:
-        for pk, prob in dc_model.items():
-            fav_cote = cotes_1n2.get("1" if pk == "1x" else "2" if pk == "x2" else "1")
-            _add(
-                pool,
-                market=dc_market_keys[pk],
-                pick=pk,
-                label=dc_labels[pk],
-                cote=fav_cote,
-                prob_pct=prob,
+    # Sans cotes Winamax « Double chance », ne pas estimer via 1N2 (ex. DC 12 @ cote victoire dom).
+
+
+def _dedupe_dc_same_cote(pool: list[_Opp]) -> list[_Opp]:
+    """Si plusieurs DC partagent la même cote bookmaker, ne garder que le meilleur score."""
+    dc_rows: list[_Opp] = []
+    other: list[_Opp] = []
+    for opp in pool:
+        if opp.market.startswith("dc_"):
+            dc_rows.append(opp)
+        else:
+            other.append(opp)
+    by_cote: dict[float, list[_Opp]] = {}
+    for opp in dc_rows:
+        if opp.cote is None:
+            other.append(opp)
+            continue
+        key = round(float(opp.cote), 2)
+        by_cote.setdefault(key, []).append(opp)
+    kept_dc: list[_Opp] = []
+    for group in by_cote.values():
+        if len(group) == 1:
+            kept_dc.append(group[0])
+        else:
+            kept_dc.append(
+                max(group, key=lambda o: _advantage_score(o.prob_pct, o.cote, o.edge)),
             )
+    return other + kept_dc
 
 
 def _collect_dnb(
@@ -390,6 +407,9 @@ def _collect_value_bets(pool: list[_Opp], *, value_bets: list[ValueBet]) -> None
 def _to_recommendation(opp: _Opp) -> BetRecommendation:
     tier = _tier(opp.edge, opp.cote)
     score = _advantage_score(opp.prob_pct, opp.cote, opp.edge)
+    stars = stars_from_edge(opp.edge)
+    if tier == "prudent":
+        stars = min(stars, 3)
     return BetRecommendation(
         market=opp.market,
         pick=opp.pick,
@@ -400,7 +420,7 @@ def _to_recommendation(opp: _Opp) -> BetRecommendation:
         score=round(score, 4),
         tier=tier,
         raison=_raison(opp.prob_pct, opp.cote, opp.edge, tier),
-        stars=stars_from_edge(opp.edge),
+        stars=stars,
     )
 
 
@@ -446,6 +466,8 @@ def build_intelligent_conseils(
     _collect_exact_goals(pool, markets=markets)
     _collect_value_bets(pool, value_bets=value_bets or [])
     _collect_premium(pool, premium=premium)
+
+    pool = _dedupe_dc_same_cote(pool)
 
     pick = str(pronostic_1n2 or "").strip()
     if pick in ("1", "N", "2"):
