@@ -1627,7 +1627,7 @@
                         <span class="mb-1 block text-xs text-gray-500">Course</span>
                         <input type="text" id="courseInput" placeholder="C1" class="input-glass w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm uppercase text-white transition">
                     </label>
-                    <button type="button" onclick="lancerAnalyse()" id="submitBtn"
+                    <button type="button" id="submitBtn"
                         class="sm:col-span-2 lg:col-span-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 px-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:from-emerald-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-60">
                         Analyser
                     </button>
@@ -3816,7 +3816,7 @@
         /** Ouvre le modal deux offres (comme quota épuisé) — Stripe uniquement depuis le modal. */
         function ouvrirPaywallPremium() {
             if (!estMembreConnecte()) {
-                ouvrirModalAuth('signin');
+                ouvrirModalAuth('login');
                 return;
             }
             if (aPackIntegralVelora()) {
@@ -3849,7 +3849,7 @@
                     errEl.textContent = 'Connectez-vous pour souscrire à Premium.';
                     errEl.classList.remove('hidden');
                 }
-                ouvrirModalAuth('signin');
+                ouvrirModalAuth('login');
                 return;
             }
 
@@ -3867,7 +3867,7 @@
                     errEl.textContent = 'Session invalide — reconnectez-vous.';
                     errEl.classList.remove('hidden');
                 }
-                ouvrirModalAuth('signin');
+                ouvrirModalAuth('login');
                 return;
             }
 
@@ -3940,7 +3940,7 @@
 
         async function lancerPortailAbonnement() {
             if (!estMembreConnecte()) {
-                ouvrirModalAuth('signin');
+                ouvrirModalAuth('login');
                 return;
             }
 
@@ -4221,6 +4221,7 @@
         }
 
         function ouvrirModalAuth(mode) {
+            if (mode === 'signin') mode = 'login';
             if (mode) authMode = mode;
             masquerMessagesAuthModal();
             mettreAJourModalAuthMode();
