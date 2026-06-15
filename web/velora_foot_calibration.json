@@ -8,7 +8,7 @@
     "btts": 1.06,
     "team_goals_home": 1.08,
     "team_goals_away": 1.08,
-    "score_exact": 1.19
+    "score_exact": 1.21
   },
   "suggestions": [
     {
@@ -16,10 +16,10 @@
       "label": "Score exact (top 3)",
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
-      "edge_suggere": 1.19,
-      "taux_pct": 23,
-      "echantillon": 53,
-      "raison": "23% de réussite sur 53 matchs — seuil relevé"
+      "edge_suggere": 1.21,
+      "taux_pct": 21,
+      "echantillon": 56,
+      "raison": "21% de réussite sur 56 matchs — seuil relevé"
     },
     {
       "marche": "value_1n2",
@@ -45,17 +45,17 @@
   "detail_par_marche": {
     "double_chance": {
       "label": "Double chance",
-      "total": 39,
+      "total": 42,
       "succes": 20,
-      "taux": 51,
-      "profit_net": -181.9
+      "taux": 48,
+      "profit_net": -211.9
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 53,
+      "total": 56,
       "succes": 12,
-      "taux": 23,
-      "profit_net": -237.1
+      "taux": 21,
+      "profit_net": -267.1
     },
     "value_1n2": {
       "label": "Value 1N2",
