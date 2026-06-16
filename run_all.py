@@ -654,7 +654,17 @@ def _dump_skip_scraper_ci(path: Path, max_heures: float) -> bool:
     age_h = (time.time() - path.stat().st_mtime) / 3600.0
     if age_h > max_heures:
         return False
-    return _dump_contient_match_journee_pari(path)
+    if not _dump_contient_match_journee_pari(path):
+        return False
+    try:
+        from parser_winamax import winamax_state_missing_tennis
+
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if winamax_state_missing_tennis(data):
+            return False
+    except (OSError, json.JSONDecodeError):
+        pass
+    return True
 
 
 def _dump_utilisable_ci(path: Path, max_heures: float) -> bool:
@@ -782,7 +792,26 @@ def executer_phase_scraper() -> bool:
     debut = 0
     if _ci_scraper_optionnel():
         mode = _mode_repli_scraper_ci(proactif=True)
-        if mode in ("premium", "premium_web"):
+        tennis_json_vide = False
+        tennis_web = WEB_ROOT / "api_velora_matchs_tennis.json"
+        if tennis_web.is_file():
+            try:
+                raw_t = json.loads(tennis_web.read_text(encoding="utf-8"))
+                tennis_json_vide = int((raw_t.get("meta") or {}).get("match_count") or 0) == 0
+            except (OSError, json.JSONDecodeError):
+                tennis_json_vide = True
+        dump_sans_tennis = False
+        if DUMP_HTML.is_file():
+            try:
+                from parser_winamax import winamax_state_missing_tennis
+
+                dump_sans_tennis = winamax_state_missing_tennis(
+                    json.loads(DUMP_HTML.read_text(encoding="utf-8"))
+                )
+            except (OSError, json.JSONDecodeError):
+                pass
+        force_tennis_scrape = tennis_json_vide and dump_sans_tennis
+        if mode in ("premium", "premium_web") and not force_tennis_scrape:
             if mode == "premium_web":
                 _synchroniser_premium_depuis_web()
             log(
@@ -791,12 +820,17 @@ def executer_phase_scraper() -> bool:
                 "Résolution PMU/Foot et publication communauté continuent.",
             )
             return True
-        if mode == "dump":
+        if force_tennis_scrape:
+            log(
+                "CI : tennis absent du dump/JSON — scrape Winamax forcé "
+                "(ignore repli premium / dump récent).",
+            )
+        if mode == "dump" and not force_tennis_scrape:
             log(
                 "CI : dump HTML récent — reprise à l'étape parser (sans re-scraper Winamax).",
             )
             debut = 1
-        elif mode in ("matchs", "matchs_web"):
+        elif mode in ("matchs", "matchs_web") and not force_tennis_scrape:
             if mode == "matchs_web":
                 _synchroniser_premium_depuis_web()
             log("CI : matchs JSON récents — reprise au sniper uniquement.")

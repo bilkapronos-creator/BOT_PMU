@@ -370,6 +370,73 @@ def _slice_state_for_url(state: dict, url: str) -> dict | None:
     return sliced
 
 
+def _tennis_tournament_urls(state: dict, max_urls: int = 10) -> list[str]:
+    sports = state.get("sports") or {}
+    tennis = sports.get(str(TENNIS_SPORT_ID)) or sports.get(TENNIS_SPORT_ID) or {}
+    cat_ids = tennis.get("categories") or []
+    cats = state.get("categories") or {}
+    tournaments = state.get("tournaments") or {}
+    ranked: list[tuple[int, int]] = []
+    for cid in cat_ids:
+        cat = cats.get(str(cid)) if isinstance(cats.get(str(cid)), dict) else cats.get(cid)
+        if not isinstance(cat, dict):
+            continue
+        for tid in cat.get("tournaments") or []:
+            tour = tournaments.get(str(tid)) if isinstance(tournaments.get(str(tid)), dict) else tournaments.get(tid)
+            if not isinstance(tour, dict):
+                continue
+            try:
+                count = int(tour.get("mainMatchCount") or 0)
+                tid_int = int(tid)
+            except (TypeError, ValueError):
+                continue
+            if count > 0:
+                ranked.append((count, tid_int))
+    ranked.sort(key=lambda x: -x[0])
+    seen: set[int] = set()
+    urls: list[str] = []
+    for _, tid in ranked:
+        if tid in seen:
+            continue
+        seen.add(tid)
+        urls.append(f"https://www.winamax.fr/paris-sportifs/sports/5/tournaments/{tid}")
+        if len(urls) >= max_urls:
+            break
+    return urls
+
+
+def _scrape_tennis_tournament_urls(
+    page,
+    data: dict | None,
+    sources: list[str],
+) -> dict | None:
+    from parser_winamax import winamax_state_missing_tennis
+
+    if not winamax_state_missing_tennis(data or {}):
+        return data
+    urls = _tennis_tournament_urls(data or {})
+    if not urls:
+        print("[winamax_dump] Métadonnées tennis sans tournois listés — skip URLs tournois.")
+        return data
+    print(f"[winamax_dump] Visite {len(urls)} page(s) tournoi tennis…")
+    for url in urls:
+        if _count_matches_by_sport_id(data or {}).get(TENNIS_SPORT_ID, 0) > 0:
+            break
+        try:
+            chunk, src = _try_url(page, url, state_ready=False)
+            if chunk is not None:
+                before = _count_matches_by_sport_id(data or {}).get(TENNIS_SPORT_ID, 0)
+                data = _merge_winamax_states(data, chunk)
+                after = _count_matches_by_sport_id(data or {}).get(TENNIS_SPORT_ID, 0)
+                sources.append(f"{url} ({src})")
+                print(f"[winamax_dump] Tournoi: tennis {before} -> {after} — {url}")
+        except WinamaxDumpError as e:
+            print(f"[winamax_dump] tournoi {url} — {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"[winamax_dump] tournoi ignoré {url}: {e}", file=sys.stderr)
+    return data
+
+
 def _diagnose_html(html: str, page) -> None:
     try:
         title = page.title()
@@ -762,6 +829,8 @@ def main() -> None:
                     print(f"[winamax_dump] retry tennis — {e}", file=sys.stderr)
                 except Exception as e:
                     print(f"[winamax_dump] retry tennis ignoré: {e}", file=sys.stderr)
+
+            data = _scrape_tennis_tournament_urls(page, data, sources)
 
             if data is not None and sources:
                 source = " + ".join(sources)

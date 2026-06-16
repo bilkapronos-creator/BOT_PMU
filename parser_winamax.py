@@ -20,6 +20,7 @@ if hasattr(sys.stdout, "reconfigure"):
 DUMP = Path(__file__).resolve().parent / "dump_winamax_html.json"
 OUT_API = Path(__file__).resolve().parent / "api_velora_matchs.json"
 FOOTBALL_SPORT_ID = 1
+TENNIS_SPORT_ID = 5
 NOT_AVAILABLE = "Compos non disponibles"
 DISPLAY_LIMIT = 15
 VALUE_THRESHOLD = 1.05
@@ -1516,6 +1517,27 @@ def parse_football_matches(data: dict) -> list[dict]:
             f"(1N2 OK — cotes annexes / O-U peuvent être instables)."
         )
     return results
+
+
+def winamax_tennis_match_count(state: dict) -> int:
+    return sum(
+        1
+        for match in (state.get("matches") or {}).values()
+        if isinstance(match, dict) and match.get("sportId") == TENNIS_SPORT_ID
+    )
+
+
+def winamax_tennis_meta_count(state: dict) -> int:
+    sports = state.get("sports") or {}
+    meta = sports.get(str(TENNIS_SPORT_ID)) or sports.get(TENNIS_SPORT_ID) or {}
+    try:
+        return int(meta.get("mainMatchCount") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def winamax_state_missing_tennis(state: dict) -> bool:
+    return winamax_tennis_meta_count(state) > 0 and winamax_tennis_match_count(state) == 0
 
 
 def load_preloaded_state() -> dict | None:
