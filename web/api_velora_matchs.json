@@ -1,614 +1,2295 @@
-{
-  "schema_version": 2,
-  "meta": {
-    "generated_at": "2026-06-16T10:25:44.689848+02:00",
-    "engine": "velora-pro-2",
-    "match_count": 4
+[
+  {
+    "id_match": "68492570",
+    "date_match": "16/06/2026 à 17:00",
+    "match_start_ts": 1781622000,
+    "equipe_domicile": "BFC Daugavpils",
+    "equipe_exterieur": "Super Nova",
+    "cotes": {
+      "1": 1.84,
+      "N": 3.3,
+      "2": 3.45
+    },
+    "probabilites": {
+      "1": 46,
+      "N": 38,
+      "2": 16
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : DC 1X",
+    "les_deux_marquent": "Données indisponibles"
   },
-  "matchs": [
-    {
-      "id_match": "66457006",
-      "date_match": "16/06/2026 à 21:00",
-      "match_start_ts": 1781636400,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "France",
-      "equipe_exterieur": "Sénégal",
-      "meta_match": {
-        "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
-        }
-      },
-      "confidence": {
-        "velora_score": 56.4,
-        "indice_velora": 3,
-        "base_confidence": 0.564,
-        "adjusted_confidence": 0.564,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.43,
-          "N": 4.3,
-          "2": 6.25
-        },
-        "probabilites": {
-          "1": 66,
-          "N": 22,
-          "2": 12
-        },
-        "probabilites_marche": {
-          "1": 64,
-          "N": 21,
-          "2": 15
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire France",
-        "confiance_niveau": "haute",
-        "poisson_lambdas": {
-          "home": 2.528,
-          "away": 1.224
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "2-0",
-            "prob": 7
-          },
-          {
-            "score": "3-0",
-            "prob": 6
-          },
-          {
-            "score": "1-0",
-            "prob": 6
-          }
-        ],
-        "prob_over_25_modele": 71,
-        "prob_btts_modele": 64,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire France",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "top_scores": [
-        {
-          "score": "2-1",
-          "prob": 9
-        },
-        {
-          "score": "3-1",
-          "prob": 8
-        },
-        {
-          "score": "2-0",
-          "prob": 7
-        },
-        {
-          "score": "3-0",
-          "prob": 6
-        },
-        {
-          "score": "1-0",
-          "prob": 6
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "cotes": {
-        "1": 1.43,
-        "N": 4.3,
-        "2": 6.25
-      },
-      "probabilites": {
-        "1": 66,
-        "N": 22,
-        "2": 12
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Victoire France",
-      "velora_pick_1n2": "1"
+  {
+    "id_match": "71901774",
+    "date_match": "16/06/2026 à 17:30",
+    "match_start_ts": 1781623800,
+    "equipe_domicile": "Sūduva",
+    "equipe_exterieur": "Šiauliai",
+    "cotes": {
+      "1": 1.49,
+      "N": 3.8,
+      "2": 5.0
     },
-    {
-      "id_match": "66457008",
-      "date_match": "17/06/2026 à 00:00",
-      "match_start_ts": 1781647200,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Irak",
-      "equipe_exterieur": "Norvège",
-      "meta_match": {
-        "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
-        }
-      },
-      "confidence": {
-        "velora_score": 49.9,
-        "indice_velora": 2,
-        "base_confidence": 0.499,
-        "adjusted_confidence": 0.499,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 10.5,
-          "N": 6.5,
-          "2": 1.19
-        },
-        "probabilites": {
-          "1": 8,
-          "N": 18,
-          "2": 74
-        },
-        "probabilites_marche": {
-          "1": 9,
-          "N": 14,
-          "2": 77
-        },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Norvège",
-        "confiance_niveau": "moyenne",
-        "poisson_lambdas": {
-          "home": 0.922,
-          "away": 2.697
-        },
-        "top_scores_modele": [
-          {
-            "score": "0-2",
-            "prob": 10
-          },
-          {
-            "score": "1-2",
-            "prob": 9
-          },
-          {
-            "score": "0-3",
-            "prob": 9
-          },
-          {
-            "score": "1-3",
-            "prob": 8
-          },
-          {
-            "score": "0-1",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 68,
-        "prob_btts_modele": 55,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Norvège",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "top_scores": [
-        {
-          "score": "0-2",
-          "prob": 10
-        },
-        {
-          "score": "1-2",
-          "prob": 9
-        },
-        {
-          "score": "0-3",
-          "prob": 9
-        },
-        {
-          "score": "1-3",
-          "prob": 8
-        },
-        {
-          "score": "0-1",
-          "prob": 7
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "cotes": {
-        "1": 10.5,
-        "N": 6.5,
-        "2": 1.19
-      },
-      "probabilites": {
-        "1": 8,
-        "N": 18,
-        "2": 74
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Victoire Norvège",
-      "velora_pick_1n2": "2"
+    "probabilites": {
+      "1": 85,
+      "N": 11,
+      "2": 4
     },
-    {
-      "id_match": "66457018",
-      "date_match": "17/06/2026 à 03:00",
-      "match_start_ts": 1781658000,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Argentine",
-      "equipe_exterieur": "Algérie",
-      "meta_match": {
-        "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
-        }
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "confidence": {
-        "velora_score": 61.1,
-        "indice_velora": 3,
-        "base_confidence": 0.611,
-        "adjusted_confidence": 0.611,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.38,
-          "N": 4.5,
-          "2": 7.25
-        },
-        "probabilites": {
-          "1": 70,
-          "N": 19,
-          "2": 11
-        },
-        "probabilites_marche": {
-          "1": 67,
-          "N": 20,
-          "2": 13
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Argentine",
-        "confiance_niveau": "haute",
-        "poisson_lambdas": {
-          "home": 2.571,
-          "away": 1.133
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "2-0",
-            "prob": 8
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "3-0",
-            "prob": 7
-          },
-          {
-            "score": "1-0",
-            "prob": 6
-          }
-        ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 61,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": []
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Argentine",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "top_scores": [
-        {
-          "score": "2-1",
-          "prob": 9
-        },
-        {
-          "score": "2-0",
-          "prob": 8
-        },
-        {
-          "score": "3-1",
-          "prob": 8
-        },
-        {
-          "score": "3-0",
-          "prob": 7
-        },
-        {
-          "score": "1-0",
-          "prob": 6
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "cotes": {
-        "1": 1.38,
-        "N": 4.5,
-        "2": 7.25
-      },
-      "probabilites": {
-        "1": 70,
-        "N": 19,
-        "2": 11
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Victoire Argentine",
-      "velora_pick_1n2": "1"
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
     },
-    {
-      "id_match": "66457020",
-      "date_match": "17/06/2026 à 06:00",
-      "match_start_ts": 1781668800,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Autriche",
-      "equipe_exterieur": "Jordanie",
-      "meta_match": {
-        "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
-        }
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "67912726",
+    "date_match": "16/06/2026 à 18:00",
+    "match_start_ts": 1781625600,
+    "equipe_domicile": "Dila Gori",
+    "equipe_exterieur": "FC Spaeri",
+    "cotes": {
+      "1": 1.8,
+      "N": 3.3,
+      "2": 3.65
+    },
+    "probabilites": {
+      "1": 44,
+      "N": 50,
+      "2": 6
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "confidence": {
-        "velora_score": 65.0,
-        "indice_velora": 3,
-        "base_confidence": 0.65,
-        "adjusted_confidence": 0.65,
-        "modifiers": []
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "68214688",
+    "date_match": "16/06/2026 à 18:00",
+    "match_start_ts": 1781625600,
+    "equipe_domicile": "Parnu Vaprus",
+    "equipe_exterieur": "Flora Tallinn",
+    "cotes": {
+      "1": 5.3,
+      "N": 4.4,
+      "2": 1.39
+    },
+    "probabilites": {
+      "1": 2,
+      "N": 5,
+      "2": 93
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.29,
-          "N": 5.5,
-          "2": 7.75
-        },
-        "probabilites": {
-          "1": 74,
-          "N": 16,
-          "2": 10
-        },
-        "probabilites_marche": {
-          "1": 71,
-          "N": 17,
-          "2": 12
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Autriche",
-        "confiance_niveau": "haute",
-        "poisson_lambdas": {
-          "home": 2.611,
-          "away": 1.073
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "2-0",
-            "prob": 9
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "3-0",
-            "prob": 7
-          },
-          {
-            "score": "1-0",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 69,
-        "prob_btts_modele": 60,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": []
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "68214690",
+    "date_match": "16/06/2026 à 18:00",
+    "match_start_ts": 1781625600,
+    "equipe_domicile": "Kuressaare",
+    "equipe_exterieur": "Trans Narva",
+    "cotes": {
+      "1": 2.2,
+      "N": 3.35,
+      "2": 2.55
+    },
+    "probabilites": {
+      "1": 45,
+      "N": 32,
+      "2": 23
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "68492572",
+    "date_match": "16/06/2026 à 18:00",
+    "match_start_ts": 1781625600,
+    "equipe_domicile": "Grobinas SC",
+    "equipe_exterieur": "FK Liepaja",
+    "cotes": {
+      "1": 3.25,
+      "N": 3.45,
+      "2": 1.86
+    },
+    "probabilites": {
+      "1": 3,
+      "N": 15,
+      "2": 82
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "_legacy": {
-        "conseil": "Victoire Autriche",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "71901776",
+    "date_match": "16/06/2026 à 18:30",
+    "match_start_ts": 1781627400,
+    "equipe_domicile": "Žalgiris",
+    "equipe_exterieur": "Panevėžys",
+    "cotes": {
+      "1": 1.46,
+      "N": 4.1,
+      "2": 4.9
+    },
+    "probabilites": {
+      "1": 89,
+      "N": 9,
+      "2": 2
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "66457006",
+    "date_match": "16/06/2026 à 21:00",
+    "match_start_ts": 1781636400,
+    "equipe_domicile": "France",
+    "equipe_exterieur": "Sénégal",
+    "cotes": {
+      "1": 1.5,
+      "N": 4.4,
+      "2": 6.75
+    },
+    "probabilites": {
+      "1": 92,
+      "N": 4,
+      "2": 4
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "top_scores": [
-        {
-          "score": "2-1",
-          "prob": 9
-        },
-        {
-          "score": "2-0",
-          "prob": 9
-        },
-        {
-          "score": "3-1",
-          "prob": 8
-        },
-        {
-          "score": "3-0",
-          "prob": 7
-        },
-        {
-          "score": "1-0",
-          "prob": 7
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "cotes": {
-        "1": 1.29,
-        "N": 5.5,
-        "2": 7.75
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "1000184712",
+    "date_match": "16/06/2026 à 21:00",
+    "match_start_ts": 1781636400,
+    "equipe_domicile": "MultiFoot Coupe du Monde 2026 (J1",
+    "equipe_exterieur": "Groupes I & J)",
+    "cotes": {
+      "1": 1.39,
+      "N": null,
+      "2": 7.25
+    },
+    "probabilites": {
+      "1": 10,
+      "N": 0,
+      "2": 90
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "probabilites": {
-        "1": 74,
-        "N": 16,
-        "2": 10
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "68194680",
+    "date_match": "16/06/2026 à 21:15",
+    "match_start_ts": 1781637300,
+    "equipe_domicile": "Stjarnan",
+    "equipe_exterieur": "Breidablik Kopavogur",
+    "cotes": {
+      "1": 2.6,
+      "N": 3.9,
+      "2": 1.92
+    },
+    "probabilites": {
+      "1": 2,
+      "N": 13,
+      "2": 85
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
       },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Victoire Autriche",
-      "velora_pick_1n2": "1"
-    }
-  ]
-}
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "68194684",
+    "date_match": "16/06/2026 à 21:15",
+    "match_start_ts": 1781637300,
+    "equipe_domicile": "Vikingur Reykjavik",
+    "equipe_exterieur": "KR Reykjavik",
+    "cotes": {
+      "1": 1.4,
+      "N": 4.8,
+      "2": 4.7
+    },
+    "probabilites": {
+      "1": 91,
+      "N": 7,
+      "2": 2
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "71912616",
+    "date_match": "16/06/2026 à 21:15",
+    "match_start_ts": 1781637300,
+    "equipe_domicile": "IA Akranes",
+    "equipe_exterieur": "Valur Reykjavik",
+    "cotes": {
+      "1": 2.0,
+      "N": 3.6,
+      "2": 2.6
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 36,
+      "2": 14
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "66457008",
+    "date_match": "17/06/2026 à 00:00",
+    "match_start_ts": 1781647200,
+    "equipe_domicile": "Irak",
+    "equipe_exterieur": "Norvège",
+    "cotes": {
+      "1": 12.0,
+      "N": 7.25,
+      "2": 1.19
+    },
+    "probabilites": {
+      "1": 0,
+      "N": 3,
+      "2": 97
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "66457018",
+    "date_match": "17/06/2026 à 03:00",
+    "match_start_ts": 1781658000,
+    "equipe_domicile": "Argentine",
+    "equipe_exterieur": "Algérie",
+    "cotes": {
+      "1": 1.42,
+      "N": 4.5,
+      "2": 7.75
+    },
+    "probabilites": {
+      "1": 85,
+      "N": 5,
+      "2": 10
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "66457020",
+    "date_match": "17/06/2026 à 06:00",
+    "match_start_ts": 1781668800,
+    "equipe_domicile": "Autriche",
+    "equipe_exterieur": "Jordanie",
+    "cotes": {
+      "1": 1.37,
+      "N": 5.2,
+      "2": 7.25
+    },
+    "probabilites": {
+      "1": 48,
+      "N": 2,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": "Données indisponibles",
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext",
+    "les_deux_marquent": "Données indisponibles"
+  },
+  {
+    "id_match": "67091354",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "HJK Helsinki",
+    "equipe_exterieur": "Inter Turku",
+    "cotes": {
+      "1": 2.35,
+      "N": 3.15,
+      "2": 2.4
+    },
+    "probabilites": {
+      "1": 46,
+      "N": 43,
+      "2": 11
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : DC 1X"
+  },
+  {
+    "id_match": "67091356",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "FC Ilves",
+    "equipe_exterieur": "Jaro",
+    "cotes": {
+      "1": 1.62,
+      "N": 3.7,
+      "2": 3.75
+    },
+    "probabilites": {
+      "1": 98,
+      "N": 2,
+      "2": 0
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "67091358",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "TPS Turku",
+    "equipe_exterieur": "KuPS",
+    "cotes": {
+      "1": 4.2,
+      "N": 3.5,
+      "2": 1.58
+    },
+    "probabilites": {
+      "1": 6,
+      "N": 53,
+      "2": 41
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "67912732",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "Iberia 1999",
+    "equipe_exterieur": "FC Rustavi",
+    "cotes": {
+      "1": 1.72,
+      "N": 3.2,
+      "2": 3.75
+    },
+    "probabilites": {
+      "1": 11,
+      "N": 73,
+      "2": 16
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "68492574",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "Jelgava",
+    "equipe_exterieur": "Ogre United",
+    "cotes": {
+      "1": 1.5,
+      "N": 3.7,
+      "2": 4.6
+    },
+    "probabilites": {
+      "1": 58,
+      "N": 23,
+      "2": 19
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "68492576",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "Tukums 2000",
+    "equipe_exterieur": "FK Auda",
+    "cotes": {
+      "1": 4.2,
+      "N": 3.8,
+      "2": 1.52
+    },
+    "probabilites": {
+      "1": 2,
+      "N": 3,
+      "2": 95
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "72095782",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "KAC Marrakech",
+    "equipe_exterieur": "Ittihad Tanger",
+    "cotes": {
+      "1": 2.0,
+      "N": 2.9,
+      "2": 3.2
+    },
+    "probabilites": {
+      "1": 53,
+      "N": 21,
+      "2": 26
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "72095784",
+    "date_match": "17/06/2026 à 17:00",
+    "match_start_ts": 1781708400,
+    "equipe_domicile": "Renaissance Zemamra",
+    "equipe_exterieur": "Raja Casablanca",
+    "cotes": {
+      "1": 4.6,
+      "N": 3.15,
+      "2": 1.6
+    },
+    "probabilites": {
+      "1": 0,
+      "N": 0,
+      "2": 100
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "71901778",
+    "date_match": "17/06/2026 à 17:30",
+    "match_start_ts": 1781710200,
+    "equipe_domicile": "Hegelmann",
+    "equipe_exterieur": "Džiugas",
+    "cotes": {
+      "1": 2.35,
+      "N": 3.05,
+      "2": 2.45
+    },
+    "probabilites": {
+      "1": 5,
+      "N": 41,
+      "2": 54
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "68214692",
+    "date_match": "17/06/2026 à 18:00",
+    "match_start_ts": 1781712000,
+    "equipe_domicile": "Nomme United",
+    "equipe_exterieur": "Levadia Tallinn",
+    "cotes": {
+      "1": 9.0,
+      "N": 6.25,
+      "2": 1.12
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 0,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "68214694",
+    "date_match": "17/06/2026 à 18:00",
+    "match_start_ts": 1781712000,
+    "equipe_domicile": "Nomme Kalju",
+    "equipe_exterieur": "Tammeka Tartu",
+    "cotes": {
+      "1": 1.32,
+      "N": 4.5,
+      "2": 5.7
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 50,
+      "2": 0
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : DC 1X"
+  },
+  {
+    "id_match": "68214696",
+    "date_match": "17/06/2026 à 18:00",
+    "match_start_ts": 1781712000,
+    "equipe_domicile": "Paide Linnameeskond",
+    "equipe_exterieur": "Harju JK Laagri",
+    "cotes": {
+      "1": 1.42,
+      "N": 4.1,
+      "2": 4.9
+    },
+    "probabilites": {
+      "1": 48,
+      "N": 2,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "68492578",
+    "date_match": "17/06/2026 à 18:00",
+    "match_start_ts": 1781712000,
+    "equipe_domicile": "Riga FC",
+    "equipe_exterieur": "Rigas Futbola Skola",
+    "cotes": {
+      "1": 2.25,
+      "N": 3.2,
+      "2": 2.5
+    },
+    "probabilites": {
+      "1": 33,
+      "N": 62,
+      "2": 5
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "71901780",
+    "date_match": "17/06/2026 à 18:00",
+    "match_start_ts": 1781712000,
+    "equipe_domicile": "Kauno Žalgiris",
+    "equipe_exterieur": "Banga",
+    "cotes": {
+      "1": 1.44,
+      "N": 3.9,
+      "2": 5.0
+    },
+    "probabilites": {
+      "1": 83,
+      "N": 13,
+      "2": 4
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457030",
+    "date_match": "17/06/2026 à 19:00",
+    "match_start_ts": 1781715600,
+    "equipe_domicile": "Portugal",
+    "equipe_exterieur": "RD Congo",
+    "cotes": {
+      "1": 1.26,
+      "N": 5.9,
+      "2": 10.0
+    },
+    "probabilites": {
+      "1": 98,
+      "N": 2,
+      "2": 0
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "67912728",
+    "date_match": "17/06/2026 à 19:00",
+    "match_start_ts": 1781715600,
+    "equipe_domicile": "Torpedo Koutaïssi",
+    "equipe_exterieur": "Dinamo Batoumi",
+    "cotes": {
+      "1": 1.44,
+      "N": 3.8,
+      "2": 4.5
+    },
+    "probabilites": {
+      "1": 87,
+      "N": 9,
+      "2": 4
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "67091360",
+    "date_match": "17/06/2026 à 20:00",
+    "match_start_ts": 1781719200,
+    "equipe_domicile": "IF Gnistan",
+    "equipe_exterieur": "Lahti",
+    "cotes": {
+      "1": 2.25,
+      "N": 3.1,
+      "2": 2.5
+    },
+    "probabilites": {
+      "1": 58,
+      "N": 35,
+      "2": 7
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "67091362",
+    "date_match": "17/06/2026 à 20:00",
+    "match_start_ts": 1781719200,
+    "equipe_domicile": "Seinäjoen",
+    "equipe_exterieur": "Vaasa",
+    "cotes": {
+      "1": 2.2,
+      "N": 3.25,
+      "2": 2.5
+    },
+    "probabilites": {
+      "1": 29,
+      "N": 56,
+      "2": 15
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66457042",
+    "date_match": "17/06/2026 à 22:00",
+    "match_start_ts": 1781726400,
+    "equipe_domicile": "Angleterre",
+    "equipe_exterieur": "Croatie",
+    "cotes": {
+      "1": 1.7,
+      "N": 3.85,
+      "2": 4.5
+    },
+    "probabilites": {
+      "1": 87,
+      "N": 10,
+      "2": 3
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457044",
+    "date_match": "18/06/2026 à 01:00",
+    "match_start_ts": 1781737200,
+    "equipe_domicile": "Ghana",
+    "equipe_exterieur": "Panama",
+    "cotes": {
+      "1": 2.1,
+      "N": 3.5,
+      "2": 3.3
+    },
+    "probabilites": {
+      "1": 64,
+      "N": 31,
+      "2": 5
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457032",
+    "date_match": "18/06/2026 à 04:00",
+    "match_start_ts": 1781748000,
+    "equipe_domicile": "Ouzbékistan",
+    "equipe_exterieur": "Colombie",
+    "cotes": {
+      "1": 8.0,
+      "N": 4.9,
+      "2": 1.35
+    },
+    "probabilites": {
+      "1": 12,
+      "N": 19,
+      "2": 69
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "67091352",
+    "date_match": "18/06/2026 à 11:59",
+    "match_start_ts": 1781776740,
+    "equipe_domicile": "AC Oulu",
+    "equipe_exterieur": "Mariehamn",
+    "cotes": {
+      "1": 1.32,
+      "N": 4.1,
+      "2": 5.7
+    },
+    "probabilites": {
+      "1": 100,
+      "N": 0,
+      "2": 0
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456910",
+    "date_match": "18/06/2026 à 18:00",
+    "match_start_ts": 1781798400,
+    "equipe_domicile": "République Tchèque",
+    "equipe_exterieur": "Afrique du Sud",
+    "cotes": {
+      "1": 1.74,
+      "N": 3.8,
+      "2": 4.4
+    },
+    "probabilites": {
+      "1": 93,
+      "N": 5,
+      "2": 2
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456922",
+    "date_match": "18/06/2026 à 21:00",
+    "match_start_ts": 1781809200,
+    "equipe_domicile": "Suisse",
+    "equipe_exterieur": "Bosnie-Herzégovine",
+    "cotes": {
+      "1": 1.54,
+      "N": 4.1,
+      "2": 5.8
+    },
+    "probabilites": {
+      "1": 85,
+      "N": 9,
+      "2": 6
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456920",
+    "date_match": "19/06/2026 à 00:00",
+    "match_start_ts": 1781820000,
+    "equipe_domicile": "Canada",
+    "equipe_exterieur": "Qatar",
+    "cotes": {
+      "1": 1.22,
+      "N": 5.0,
+      "2": 8.5
+    },
+    "probabilites": {
+      "1": 95,
+      "N": 2,
+      "2": 3
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "71605992",
+    "date_match": "19/06/2026 à 02:00",
+    "match_start_ts": 1781827200,
+    "equipe_domicile": "Universidad De Chile",
+    "equipe_exterieur": "O'Higgins",
+    "cotes": {
+      "1": 1.7,
+      "N": 3.2,
+      "2": 3.6
+    },
+    "probabilites": {
+      "1": 47,
+      "N": 3,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "66456908",
+    "date_match": "19/06/2026 à 03:00",
+    "match_start_ts": 1781830800,
+    "equipe_domicile": "Mexique",
+    "equipe_exterieur": "Corée du Sud",
+    "cotes": {
+      "1": 1.96,
+      "N": 3.3,
+      "2": 3.95
+    },
+    "probabilites": {
+      "1": 69,
+      "N": 13,
+      "2": 18
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66854088",
+    "date_match": "19/06/2026 à 20:45",
+    "match_start_ts": 1781894700,
+    "equipe_domicile": "Drogheda",
+    "equipe_exterieur": "Shelbourne",
+    "cotes": {
+      "1": 3.3,
+      "N": 3.1,
+      "2": 1.78
+    },
+    "probabilites": {
+      "1": 2,
+      "N": 54,
+      "2": 44
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66854090",
+    "date_match": "19/06/2026 à 20:45",
+    "match_start_ts": 1781894700,
+    "equipe_domicile": "Galway United",
+    "equipe_exterieur": "Derry City",
+    "cotes": {
+      "1": 2.7,
+      "N": 2.95,
+      "2": 2.1
+    },
+    "probabilites": {
+      "1": 3,
+      "N": 49,
+      "2": 48
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66854092",
+    "date_match": "19/06/2026 à 20:45",
+    "match_start_ts": 1781894700,
+    "equipe_domicile": "St Patrick's",
+    "equipe_exterieur": "Sligo Rovers",
+    "cotes": {
+      "1": 1.21,
+      "N": 4.6,
+      "2": 7.25
+    },
+    "probabilites": {
+      "1": 70,
+      "N": 18,
+      "2": 12
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "66854094",
+    "date_match": "19/06/2026 à 20:45",
+    "match_start_ts": 1781894700,
+    "equipe_domicile": "Waterford",
+    "equipe_exterieur": "Shamrock Rovers",
+    "cotes": {
+      "1": 4.3,
+      "N": 3.6,
+      "2": 1.48
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 2,
+      "2": 48
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456944",
+    "date_match": "19/06/2026 à 21:00",
+    "match_start_ts": 1781895600,
+    "equipe_domicile": "États-Unis",
+    "equipe_exterieur": "Australie",
+    "cotes": {
+      "1": 1.6,
+      "N": 4.2,
+      "2": 4.8
+    },
+    "probabilites": {
+      "1": 48,
+      "N": 2,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "66854086",
+    "date_match": "19/06/2026 à 21:00",
+    "match_start_ts": 1781895600,
+    "equipe_domicile": "Bohemians",
+    "equipe_exterieur": "Dundalk",
+    "cotes": {
+      "1": 1.76,
+      "N": 3.35,
+      "2": 3.2
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 44,
+      "2": 6
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : DC 1X"
+  },
+  {
+    "id_match": "66456934",
+    "date_match": "20/06/2026 à 00:00",
+    "match_start_ts": 1781906400,
+    "equipe_domicile": "Écosse",
+    "equipe_exterieur": "Maroc",
+    "cotes": {
+      "1": 4.7,
+      "N": 3.65,
+      "2": 1.72
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 2,
+      "2": 48
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456932",
+    "date_match": "20/06/2026 à 02:30",
+    "match_start_ts": 1781915400,
+    "equipe_domicile": "Brésil",
+    "equipe_exterieur": "Haïti",
+    "cotes": {
+      "1": 1.1,
+      "N": 10.0,
+      "2": 17.0
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 50,
+      "2": 0
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : DC 1X"
+  },
+  {
+    "id_match": "66456946",
+    "date_match": "20/06/2026 à 05:00",
+    "match_start_ts": 1781924400,
+    "equipe_domicile": "Turquie",
+    "equipe_exterieur": "Paraguay",
+    "cotes": {
+      "1": 1.96,
+      "N": 3.4,
+      "2": 3.8
+    },
+    "probabilites": {
+      "1": 88,
+      "N": 9,
+      "2": 3
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66456972",
+    "date_match": "20/06/2026 à 19:00",
+    "match_start_ts": 1781974800,
+    "equipe_domicile": "Pays-Bas",
+    "equipe_exterieur": "Suède",
+    "cotes": {
+      "1": 1.64,
+      "N": 4.0,
+      "2": 4.7
+    },
+    "probabilites": {
+      "1": 84,
+      "N": 9,
+      "2": 7
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "72037988",
+    "date_match": "20/06/2026 à 21:00",
+    "match_start_ts": 1781982000,
+    "equipe_domicile": "Almeria",
+    "equipe_exterieur": "Malaga",
+    "cotes": {
+      "1": 1.9,
+      "N": 3.2,
+      "2": 2.95
+    },
+    "probabilites": {
+      "1": 21,
+      "N": 2,
+      "2": 77
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "66457074",
+    "date_match": "20/06/2026 à 22:00",
+    "match_start_ts": 1781985600,
+    "equipe_domicile": "Allemagne",
+    "equipe_exterieur": "Côte d'Ivoire",
+    "cotes": {
+      "1": 1.52,
+      "N": 4.4,
+      "2": 5.4
+    },
+    "probabilites": {
+      "1": 95,
+      "N": 2,
+      "2": 3
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457076",
+    "date_match": "21/06/2026 à 02:00",
+    "match_start_ts": 1782000000,
+    "equipe_domicile": "Équateur",
+    "equipe_exterieur": "Curaçao",
+    "cotes": {
+      "1": 1.08,
+      "N": 11.0,
+      "2": 19.0
+    },
+    "probabilites": {
+      "1": 48,
+      "N": 2,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "66456974",
+    "date_match": "21/06/2026 à 06:00",
+    "match_start_ts": 1782014400,
+    "equipe_domicile": "Tunisie",
+    "equipe_exterieur": "Japon",
+    "cotes": {
+      "1": 6.25,
+      "N": 4.1,
+      "2": 1.5
+    },
+    "probabilites": {
+      "1": 0,
+      "N": 2,
+      "2": 98
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "66456998",
+    "date_match": "21/06/2026 à 18:00",
+    "match_start_ts": 1782057600,
+    "equipe_domicile": "Espagne",
+    "equipe_exterieur": "Arabie Saoudite",
+    "cotes": {
+      "1": 1.07,
+      "N": 7.5,
+      "2": 15.0
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 0,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Ext"
+  },
+  {
+    "id_match": "68194686",
+    "date_match": "21/06/2026 à 20:00",
+    "match_start_ts": 1782064800,
+    "equipe_domicile": "FH Hafnarfjordur",
+    "equipe_exterieur": "Thor Akureyri",
+    "cotes": {
+      "1": 1.66,
+      "N": 3.7,
+      "2": 3.15
+    },
+    "probabilites": {
+      "1": 41,
+      "N": 42,
+      "2": 17
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66456986",
+    "date_match": "21/06/2026 à 21:00",
+    "match_start_ts": 1782068400,
+    "equipe_domicile": "Belgique",
+    "equipe_exterieur": "Iran",
+    "cotes": {
+      "1": 1.35,
+      "N": 4.2,
+      "2": 6.25
+    },
+    "probabilites": {
+      "1": 100,
+      "N": 0,
+      "2": 0
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457000",
+    "date_match": "22/06/2026 à 00:00",
+    "match_start_ts": 1782079200,
+    "equipe_domicile": "Uruguay",
+    "equipe_exterieur": "Cap-Vert",
+    "cotes": {
+      "1": 1.39,
+      "N": 3.75,
+      "2": 6.5
+    },
+    "probabilites": {
+      "1": 63,
+      "N": 23,
+      "2": 13
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "66456988",
+    "date_match": "22/06/2026 à 03:00",
+    "match_start_ts": 1782090000,
+    "equipe_domicile": "Nouvelle Zélande",
+    "equipe_exterieur": "Égypte",
+    "cotes": {
+      "1": 4.8,
+      "N": 3.65,
+      "2": 1.52
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 1,
+      "2": 49
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457022",
+    "date_match": "22/06/2026 à 19:00",
+    "match_start_ts": 1782147600,
+    "equipe_domicile": "Argentine",
+    "equipe_exterieur": "Autriche",
+    "cotes": {
+      "1": 1.52,
+      "N": 3.6,
+      "2": 4.9
+    },
+    "probabilites": {
+      "1": 58,
+      "N": 24,
+      "2": 18
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "66854126",
+    "date_match": "22/06/2026 à 20:45",
+    "match_start_ts": 1782153900,
+    "equipe_domicile": "Shelbourne",
+    "equipe_exterieur": "Bohemians",
+    "cotes": {
+      "1": 2.3,
+      "N": 2.95,
+      "2": 2.4
+    },
+    "probabilites": {
+      "1": 11,
+      "N": 89,
+      "2": 0
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66854128",
+    "date_match": "22/06/2026 à 21:00",
+    "match_start_ts": 1782154800,
+    "equipe_domicile": "Shamrock Rovers",
+    "equipe_exterieur": "Derry City",
+    "cotes": {
+      "1": 1.76,
+      "N": 3.0,
+      "2": 3.45
+    },
+    "probabilites": {
+      "1": 49,
+      "N": 50,
+      "2": 1
+    },
+    "tendance_buts": "Match Tactique",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Nul"
+  },
+  {
+    "id_match": "66457010",
+    "date_match": "22/06/2026 à 23:00",
+    "match_start_ts": 1782162000,
+    "equipe_domicile": "France",
+    "equipe_exterieur": "Irak",
+    "cotes": {
+      "1": 1.07,
+      "N": 7.5,
+      "2": 15.0
+    },
+    "probabilites": {
+      "1": 100,
+      "N": 0,
+      "2": 0
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  },
+  {
+    "id_match": "66457012",
+    "date_match": "23/06/2026 à 02:00",
+    "match_start_ts": 1782172800,
+    "equipe_domicile": "Norvège",
+    "equipe_exterieur": "Sénégal",
+    "cotes": {
+      "1": 2.0,
+      "N": 3.25,
+      "2": 3.05
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 19,
+      "2": 31
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Privilégier le +2.5 buts"
+  },
+  {
+    "id_match": "66457024",
+    "date_match": "23/06/2026 à 05:00",
+    "match_start_ts": 1782183600,
+    "equipe_domicile": "Jordanie",
+    "equipe_exterieur": "Algérie",
+    "cotes": {
+      "1": 5.7,
+      "N": 3.95,
+      "2": 1.41
+    },
+    "probabilites": {
+      "1": 50,
+      "N": 0,
+      "2": 50
+    },
+    "tendance_buts": "Match Offensif",
+    "top_scores": [],
+    "match_status": "PREMATCH",
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "🔥 Value Bet Détecté : Dom"
+  }
+]
