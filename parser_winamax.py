@@ -1251,8 +1251,8 @@ def extract_btts_oui(match_bets: list, outcomes: dict) -> int | None:
 MATCH_ENDED_STATUSES = frozenset({"ENDED", "CLOSED", "FINISHED", "CANCELLED", "CANCELED"})
 WINAMAX_MATCH_STATUS_ENDED_NUM = 3
 MATCH_FINISHED_GRACE_MINUTES = 120
-MATCH_PARSER_HORIZON_HOURS = int(os.environ.get("VELORA_PARSER_HORIZON_HOURS", "24"))
-MATCH_PARSER_HORIZON_MODE = os.environ.get("VELORA_PARSER_HORIZON_MODE", "betting_day").strip().lower()
+MATCH_PARSER_HORIZON_HOURS = int(os.environ.get("VELORA_PARSER_HORIZON_HOURS", "168"))
+MATCH_PARSER_HORIZON_MODE = os.environ.get("VELORA_PARSER_HORIZON_MODE", "rolling").strip().lower()
 BETTING_DAY_END_HOUR = int(os.environ.get("VELORA_BETTING_DAY_END_HOUR", "8"))
 
 

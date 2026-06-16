@@ -5525,7 +5525,7 @@
         /** Cartes Foot : une analyse ciblée ou liste complète (Premium). */
         function listeFootCartesAffichees() {
             if (footVoirTousMatchs && estVeloraPremiumFoot()) {
-                let liste = footMatchsRecherchables();
+                let liste = footMatchsPremiumListe();
                 if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
                 const q = normaliserTexteRechercheFoot(footFiltre);
                 if (q) {
@@ -5536,9 +5536,7 @@
                         return blob.includes(q);
                     });
                 }
-                return liste.sort(
-                    (a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0),
-                );
+                return liste;
             }
             return footMatchAnalyseUnique();
         }
@@ -6649,9 +6647,16 @@
             return footMatchs.filter((m) => !estMatchTermine(m) && !estMatchEnDirect(m));
         }
 
-        /** Matchs du jour (Paris) non terminés — base affichée au clic « Générer l'analyse ». */
+        /** Matchs du jour (Paris) non terminés — base gratuite (chips, recherche). */
         function footMatchsRecherchables() {
             return footMatchs.filter((m) => isKickoffInBettingDayParis(m) && estMatchAVenirOuLive(m));
+        }
+
+        /** Premium « Voir tous » : tous les matchs à venir / live dans le JSON (fenêtre parser ~7 j). */
+        function footMatchsPremiumListe() {
+            return footMatchs
+                .filter((m) => estMatchAVenirOuLive(m))
+                .sort((a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0));
         }
 
         function equipesFootRecherchables() {
@@ -8679,8 +8684,8 @@
             if (footVoirTousMatchs && estVeloraPremiumFoot()) {
                 const liste = listeFootCartesAffichees();
                 meta.textContent = liste.length
-                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} du jour — vue complète`
-                    : 'Aucun match du jour actif pour le moment';
+                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} à venir — vue complète Premium`
+                    : 'Aucun match à venir dans la base pour le moment';
                 return;
             }
             const liste = footMatchAnalyseUnique();
