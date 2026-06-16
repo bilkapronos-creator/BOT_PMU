@@ -1,18 +1,18 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-06-16T01:22:24.199175+02:00",
+    "generated_at": "2026-06-16T09:20:15.595239+02:00",
     "engine": "velora-pro-2",
-    "match_count": 5
+    "match_count": 4
   },
   "matchs": [
     {
-      "id_match": "66456994",
-      "date_match": "15/06/2026 à 18:00",
-      "match_start_ts": 1781539200,
+      "id_match": "66457006",
+      "date_match": "16/06/2026 à 21:00",
+      "match_start_ts": 1781636400,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Espagne",
-      "equipe_exterieur": "Cap-Vert",
+      "equipe_domicile": "France",
+      "equipe_exterieur": "Sénégal",
       "meta_match": {
         "competition": {
           "name": "International — Coupe du Monde 2026",
@@ -24,60 +24,60 @@
         }
       },
       "confidence": {
-        "velora_score": 49.9,
-        "indice_velora": 2,
-        "base_confidence": 0.499,
-        "adjusted_confidence": 0.499,
+        "velora_score": 56.4,
+        "indice_velora": 3,
+        "base_confidence": 0.564,
+        "adjusted_confidence": 0.564,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.05,
-          "N": 11.5,
-          "2": 20.0
+          "1": 1.43,
+          "N": 4.3,
+          "2": 6.25
         },
         "probabilites": {
-          "1": 73,
-          "N": 21,
-          "2": 6
+          "1": 66,
+          "N": 22,
+          "2": 12
         },
         "probabilites_marche": {
-          "1": 87,
-          "N": 8,
-          "2": 5
+          "1": 64,
+          "N": 21,
+          "2": 15
         },
         "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Espagne",
-        "confiance_niveau": "moyenne",
+        "pronostic_label": "Victoire France",
+        "confiance_niveau": "haute",
         "poisson_lambdas": {
-          "home": 1.278,
-          "away": 0.306
+          "home": 2.528,
+          "away": 1.224
         },
         "top_scores_modele": [
           {
-            "score": "1-0",
-            "prob": 26
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 8
           },
           {
             "score": "2-0",
-            "prob": 17
-          },
-          {
-            "score": "3-0",
             "prob": 7
           },
           {
-            "score": "2-1",
-            "prob": 5
+            "score": "3-0",
+            "prob": 6
           },
           {
-            "score": "4-0",
-            "prob": 2
+            "score": "1-0",
+            "prob": 6
           }
         ],
-        "prob_over_25_modele": 21,
-        "prob_btts_modele": 19,
+        "prob_over_25_modele": 71,
+        "prob_btts_modele": 64,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
@@ -103,373 +103,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Espagne — forme favorable Espagne",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "top_scores": [
-        {
-          "score": "1-0",
-          "prob": 26
-        },
-        {
-          "score": "2-0",
-          "prob": 17
-        },
-        {
-          "score": "3-0",
-          "prob": 7
-        },
-        {
-          "score": "2-1",
-          "prob": 5
-        },
-        {
-          "score": "4-0",
-          "prob": 2
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Double Chance DC 1X",
-      "velora_pick_1n2": "1"
-    },
-    {
-      "id_match": "68194682",
-      "date_match": "15/06/2026 à 20:00",
-      "match_start_ts": 1781546400,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "KA Akureyri",
-      "equipe_exterieur": "Fram Reykjavik",
-      "meta_match": {
-        "competition": {
-          "name": "Islande — Besta deild karla",
-          "type": "other",
-          "round": "J10",
-          "stakes_tier": "medium",
-          "category_id": "10",
-          "tournament_id": "102"
-        }
-      },
-      "confidence": {
-        "indice_velora": 0,
-        "indice_label": "Non calculable",
-        "base_confidence": 0.5,
-        "adjusted_confidence": 0.5,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 2.65,
-          "N": 3.4,
-          "2": 1.92
-        },
-        "probabilites": {
-          "1": 33,
-          "N": 25,
-          "2": 42
-        },
-        "probabilites_marche": {
-          "1": 32,
-          "N": 25,
-          "2": 43
-        },
-        "pronostic_1n2": "N",
-        "pronostic_label": "Privilégier le +2.5 buts",
-        "confiance_niveau": "faible",
-        "poisson_lambdas": {
-          "home": 1.294,
-          "away": 1.501
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-1",
-            "prob": 12
-          },
-          {
-            "score": "0-0",
-            "prob": 6
-          },
-          {
-            "score": "2-2",
-            "prob": 6
-          },
-          {
-            "score": "3-3",
-            "prob": 1
-          }
-        ],
-        "prob_over_25_modele": 53,
-        "prob_btts_modele": 56,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": [
-          {
-            "market": "dc_12",
-            "pick": "12",
-            "label": "Double chance 12",
-            "cote": 2.65,
-            "prob_pct": 70,
-            "edge": 1.855,
-            "score": 1.2436,
-            "tier": "excellent",
-            "raison": "Proba 70% × cote 2.65 → edge 1.85 — bon équilibre proba/rendement",
-            "stars": 5
-          },
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "cote": 2.65,
-            "prob_pct": 61,
-            "edge": 1.616,
-            "score": 0.8788,
-            "tier": "excellent",
-            "raison": "Proba 61% × cote 2.65 → edge 1.62 — bon équilibre proba/rendement",
-            "stars": 5
-          },
-          {
-            "market": "dc_x2",
-            "pick": "x2",
-            "label": "Double chance X2",
-            "cote": 1.92,
-            "prob_pct": 69,
-            "edge": 1.325,
-            "score": 0.4518,
-            "tier": "excellent",
-            "raison": "Proba 69% × cote 1.92 → edge 1.32 — bon équilibre proba/rendement",
-            "stars": 5
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "cote": 2.65,
-          "prob_pct": 70,
-          "edge": 1.855,
-          "score": 1.2436,
-          "tier": "excellent",
-          "raison": "Proba 70% × cote 2.65 → edge 1.85 — bon équilibre proba/rendement",
-          "stars": 5
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Privilégier le +2.5 buts",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "opportunite_type": "dc_12",
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "top_scores": [
-        {
-          "score": "1-1",
-          "prob": 12
-        },
-        {
-          "score": "0-0",
-          "prob": 6
-        },
-        {
-          "score": "2-2",
-          "prob": 6
-        },
-        {
-          "score": "3-3",
-          "prob": 1
-        }
-      ],
-      "les_deux_marquent": "Données indisponibles",
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Double Chance DC 1X",
-      "velora_pick_1n2": "N",
-      "probabilites": {
-        "1": 33,
-        "N": 25,
-        "2": 42
-      }
-    },
-    {
-      "id_match": "66456982",
-      "date_match": "15/06/2026 à 21:00",
-      "match_start_ts": 1781550000,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Belgique",
-      "equipe_exterieur": "Égypte",
-      "meta_match": {
-        "competition": {
-          "name": "International — Coupe du Monde 2026",
-          "type": "cup",
-          "round": "J1",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "900001750"
-        }
-      },
-      "confidence": {
-        "velora_score": 63.4,
-        "indice_velora": 3,
-        "base_confidence": 0.634,
-        "adjusted_confidence": 0.634,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.6,
-          "N": 3.85,
-          "2": 5.0
-        },
-        "probabilites": {
-          "1": 64,
-          "N": 21,
-          "2": 15
-        },
-        "probabilites_marche": {
-          "1": 58,
-          "N": 24,
-          "2": 18
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Belgique",
-        "confiance_niveau": "haute",
-        "poisson_lambdas": {
-          "home": 2.378,
-          "away": 1.325
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "3-1",
-            "prob": 7
-          },
-          {
-            "score": "2-0",
-            "prob": 7
-          },
-          {
-            "score": "1-0",
-            "prob": 6
-          },
-          {
-            "score": "3-0",
-            "prob": 6
-          }
-        ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 66,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [],
-        "conseils_intelligents": [
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "cote": 1.6,
-            "prob_pct": 85,
-            "edge": 1.36,
-            "score": 0.5047,
-            "tier": "excellent",
-            "raison": "Proba 85% × cote 1.60 → edge 1.36 — bon équilibre proba/rendement",
-            "stars": 5
-          },
-          {
-            "market": "dc_12",
-            "pick": "12",
-            "label": "Double chance 12",
-            "cote": 1.6,
-            "prob_pct": 79,
-            "edge": 1.264,
-            "score": 0.3655,
-            "tier": "excellent",
-            "raison": "Proba 79% × cote 1.60 → edge 1.26 — bon équilibre proba/rendement",
-            "stars": 5
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "cote": 1.6,
-          "prob_pct": 85,
-          "edge": 1.36,
-          "score": 0.5047,
-          "tier": "excellent",
-          "raison": "Proba 85% × cote 1.60 → edge 1.36 — bon équilibre proba/rendement",
-          "stars": 5
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Victoire Belgique — forme favorable Belgique",
+        "conseil": "Victoire France",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -491,35 +125,45 @@
         },
         {
           "score": "3-1",
-          "prob": 7
+          "prob": 8
         },
         {
           "score": "2-0",
           "prob": 7
         },
         {
-          "score": "1-0",
+          "score": "3-0",
           "prob": 6
         },
         {
-          "score": "3-0",
+          "score": "1-0",
           "prob": 6
         }
       ],
       "les_deux_marquent": "Données indisponibles",
+      "cotes": {
+        "1": 1.43,
+        "N": 4.3,
+        "2": 6.25
+      },
+      "probabilites": {
+        "1": 66,
+        "N": 22,
+        "2": 12
+      },
       "indice_velora": 0,
       "indice_velora_label": "Non calculable",
       "velora_score": null,
-      "conseil": "Double Chance DC 1X",
+      "conseil": "Victoire France",
       "velora_pick_1n2": "1"
     },
     {
-      "id_match": "66456996",
-      "date_match": "16/06/2026 à 00:00",
-      "match_start_ts": 1781560800,
+      "id_match": "66457008",
+      "date_match": "17/06/2026 à 00:00",
+      "match_start_ts": 1781647200,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Arabie Saoudite",
-      "equipe_exterieur": "Uruguay",
+      "equipe_domicile": "Irak",
+      "equipe_exterieur": "Norvège",
       "meta_match": {
         "competition": {
           "name": "International — Coupe du Monde 2026",
@@ -531,43 +175,47 @@
         }
       },
       "confidence": {
-        "velora_score": 41.6,
+        "velora_score": 49.9,
         "indice_velora": 2,
-        "base_confidence": 0.416,
-        "adjusted_confidence": 0.416,
+        "base_confidence": 0.499,
+        "adjusted_confidence": 0.499,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 6.5,
-          "N": 4.5,
-          "2": 1.41
+          "1": 10.5,
+          "N": 6.5,
+          "2": 1.19
         },
         "probabilites": {
-          "1": 14,
-          "N": 22,
-          "2": 64
+          "1": 8,
+          "N": 18,
+          "2": 74
         },
         "probabilites_marche": {
-          "1": 14,
-          "N": 20,
-          "2": 66
+          "1": 9,
+          "N": 14,
+          "2": 77
         },
         "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Uruguay",
+        "pronostic_label": "Victoire Norvège",
         "confiance_niveau": "moyenne",
         "poisson_lambdas": {
-          "home": 1.114,
-          "away": 2.42
+          "home": 0.922,
+          "away": 2.697
         },
         "top_scores_modele": [
           {
-            "score": "1-2",
+            "score": "0-2",
             "prob": 10
           },
           {
-            "score": "0-2",
+            "score": "1-2",
+            "prob": 9
+          },
+          {
+            "score": "0-3",
             "prob": 9
           },
           {
@@ -577,14 +225,10 @@
           {
             "score": "0-1",
             "prob": 7
-          },
-          {
-            "score": "0-3",
-            "prob": 7
           }
         ],
-        "prob_over_25_modele": 67,
-        "prob_btts_modele": 60,
+        "prob_over_25_modele": 68,
+        "prob_btts_modele": 55,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
@@ -592,44 +236,7 @@
         },
         "value_bets": [],
         "display_badges": [],
-        "conseils_intelligents": [
-          {
-            "market": "dc_12",
-            "pick": "12",
-            "label": "Double chance 12",
-            "cote": 6.5,
-            "prob_pct": 78,
-            "edge": 5.07,
-            "score": 6.2292,
-            "tier": "excellent",
-            "raison": "Proba 78% × cote 6.50 → edge 5.07 — bon équilibre proba/rendement",
-            "stars": 5
-          },
-          {
-            "market": "dc_x2",
-            "pick": "x2",
-            "label": "Double chance X2",
-            "cote": 1.41,
-            "prob_pct": 86,
-            "edge": 1.213,
-            "score": 0.2496,
-            "tier": "prudent",
-            "raison": "Proba 86% × cote 1.41 → edge 1.21 — cote faible (<1.50), gain limité",
-            "stars": 5
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "cote": 6.5,
-          "prob_pct": 78,
-          "edge": 5.07,
-          "score": 6.2292,
-          "tier": "excellent",
-          "raison": "Proba 78% × cote 6.50 → edge 5.07 — bon équilibre proba/rendement",
-          "stars": 5
-        }
+        "conseils_intelligents": []
       },
       "premium_analysis": {
         "score_exact": {
@@ -647,10 +254,9 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Uruguay — forme favorable Uruguay",
+        "conseil": "Victoire Norvège",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
-        "opportunite_type": "dc_12",
         "is_opportunite": false
       },
       "marches_supplementaires": {
@@ -665,11 +271,15 @@
       },
       "top_scores": [
         {
-          "score": "1-2",
+          "score": "0-2",
           "prob": 10
         },
         {
-          "score": "0-2",
+          "score": "1-2",
+          "prob": 9
+        },
+        {
+          "score": "0-3",
           "prob": 9
         },
         {
@@ -679,26 +289,32 @@
         {
           "score": "0-1",
           "prob": 7
-        },
-        {
-          "score": "0-3",
-          "prob": 7
         }
       ],
       "les_deux_marquent": "Données indisponibles",
+      "cotes": {
+        "1": 10.5,
+        "N": 6.5,
+        "2": 1.19
+      },
+      "probabilites": {
+        "1": 8,
+        "N": 18,
+        "2": 74
+      },
       "indice_velora": 0,
       "indice_velora_label": "Non calculable",
       "velora_score": null,
-      "conseil": "Double Chance DC 1X",
+      "conseil": "Victoire Norvège",
       "velora_pick_1n2": "2"
     },
     {
-      "id_match": "66456984",
-      "date_match": "16/06/2026 à 03:00",
-      "match_start_ts": 1781571600,
+      "id_match": "66457018",
+      "date_match": "17/06/2026 à 03:00",
+      "match_start_ts": 1781658000,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Iran",
-      "equipe_exterieur": "Nouvelle Zélande",
+      "equipe_domicile": "Argentine",
+      "equipe_exterieur": "Algérie",
       "meta_match": {
         "competition": {
           "name": "International — Coupe du Monde 2026",
@@ -710,60 +326,60 @@
         }
       },
       "confidence": {
-        "velora_score": 56.1,
+        "velora_score": 61.1,
         "indice_velora": 3,
-        "base_confidence": 0.561,
-        "adjusted_confidence": 0.561,
+        "base_confidence": 0.611,
+        "adjusted_confidence": 0.611,
         "modifiers": []
       },
       "pro_alerts": [],
       "free_analysis": {
         "cotes_1n2": {
-          "1": 1.86,
-          "N": 3.4,
-          "2": 3.95
+          "1": 1.38,
+          "N": 4.5,
+          "2": 7.25
         },
         "probabilites": {
-          "1": 56,
-          "N": 26,
-          "2": 18
+          "1": 70,
+          "N": 19,
+          "2": 11
         },
         "probabilites_marche": {
-          "1": 50,
-          "N": 27,
-          "2": 23
+          "1": 67,
+          "N": 20,
+          "2": 13
         },
         "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Iran",
+        "pronostic_label": "Victoire Argentine",
         "confiance_niveau": "haute",
         "poisson_lambdas": {
-          "home": 1.36,
-          "away": 0.922
+          "home": 2.571,
+          "away": 1.133
         },
         "top_scores_modele": [
-          {
-            "score": "1-0",
-            "prob": 14
-          },
-          {
-            "score": "2-0",
-            "prob": 9
-          },
           {
             "score": "2-1",
             "prob": 9
           },
           {
-            "score": "3-0",
-            "prob": 4
+            "score": "2-0",
+            "prob": 8
           },
           {
             "score": "3-1",
-            "prob": 4
+            "prob": 8
+          },
+          {
+            "score": "3-0",
+            "prob": 7
+          },
+          {
+            "score": "1-0",
+            "prob": 6
           }
         ],
-        "prob_over_25_modele": 40,
-        "prob_btts_modele": 45,
+        "prob_over_25_modele": 70,
+        "prob_btts_modele": 61,
         "football_data_enriched": true,
         "markets_raw": {
           "over_under_total": {},
@@ -771,44 +387,7 @@
         },
         "value_bets": [],
         "display_badges": [],
-        "conseils_intelligents": [
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "cote": 1.86,
-            "prob_pct": 82,
-            "edge": 1.525,
-            "score": 0.7468,
-            "tier": "excellent",
-            "raison": "Proba 82% × cote 1.86 → edge 1.52 — bon équilibre proba/rendement",
-            "stars": 5
-          },
-          {
-            "market": "dc_12",
-            "pick": "12",
-            "label": "Double chance 12",
-            "cote": 1.86,
-            "prob_pct": 74,
-            "edge": 1.376,
-            "score": 0.526,
-            "tier": "excellent",
-            "raison": "Proba 74% × cote 1.86 → edge 1.38 — bon équilibre proba/rendement",
-            "stars": 5
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "cote": 1.86,
-          "prob_pct": 82,
-          "edge": 1.525,
-          "score": 0.7468,
-          "tier": "excellent",
-          "raison": "Proba 82% × cote 1.86 → edge 1.52 — bon équilibre proba/rendement",
-          "stars": 5
-        }
+        "conseils_intelligents": []
       },
       "premium_analysis": {
         "score_exact": {
@@ -826,7 +405,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Victoire Iran — forme favorable Iran",
+        "conseil": "Victoire Argentine",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -843,31 +422,192 @@
       },
       "top_scores": [
         {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "2-0",
+          "prob": 8
+        },
+        {
+          "score": "3-1",
+          "prob": 8
+        },
+        {
+          "score": "3-0",
+          "prob": 7
+        },
+        {
           "score": "1-0",
-          "prob": 14
+          "prob": 6
+        }
+      ],
+      "les_deux_marquent": "Données indisponibles",
+      "cotes": {
+        "1": 1.38,
+        "N": 4.5,
+        "2": 7.25
+      },
+      "probabilites": {
+        "1": 70,
+        "N": 19,
+        "2": 11
+      },
+      "indice_velora": 0,
+      "indice_velora_label": "Non calculable",
+      "velora_score": null,
+      "conseil": "Victoire Argentine",
+      "velora_pick_1n2": "1"
+    },
+    {
+      "id_match": "66457020",
+      "date_match": "17/06/2026 à 06:00",
+      "match_start_ts": 1781668800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Autriche",
+      "equipe_exterieur": "Jordanie",
+      "meta_match": {
+        "competition": {
+          "name": "International — Coupe du Monde 2026",
+          "type": "cup",
+          "round": "J1",
+          "stakes_tier": "medium",
+          "category_id": "4",
+          "tournament_id": "900001750"
+        }
+      },
+      "confidence": {
+        "velora_score": 65.0,
+        "indice_velora": 3,
+        "base_confidence": 0.65,
+        "adjusted_confidence": 0.65,
+        "modifiers": []
+      },
+      "pro_alerts": [],
+      "free_analysis": {
+        "cotes_1n2": {
+          "1": 1.29,
+          "N": 5.5,
+          "2": 7.75
+        },
+        "probabilites": {
+          "1": 74,
+          "N": 16,
+          "2": 10
+        },
+        "probabilites_marche": {
+          "1": 71,
+          "N": 17,
+          "2": 12
+        },
+        "pronostic_1n2": "1",
+        "pronostic_label": "Victoire Autriche",
+        "confiance_niveau": "haute",
+        "poisson_lambdas": {
+          "home": 2.611,
+          "away": 1.073
+        },
+        "top_scores_modele": [
+          {
+            "score": "2-1",
+            "prob": 9
+          },
+          {
+            "score": "2-0",
+            "prob": 9
+          },
+          {
+            "score": "3-1",
+            "prob": 8
+          },
+          {
+            "score": "3-0",
+            "prob": 7
+          },
+          {
+            "score": "1-0",
+            "prob": 7
+          }
+        ],
+        "prob_over_25_modele": 69,
+        "prob_btts_modele": 60,
+        "football_data_enriched": true,
+        "markets_raw": {
+          "over_under_total": {},
+          "team_goals": {}
+        },
+        "value_bets": [],
+        "display_badges": [],
+        "conseils_intelligents": []
+      },
+      "premium_analysis": {
+        "score_exact": {
+          "top3": []
+        },
+        "buteur_match": {
+          "top": []
+        },
+        "buteur_mi_temps": {
+          "top": []
+        },
+        "buteur_double": {
+          "top": []
+        },
+        "value_bets": []
+      },
+      "_legacy": {
+        "conseil": "Victoire Autriche",
+        "tendance_buts": "Match Offensif",
+        "marches_supplementaires": {},
+        "is_opportunite": false
+      },
+      "marches_supplementaires": {
+        "plus_moins_buts": {
+          "1.5": "Indisponible",
+          "2.5": "Indisponible",
+          "3.5": "Indisponible"
+        },
+        "buteur_match": "Indisponible",
+        "buteur_mi_temps": "Indisponible",
+        "buteur_multiple": "Indisponible"
+      },
+      "top_scores": [
+        {
+          "score": "2-1",
+          "prob": 9
         },
         {
           "score": "2-0",
           "prob": 9
         },
         {
-          "score": "2-1",
-          "prob": 9
+          "score": "3-1",
+          "prob": 8
         },
         {
           "score": "3-0",
-          "prob": 4
+          "prob": 7
         },
         {
-          "score": "3-1",
-          "prob": 4
+          "score": "1-0",
+          "prob": 7
         }
       ],
       "les_deux_marquent": "Données indisponibles",
+      "cotes": {
+        "1": 1.29,
+        "N": 5.5,
+        "2": 7.75
+      },
+      "probabilites": {
+        "1": 74,
+        "N": 16,
+        "2": 10
+      },
       "indice_velora": 0,
       "indice_velora_label": "Non calculable",
       "velora_score": null,
-      "conseil": "Double Chance DC 1X",
+      "conseil": "Victoire Autriche",
       "velora_pick_1n2": "1"
     }
   ]
