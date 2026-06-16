@@ -107,6 +107,7 @@ jobs:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
           VELORA_PARSER_HORIZON_MODE: betting_day
           VELORA_BETTING_DAY_END_HOUR: "8"
+          VELORA_DUMP_TENNIS_POLL_SEC: "50"
         run: xvfb-run -a python run_all.py
 
       - name: Vérifier matchs du jour (recherche Foot vide si 0)

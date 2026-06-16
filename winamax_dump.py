@@ -39,6 +39,7 @@ EVALUATE_TIMEOUT_MS = int(os.environ.get("VELORA_DUMP_EVAL_MS", "20000"))
 REGEX_MAX_SECONDS = int(os.environ.get("VELORA_DUMP_REGEX_SEC", "25"))
 GOTO_TIMEOUT_MS = int(os.environ.get("VELORA_DUMP_GOTO_MS", "90000"))
 HTTP_TIMEOUT_SEC = int(os.environ.get("VELORA_DUMP_HTTP_TIMEOUT", "35"))
+TENNIS_POLL_SEC = float(os.environ.get("VELORA_DUMP_TENNIS_POLL_SEC", "45"))
 
 
 class WinamaxDumpError(Exception):
@@ -118,6 +119,90 @@ def _normalize_state(data: object) -> tuple[dict | None, str]:
         n = len(found.get("matches") or {})
         return found, f"état sport ({n} matchs)"
     return None, ""
+
+
+def _harvest_state_chunks_from_text(text: str) -> list[dict]:
+    """Extrait des blocs matches/outcomes depuis Socket.IO ou JSON embarqué."""
+    chunks: list[dict] = []
+    if not text:
+        return chunks
+    stripped = text.strip()
+    if stripped.startswith("42"):
+        try:
+            payload = json.loads(stripped[2:])
+            if isinstance(payload, list):
+                for item in payload:
+                    found = _find_sport_state(item)
+                    if found is not None:
+                        chunks.append(found)
+                    if isinstance(item, dict):
+                        for key in ("result", "value", "data"):
+                            nested = item.get(key)
+                            found = _find_sport_state(nested)
+                            if found is not None:
+                                chunks.append(found)
+        except json.JSONDecodeError:
+            pass
+    try:
+        data = json.loads(stripped)
+        found = _find_sport_state(data)
+        if found is not None:
+            chunks.append(found)
+    except json.JSONDecodeError:
+        pass
+    if '"matches"' in text:
+        for m in re.finditer(r'\{"matches"\s*:\s*\{', text):
+            chunk_str = _extract_json_object(text, m.start())
+            if not chunk_str:
+                continue
+            try:
+                data = json.loads(chunk_str)
+                found = _find_sport_state(data)
+                if found is not None:
+                    chunks.append(found)
+            except json.JSONDecodeError:
+                continue
+    return chunks
+
+
+def _poll_tennis_matches_in_page(page, max_seconds: float = TENNIS_POLL_SEC) -> int:
+    """Winamax injecte le tennis via Socket.IO — attendre que PRELOADED_STATE se remplisse."""
+    deadline = time.monotonic() + max_seconds
+    last_n = 0
+    while time.monotonic() < deadline:
+        try:
+            n = page.evaluate(
+                f"""() => {{
+                const s = window.PRELOADED_STATE;
+                if (!s || !s.matches) return 0;
+                return Object.values(s.matches).filter(
+                    (m) => m && Number(m.sportId) === {TENNIS_SPORT_ID}
+                ).length;
+            }}"""
+            )
+            n = int(n or 0)
+            if n > last_n:
+                print(f"[winamax_dump] poll Socket.IO → PRELOADED_STATE tennis: {n}")
+                last_n = n
+            if n >= 3:
+                return n
+        except Exception:
+            pass
+        time.sleep(2.0)
+    return last_n
+
+
+def _click_tennis_nav(page) -> None:
+    for sel in ("a[href*='/sports/5']", "a[href*='sports/5']"):
+        try:
+            loc = page.locator(sel).first
+            if loc.is_visible(timeout=2000):
+                loc.click(timeout=3000)
+                print(f"[winamax_dump] Clic navigation tennis ({sel})")
+                time.sleep(1.5)
+                return
+        except Exception:
+            continue
 
 
 def _extract_via_evaluate(page) -> tuple[object | None, str]:
@@ -551,13 +636,27 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
 
     def on_response(response) -> None:
         try:
-            if response.status != 200 or "winamax" not in response.url.lower():
+            if response.status != 200:
                 return
-            if "json" not in (response.headers.get("content-type") or "").lower():
+            url = response.url.lower()
+            if "winamax" not in url:
                 return
-            norm, _ = _normalize_state(response.json())
-            if norm is not None:
-                captured.append(norm)
+            is_socket = "uof-sports-server" in url or "socket.io" in url
+            ctype = (response.headers.get("content-type") or "").lower()
+            if is_socket or "json" in ctype or "text/plain" in ctype or "javascript" in ctype:
+                try:
+                    body = response.text()
+                except Exception:
+                    return
+                for chunk in _harvest_state_chunks_from_text(body):
+                    captured.append(chunk)
+                if "json" in ctype and not is_socket:
+                    try:
+                        norm, _ = _normalize_state(response.json())
+                        if norm is not None:
+                            captured.append(norm)
+                    except Exception:
+                        pass
         except Exception:
             pass
 
@@ -575,7 +674,16 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
 
         if expected_sport == TENNIS_SPORT_ID:
             _scroll_to_load_matches(page)
+            _click_tennis_nav(page)
             state_ready = _wait_for_sport_id_matches(page, TENNIS_SPORT_ID)
+            polled = _poll_tennis_matches_in_page(page)
+            if polled > 0:
+                state_ready = True
+        elif "/tournaments/" in url and "/sports/5" in url:
+            _scroll_to_load_matches(page)
+            polled = _poll_tennis_matches_in_page(page, max_seconds=min(TENNIS_POLL_SEC, 25.0))
+            if polled > 0:
+                state_ready = True
         elif not state_ready:
             state_ready = _wait_for_sport_state(page)
 
