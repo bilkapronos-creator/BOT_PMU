@@ -262,6 +262,114 @@ def _wait_for_sport_state(page) -> bool:
         return False
 
 
+def _wait_for_sport_id_matches(page, sport_id: int) -> bool:
+    try:
+        page.wait_for_function(
+            f"""() => {{
+                const s = window.PRELOADED_STATE;
+                if (!s || !s.matches) return false;
+                return Object.values(s.matches).some(
+                    (m) => m && Number(m.sportId) === {sport_id}
+                );
+            }}""",
+            timeout=WAIT_STATE_MS,
+        )
+        print(f"[winamax_dump] PRELOADED_STATE sportId={sport_id} prêt (<{WAIT_STATE_MS}ms)")
+        return True
+    except Exception as e:
+        print(
+            f"[winamax_dump] wait sportId={sport_id} timeout ({WAIT_STATE_MS}ms): {e}",
+            file=sys.stderr,
+        )
+        return False
+
+
+def _scroll_to_load_matches(page, times: int = 5) -> None:
+    for _ in range(times):
+        try:
+            page.evaluate("window.scrollBy(0, Math.max(600, window.innerHeight))")
+            time.sleep(0.7)
+        except Exception:
+            break
+    try:
+        page.evaluate("window.scrollTo(0, 0)")
+        time.sleep(0.4)
+    except Exception:
+        pass
+
+
+def _filter_winamax_state_by_sport(state: dict, sport_id: int) -> dict | None:
+    """Ne garde que les matchs (et bets/outcomes/odds liés) d'un sport."""
+    matches_map = state.get("matches") or {}
+    filtered_matches: dict = {}
+    match_ids: set[int] = set()
+    for key, match in matches_map.items():
+        if not isinstance(match, dict) or match.get("sportId") != sport_id:
+            continue
+        filtered_matches[key] = match
+        try:
+            match_ids.add(int(match.get("matchId") or key))
+        except (TypeError, ValueError):
+            continue
+    if not filtered_matches:
+        return None
+
+    filtered_bets: dict = {}
+    outcome_ids: set[int] = set()
+    for bid, bet in (state.get("bets") or {}).items():
+        if not isinstance(bet, dict):
+            continue
+        try:
+            mid = int(bet.get("matchId") or 0)
+        except (TypeError, ValueError):
+            continue
+        if mid not in match_ids:
+            continue
+        filtered_bets[bid] = bet
+        for oid in bet.get("outcomes") or []:
+            try:
+                outcome_ids.add(int(oid))
+            except (TypeError, ValueError):
+                continue
+
+    filtered_outcomes: dict = {}
+    for key, outcome in (state.get("outcomes") or {}).items():
+        try:
+            oid = int(key)
+        except (TypeError, ValueError):
+            continue
+        if oid in outcome_ids:
+            filtered_outcomes[key] = outcome
+
+    filtered_odds: dict = {}
+    for key, odd in (state.get("odds") or {}).items():
+        try:
+            oid = int(key)
+        except (TypeError, ValueError):
+            continue
+        if oid in outcome_ids:
+            filtered_odds[key] = odd
+
+    out = dict(state)
+    out["matches"] = filtered_matches
+    out["bets"] = filtered_bets
+    out["outcomes"] = filtered_outcomes
+    out["odds"] = filtered_odds
+    return out
+
+
+def _slice_state_for_url(state: dict, url: str) -> dict | None:
+    sport_id = _expected_sport_id_for_url(url)
+    if sport_id is None:
+        return state
+    sliced = _filter_winamax_state_by_sport(state, sport_id)
+    if sliced is None:
+        return None
+    n = len(sliced.get("matches") or {})
+    print(f"[winamax_dump] Filtre sportId={sport_id} : {n} match(s)")
+    return sliced
+
+
 def _diagnose_html(html: str, page) -> None:
     try:
         title = page.title()
@@ -398,7 +506,10 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
 
         _dismiss_cookie_banner(page)
 
-        if not state_ready:
+        if expected_sport == TENNIS_SPORT_ID:
+            _scroll_to_load_matches(page)
+            state_ready = _wait_for_sport_id_matches(page, TENNIS_SPORT_ID)
+        elif not state_ready:
             state_ready = _wait_for_sport_state(page)
 
         if not state_ready and _strict_on_wait_timeout():
@@ -412,15 +523,19 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
 
         if captured:
             best = _pick_best_state(captured, expected_sport)
-            n = len(best.get("matches") or {})
-            n_target = _sport_match_count(best, expected_sport) if expected_sport else n
-            return best, f"réponse réseau ({n} matchs, sport cible={n_target})"
+            sliced = _slice_state_for_url(best, url)
+            if sliced is not None:
+                n = len(sliced.get("matches") or {})
+                n_target = _sport_match_count(sliced, expected_sport) if expected_sport else n
+                return sliced, f"réponse réseau ({n} matchs, sport cible={n_target})"
 
         data, source = _extract_via_evaluate(page)
         if data is not None:
             norm, label = _normalize_state(data)
             if norm is not None:
-                return norm, f"{source} {label}"
+                sliced = _slice_state_for_url(norm, url)
+                if sliced is not None:
+                    return sliced, f"{source} {label}"
 
         if not state_ready:
             raise WinamaxDumpError(
@@ -440,6 +555,12 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
             if os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS"):
                 DEBUG_HTML.write_text(html, encoding="utf-8")
                 print(f"[winamax_dump] HTML debug: {DEBUG_HTML}")
+            return data, source
+        norm, label = _normalize_state(data)
+        if norm is not None:
+            sliced = _slice_state_for_url(norm, url)
+            if sliced is not None:
+                return sliced, f"{source} {label}"
         return data, source
     finally:
         page.remove_listener("response", on_response)
@@ -505,8 +626,12 @@ def _try_http_regex() -> tuple[dict | None, str]:
             continue
         norm, label = _normalize_state(data)
         if norm is not None:
-            merged = _merge_winamax_states(merged, norm)
-            sources.append(f"{url} ({source} {label})")
+            sliced = _slice_state_for_url(norm, url)
+            if sliced is None:
+                continue
+            merged = _merge_winamax_states(merged, sliced)
+            n_tennis = _sport_match_count(merged, TENNIS_SPORT_ID)
+            sources.append(f"{url} ({source} {label}, tennis={n_tennis})")
     if merged is not None:
         return merged, "HTTP merge: " + "; ".join(sources)
     return None, ""

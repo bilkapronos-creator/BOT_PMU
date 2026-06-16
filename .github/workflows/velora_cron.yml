@@ -15,6 +15,7 @@ on:
       - "winamax_dump.py"
       - "winamax_sniper.py"
       - "parser_winamax.py"
+      - "parser_winamax_tennis.py"
       - ".github/workflows/velora_cron.yml"
       - "velora_engine/**"
   workflow_dispatch:
@@ -213,4 +214,5 @@ jobs:
             exit 0
           fi
           git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
+          git pull --rebase origin main
           git push origin HEAD:main
