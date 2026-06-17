@@ -3104,12 +3104,12 @@
             if (animer) {
                 pulseVitrineTaux([kpiTaux, pmuTaux, footTaux, kpiRoi]);
             }
-            const nbHist = (pmu.historique_courses?.length || 0) + (foot.historique_matchs?.length || 0);
-            if (nbHist > 0 && !window.__vitrineDetailAutoOuvert) {
-                toggleVitrineDetailPanel(true);
-                window.__vitrineDetailAutoOuvert = true;
-            }
             if (section) section.classList.remove('hidden');
+        }
+
+        /** Replie le panneau détaillé (PMU / Foot) sans masquer les KPI. */
+        function replierVitrineCommunauteDetail() {
+            toggleVitrineDetailPanel(false);
         }
 
         function getCoursesStatsSync() {
@@ -5704,6 +5704,7 @@
 
             if (sportActif !== 'foot') changerSport('foot');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
+            replierVitrineCommunauteDetail();
 
             const btn = document.getElementById('btnFootVoirTous');
             if (btn) {
@@ -5722,9 +5723,7 @@
                 const liste = listeFootCartesAffichees();
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
-                    preparerHistoriqueFootCommunaute()
-                        .then(() => chargerStatsPlateforme({ animer: false }))
-                        .catch(() => {});
+                    preparerHistoriqueFootCommunaute().catch(() => {});
                     defilerVersResultatsFoot();
                 }
             } catch (err) {
@@ -5797,6 +5796,7 @@
 
             if (sportActif !== 'foot') changerSport('foot');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
+            replierVitrineCommunauteDetail();
 
             if (btn) {
                 btn.disabled = true;
@@ -5811,9 +5811,7 @@
                 const liste = listeFootCartesAffichees();
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
-                    preparerHistoriqueFootCommunaute()
-                        .then(() => chargerStatsPlateforme({ animer: false }))
-                        .catch(() => {});
+                    preparerHistoriqueFootCommunaute().catch(() => {});
                     defilerVersResultatsFoot();
                 }
             } catch (err) {
@@ -9577,6 +9575,7 @@
             }
             if (sportActif !== 'tennis') changerSport('tennis');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
+            replierVitrineCommunauteDetail();
 
             const btn = document.getElementById('btnTennisVoirTous');
             if (btn) {
@@ -9766,6 +9765,7 @@
 
             if (sportActif !== 'tennis') changerSport('tennis');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
+            replierVitrineCommunauteDetail();
             if (btn) { btn.disabled = true; btn.textContent = 'Génération…'; }
             try {
                 await rechargerTennisMatchsServeur({ force: true, silent: true });
