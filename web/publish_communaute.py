@@ -17,7 +17,7 @@ from stats_pmu import (
 OUT = Path(__file__).resolve().parent / "api_velora_communaute.json"
 
 
-def _extraire_historique_foot(archives: list, limit: int = 12) -> list[dict]:
+def _extraire_historique_foot(archives: list, limit: int = 30) -> list[dict]:
     web_dir = Path(__file__).resolve().parent
     if str(web_dir) not in sys.path:
         sys.path.insert(0, str(web_dir))
@@ -75,6 +75,140 @@ def _extraire_historique_foot(archives: list, limit: int = 12) -> list[dict]:
     return out
 
 
+    return out
+
+
+def _paris_day_key(ts_raw: int | float | None) -> str:
+    if ts_raw is None:
+        return "unknown"
+    try:
+        ts = float(ts_raw)
+        if ts > 1e12:
+            ts /= 1000.0
+        from zoneinfo import ZoneInfo
+
+        dt = datetime.fromtimestamp(ts, tz=ZoneInfo("Europe/Paris"))
+        return dt.strftime("%Y-%m-%d")
+    except (TypeError, ValueError, OSError, OverflowError):
+        return "unknown"
+
+
+_WEEKDAYS_FR = (
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche",
+)
+_MONTHS_FR = (
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+)
+
+
+def _label_jour_paris(day_key: str) -> str:
+    if day_key == "unknown":
+        return "Sans date"
+    try:
+        dt = datetime.strptime(day_key, "%Y-%m-%d")
+        wd = _WEEKDAYS_FR[dt.weekday()]
+        mo = _MONTHS_FR[dt.month - 1]
+        return f"{wd} {dt.day} {mo} {dt.year}"
+    except ValueError:
+        return day_key
+
+
+def _extraire_historique_par_jour(archives: list, max_days: int = 14) -> list[dict]:
+    """Pronostics groupés par jour de match (Paris), pour vitrine et archives."""
+    web_dir = Path(__file__).resolve().parent
+    if str(web_dir) not in sys.path:
+        sys.path.insert(0, str(web_dir))
+    from velora_archiver_foot import (  # noqa: PLC0415
+        _est_archive_terminee_validee,
+        _est_en_attente,
+    )
+
+    candidats = [
+        a
+        for a in archives
+        if (_est_archive_terminee_validee(a) or _est_en_attente(a))
+        and (a.get("equipe_domicile") or a.get("equipe_exterieur"))
+    ]
+    candidats.sort(
+        key=lambda a: a.get("match_start_ts") or a.get("timestamp") or 0,
+        reverse=True,
+    )
+
+    buckets: dict[str, list[dict]] = {}
+    for a in candidats:
+        day = _paris_day_key(a.get("match_start_ts") or a.get("timestamp"))
+        buckets.setdefault(day, []).append(a)
+
+    out: list[dict] = []
+    for day_key in sorted(buckets.keys(), reverse=True)[:max_days]:
+        if day_key == "unknown":
+            continue
+        items_raw = buckets[day_key]
+        matchs: list[dict] = []
+        victoires = 0
+        valides = 0
+        en_attente = 0
+        for a in items_raw:
+            en_att = _est_en_attente(a)
+            if en_att:
+                en_attente += 1
+            elif _est_archive_terminee_validee(a):
+                valides += 1
+                if a.get("reussi_foot") is True:
+                    tp = str(a.get("type_pari_foot") or "").strip().lower()
+                    if tp != "perdu":
+                        victoires += 1
+            type_pari = (
+                a.get("type_pari_foot")
+                or a.get("opportunite_detail")
+                or a.get("conseil")
+                or a.get("marche")
+                or ""
+            )
+            matchs.append(
+                {
+                    "equipe_domicile": a.get("equipe_domicile") or "?",
+                    "equipe_exterieur": a.get("equipe_exterieur") or "?",
+                    "score_final": "" if en_att else (a.get("score_final") or ""),
+                    "type_pari_foot": type_pari if en_att else (a.get("type_pari_foot") or type_pari),
+                    "reussi_foot": None if en_att else a.get("reussi_foot"),
+                    "marche": a.get("marche") or a.get("opportunite_type") or "",
+                    "conseil": a.get("conseil") or a.get("opportunite_detail") or "",
+                    "en_attente": en_att,
+                    "match_start_ts": a.get("match_start_ts") or a.get("timestamp") or 0,
+                }
+            )
+        out.append(
+            {
+                "jour": day_key,
+                "label": _label_jour_paris(day_key),
+                "total": len(items_raw),
+                "valides": valides,
+                "victoires": victoires,
+                "en_attente": en_attente,
+                "matchs": matchs,
+            }
+        )
+    return out
+
+
 def construire_bloc_pmu() -> dict:
     """
     Bloc PMU complet : agrégat financier (archives) + détail Tiercé/types + historique courses.
@@ -120,6 +254,7 @@ def construire_bloc_foot() -> dict:
     bloc["detail_par_marche"] = foot.get("detail_par_marche") or {}
     bloc["calibration"] = foot.get("calibration") or {}
     bloc["historique_matchs"] = _extraire_historique_foot(archives)
+    bloc["historique_par_jour"] = _extraire_historique_par_jour(archives)
     return bloc
 
 

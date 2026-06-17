@@ -50,45 +50,45 @@
     "membres_actifs": 2
   },
   "foot": {
-    "taux": 50,
-    "victoires": 14,
-    "total": 28,
-    "mises_cumulees": 280.0,
-    "profit_net": -97.7,
-    "roi_pct": -34.9,
+    "taux": 39,
+    "victoires": 59,
+    "total": 151,
+    "mises_cumulees": 1510.0,
+    "profit_net": -359.7,
+    "roi_pct": -23.8,
     "detail_par_type_pari": {
-      "Double chance": {
-        "total": 22,
+      "1N2 Domicile": {
+        "total": 17,
+        "succes": 17,
+        "taux": 100
+      },
+      "Value 1N2": {
+        "total": 14,
         "succes": 0,
         "taux": 0
       },
-      "Score exact (top 3)": {
-        "total": 56,
-        "succes": 12,
-        "taux": 21
-      },
-      "Double chance 1X": {
-        "total": 3,
-        "succes": 3,
-        "taux": 100
-      },
-      "1N2 Domicile": {
-        "total": 12,
-        "succes": 12,
-        "taux": 100
-      },
       "1N2 Extérieur": {
-        "total": 12,
-        "succes": 12,
+        "total": 13,
+        "succes": 13,
         "taux": 100
       },
       "1N2 Nul": {
+        "total": 6,
+        "succes": 6,
+        "taux": 100
+      },
+      "Double chance 1X": {
         "total": 5,
         "succes": 5,
         "taux": 100
       },
-      "Value 1N2": {
-        "total": 11,
+      "Score exact (top 3)": {
+        "total": 57,
+        "succes": 12,
+        "taux": 21
+      },
+      "Double chance": {
+        "total": 22,
         "succes": 0,
         "taux": 0
       },
@@ -109,26 +109,26 @@
       }
     },
     "detail_par_marche": {
+      "value_1n2": {
+        "label": "Value 1N2",
+        "total": 27,
+        "succes": 13,
+        "taux": 48,
+        "profit_net": 218.2
+      },
       "double_chance": {
         "label": "Double chance",
-        "total": 42,
-        "succes": 20,
-        "taux": 48,
-        "profit_net": -211.9
+        "total": 44,
+        "succes": 22,
+        "taux": 50,
+        "profit_net": -203.4
       },
       "score_exact": {
         "label": "Score exact (top 3)",
-        "total": 56,
+        "total": 57,
         "succes": 12,
         "taux": 21,
-        "profit_net": -267.1
-      },
-      "value_1n2": {
-        "label": "Value 1N2",
-        "total": 17,
-        "succes": 6,
-        "taux": 35,
-        "profit_net": 198.1
+        "profit_net": -277.1
       },
       "pronostic_1n2": {
         "label": "Pronostic 1N2",
@@ -147,7 +147,7 @@
     },
     "calibration": {
       "edge_thresholds": {
-        "1n2": 1.07,
+        "1n2": 1.05,
         "dc_1x": 1.05,
         "dc_x2": 1.05,
         "ou_total": 1.08,
@@ -164,18 +164,8 @@
           "edge_actuel": 1.15,
           "edge_suggere": 1.21,
           "taux_pct": 21,
-          "echantillon": 56,
-          "raison": "21% de réussite sur 56 matchs — seuil relevé"
-        },
-        {
-          "marche": "value_1n2",
-          "label": "Value 1N2",
-          "edge_key": "1n2",
-          "edge_actuel": 1.05,
-          "edge_suggere": 1.07,
-          "taux_pct": 35,
-          "echantillon": 17,
-          "raison": "35% de réussite sur 17 matchs — seuil relevé"
+          "echantillon": 57,
+          "raison": "21% de réussite sur 57 matchs — seuil relevé"
         },
         {
           "marche": "over_25",
@@ -192,173 +182,2626 @@
     },
     "historique_matchs": [
       {
-        "equipe_domicile": "Pays-Bas",
-        "equipe_exterieur": "Ouzbékistan",
+        "equipe_domicile": "Autriche",
+        "equipe_exterieur": "Jordanie",
         "score_final": "",
-        "type_pari_foot": "Victoire Ouzbékistan — forme favorable Ouzbékistan",
+        "type_pari_foot": "🔥 Value Bet Détecté : Ext",
         "reussi_foot": null,
         "marche": "1n2",
         "scores_proposes": [],
         "en_attente": true,
-        "match_start_ts": 1780944300
+        "match_start_ts": 1781668800
       },
       {
-        "equipe_domicile": "Maroc",
+        "equipe_domicile": "Argentine",
+        "equipe_exterieur": "Algérie",
+        "score_final": "3-0",
+        "type_pari_foot": "1N2 Domicile",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781658000
+      },
+      {
+        "equipe_domicile": "Irak",
         "equipe_exterieur": "Norvège",
+        "score_final": "",
+        "type_pari_foot": "🔥 Value Bet Détecté : Ext",
+        "reussi_foot": null,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": true,
+        "match_start_ts": 1781647200
+      },
+      {
+        "equipe_domicile": "Arabie Saoudite",
+        "equipe_exterieur": "Uruguay",
         "score_final": "1-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-2",
+          "0-2",
+          "1-3"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781560800
+      },
+      {
+        "equipe_domicile": "Stjarnan",
+        "equipe_exterieur": "Breidablik Kopavogur",
+        "score_final": "4-4",
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "1n2",
         "scores_proposes": [],
         "en_attente": false,
-        "match_start_ts": 1780858800
+        "match_start_ts": 1781637300
       },
       {
-        "equipe_domicile": "Grèce",
-        "equipe_exterieur": "Italie",
-        "score_final": "0-1",
-        "type_pari_foot": "1N2 Extérieur",
+        "equipe_domicile": "Vikingur Reykjavik",
+        "equipe_exterieur": "KR Reykjavik",
+        "score_final": "2-0",
+        "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
         "marche": "1n2",
         "scores_proposes": [],
         "en_attente": false,
-        "match_start_ts": 1780858800
+        "match_start_ts": 1781637300
       },
       {
-        "equipe_domicile": "Pays-Bas",
-        "equipe_exterieur": "Ouzbékistan",
-        "score_final": "",
-        "type_pari_foot": "Score exact 3-0 @ 7",
-        "reussi_foot": null,
-        "marche": "score_exact",
-        "scores_proposes": [],
-        "en_attente": true,
-        "match_start_ts": 1780944300
-      },
-      {
-        "equipe_domicile": "Las Palmas",
-        "equipe_exterieur": "Malaga",
-        "score_final": "0-1",
-        "type_pari_foot": "1N2 Extérieur",
-        "reussi_foot": true,
-        "marche": "1n2",
-        "scores_proposes": [],
-        "en_attente": false,
-        "match_start_ts": 1780858800
-      },
-      {
-        "equipe_domicile": "Inter Toronto",
-        "equipe_exterieur": "Forge",
-        "score_final": "1-4",
-        "type_pari_foot": "1N2 Extérieur",
-        "reussi_foot": true,
-        "marche": "1n2",
-        "scores_proposes": [],
-        "en_attente": false,
-        "match_start_ts": 1780855200
-      },
-      {
-        "equipe_domicile": "Maroc",
-        "equipe_exterieur": "Norvège",
+        "equipe_domicile": "Belgique",
+        "equipe_exterieur": "Égypte",
         "score_final": "1-1",
         "type_pari_foot": "Perdu",
         "reussi_foot": false,
         "marche": "score_exact",
         "scores_proposes": [
           "2-1",
-          "1-0",
-          "3-1"
+          "3-1",
+          "2-0"
         ],
         "en_attente": false,
-        "match_start_ts": 1780858800
+        "match_start_ts": 1781550000
       },
       {
-        "equipe_domicile": "Danemark",
-        "equipe_exterieur": "Ukraine",
-        "score_final": "2-1",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
+        "equipe_domicile": "IA Akranes",
+        "equipe_exterieur": "Valur Reykjavik",
+        "score_final": "",
+        "type_pari_foot": "🔥 Value Bet Détecté : Nul",
+        "reussi_foot": null,
         "marche": "1n2",
         "scores_proposes": [],
-        "en_attente": false,
-        "match_start_ts": 1780849800
+        "en_attente": true,
+        "match_start_ts": 1781637300
       },
       {
-        "equipe_domicile": "USM Alger",
-        "equipe_exterieur": "Belouizdad",
-        "score_final": "2-0",
-        "type_pari_foot": "Perdu",
-        "reussi_foot": false,
-        "marche": "over_25",
-        "scores_proposes": [],
-        "en_attente": false,
-        "match_start_ts": 1780426800
-      },
-      {
-        "equipe_domicile": "Grèce",
-        "equipe_exterieur": "Italie",
-        "score_final": "0-1",
-        "type_pari_foot": "Score exact 0-1",
-        "reussi_foot": true,
-        "marche": "score_exact",
-        "scores_proposes": [
-          "1-2",
-          "0-1",
-          "1-3"
-        ],
-        "en_attente": false,
-        "match_start_ts": 1780858800
-      },
-      {
-        "equipe_domicile": "Autriche",
-        "equipe_exterieur": "Tunisie",
-        "score_final": "1-0",
-        "type_pari_foot": "1N2 Domicile",
-        "reussi_foot": true,
-        "marche": "1n2",
-        "scores_proposes": [],
-        "en_attente": false,
-        "match_start_ts": 1780339500
-      },
-      {
-        "equipe_domicile": "Norvège",
-        "equipe_exterieur": "Suède",
+        "equipe_domicile": "France",
+        "equipe_exterieur": "Sénégal",
         "score_final": "3-1",
         "type_pari_foot": "1N2 Domicile",
         "reussi_foot": true,
         "marche": "1n2",
         "scores_proposes": [],
         "en_attente": false,
-        "match_start_ts": 1780333200
+        "match_start_ts": 1781636400
+      },
+      {
+        "equipe_domicile": "KA Akureyri",
+        "equipe_exterieur": "Fram Reykjavik",
+        "score_final": "3-4",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-1",
+          "0-0",
+          "2-2"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781546400
+      },
+      {
+        "equipe_domicile": "MultiFoot Coupe du Monde 2026 (J1",
+        "equipe_exterieur": "Groupes I & J)",
+        "score_final": "",
+        "type_pari_foot": "🔥 Value Bet Détecté : Ext",
+        "reussi_foot": null,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": true,
+        "match_start_ts": 1781636400
+      },
+      {
+        "equipe_domicile": "Žalgiris",
+        "equipe_exterieur": "Panevėžys",
+        "score_final": "3-0",
+        "type_pari_foot": "1N2 Domicile",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781627400
+      },
+      {
+        "equipe_domicile": "Espagne",
+        "equipe_exterieur": "Cap-Vert",
+        "score_final": "0-0",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-0",
+          "2-0",
+          "3-0"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781539200
+      },
+      {
+        "equipe_domicile": "Dila Gori",
+        "equipe_exterieur": "FC Spaeri",
+        "score_final": "3-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781625600
+      },
+      {
+        "equipe_domicile": "Parnu Vaprus",
+        "equipe_exterieur": "Flora Tallinn",
+        "score_final": "1-2",
+        "type_pari_foot": "1N2 Extérieur",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781625600
+      },
+      {
+        "equipe_domicile": "Pays-Bas",
+        "equipe_exterieur": "Japon",
+        "score_final": "2-2",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-2",
+          "0-1",
+          "2-3"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781467200
+      },
+      {
+        "equipe_domicile": "Kuressaare",
+        "equipe_exterieur": "Trans Narva",
+        "score_final": "0-0",
+        "type_pari_foot": "1N2 Nul",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781625600
+      },
+      {
+        "equipe_domicile": "Grobinas SC",
+        "equipe_exterieur": "FK Liepaja",
+        "score_final": "1-0",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781625600
+      },
+      {
+        "equipe_domicile": "Unión La Calera",
+        "equipe_exterieur": "Universidad De Chile",
+        "score_final": "",
+        "type_pari_foot": "Scores exacts proposés : 4-5, 3-4, 3-5",
+        "reussi_foot": null,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "4-5",
+          "3-4",
+          "3-5"
+        ],
+        "en_attente": true,
+        "match_start_ts": 1781463600
+      },
+      {
+        "equipe_domicile": "Sūduva",
+        "equipe_exterieur": "Šiauliai",
+        "score_final": "2-1",
+        "type_pari_foot": "1N2 Domicile",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781623800
+      },
+      {
+        "equipe_domicile": "BFC Daugavpils",
+        "equipe_exterieur": "Super Nova",
+        "score_final": "0-0",
+        "type_pari_foot": "Double chance 1X",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781622000
+      },
+      {
+        "equipe_domicile": "Allemagne",
+        "equipe_exterieur": "Curaçao",
+        "score_final": "7-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "3-0",
+          "2-0",
+          "4-0"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781456400
+      },
+      {
+        "equipe_domicile": "Arabie Saoudite",
+        "equipe_exterieur": "Uruguay",
+        "score_final": "1-1",
+        "type_pari_foot": "Double chance 1X",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781560800
+      },
+      {
+        "equipe_domicile": "Belgique",
+        "equipe_exterieur": "Égypte",
+        "score_final": "1-1",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781550000
+      },
+      {
+        "equipe_domicile": "Keflavik",
+        "equipe_exterieur": "FH Hafnarfjordur",
+        "score_final": "1-2",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-1",
+          "0-0",
+          "2-2"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781456400
+      },
+      {
+        "equipe_domicile": "KA Akureyri",
+        "equipe_exterieur": "Fram Reykjavik",
+        "score_final": "3-4",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781546400
+      },
+      {
+        "equipe_domicile": "Espagne",
+        "equipe_exterieur": "Cap-Vert",
+        "score_final": "0-0",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781539200
+      },
+      {
+        "equipe_domicile": "Thor Akureyri",
+        "equipe_exterieur": "IBV Vestmannaeyjar",
+        "score_final": "1-4",
+        "type_pari_foot": "Perdu",
+        "reussi_foot": false,
+        "marche": "score_exact",
+        "scores_proposes": [
+          "1-1",
+          "0-0",
+          "2-2"
+        ],
+        "en_attente": false,
+        "match_start_ts": 1781456400
+      },
+      {
+        "equipe_domicile": "Pays-Bas",
+        "equipe_exterieur": "Japon",
+        "score_final": "2-2",
+        "type_pari_foot": "Double chance 1X",
+        "reussi_foot": true,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": false,
+        "match_start_ts": 1781467200
+      },
+      {
+        "equipe_domicile": "Unión La Calera",
+        "equipe_exterieur": "Universidad De Chile",
+        "score_final": "",
+        "type_pari_foot": "Double Chance DC 1X",
+        "reussi_foot": null,
+        "marche": "1n2",
+        "scores_proposes": [],
+        "en_attente": true,
+        "match_start_ts": 1781463600
+      }
+    ],
+    "historique_par_jour": [
+      {
+        "jour": "2026-06-17",
+        "label": "mercredi 17 juin 2026",
+        "total": 3,
+        "valides": 1,
+        "victoires": 1,
+        "en_attente": 2,
+        "matchs": [
+          {
+            "equipe_domicile": "Autriche",
+            "equipe_exterieur": "Jordanie",
+            "score_final": "",
+            "type_pari_foot": "🔥 Value Bet Détecté : Ext",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": true,
+            "match_start_ts": 1781668800
+          },
+          {
+            "equipe_domicile": "Argentine",
+            "equipe_exterieur": "Algérie",
+            "score_final": "3-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781658000
+          },
+          {
+            "equipe_domicile": "Irak",
+            "equipe_exterieur": "Norvège",
+            "score_final": "",
+            "type_pari_foot": "🔥 Value Bet Détecté : Ext",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": true,
+            "match_start_ts": 1781647200
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-16",
+        "label": "mardi 16 juin 2026",
+        "total": 14,
+        "valides": 12,
+        "victoires": 8,
+        "en_attente": 2,
+        "matchs": [
+          {
+            "equipe_domicile": "Stjarnan",
+            "equipe_exterieur": "Breidablik Kopavogur",
+            "score_final": "4-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781637300
+          },
+          {
+            "equipe_domicile": "Vikingur Reykjavik",
+            "equipe_exterieur": "KR Reykjavik",
+            "score_final": "2-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781637300
+          },
+          {
+            "equipe_domicile": "IA Akranes",
+            "equipe_exterieur": "Valur Reykjavik",
+            "score_final": "",
+            "type_pari_foot": "🔥 Value Bet Détecté : Nul",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": true,
+            "match_start_ts": 1781637300
+          },
+          {
+            "equipe_domicile": "France",
+            "equipe_exterieur": "Sénégal",
+            "score_final": "3-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781636400
+          },
+          {
+            "equipe_domicile": "MultiFoot Coupe du Monde 2026 (J1",
+            "equipe_exterieur": "Groupes I & J)",
+            "score_final": "",
+            "type_pari_foot": "🔥 Value Bet Détecté : Ext",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": true,
+            "match_start_ts": 1781636400
+          },
+          {
+            "equipe_domicile": "Žalgiris",
+            "equipe_exterieur": "Panevėžys",
+            "score_final": "3-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781627400
+          },
+          {
+            "equipe_domicile": "Dila Gori",
+            "equipe_exterieur": "FC Spaeri",
+            "score_final": "3-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1781625600
+          },
+          {
+            "equipe_domicile": "Parnu Vaprus",
+            "equipe_exterieur": "Flora Tallinn",
+            "score_final": "1-2",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781625600
+          },
+          {
+            "equipe_domicile": "Kuressaare",
+            "equipe_exterieur": "Trans Narva",
+            "score_final": "0-0",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1781625600
+          },
+          {
+            "equipe_domicile": "Grobinas SC",
+            "equipe_exterieur": "FK Liepaja",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781625600
+          },
+          {
+            "equipe_domicile": "Sūduva",
+            "equipe_exterieur": "Šiauliai",
+            "score_final": "2-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781623800
+          },
+          {
+            "equipe_domicile": "BFC Daugavpils",
+            "equipe_exterieur": "Super Nova",
+            "score_final": "0-0",
+            "type_pari_foot": "Double chance 1X",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781622000
+          },
+          {
+            "equipe_domicile": "Arabie Saoudite",
+            "equipe_exterieur": "Uruguay",
+            "score_final": "1-1",
+            "type_pari_foot": "Double chance 1X",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781560800
+          },
+          {
+            "equipe_domicile": "Arabie Saoudite",
+            "equipe_exterieur": "Uruguay",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-2, 0-2, 1-3",
+            "en_attente": false,
+            "match_start_ts": 1781560800
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-15",
+        "label": "lundi 15 juin 2026",
+        "total": 6,
+        "valides": 6,
+        "victoires": 0,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Belgique",
+            "equipe_exterieur": "Égypte",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781550000
+          },
+          {
+            "equipe_domicile": "Belgique",
+            "equipe_exterieur": "Égypte",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781550000
+          },
+          {
+            "equipe_domicile": "KA Akureyri",
+            "equipe_exterieur": "Fram Reykjavik",
+            "score_final": "3-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781546400
+          },
+          {
+            "equipe_domicile": "KA Akureyri",
+            "equipe_exterieur": "Fram Reykjavik",
+            "score_final": "3-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781546400
+          },
+          {
+            "equipe_domicile": "Espagne",
+            "equipe_exterieur": "Cap-Vert",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781539200
+          },
+          {
+            "equipe_domicile": "Espagne",
+            "equipe_exterieur": "Cap-Vert",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781539200
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-14",
+        "label": "dimanche 14 juin 2026",
+        "total": 14,
+        "valides": 12,
+        "victoires": 2,
+        "en_attente": 2,
+        "matchs": [
+          {
+            "equipe_domicile": "Pays-Bas",
+            "equipe_exterieur": "Japon",
+            "score_final": "2-2",
+            "type_pari_foot": "Double chance 1X",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781467200
+          },
+          {
+            "equipe_domicile": "Pays-Bas",
+            "equipe_exterieur": "Japon",
+            "score_final": "2-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-2, 0-1, 2-3",
+            "en_attente": false,
+            "match_start_ts": 1781467200
+          },
+          {
+            "equipe_domicile": "Unión La Calera",
+            "equipe_exterieur": "Universidad De Chile",
+            "score_final": "",
+            "type_pari_foot": "Double Chance DC 1X",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": true,
+            "match_start_ts": 1781463600
+          },
+          {
+            "equipe_domicile": "Unión La Calera",
+            "equipe_exterieur": "Universidad De Chile",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 4-5, 3-4, 3-5",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 4-5, 3-4, 3-5",
+            "en_attente": true,
+            "match_start_ts": 1781463600
+          },
+          {
+            "equipe_domicile": "Allemagne",
+            "equipe_exterieur": "Curaçao",
+            "score_final": "7-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Allemagne",
+            "equipe_exterieur": "Curaçao",
+            "score_final": "7-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Keflavik",
+            "equipe_exterieur": "FH Hafnarfjordur",
+            "score_final": "1-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Keflavik",
+            "equipe_exterieur": "FH Hafnarfjordur",
+            "score_final": "1-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Thor Akureyri",
+            "equipe_exterieur": "IBV Vestmannaeyjar",
+            "score_final": "1-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Thor Akureyri",
+            "equipe_exterieur": "IBV Vestmannaeyjar",
+            "score_final": "1-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781456400
+          },
+          {
+            "equipe_domicile": "Deportes Concepcion",
+            "equipe_exterieur": "Limache",
+            "score_final": "3-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781454600
+          },
+          {
+            "equipe_domicile": "Deportes Concepcion",
+            "equipe_exterieur": "Limache",
+            "score_final": "3-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781454600
+          },
+          {
+            "equipe_domicile": "Nomme Kalju",
+            "equipe_exterieur": "Paide Linnameeskond",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781436600
+          },
+          {
+            "equipe_domicile": "Nomme Kalju",
+            "equipe_exterieur": "Paide Linnameeskond",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781436600
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-13",
+        "label": "samedi 13 juin 2026",
+        "total": 36,
+        "valides": 30,
+        "victoires": 14,
+        "en_attente": 6,
+        "matchs": [
+          {
+            "equipe_domicile": "Qatar",
+            "equipe_exterieur": "Suisse",
+            "score_final": "1-1",
+            "type_pari_foot": "Double chance 1X",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781377200
+          },
+          {
+            "equipe_domicile": "Qatar",
+            "equipe_exterieur": "Suisse",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-2, 1-2, 0-3",
+            "en_attente": false,
+            "match_start_ts": 1781377200
+          },
+          {
+            "equipe_domicile": "Everton",
+            "equipe_exterieur": "Palestino",
+            "score_final": "",
+            "type_pari_foot": "Double Chance DC 1X",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": true,
+            "match_start_ts": 1781377200
+          },
+          {
+            "equipe_domicile": "Everton",
+            "equipe_exterieur": "Palestino",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 2-1, 1-0, 3-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-1, 1-0, 3-1",
+            "en_attente": true,
+            "match_start_ts": 1781377200
+          },
+          {
+            "equipe_domicile": "Coquimbo Unido",
+            "equipe_exterieur": "O'Higgins",
+            "score_final": "",
+            "type_pari_foot": "Double Chance DC 1X",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": true,
+            "match_start_ts": 1781368200
+          },
+          {
+            "equipe_domicile": "Coquimbo Unido",
+            "equipe_exterieur": "O'Higgins",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 2-1, 1-0, 2-0",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-1, 1-0, 2-0",
+            "en_attente": true,
+            "match_start_ts": 1781368200
+          },
+          {
+            "equipe_domicile": "Lahti",
+            "equipe_exterieur": "Seinäjoen",
+            "score_final": "0-5",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "Lahti",
+            "equipe_exterieur": "Seinäjoen",
+            "score_final": "0-5",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "Mariehamn",
+            "equipe_exterieur": "IF Gnistan",
+            "score_final": "0-3",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "Mariehamn",
+            "equipe_exterieur": "IF Gnistan",
+            "score_final": "0-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "Flora Tallinn",
+            "equipe_exterieur": "Levadia Tallinn",
+            "score_final": "1-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "Flora Tallinn",
+            "equipe_exterieur": "Levadia Tallinn",
+            "score_final": "1-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781366400
+          },
+          {
+            "equipe_domicile": "FK Auda",
+            "equipe_exterieur": "Jelgava",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781362800
+          },
+          {
+            "equipe_domicile": "FK Auda",
+            "equipe_exterieur": "Jelgava",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781362800
+          },
+          {
+            "equipe_domicile": "Jaro",
+            "equipe_exterieur": "HJK Helsinki",
+            "score_final": "2-5",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Jaro",
+            "equipe_exterieur": "HJK Helsinki",
+            "score_final": "2-5",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Vaasa",
+            "equipe_exterieur": "KuPS",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Vaasa",
+            "equipe_exterieur": "KuPS",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Tammeka Tartu",
+            "equipe_exterieur": "Parnu Vaprus",
+            "score_final": "0-0",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Tammeka Tartu",
+            "equipe_exterieur": "Parnu Vaprus",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781359200
+          },
+          {
+            "equipe_domicile": "Grobinas SC",
+            "equipe_exterieur": "Rigas Futbola Skola",
+            "score_final": "1-3",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781355600
+          },
+          {
+            "equipe_domicile": "Grobinas SC",
+            "equipe_exterieur": "Rigas Futbola Skola",
+            "score_final": "1-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781355600
+          },
+          {
+            "equipe_domicile": "Inter Turku",
+            "equipe_exterieur": "AC Oulu",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781352000
+          },
+          {
+            "equipe_domicile": "Inter Turku",
+            "equipe_exterieur": "AC Oulu",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781352000
+          },
+          {
+            "equipe_domicile": "FC Ilves",
+            "equipe_exterieur": "TPS Turku",
+            "score_final": "0-1",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781352000
+          },
+          {
+            "equipe_domicile": "FC Ilves",
+            "equipe_exterieur": "TPS Turku",
+            "score_final": "0-1",
+            "type_pari_foot": "Score exact 0-1",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781352000
+          },
+          {
+            "equipe_domicile": "Trans Narva",
+            "equipe_exterieur": "Nomme United",
+            "score_final": "1-2",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781350200
+          },
+          {
+            "equipe_domicile": "Trans Narva",
+            "equipe_exterieur": "Nomme United",
+            "score_final": "1-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781350200
+          },
+          {
+            "equipe_domicile": "Sūduva",
+            "equipe_exterieur": "Banga",
+            "score_final": "0-0",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781349300
+          },
+          {
+            "equipe_domicile": "Sūduva",
+            "equipe_exterieur": "Banga",
+            "score_final": "0-0",
+            "type_pari_foot": "Score exact 0-0",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781349300
+          },
+          {
+            "equipe_domicile": "Ogre United",
+            "equipe_exterieur": "Riga FC",
+            "score_final": "1-4",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781348400
+          },
+          {
+            "equipe_domicile": "Ogre United",
+            "equipe_exterieur": "Riga FC",
+            "score_final": "1-4",
+            "type_pari_foot": "Score exact 1-4",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781348400
+          },
+          {
+            "equipe_domicile": "Harju JK Laagri",
+            "equipe_exterieur": "Kuressaare",
+            "score_final": "3-2",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781343000
+          },
+          {
+            "equipe_domicile": "Harju JK Laagri",
+            "equipe_exterieur": "Kuressaare",
+            "score_final": "3-2",
+            "type_pari_foot": "Score exact 3-2",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781343000
+          },
+          {
+            "equipe_domicile": "Audax Italiano",
+            "equipe_exterieur": "La Serena",
+            "score_final": "",
+            "type_pari_foot": "Double Chance DC 1X",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": true,
+            "match_start_ts": 1781308800
+          },
+          {
+            "equipe_domicile": "Audax Italiano",
+            "equipe_exterieur": "La Serena",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 2-1, 3-1, 2-0",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-1, 3-1, 2-0",
+            "en_attente": true,
+            "match_start_ts": 1781308800
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-12",
+        "label": "vendredi 12 juin 2026",
+        "total": 26,
+        "valides": 26,
+        "victoires": 9,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Canada",
+            "equipe_exterieur": "Bosnie-Herzégovine",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781290800
+          },
+          {
+            "equipe_domicile": "Canada",
+            "equipe_exterieur": "Bosnie-Herzégovine",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781290800
+          },
+          {
+            "equipe_domicile": "Shelbourne",
+            "equipe_exterieur": "Shamrock Rovers",
+            "score_final": "2-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781290800
+          },
+          {
+            "equipe_domicile": "Shelbourne",
+            "equipe_exterieur": "Shamrock Rovers",
+            "score_final": "2-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781290800
+          },
+          {
+            "equipe_domicile": "Derry City",
+            "equipe_exterieur": "Bohemians",
+            "score_final": "4-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Derry City",
+            "equipe_exterieur": "Bohemians",
+            "score_final": "4-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Galway United",
+            "equipe_exterieur": "Dundalk",
+            "score_final": "0-1",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Galway United",
+            "equipe_exterieur": "Dundalk",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "St Patrick's",
+            "equipe_exterieur": "Drogheda",
+            "score_final": "4-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "St Patrick's",
+            "equipe_exterieur": "Drogheda",
+            "score_final": "4-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Waterford",
+            "equipe_exterieur": "Sligo Rovers",
+            "score_final": "0-0",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Waterford",
+            "equipe_exterieur": "Sligo Rovers",
+            "score_final": "0-0",
+            "type_pari_foot": "Score exact 0-0",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781289900
+          },
+          {
+            "equipe_domicile": "Dinamo Batoumi",
+            "equipe_exterieur": "Dila Gori",
+            "score_final": "3-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781283600
+          },
+          {
+            "equipe_domicile": "Dinamo Batoumi",
+            "equipe_exterieur": "Dila Gori",
+            "score_final": "3-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781283600
+          },
+          {
+            "equipe_domicile": "Žalgiris",
+            "equipe_exterieur": "FK Riteriai",
+            "score_final": "3-2",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781283600
+          },
+          {
+            "equipe_domicile": "Žalgiris",
+            "equipe_exterieur": "FK Riteriai",
+            "score_final": "3-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781283600
+          },
+          {
+            "equipe_domicile": "FK Liepaja",
+            "equipe_exterieur": "Super Nova",
+            "score_final": "2-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781280000
+          },
+          {
+            "equipe_domicile": "FK Liepaja",
+            "equipe_exterieur": "Super Nova",
+            "score_final": "2-1",
+            "type_pari_foot": "Score exact 2-1",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781280000
+          },
+          {
+            "equipe_domicile": "Džiugas",
+            "equipe_exterieur": "Šiauliai",
+            "score_final": "4-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781280000
+          },
+          {
+            "equipe_domicile": "Džiugas",
+            "equipe_exterieur": "Šiauliai",
+            "score_final": "4-3",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781280000
+          },
+          {
+            "equipe_domicile": "Panevėžys",
+            "equipe_exterieur": "TransINVEST",
+            "score_final": "1-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781278200
+          },
+          {
+            "equipe_domicile": "Panevėžys",
+            "equipe_exterieur": "TransINVEST",
+            "score_final": "1-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781278200
+          },
+          {
+            "equipe_domicile": "Tukums 2000",
+            "equipe_exterieur": "BFC Daugavpils",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781276400
+          },
+          {
+            "equipe_domicile": "Tukums 2000",
+            "equipe_exterieur": "BFC Daugavpils",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781276400
+          },
+          {
+            "equipe_domicile": "Iberia 1999",
+            "equipe_exterieur": "FC Spaeri",
+            "score_final": "1-1",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781276400
+          },
+          {
+            "equipe_domicile": "Iberia 1999",
+            "equipe_exterieur": "FC Spaeri",
+            "score_final": "1-1",
+            "type_pari_foot": "Score exact 1-1",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781276400
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-11",
+        "label": "jeudi 11 juin 2026",
+        "total": 2,
+        "valides": 2,
+        "victoires": 2,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Mexique",
+            "equipe_exterieur": "Afrique du Sud",
+            "score_final": "2-0",
+            "type_pari_foot": "Double chance 1X",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781204400
+          },
+          {
+            "equipe_domicile": "Mexique",
+            "equipe_exterieur": "Afrique du Sud",
+            "score_final": "2-0",
+            "type_pari_foot": "Score exact 2-0",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-1, 2-0, 3-1",
+            "en_attente": false,
+            "match_start_ts": 1781204400
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-10",
+        "label": "mercredi 10 juin 2026",
+        "total": 6,
+        "valides": 6,
+        "victoires": 0,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Portugal",
+            "equipe_exterieur": "Nigeria",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781120700
+          },
+          {
+            "equipe_domicile": "Portugal",
+            "equipe_exterieur": "Nigeria",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781120700
+          },
+          {
+            "equipe_domicile": "Malaga",
+            "equipe_exterieur": "Las Palmas",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781118000
+          },
+          {
+            "equipe_domicile": "Malaga",
+            "equipe_exterieur": "Las Palmas",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781118000
+          },
+          {
+            "equipe_domicile": "Paraguay (F)",
+            "equipe_exterieur": "Colombie (F)",
+            "score_final": "3-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1781046000
+          },
+          {
+            "equipe_domicile": "Atlético Ottawa",
+            "equipe_exterieur": "Supra du Québec",
+            "score_final": "3-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1781046000
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-09",
+        "label": "mardi 9 juin 2026",
+        "total": 48,
+        "valides": 22,
+        "victoires": 6,
+        "en_attente": 26,
+        "matchs": [
+          {
+            "equipe_domicile": "MAS Fès",
+            "equipe_exterieur": "FAR Rabat",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781035200
+          },
+          {
+            "equipe_domicile": "Islande (F)",
+            "equipe_exterieur": "Espagne (F)",
+            "score_final": "1-6",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781031600
+          },
+          {
+            "equipe_domicile": "France (F)",
+            "equipe_exterieur": "Irlande (F)",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781031600
+          },
+          {
+            "equipe_domicile": "Pays-Bas (F)",
+            "equipe_exterieur": "Pologne (F)",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781031600
+          },
+          {
+            "equipe_domicile": "Almeria",
+            "equipe_exterieur": "Castellon",
+            "score_final": "3-2",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781031600
+          },
+          {
+            "equipe_domicile": "Renaissance Zemamra",
+            "equipe_exterieur": "Union Touarga",
+            "score_final": "",
+            "type_pari_foot": "BTTS — Oui @ 2.00",
+            "reussi_foot": null,
+            "marche": "btts",
+            "conseil": "🔥 Value Bet : BTTS — Oui @ 2.00",
+            "en_attente": true,
+            "match_start_ts": 1781028000
+          },
+          {
+            "equipe_domicile": "Renaissance Zemamra",
+            "equipe_exterieur": "Union Touarga",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-0, 2-0, 2-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-0, 2-0, 2-1",
+            "en_attente": true,
+            "match_start_ts": 1781028000
+          },
+          {
+            "equipe_domicile": "KAC Marrakech",
+            "equipe_exterieur": "Raja Casablanca",
+            "score_final": "1-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781028000
+          },
+          {
+            "equipe_domicile": "KAC Marrakech",
+            "equipe_exterieur": "Raja Casablanca",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781028000
+          },
+          {
+            "equipe_domicile": "Pays de Galles (F)",
+            "equipe_exterieur": "République Tchèque (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 3.70",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 3.70",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Pays de Galles (F)",
+            "equipe_exterieur": "République Tchèque (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 1-3, 2-0, 0-2",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-3, 2-0, 0-2",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Albanie (F)",
+            "equipe_exterieur": "Montenegro (F)",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Albanie (F)",
+            "equipe_exterieur": "Montenegro (F)",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Géorgie (F)",
+            "equipe_exterieur": "Grèce (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.42",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.42",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Géorgie (F)",
+            "equipe_exterieur": "Grèce (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 2-2, 2-1, 1-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-2, 2-1, 1-1",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Suède (F)",
+            "equipe_exterieur": "Italie (F)",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Suède (F)",
+            "equipe_exterieur": "Italie (F)",
+            "score_final": "0-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Serbie (F)",
+            "equipe_exterieur": "Danemark (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.62",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.62",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Serbie (F)",
+            "equipe_exterieur": "Danemark (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 1-0, 2-3, 3-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-0, 2-3, 3-1",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Irlande du Nord (F)",
+            "equipe_exterieur": "Suisse (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.72",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.72",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Irlande du Nord (F)",
+            "equipe_exterieur": "Suisse (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 1-3, 0-4, 2-4",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-3, 0-4, 2-4",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Malte (F)",
+            "equipe_exterieur": "Turquie (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.54",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.54",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Malte (F)",
+            "equipe_exterieur": "Turquie (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-1, 1-1, 2-4",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-1, 1-1, 2-4",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Finlande (F)",
+            "equipe_exterieur": "Portugal (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 3.15",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 3.15",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Finlande (F)",
+            "equipe_exterieur": "Portugal (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-1, 2-1, 2-0",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-1, 2-1, 2-0",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Lettonie (F)",
+            "equipe_exterieur": "Slovaquie (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.84",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.84",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Lettonie (F)",
+            "equipe_exterieur": "Slovaquie (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 1-2, 1-1, 0-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-2, 1-1, 0-1",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Estonie (F)",
+            "equipe_exterieur": "Bosnie-Herzégovine (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.70",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.70",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Estonie (F)",
+            "equipe_exterieur": "Bosnie-Herzégovine (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-2, 2-1, 1-2",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-2, 2-1, 1-2",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Croatie (F)",
+            "equipe_exterieur": "Bulgarie (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.58",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.58",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Croatie (F)",
+            "equipe_exterieur": "Bulgarie (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 2-2, 1-0",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 2-2, 1-0",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Gibraltar (F)",
+            "equipe_exterieur": "Kosovo (F)",
+            "score_final": "6-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Hongrie (F)",
+            "equipe_exterieur": "Andorre (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.08",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.08",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Hongrie (F)",
+            "equipe_exterieur": "Andorre (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 4-0, 5-0, 3-0",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 4-0, 5-0, 3-0",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Macédoine du Nord (F)",
+            "equipe_exterieur": "Azerbaïdjan (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.45",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.45",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Macédoine du Nord (F)",
+            "equipe_exterieur": "Azerbaïdjan (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-0, 2-1",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-0, 2-1",
+            "en_attente": true,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Chypre (F)",
+            "equipe_exterieur": "Moldavie (F)",
+            "score_final": "0-2",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Chypre (F)",
+            "equipe_exterieur": "Moldavie (F)",
+            "score_final": "0-2",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781024400
+          },
+          {
+            "equipe_domicile": "Norvège (F)",
+            "equipe_exterieur": "Autriche (F)",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "Norvège (F)",
+            "equipe_exterieur": "Autriche (F)",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : DC 1X",
+            "en_attente": false,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "Slovénie (F)",
+            "equipe_exterieur": "Allemagne (F)",
+            "score_final": "",
+            "type_pari_foot": "Over 2.5 buts @ 1.35",
+            "reussi_foot": null,
+            "marche": "over_25",
+            "conseil": "📊 Value Bet : Over 2.5 buts @ 1.35",
+            "en_attente": true,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "Slovénie (F)",
+            "equipe_exterieur": "Allemagne (F)",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 0-1, 1-2, 1-3",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 0-1, 1-2, 1-3",
+            "en_attente": true,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "US Yacoub Mansour",
+            "equipe_exterieur": "CODM Meknes",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "US Yacoub Mansour",
+            "equipe_exterieur": "CODM Meknes",
+            "score_final": "1-1",
+            "type_pari_foot": "Score exact 1-1",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Dom",
+            "en_attente": false,
+            "match_start_ts": 1781020800
+          },
+          {
+            "equipe_domicile": "Agrobiznes Volochisk",
+            "equipe_exterieur": "Kudrivka Irpin",
+            "score_final": "2-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781017200
+          },
+          {
+            "equipe_domicile": "Agrobiznes Volochisk",
+            "equipe_exterieur": "Kudrivka Irpin",
+            "score_final": "2-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1781017200
+          },
+          {
+            "equipe_domicile": "Livyi Bereg Kiev",
+            "equipe_exterieur": "Oleksandria",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Victoire Livyi Bereg Kiev — forme favorable Livyi Bereg Kiev",
+            "en_attente": false,
+            "match_start_ts": 1781008200
+          },
+          {
+            "equipe_domicile": "Livyi Bereg Kiev",
+            "equipe_exterieur": "Oleksandria",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Victoire Livyi Bereg Kiev — forme favorable Livyi Bereg Kiev",
+            "en_attente": false,
+            "match_start_ts": 1781008200
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-08",
+        "label": "lundi 8 juin 2026",
+        "total": 8,
+        "valides": 6,
+        "victoires": 4,
+        "en_attente": 2,
+        "matchs": [
+          {
+            "equipe_domicile": "Olympique Dcheira",
+            "equipe_exterieur": "HUSA Agadir",
+            "score_final": "",
+            "type_pari_foot": "Double Chance DC 1X",
+            "reussi_foot": null,
+            "marche": "1n2",
+            "conseil": "Double Chance DC 1X",
+            "en_attente": true,
+            "match_start_ts": 1780948800
+          },
+          {
+            "equipe_domicile": "Olympique Dcheira",
+            "equipe_exterieur": "HUSA Agadir",
+            "score_final": "",
+            "type_pari_foot": "Scores exacts proposés : 1-1, 2-2, 3-3",
+            "reussi_foot": null,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-1, 2-2, 3-3",
+            "en_attente": true,
+            "match_start_ts": 1780948800
+          },
+          {
+            "equipe_domicile": "France",
+            "equipe_exterieur": "Irlande du Nord",
+            "score_final": "3-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Match en direct — cotes annexes non utilisées",
+            "en_attente": false,
+            "match_start_ts": 1780945800
+          },
+          {
+            "equipe_domicile": "France",
+            "equipe_exterieur": "Irlande du Nord",
+            "score_final": "3-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Match en direct — cotes annexes non utilisées",
+            "en_attente": false,
+            "match_start_ts": 1780945800
+          },
+          {
+            "equipe_domicile": "Pays-Bas",
+            "equipe_exterieur": "Ouzbékistan",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Match en direct — cotes annexes non utilisées",
+            "en_attente": false,
+            "match_start_ts": 1780944300
+          },
+          {
+            "equipe_domicile": "Pays-Bas",
+            "equipe_exterieur": "Ouzbékistan",
+            "score_final": "1-0",
+            "type_pari_foot": "Score exact 1-0",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Match en direct — cotes annexes non utilisées",
+            "en_attente": false,
+            "match_start_ts": 1780944300
+          },
+          {
+            "equipe_domicile": "RSB Berkane",
+            "equipe_exterieur": "Ittihad Tanger",
+            "score_final": "1-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "",
+            "en_attente": false,
+            "match_start_ts": 1780941600
+          },
+          {
+            "equipe_domicile": "RSB Berkane",
+            "equipe_exterieur": "Ittihad Tanger",
+            "score_final": "1-0",
+            "type_pari_foot": "Score exact 1-0",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Scores exacts proposés : 1-0, 2-1, 2-0",
+            "en_attente": false,
+            "match_start_ts": 1780941600
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-07",
+        "label": "dimanche 7 juin 2026",
+        "total": 10,
+        "valides": 10,
+        "victoires": 4,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Maroc",
+            "equipe_exterieur": "Norvège",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Victoire Maroc — forme favorable Maroc",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Grèce",
+            "equipe_exterieur": "Italie",
+            "score_final": "0-1",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Victoire Italie — forme favorable Italie",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Las Palmas",
+            "equipe_exterieur": "Malaga",
+            "score_final": "0-1",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Maroc",
+            "equipe_exterieur": "Norvège",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Victoire Maroc — forme favorable Maroc",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Grèce",
+            "equipe_exterieur": "Italie",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Victoire Italie — forme favorable Italie",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Las Palmas",
+            "equipe_exterieur": "Malaga",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Victoire Malaga — forme favorable Malaga — Classement 5e vs 4e",
+            "en_attente": false,
+            "match_start_ts": 1780858800
+          },
+          {
+            "equipe_domicile": "Inter Toronto",
+            "equipe_exterieur": "Forge",
+            "score_final": "1-4",
+            "type_pari_foot": "1N2 Extérieur",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
+            "en_attente": false,
+            "match_start_ts": 1780855200
+          },
+          {
+            "equipe_domicile": "Inter Toronto",
+            "equipe_exterieur": "Forge",
+            "score_final": "1-4",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "score_exact",
+            "conseil": "Victoire Forge — forme favorable Forge — Classement 3e vs 1e",
+            "en_attente": false,
+            "match_start_ts": 1780855200
+          },
+          {
+            "equipe_domicile": "Danemark",
+            "equipe_exterieur": "Ukraine",
+            "score_final": "2-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "Victoire Ukraine — forme favorable Ukraine",
+            "en_attente": false,
+            "match_start_ts": 1780849800
+          },
+          {
+            "equipe_domicile": "Danemark",
+            "equipe_exterieur": "Ukraine",
+            "score_final": "2-1",
+            "type_pari_foot": "Score exact 2-1",
+            "reussi_foot": true,
+            "marche": "score_exact",
+            "conseil": "Victoire Ukraine — forme favorable Ukraine",
+            "en_attente": false,
+            "match_start_ts": 1780849800
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-02",
+        "label": "mardi 2 juin 2026",
+        "total": 1,
+        "valides": 1,
+        "victoires": 0,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "USM Alger",
+            "equipe_exterieur": "Belouizdad",
+            "score_final": "2-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780426800
+          }
+        ]
+      },
+      {
+        "jour": "2026-06-01",
+        "label": "lundi 1 juin 2026",
+        "total": 6,
+        "valides": 6,
+        "victoires": 3,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "Autriche",
+            "equipe_exterieur": "Tunisie",
+            "score_final": "1-0",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Victoire Autriche — forme favorable Autriche",
+            "en_attente": false,
+            "match_start_ts": 1780339500
+          },
+          {
+            "equipe_domicile": "Norvège",
+            "equipe_exterieur": "Suède",
+            "score_final": "3-1",
+            "type_pari_foot": "1N2 Domicile",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "Victoire Norvège — forme favorable Norvège",
+            "en_attente": false,
+            "match_start_ts": 1780333200
+          },
+          {
+            "equipe_domicile": "Palestino",
+            "equipe_exterieur": "Audax Italiano",
+            "score_final": "0-0",
+            "type_pari_foot": "1N2 Nul",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1780272000
+          },
+          {
+            "equipe_domicile": "Cruzeiro",
+            "equipe_exterieur": "Fluminense",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780270200
+          },
+          {
+            "equipe_domicile": "Remo",
+            "equipe_exterieur": "Sao Paulo",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780270200
+          },
+          {
+            "equipe_domicile": "Emelec",
+            "equipe_exterieur": "Universidad Católica (EQU)",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Ext",
+            "en_attente": false,
+            "match_start_ts": 1780269000
+          }
+        ]
+      },
+      {
+        "jour": "2026-05-31",
+        "label": "dimanche 31 mai 2026",
+        "total": 11,
+        "valides": 11,
+        "victoires": 6,
+        "en_attente": 0,
+        "matchs": [
+          {
+            "equipe_domicile": "O'Higgins",
+            "equipe_exterieur": "Everton",
+            "score_final": "2-3",
+            "type_pari_foot": "Over 2.5",
+            "reussi_foot": true,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Dom +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780263000
+          },
+          {
+            "equipe_domicile": "Brésil",
+            "equipe_exterieur": "Panama",
+            "score_final": "6-2",
+            "type_pari_foot": "Over 2.5",
+            "reussi_foot": true,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780263000
+          },
+          {
+            "equipe_domicile": "Guayaquil City FC",
+            "equipe_exterieur": "Independiente Del Valle",
+            "score_final": "2-4",
+            "type_pari_foot": "Double chance X2",
+            "reussi_foot": true,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : DC X2",
+            "en_attente": false,
+            "match_start_ts": 1780259400
+          },
+          {
+            "equipe_domicile": "Forge",
+            "equipe_exterieur": "Cavalry",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "1n2",
+            "conseil": "🔥 Value Bet Détecté : Nul",
+            "en_attente": false,
+            "match_start_ts": 1780257600
+          },
+          {
+            "equipe_domicile": "États-Unis",
+            "equipe_exterieur": "Sénégal",
+            "score_final": "3-2",
+            "type_pari_foot": "Over 2.5",
+            "reussi_foot": true,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780255800
+          },
+          {
+            "equipe_domicile": "Valur Reykjavik",
+            "equipe_exterieur": "Vikingur Reykjavik",
+            "score_final": "1-5",
+            "type_pari_foot": "Over 2.5",
+            "reussi_foot": true,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780254900
+          },
+          {
+            "equipe_domicile": "Cordoue",
+            "equipe_exterieur": "Huesca",
+            "score_final": "1-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "Privilégier le +2.5 buts",
+            "en_attente": false,
+            "match_start_ts": 1780254000
+          },
+          {
+            "equipe_domicile": "Leganes",
+            "equipe_exterieur": "Mirandes",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Dom +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780254000
+          },
+          {
+            "equipe_domicile": "Vasco da Gama",
+            "equipe_exterieur": "Atlético Mineiro",
+            "score_final": "0-1",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780254000
+          },
+          {
+            "equipe_domicile": "Palmeiras",
+            "equipe_exterieur": "Chapecoense",
+            "score_final": "1-0",
+            "type_pari_foot": "Perdu",
+            "reussi_foot": false,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Dom +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780254000
+          },
+          {
+            "equipe_domicile": "Huachipato",
+            "equipe_exterieur": "Universidad Catolica",
+            "score_final": "0-3",
+            "type_pari_foot": "Over 2.5",
+            "reussi_foot": true,
+            "marche": "over_25",
+            "conseil": "🔥 Value Bet Détecté : Ext +2.5",
+            "en_attente": false,
+            "match_start_ts": 1780254000
+          }
+        ]
       }
     ]
   },
   "global": {
-    "taux": 48,
-    "victoires": 15,
-    "total": 31,
-    "mises_cumulees": 310.0,
-    "profit_net": -102.7,
-    "roi_pct": -33.1
+    "taux": 39,
+    "victoires": 60,
+    "total": 154,
+    "mises_cumulees": 1540.0,
+    "profit_net": -364.7,
+    "roi_pct": -23.7
   },
   "meta": {
     "mise_unitaire": 10.0,
-    "genere_at": "2026-06-08T19:41:09.382525+00:00",
-    "archives_foot": 28,
-    "nouvelles_validations": 5,
-    "sync_winamax": {
-      "demandes": 0,
-      "recuperes": 0,
-      "erreur": null,
-      "ids_interroges": []
-    },
-    "resolution_en_attente": {
-      "en_attente_avant": 7,
-      "resolus": 5,
-      "encore_attente": 2,
-      "scores_recuperes": 0,
-      "erreur": null
-    },
-    "reval_score_exact_top3": 5
+    "genere_at": "2026-06-17T05:38:40.200451+00:00"
   }
 }

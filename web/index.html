@@ -480,6 +480,42 @@
         .vitrine-foot-historique .vitrine-pmu-historique-item {
             border-color: rgba(34, 211, 238, 0.15);
         }
+        .foot-archives-jour {
+            margin-top: 0.25rem;
+        }
+        .foot-archives-jour-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.35rem 0.75rem;
+            padding: 0.55rem 0.85rem;
+            margin-bottom: 0.65rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(34, 211, 238, 0.22);
+            background: linear-gradient(90deg, rgba(8, 47, 73, 0.55), rgba(15, 23, 42, 0.35));
+        }
+        .foot-archives-jour-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            color: rgb(103 232 249);
+        }
+        .foot-archives-jour-stats {
+            font-size: 0.62rem;
+            color: rgb(148 163 184);
+        }
+        .vitrine-foot-jour-groupe {
+            margin-bottom: 0.65rem;
+        }
+        .vitrine-foot-jour-label {
+            margin-bottom: 0.35rem;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: capitalize;
+            letter-spacing: 0.04em;
+            color: rgba(103, 232, 249, 0.75);
+        }
         .foot-archive-badge-attente {
             display: inline-flex;
             align-items: center;
@@ -1757,7 +1793,7 @@
                                     <div id="vitrineFootParTypeListe" class="flex flex-wrap gap-1.5"></div>
                             </div>
                             <div id="vitrineFootHistorique" class="vitrine-pmu-historique vitrine-foot-historique hidden">
-                                    <p class="mb-2 mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Derniers matchs</p>
+                                    <p class="mb-2 mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-400/75">Pronostics par jour</p>
                                 <ul id="vitrineFootHistoriqueListe" class="space-y-1.5"></ul>
                                 </div>
                             </div>
@@ -2366,6 +2402,9 @@
             foot.detail_par_type_pari = blocJson.detail_par_type_pari || {};
             foot.detail_par_marche = blocJson.detail_par_marche || {};
             foot.calibration = blocJson.calibration || foot.calibration || {};
+            foot.historique_par_jour = Array.isArray(blocJson.historique_par_jour)
+                ? blocJson.historique_par_jour
+                : [];
             foot.historique_matchs = choisirHistoriqueFoot(
                 historiqueLocal,
                 Array.isArray(blocJson.historique_matchs) ? blocJson.historique_matchs : [],
@@ -2422,7 +2461,96 @@
                     (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
                         - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
                 )
-                .slice(0, 12);
+                .slice(0, 30);
+        }
+
+        function formaterJourParisArchive(ms) {
+            if (!ms) return 'Date inconnue';
+            return new Intl.DateTimeFormat('fr-FR', {
+                timeZone: 'Europe/Paris',
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            }).format(new Date(ms));
+        }
+
+        function statsJourArchivesFoot(items) {
+            const valides = items.filter((a) => archiveFootEstValidee(a));
+            const victoires = valides.filter((a) => {
+                if (a.reussi_foot !== true) return false;
+                const tp = String(a.type_pari_foot || '').trim().toLowerCase();
+                return tp !== 'perdu';
+            }).length;
+            const enAttente = items.filter((a) => archiveFootEstEnAttente(a)).length;
+            return { total: items.length, valides: valides.length, victoires, enAttente };
+        }
+
+        function grouperArchivesFootParJour(archives) {
+            const groups = new Map();
+            for (const a of archives || []) {
+                const ms = parseMatchStartMs(a) || Number(a.timestamp) || 0;
+                const key = ms ? parisDayKey(ms) : 'unknown';
+                if (!groups.has(key)) groups.set(key, []);
+                groups.get(key).push(a);
+            }
+            return [...groups.entries()]
+                .filter(([key]) => key !== 'unknown')
+                .sort((a, b) => b[0].localeCompare(a[0]))
+                .map(([key, items]) => {
+                    const ms = parseMatchStartMs(items[0]) || Date.now();
+                    const stats = statsJourArchivesFoot(items);
+                    return {
+                        key,
+                        label: formaterJourParisArchive(ms),
+                        items: items.sort(
+                            (a, b) => (parseMatchStartMs(b) || 0) - (parseMatchStartMs(a) || 0),
+                        ),
+                        stats,
+                    };
+                });
+        }
+
+        function htmlArchivesFootJourHeader(group) {
+            const s = group.stats;
+            const parts = [`${s.total} pronostic${s.total > 1 ? 's' : ''}`];
+            if (s.valides) {
+                parts.push(`${s.victoires}/${s.valides} gagnant${s.victoires > 1 ? 's' : ''}`);
+            }
+            if (s.enAttente) {
+                parts.push(`${s.enAttente} en attente`);
+            }
+            return `
+                <div class="foot-archives-jour-header" role="heading" aria-level="3">
+                    <span class="foot-archives-jour-title">${escHtml(group.label)}</span>
+                    <span class="foot-archives-jour-stats">${escHtml(parts.join(' · '))}</span>
+                </div>`;
+        }
+
+        function grouperHistoriqueFootParJour(items) {
+            const groups = new Map();
+            for (const m of items || []) {
+                const ts = Number(m.match_start_ts) || 0;
+                const ms = ts > 1e12 ? ts : ts * 1000;
+                const key = ms ? parisDayKey(ms) : 'unknown';
+                if (!groups.has(key)) groups.set(key, []);
+                groups.get(key).push(m);
+            }
+            return [...groups.entries()]
+                .filter(([key]) => key !== 'unknown')
+                .sort((a, b) => b[0].localeCompare(a[0]))
+                .map(([key, matchs]) => {
+                    const ms = Number(matchs[0]?.match_start_ts) || 0;
+                    const msNorm = ms > 1e12 ? ms : ms * 1000;
+                    const victoires = matchs.filter((m) => m.reussi_foot === true).length;
+                    const resolus = matchs.filter((m) => !m.en_attente && m.reussi_foot != null).length;
+                    return {
+                        key,
+                        label: formaterJourParisArchive(msNorm),
+                        stats: `${matchs.length} match${matchs.length > 1 ? 's' : ''}${resolus ? ` · ${victoires}/${resolus} gagnant${victoires > 1 ? 's' : ''}` : ''}`,
+                        items: matchs,
+                    };
+                });
         }
 
         function extraireHistoriquePmuDepuisArchivesLocales() {
@@ -2774,9 +2902,13 @@
             const enAttente = !!match.en_attente
                 || (match.reussi_foot == null && !match.score_final && !/perdu/i.test(String(match.type_pari_foot || '')));
             const proposes = Array.isArray(match.scores_proposes) ? match.scores_proposes.join(', ') : '';
+            const conseil = String(match.conseil || match.type_pari_foot || '').replace(/🔥|💎|🎯|⚽/g, '').trim();
+            const conseilCourt = conseil.length > 48 ? `${conseil.slice(0, 45)}…` : conseil;
             const sousTitre = proposes && String(match.marche || '').toLowerCase() === 'score_exact'
                 ? `<span class="block text-[10px] text-cyan-500/70 mt-0.5">Top 3 : ${proposes}</span>`
-                : '';
+                : (conseilCourt
+                    ? `<span class="block text-[10px] text-gray-500 mt-0.5">${escHtml(conseilCourt)}</span>`
+                    : '');
             let badge;
             if (enAttente) {
                 badge = '<span class="vitrine-pmu-badge text-cyan-200/90 border border-cyan-500/30 bg-cyan-500/10">En attente</span>';
@@ -2819,7 +2951,28 @@
             if (listeParType) listeParType.innerHTML = chips;
             if (blocParType) blocParType.classList.toggle('hidden', !chips);
 
-            const hist = (foot.historique_matchs || []).map(htmlVitrineHistoriqueFootItem).join('');
+            const parJour = Array.isArray(foot.historique_par_jour) && foot.historique_par_jour.length
+                ? foot.historique_par_jour
+                : null;
+            let hist = '';
+            if (parJour) {
+                hist = parJour.map((jour) => {
+                    const items = (jour.matchs || []).map(htmlVitrineHistoriqueFootItem).join('');
+                    if (!items) return '';
+                    return `
+                        <li class="vitrine-foot-jour-groupe">
+                            <p class="vitrine-foot-jour-label">${escHtml(jour.label || jour.jour || '')} · ${escHtml(String(jour.victoires || 0))}/${escHtml(String(jour.valides || jour.total || 0))}</p>
+                            <ul class="space-y-1">${items}</ul>
+                        </li>`;
+                }).join('');
+            } else {
+                const groups = grouperHistoriqueFootParJour(foot.historique_matchs || []);
+                hist = groups.map((g) => `
+                    <li class="vitrine-foot-jour-groupe">
+                        <p class="vitrine-foot-jour-label">${escHtml(g.label)} · ${escHtml(g.stats)}</p>
+                        <ul class="space-y-1">${g.items.map(htmlVitrineHistoriqueFootItem).join('')}</ul>
+                    </li>`).join('');
+            }
             if (listeHist) listeHist.innerHTML = hist;
             if (blocHist) blocHist.classList.toggle('hidden', !hist);
         }
@@ -6351,6 +6504,7 @@
                 type_pari_foot: enAttente ? type : (a.type_pari_foot || type),
                 reussi_foot: enAttente ? null : a.reussi_foot,
                 marche: a.marche || a.opportunite_type || '',
+                conseil: a.conseil || a.opportunite_detail || '',
                 en_attente: enAttente,
                 match_start_ts: Number(a.match_start_ts) || Number(a.timestamp) || 0,
             };
@@ -6365,7 +6519,7 @@
                 (a, b) => (Number(b.match_start_ts) || Number(b.timestamp) || 0)
                     - (Number(a.match_start_ts) || Number(a.timestamp) || 0),
             );
-            return list.slice(0, 12).map(archiveVersHistoriqueFootItem);
+            return list.slice(0, 30).map(archiveVersHistoriqueFootItem);
         }
 
         async function preparerHistoriqueFootCommunaute() {
@@ -9900,7 +10054,11 @@
                 return;
             }
 
-            liste.innerHTML = archives.map(htmlCarteArchiveFoot).join('');
+            liste.innerHTML = grouperArchivesFootParJour(archives).map((group) => `
+                <section class="foot-archives-jour" aria-label="${escHtml(group.label)}">
+                    ${htmlArchivesFootJourHeader(group)}
+                    <div class="space-y-3">${group.items.map(htmlCarteArchiveFoot).join('')}</div>
+                </section>`).join('');
         }
 
         async function chargerArchivesPmu() {

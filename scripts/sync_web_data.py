@@ -50,6 +50,17 @@ def main() -> int:
         print(f"[sync] historique cotes ignoré ({err})")
 
     try:
+        from velora_pronos_history import snapshot_pronos_from_json_files
+
+        matchs = WEB / "api_velora_matchs.json"
+        premium = WEB / "api_velora_premium.json"
+        if matchs.is_file():
+            snapshot_pronos_from_json_files(matchs, premium if premium.is_file() else None)
+            print("[sync] historique pronos Foot -> velora_pronos_history.json")
+    except Exception as err:
+        print(f"[sync] historique pronos ignoré ({err})")
+
+    try:
         from stats_foot import ecrire_calibration_foot
 
         ecrire_calibration_foot()

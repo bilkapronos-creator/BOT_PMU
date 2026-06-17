@@ -258,6 +258,7 @@ def _bloc_communaute_enrichi(source: dict) -> dict[str, Any]:
         "detail_par_marche",
         "calibration",
         "historique_matchs",
+        "historique_par_jour",
         "historique_courses",
         "compteur_historique",
         "gains_par_famille",

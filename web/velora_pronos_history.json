@@ -1,0 +1,4218 @@
+{
+  "version": 1,
+  "by_match": {
+    "66457006": {
+      "id_match": "66457006",
+      "equipe_domicile": "France",
+      "equipe_exterieur": "Sénégal",
+      "match_start_ts": 1781636400,
+      "date_match": "16/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.43,
+            "N": 4.3,
+            "2": 6.25
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire France",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.43,
+              "N": 4.3,
+              "2": 6.25
+            },
+            "probabilites": {
+              "1": 66,
+              "N": 22,
+              "2": 12
+            },
+            "probabilites_marche": {
+              "1": 64,
+              "N": 21,
+              "2": 15
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire France",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.528,
+              "away": 1.224
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "2-0",
+                "prob": 7
+              },
+              {
+                "score": "3-0",
+                "prob": 6
+              },
+              {
+                "score": "1-0",
+                "prob": 6
+              }
+            ],
+            "prob_over_25_modele": 71,
+            "prob_btts_modele": 64,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 88,
+                "edge": 0.0,
+                "score": 88.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 88% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 71,
+                "edge": 0.0,
+                "score": 71.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 71% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 64,
+                "edge": 0.0,
+                "score": 64.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 64% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 88,
+              "edge": 0.0,
+              "score": 88.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 88% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.43,
+            "N": 4.3,
+            "2": 6.25
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire France",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.43,
+              "N": 4.3,
+              "2": 6.25
+            },
+            "probabilites": {
+              "1": 66,
+              "N": 22,
+              "2": 12
+            },
+            "probabilites_marche": {
+              "1": 64,
+              "N": 21,
+              "2": 15
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire France",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.528,
+              "away": 1.224
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "2-0",
+                "prob": 7
+              },
+              {
+                "score": "3-0",
+                "prob": 6
+              },
+              {
+                "score": "1-0",
+                "prob": 6
+              }
+            ],
+            "prob_over_25_modele": 71,
+            "prob_btts_modele": 64,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 88,
+                "edge": 0.0,
+                "score": 88.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 88% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 71,
+                "edge": 0.0,
+                "score": 71.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 71% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 64,
+                "edge": 0.0,
+                "score": 64.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 64% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 88,
+              "edge": 0.0,
+              "score": 88.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 88% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        }
+      ]
+    },
+    "66457008": {
+      "id_match": "66457008",
+      "equipe_domicile": "Irak",
+      "equipe_exterieur": "Norvège",
+      "match_start_ts": 1781647200,
+      "date_match": "17/06/2026 à 00:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Double chance X2",
+          "opportunite_detail": "Double chance X2",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 10.5,
+            "N": 6.5,
+            "2": 1.19
+          },
+          "pronostic_1n2": "2",
+          "pronostic_label": "Victoire Norvège",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 00:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 10.5,
+              "N": 6.5,
+              "2": 1.19
+            },
+            "probabilites": {
+              "1": 8,
+              "N": 18,
+              "2": 74
+            },
+            "probabilites_marche": {
+              "1": 9,
+              "N": 14,
+              "2": 77
+            },
+            "pronostic_1n2": "2",
+            "pronostic_label": "Victoire Norvège",
+            "confiance_niveau": "moyenne",
+            "poisson_lambdas": {
+              "home": 0.922,
+              "away": 2.697
+            },
+            "top_scores_modele": [
+              {
+                "score": "0-2",
+                "prob": 10
+              },
+              {
+                "score": "1-2",
+                "prob": 9
+              },
+              {
+                "score": "0-3",
+                "prob": 9
+              },
+              {
+                "score": "1-3",
+                "prob": 8
+              },
+              {
+                "score": "0-1",
+                "prob": 7
+              }
+            ],
+            "prob_over_25_modele": 68,
+            "prob_btts_modele": 55,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_x2",
+                "pick": "x2",
+                "label": "Double chance X2",
+                "prob_pct": 92,
+                "edge": 0.0,
+                "score": 92.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 68,
+                "edge": 0.0,
+                "score": 68.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 55,
+                "edge": 0.0,
+                "score": 55.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 55% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_x2",
+              "pick": "x2",
+              "label": "Double chance X2",
+              "prob_pct": 92,
+              "edge": 0.0,
+              "score": 92.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Double chance X2",
+          "opportunite_detail": "Double chance X2",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 10.5,
+            "N": 6.5,
+            "2": 1.19
+          },
+          "pronostic_1n2": "2",
+          "pronostic_label": "Victoire Norvège",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 00:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 10.5,
+              "N": 6.5,
+              "2": 1.19
+            },
+            "probabilites": {
+              "1": 8,
+              "N": 18,
+              "2": 74
+            },
+            "probabilites_marche": {
+              "1": 9,
+              "N": 14,
+              "2": 77
+            },
+            "pronostic_1n2": "2",
+            "pronostic_label": "Victoire Norvège",
+            "confiance_niveau": "moyenne",
+            "poisson_lambdas": {
+              "home": 0.922,
+              "away": 2.697
+            },
+            "top_scores_modele": [
+              {
+                "score": "0-2",
+                "prob": 10
+              },
+              {
+                "score": "1-2",
+                "prob": 9
+              },
+              {
+                "score": "0-3",
+                "prob": 9
+              },
+              {
+                "score": "1-3",
+                "prob": 8
+              },
+              {
+                "score": "0-1",
+                "prob": 7
+              }
+            ],
+            "prob_over_25_modele": 68,
+            "prob_btts_modele": 55,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_x2",
+                "pick": "x2",
+                "label": "Double chance X2",
+                "prob_pct": 92,
+                "edge": 0.0,
+                "score": 92.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 68,
+                "edge": 0.0,
+                "score": 68.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 55,
+                "edge": 0.0,
+                "score": 55.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 55% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_x2",
+              "pick": "x2",
+              "label": "Double chance X2",
+              "prob_pct": 92,
+              "edge": 0.0,
+              "score": 92.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        }
+      ]
+    },
+    "66457018": {
+      "id_match": "66457018",
+      "equipe_domicile": "Argentine",
+      "equipe_exterieur": "Algérie",
+      "match_start_ts": 1781658000,
+      "date_match": "17/06/2026 à 03:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.38,
+            "N": 4.5,
+            "2": 7.25
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire Argentine",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 03:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.38,
+              "N": 4.5,
+              "2": 7.25
+            },
+            "probabilites": {
+              "1": 70,
+              "N": 19,
+              "2": 11
+            },
+            "probabilites_marche": {
+              "1": 67,
+              "N": 20,
+              "2": 13
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire Argentine",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.571,
+              "away": 1.133
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "2-0",
+                "prob": 8
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "3-0",
+                "prob": 7
+              },
+              {
+                "score": "1-0",
+                "prob": 6
+              }
+            ],
+            "prob_over_25_modele": 70,
+            "prob_btts_modele": 61,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 89,
+                "edge": 0.0,
+                "score": 89.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 70,
+                "edge": 0.0,
+                "score": 70.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 61,
+                "edge": 0.0,
+                "score": 61.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 61% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 89,
+              "edge": 0.0,
+              "score": 89.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.38,
+            "N": 4.5,
+            "2": 7.25
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire Argentine",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 03:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.38,
+              "N": 4.5,
+              "2": 7.25
+            },
+            "probabilites": {
+              "1": 70,
+              "N": 19,
+              "2": 11
+            },
+            "probabilites_marche": {
+              "1": 67,
+              "N": 20,
+              "2": 13
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire Argentine",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.571,
+              "away": 1.133
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "2-0",
+                "prob": 8
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "3-0",
+                "prob": 7
+              },
+              {
+                "score": "1-0",
+                "prob": 6
+              }
+            ],
+            "prob_over_25_modele": 70,
+            "prob_btts_modele": 61,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 89,
+                "edge": 0.0,
+                "score": 89.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 70,
+                "edge": 0.0,
+                "score": 70.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 61,
+                "edge": 0.0,
+                "score": 61.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 61% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 89,
+              "edge": 0.0,
+              "score": 89.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        }
+      ]
+    },
+    "66457020": {
+      "id_match": "66457020",
+      "equipe_domicile": "Autriche",
+      "equipe_exterieur": "Jordanie",
+      "match_start_ts": 1781668800,
+      "date_match": "17/06/2026 à 06:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.29,
+            "N": 5.5,
+            "2": 7.75
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire Autriche",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 06:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.29,
+              "N": 5.5,
+              "2": 7.75
+            },
+            "probabilites": {
+              "1": 74,
+              "N": 16,
+              "2": 10
+            },
+            "probabilites_marche": {
+              "1": 71,
+              "N": 17,
+              "2": 12
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire Autriche",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.611,
+              "away": 1.073
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "2-0",
+                "prob": 9
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "3-0",
+                "prob": 7
+              },
+              {
+                "score": "1-0",
+                "prob": 7
+              }
+            ],
+            "prob_over_25_modele": 69,
+            "prob_btts_modele": 60,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 90,
+                "edge": 0.0,
+                "score": 90.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 90% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 69,
+                "edge": 0.0,
+                "score": 69.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 60,
+                "edge": 0.0,
+                "score": 60.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 60% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 90,
+              "edge": 0.0,
+              "score": 90.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 90% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Double chance 1X",
+          "opportunite_detail": "Double chance 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.29,
+            "N": 5.5,
+            "2": 7.75
+          },
+          "pronostic_1n2": "1",
+          "pronostic_label": "Victoire Autriche",
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 06:00",
+          "free_analysis": {
+            "cotes_1n2": {
+              "1": 1.29,
+              "N": 5.5,
+              "2": 7.75
+            },
+            "probabilites": {
+              "1": 74,
+              "N": 16,
+              "2": 10
+            },
+            "probabilites_marche": {
+              "1": 71,
+              "N": 17,
+              "2": 12
+            },
+            "pronostic_1n2": "1",
+            "pronostic_label": "Victoire Autriche",
+            "confiance_niveau": "haute",
+            "poisson_lambdas": {
+              "home": 2.611,
+              "away": 1.073
+            },
+            "top_scores_modele": [
+              {
+                "score": "2-1",
+                "prob": 9
+              },
+              {
+                "score": "2-0",
+                "prob": 9
+              },
+              {
+                "score": "3-1",
+                "prob": 8
+              },
+              {
+                "score": "3-0",
+                "prob": 7
+              },
+              {
+                "score": "1-0",
+                "prob": 7
+              }
+            ],
+            "prob_over_25_modele": 69,
+            "prob_btts_modele": 60,
+            "football_data_enriched": true,
+            "markets_raw": {
+              "over_under_total": {},
+              "team_goals": {}
+            },
+            "value_bets": [],
+            "display_badges": [],
+            "conseils_intelligents": [
+              {
+                "market": "dc_1x",
+                "pick": "1x",
+                "label": "Double chance 1X",
+                "prob_pct": 90,
+                "edge": 0.0,
+                "score": 90.0,
+                "tier": "excellent",
+                "raison": "Signal modèle Velora — 90% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "over_25",
+                "pick": "plus",
+                "label": "Plus de 2.5 buts",
+                "prob_pct": 69,
+                "edge": 0.0,
+                "score": 69.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
+                "stars": 3
+              },
+              {
+                "market": "btts",
+                "pick": "oui",
+                "label": "BTTS Oui",
+                "prob_pct": 60,
+                "edge": 0.0,
+                "score": 60.0,
+                "tier": "bon",
+                "raison": "Signal modèle Velora — 60% (cote Winamax absente sur ce marché)",
+                "stars": 2
+              }
+            ],
+            "meilleur_conseil": {
+              "market": "dc_1x",
+              "pick": "1x",
+              "label": "Double chance 1X",
+              "prob_pct": 90,
+              "edge": 0.0,
+              "score": 90.0,
+              "tier": "excellent",
+              "raison": "Signal modèle Velora — 90% (cote Winamax absente sur ce marché)",
+              "stars": 3
+            }
+          },
+          "premium_analysis": {
+            "score_exact": {
+              "top3": []
+            },
+            "buteur_match": {
+              "top": []
+            },
+            "buteur_mi_temps": {
+              "top": []
+            },
+            "buteur_double": {
+              "top": []
+            },
+            "value_bets": []
+          }
+        }
+      ]
+    },
+    "68492570": {
+      "id_match": "68492570",
+      "equipe_domicile": "BFC Daugavpils",
+      "equipe_exterieur": "Super Nova",
+      "match_start_ts": 1781622000,
+      "date_match": "16/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.84,
+            "N": 3.3,
+            "2": 3.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.84,
+            "N": 3.3,
+            "2": 3.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 17:00"
+        }
+      ]
+    },
+    "71901774": {
+      "id_match": "71901774",
+      "equipe_domicile": "Sūduva",
+      "equipe_exterieur": "Šiauliai",
+      "match_start_ts": 1781623800,
+      "date_match": "16/06/2026 à 17:30",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.49,
+            "N": 3.8,
+            "2": 5.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 17:30"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.49,
+            "N": 3.8,
+            "2": 5.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 17:30"
+        }
+      ]
+    },
+    "67912726": {
+      "id_match": "67912726",
+      "equipe_domicile": "Dila Gori",
+      "equipe_exterieur": "FC Spaeri",
+      "match_start_ts": 1781625600,
+      "date_match": "16/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.8,
+            "N": 3.3,
+            "2": 3.65
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.8,
+            "N": 3.3,
+            "2": 3.65
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68214688": {
+      "id_match": "68214688",
+      "equipe_domicile": "Parnu Vaprus",
+      "equipe_exterieur": "Flora Tallinn",
+      "match_start_ts": 1781625600,
+      "date_match": "16/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 5.3,
+            "N": 4.4,
+            "2": 1.39
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 5.3,
+            "N": 4.4,
+            "2": 1.39
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68214690": {
+      "id_match": "68214690",
+      "equipe_domicile": "Kuressaare",
+      "equipe_exterieur": "Trans Narva",
+      "match_start_ts": 1781625600,
+      "date_match": "16/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.2,
+            "N": 3.35,
+            "2": 2.55
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.2,
+            "N": 3.35,
+            "2": 2.55
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68492572": {
+      "id_match": "68492572",
+      "equipe_domicile": "Grobinas SC",
+      "equipe_exterieur": "FK Liepaja",
+      "match_start_ts": 1781625600,
+      "date_match": "16/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 3.25,
+            "N": 3.45,
+            "2": 1.86
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 3.25,
+            "N": 3.45,
+            "2": 1.86
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:00"
+        }
+      ]
+    },
+    "71901776": {
+      "id_match": "71901776",
+      "equipe_domicile": "Žalgiris",
+      "equipe_exterieur": "Panevėžys",
+      "match_start_ts": 1781627400,
+      "date_match": "16/06/2026 à 18:30",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.46,
+            "N": 4.1,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:30"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.46,
+            "N": 4.1,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 18:30"
+        }
+      ]
+    },
+    "1000184712": {
+      "id_match": "1000184712",
+      "equipe_domicile": "MultiFoot Coupe du Monde 2026 (J1",
+      "equipe_exterieur": "Groupes I & J)",
+      "match_start_ts": 1781636400,
+      "date_match": "16/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.39,
+            "N": null,
+            "2": 7.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.39,
+            "N": null,
+            "2": 7.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:00"
+        }
+      ]
+    },
+    "68194680": {
+      "id_match": "68194680",
+      "equipe_domicile": "Stjarnan",
+      "equipe_exterieur": "Breidablik Kopavogur",
+      "match_start_ts": 1781637300,
+      "date_match": "16/06/2026 à 21:15",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.6,
+            "N": 3.9,
+            "2": 1.92
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.6,
+            "N": 3.9,
+            "2": 1.92
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        }
+      ]
+    },
+    "68194684": {
+      "id_match": "68194684",
+      "equipe_domicile": "Vikingur Reykjavik",
+      "equipe_exterieur": "KR Reykjavik",
+      "match_start_ts": 1781637300,
+      "date_match": "16/06/2026 à 21:15",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.4,
+            "N": 4.8,
+            "2": 4.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.4,
+            "N": 4.8,
+            "2": 4.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        }
+      ]
+    },
+    "71912616": {
+      "id_match": "71912616",
+      "equipe_domicile": "IA Akranes",
+      "equipe_exterieur": "Valur Reykjavik",
+      "match_start_ts": 1781637300,
+      "date_match": "16/06/2026 à 21:15",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.0,
+            "N": 3.6,
+            "2": 2.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.0,
+            "N": 3.6,
+            "2": 2.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "16/06/2026 à 21:15"
+        }
+      ]
+    },
+    "67091354": {
+      "id_match": "67091354",
+      "equipe_domicile": "HJK Helsinki",
+      "equipe_exterieur": "Inter Turku",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.35,
+            "N": 3.15,
+            "2": 2.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.35,
+            "N": 3.15,
+            "2": 2.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "67091356": {
+      "id_match": "67091356",
+      "equipe_domicile": "FC Ilves",
+      "equipe_exterieur": "Jaro",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.62,
+            "N": 3.7,
+            "2": 3.75
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.62,
+            "N": 3.7,
+            "2": 3.75
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "67091358": {
+      "id_match": "67091358",
+      "equipe_domicile": "TPS Turku",
+      "equipe_exterieur": "KuPS",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.2,
+            "N": 3.5,
+            "2": 1.58
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.2,
+            "N": 3.5,
+            "2": 1.58
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "67912732": {
+      "id_match": "67912732",
+      "equipe_domicile": "Iberia 1999",
+      "equipe_exterieur": "FC Rustavi",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.72,
+            "N": 3.2,
+            "2": 3.75
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.72,
+            "N": 3.2,
+            "2": 3.75
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "68492574": {
+      "id_match": "68492574",
+      "equipe_domicile": "Jelgava",
+      "equipe_exterieur": "Ogre United",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.5,
+            "N": 3.7,
+            "2": 4.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.5,
+            "N": 3.7,
+            "2": 4.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "68492576": {
+      "id_match": "68492576",
+      "equipe_domicile": "Tukums 2000",
+      "equipe_exterieur": "FK Auda",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.2,
+            "N": 3.8,
+            "2": 1.52
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.2,
+            "N": 3.8,
+            "2": 1.52
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "72095782": {
+      "id_match": "72095782",
+      "equipe_domicile": "KAC Marrakech",
+      "equipe_exterieur": "Ittihad Tanger",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.0,
+            "N": 2.9,
+            "2": 3.2
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.0,
+            "N": 2.9,
+            "2": 3.2
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "72095784": {
+      "id_match": "72095784",
+      "equipe_domicile": "Renaissance Zemamra",
+      "equipe_exterieur": "Raja Casablanca",
+      "match_start_ts": 1781708400,
+      "date_match": "17/06/2026 à 17:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.6,
+            "N": 3.15,
+            "2": 1.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.6,
+            "N": 3.15,
+            "2": 1.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:00"
+        }
+      ]
+    },
+    "71901778": {
+      "id_match": "71901778",
+      "equipe_domicile": "Hegelmann",
+      "equipe_exterieur": "Džiugas",
+      "match_start_ts": 1781710200,
+      "date_match": "17/06/2026 à 17:30",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.35,
+            "N": 3.05,
+            "2": 2.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:30"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.35,
+            "N": 3.05,
+            "2": 2.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 17:30"
+        }
+      ]
+    },
+    "68214692": {
+      "id_match": "68214692",
+      "equipe_domicile": "Nomme United",
+      "equipe_exterieur": "Levadia Tallinn",
+      "match_start_ts": 1781712000,
+      "date_match": "17/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 9.0,
+            "N": 6.25,
+            "2": 1.12
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 9.0,
+            "N": 6.25,
+            "2": 1.12
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68214694": {
+      "id_match": "68214694",
+      "equipe_domicile": "Nomme Kalju",
+      "equipe_exterieur": "Tammeka Tartu",
+      "match_start_ts": 1781712000,
+      "date_match": "17/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.32,
+            "N": 4.5,
+            "2": 5.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.32,
+            "N": 4.5,
+            "2": 5.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68214696": {
+      "id_match": "68214696",
+      "equipe_domicile": "Paide Linnameeskond",
+      "equipe_exterieur": "Harju JK Laagri",
+      "match_start_ts": 1781712000,
+      "date_match": "17/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.42,
+            "N": 4.1,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.42,
+            "N": 4.1,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68492578": {
+      "id_match": "68492578",
+      "equipe_domicile": "Riga FC",
+      "equipe_exterieur": "Rigas Futbola Skola",
+      "match_start_ts": 1781712000,
+      "date_match": "17/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.25,
+            "N": 3.2,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.25,
+            "N": 3.2,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        }
+      ]
+    },
+    "71901780": {
+      "id_match": "71901780",
+      "equipe_domicile": "Kauno Žalgiris",
+      "equipe_exterieur": "Banga",
+      "match_start_ts": 1781712000,
+      "date_match": "17/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.44,
+            "N": 3.9,
+            "2": 5.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.44,
+            "N": 3.9,
+            "2": 5.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 18:00"
+        }
+      ]
+    },
+    "66457030": {
+      "id_match": "66457030",
+      "equipe_domicile": "Portugal",
+      "equipe_exterieur": "RD Congo",
+      "match_start_ts": 1781715600,
+      "date_match": "17/06/2026 à 19:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.26,
+            "N": 5.9,
+            "2": 10.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 19:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.26,
+            "N": 5.9,
+            "2": 10.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 19:00"
+        }
+      ]
+    },
+    "67912728": {
+      "id_match": "67912728",
+      "equipe_domicile": "Torpedo Koutaïssi",
+      "equipe_exterieur": "Dinamo Batoumi",
+      "match_start_ts": 1781715600,
+      "date_match": "17/06/2026 à 19:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.44,
+            "N": 3.8,
+            "2": 4.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 19:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.44,
+            "N": 3.8,
+            "2": 4.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 19:00"
+        }
+      ]
+    },
+    "67091360": {
+      "id_match": "67091360",
+      "equipe_domicile": "IF Gnistan",
+      "equipe_exterieur": "Lahti",
+      "match_start_ts": 1781719200,
+      "date_match": "17/06/2026 à 20:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.25,
+            "N": 3.1,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 20:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.25,
+            "N": 3.1,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 20:00"
+        }
+      ]
+    },
+    "67091362": {
+      "id_match": "67091362",
+      "equipe_domicile": "Seinäjoen",
+      "equipe_exterieur": "Vaasa",
+      "match_start_ts": 1781719200,
+      "date_match": "17/06/2026 à 20:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.2,
+            "N": 3.25,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 20:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.2,
+            "N": 3.25,
+            "2": 2.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 20:00"
+        }
+      ]
+    },
+    "66457042": {
+      "id_match": "66457042",
+      "equipe_domicile": "Angleterre",
+      "equipe_exterieur": "Croatie",
+      "match_start_ts": 1781726400,
+      "date_match": "17/06/2026 à 22:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.7,
+            "N": 3.85,
+            "2": 4.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 22:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.7,
+            "N": 3.85,
+            "2": 4.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "17/06/2026 à 22:00"
+        }
+      ]
+    },
+    "66457044": {
+      "id_match": "66457044",
+      "equipe_domicile": "Ghana",
+      "equipe_exterieur": "Panama",
+      "match_start_ts": 1781737200,
+      "date_match": "18/06/2026 à 01:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.1,
+            "N": 3.5,
+            "2": 3.3
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 01:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.1,
+            "N": 3.5,
+            "2": 3.3
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 01:00"
+        }
+      ]
+    },
+    "66457032": {
+      "id_match": "66457032",
+      "equipe_domicile": "Ouzbékistan",
+      "equipe_exterieur": "Colombie",
+      "match_start_ts": 1781748000,
+      "date_match": "18/06/2026 à 04:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 8.0,
+            "N": 4.9,
+            "2": 1.35
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 04:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 8.0,
+            "N": 4.9,
+            "2": 1.35
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 04:00"
+        }
+      ]
+    },
+    "67091352": {
+      "id_match": "67091352",
+      "equipe_domicile": "AC Oulu",
+      "equipe_exterieur": "Mariehamn",
+      "match_start_ts": 1781776740,
+      "date_match": "18/06/2026 à 11:59",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.32,
+            "N": 4.1,
+            "2": 5.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 11:59"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.32,
+            "N": 4.1,
+            "2": 5.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 11:59"
+        }
+      ]
+    },
+    "66456910": {
+      "id_match": "66456910",
+      "equipe_domicile": "République Tchèque",
+      "equipe_exterieur": "Afrique du Sud",
+      "match_start_ts": 1781798400,
+      "date_match": "18/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.74,
+            "N": 3.8,
+            "2": 4.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.74,
+            "N": 3.8,
+            "2": 4.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 18:00"
+        }
+      ]
+    },
+    "66456922": {
+      "id_match": "66456922",
+      "equipe_domicile": "Suisse",
+      "equipe_exterieur": "Bosnie-Herzégovine",
+      "match_start_ts": 1781809200,
+      "date_match": "18/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.54,
+            "N": 4.1,
+            "2": 5.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.54,
+            "N": 4.1,
+            "2": 5.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "18/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66456920": {
+      "id_match": "66456920",
+      "equipe_domicile": "Canada",
+      "equipe_exterieur": "Qatar",
+      "match_start_ts": 1781820000,
+      "date_match": "19/06/2026 à 00:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.22,
+            "N": 5.0,
+            "2": 8.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 00:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.22,
+            "N": 5.0,
+            "2": 8.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 00:00"
+        }
+      ]
+    },
+    "71605992": {
+      "id_match": "71605992",
+      "equipe_domicile": "Universidad De Chile",
+      "equipe_exterieur": "O'Higgins",
+      "match_start_ts": 1781827200,
+      "date_match": "19/06/2026 à 02:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.7,
+            "N": 3.2,
+            "2": 3.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 02:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.7,
+            "N": 3.2,
+            "2": 3.6
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 02:00"
+        }
+      ]
+    },
+    "66456908": {
+      "id_match": "66456908",
+      "equipe_domicile": "Mexique",
+      "equipe_exterieur": "Corée du Sud",
+      "match_start_ts": 1781830800,
+      "date_match": "19/06/2026 à 03:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.96,
+            "N": 3.3,
+            "2": 3.95
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 03:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.96,
+            "N": 3.3,
+            "2": 3.95
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 03:00"
+        }
+      ]
+    },
+    "66854088": {
+      "id_match": "66854088",
+      "equipe_domicile": "Drogheda",
+      "equipe_exterieur": "Shelbourne",
+      "match_start_ts": 1781894700,
+      "date_match": "19/06/2026 à 20:45",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 3.3,
+            "N": 3.1,
+            "2": 1.78
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 3.3,
+            "N": 3.1,
+            "2": 1.78
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        }
+      ]
+    },
+    "66854090": {
+      "id_match": "66854090",
+      "equipe_domicile": "Galway United",
+      "equipe_exterieur": "Derry City",
+      "match_start_ts": 1781894700,
+      "date_match": "19/06/2026 à 20:45",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.7,
+            "N": 2.95,
+            "2": 2.1
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.7,
+            "N": 2.95,
+            "2": 2.1
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        }
+      ]
+    },
+    "66854092": {
+      "id_match": "66854092",
+      "equipe_domicile": "St Patrick's",
+      "equipe_exterieur": "Sligo Rovers",
+      "match_start_ts": 1781894700,
+      "date_match": "19/06/2026 à 20:45",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.21,
+            "N": 4.6,
+            "2": 7.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.21,
+            "N": 4.6,
+            "2": 7.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        }
+      ]
+    },
+    "66854094": {
+      "id_match": "66854094",
+      "equipe_domicile": "Waterford",
+      "equipe_exterieur": "Shamrock Rovers",
+      "match_start_ts": 1781894700,
+      "date_match": "19/06/2026 à 20:45",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.3,
+            "N": 3.6,
+            "2": 1.48
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.3,
+            "N": 3.6,
+            "2": 1.48
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 20:45"
+        }
+      ]
+    },
+    "66456944": {
+      "id_match": "66456944",
+      "equipe_domicile": "États-Unis",
+      "equipe_exterieur": "Australie",
+      "match_start_ts": 1781895600,
+      "date_match": "19/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.6,
+            "N": 4.2,
+            "2": 4.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.6,
+            "N": 4.2,
+            "2": 4.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66854086": {
+      "id_match": "66854086",
+      "equipe_domicile": "Bohemians",
+      "equipe_exterieur": "Dundalk",
+      "match_start_ts": 1781895600,
+      "date_match": "19/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.76,
+            "N": 3.35,
+            "2": 3.2
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.76,
+            "N": 3.35,
+            "2": 3.2
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "19/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66456934": {
+      "id_match": "66456934",
+      "equipe_domicile": "Écosse",
+      "equipe_exterieur": "Maroc",
+      "match_start_ts": 1781906400,
+      "date_match": "20/06/2026 à 00:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.7,
+            "N": 3.65,
+            "2": 1.72
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 00:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.7,
+            "N": 3.65,
+            "2": 1.72
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 00:00"
+        }
+      ]
+    },
+    "66456932": {
+      "id_match": "66456932",
+      "equipe_domicile": "Brésil",
+      "equipe_exterieur": "Haïti",
+      "match_start_ts": 1781915400,
+      "date_match": "20/06/2026 à 02:30",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.1,
+            "N": 10.0,
+            "2": 17.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 02:30"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.1,
+            "N": 10.0,
+            "2": 17.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 02:30"
+        }
+      ]
+    },
+    "66456946": {
+      "id_match": "66456946",
+      "equipe_domicile": "Turquie",
+      "equipe_exterieur": "Paraguay",
+      "match_start_ts": 1781924400,
+      "date_match": "20/06/2026 à 05:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.96,
+            "N": 3.4,
+            "2": 3.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 05:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.96,
+            "N": 3.4,
+            "2": 3.8
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 05:00"
+        }
+      ]
+    },
+    "66456972": {
+      "id_match": "66456972",
+      "equipe_domicile": "Pays-Bas",
+      "equipe_exterieur": "Suède",
+      "match_start_ts": 1781974800,
+      "date_match": "20/06/2026 à 19:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.64,
+            "N": 4.0,
+            "2": 4.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 19:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.64,
+            "N": 4.0,
+            "2": 4.7
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 19:00"
+        }
+      ]
+    },
+    "72037988": {
+      "id_match": "72037988",
+      "equipe_domicile": "Almeria",
+      "equipe_exterieur": "Malaga",
+      "match_start_ts": 1781982000,
+      "date_match": "20/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.9,
+            "N": 3.2,
+            "2": 2.95
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.9,
+            "N": 3.2,
+            "2": 2.95
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66457074": {
+      "id_match": "66457074",
+      "equipe_domicile": "Allemagne",
+      "equipe_exterieur": "Côte d'Ivoire",
+      "match_start_ts": 1781985600,
+      "date_match": "20/06/2026 à 22:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.52,
+            "N": 4.4,
+            "2": 5.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 22:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.52,
+            "N": 4.4,
+            "2": 5.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "20/06/2026 à 22:00"
+        }
+      ]
+    },
+    "66457076": {
+      "id_match": "66457076",
+      "equipe_domicile": "Équateur",
+      "equipe_exterieur": "Curaçao",
+      "match_start_ts": 1782000000,
+      "date_match": "21/06/2026 à 02:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.08,
+            "N": 11.0,
+            "2": 19.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 02:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.08,
+            "N": 11.0,
+            "2": 19.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 02:00"
+        }
+      ]
+    },
+    "66456974": {
+      "id_match": "66456974",
+      "equipe_domicile": "Tunisie",
+      "equipe_exterieur": "Japon",
+      "match_start_ts": 1782014400,
+      "date_match": "21/06/2026 à 06:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 6.25,
+            "N": 4.1,
+            "2": 1.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 06:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 6.25,
+            "N": 4.1,
+            "2": 1.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 06:00"
+        }
+      ]
+    },
+    "66456998": {
+      "id_match": "66456998",
+      "equipe_domicile": "Espagne",
+      "equipe_exterieur": "Arabie Saoudite",
+      "match_start_ts": 1782057600,
+      "date_match": "21/06/2026 à 18:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.07,
+            "N": 7.5,
+            "2": 15.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 18:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Ext",
+          "opportunite_detail": "🔥 Value Bet Détecté : Ext",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.07,
+            "N": 7.5,
+            "2": 15.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 18:00"
+        }
+      ]
+    },
+    "68194686": {
+      "id_match": "68194686",
+      "equipe_domicile": "FH Hafnarfjordur",
+      "equipe_exterieur": "Thor Akureyri",
+      "match_start_ts": 1782064800,
+      "date_match": "21/06/2026 à 20:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.66,
+            "N": 3.7,
+            "2": 3.15
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 20:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.66,
+            "N": 3.7,
+            "2": 3.15
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 20:00"
+        }
+      ]
+    },
+    "66456986": {
+      "id_match": "66456986",
+      "equipe_domicile": "Belgique",
+      "equipe_exterieur": "Iran",
+      "match_start_ts": 1782068400,
+      "date_match": "21/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.35,
+            "N": 4.2,
+            "2": 6.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.35,
+            "N": 4.2,
+            "2": 6.25
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "21/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66457000": {
+      "id_match": "66457000",
+      "equipe_domicile": "Uruguay",
+      "equipe_exterieur": "Cap-Vert",
+      "match_start_ts": 1782079200,
+      "date_match": "22/06/2026 à 00:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.39,
+            "N": 3.75,
+            "2": 6.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 00:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.39,
+            "N": 3.75,
+            "2": 6.5
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 00:00"
+        }
+      ]
+    },
+    "66456988": {
+      "id_match": "66456988",
+      "equipe_domicile": "Nouvelle Zélande",
+      "equipe_exterieur": "Égypte",
+      "match_start_ts": 1782090000,
+      "date_match": "22/06/2026 à 03:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.8,
+            "N": 3.65,
+            "2": 1.52
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 03:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 4.8,
+            "N": 3.65,
+            "2": 1.52
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 03:00"
+        }
+      ]
+    },
+    "66457022": {
+      "id_match": "66457022",
+      "equipe_domicile": "Argentine",
+      "equipe_exterieur": "Autriche",
+      "match_start_ts": 1782147600,
+      "date_match": "22/06/2026 à 19:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.52,
+            "N": 3.6,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 19:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 1.52,
+            "N": 3.6,
+            "2": 4.9
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 19:00"
+        }
+      ]
+    },
+    "66854126": {
+      "id_match": "66854126",
+      "equipe_domicile": "Shelbourne",
+      "equipe_exterieur": "Bohemians",
+      "match_start_ts": 1782153900,
+      "date_match": "22/06/2026 à 20:45",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.3,
+            "N": 2.95,
+            "2": 2.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 20:45"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 2.3,
+            "N": 2.95,
+            "2": 2.4
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 20:45"
+        }
+      ]
+    },
+    "66854128": {
+      "id_match": "66854128",
+      "equipe_domicile": "Shamrock Rovers",
+      "equipe_exterieur": "Derry City",
+      "match_start_ts": 1782154800,
+      "date_match": "22/06/2026 à 21:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.76,
+            "N": 3.0,
+            "2": 3.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 21:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Nul",
+          "opportunite_detail": "🔥 Value Bet Détecté : Nul",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.76,
+            "N": 3.0,
+            "2": 3.45
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 21:00"
+        }
+      ]
+    },
+    "66457010": {
+      "id_match": "66457010",
+      "equipe_domicile": "France",
+      "equipe_exterieur": "Irak",
+      "match_start_ts": 1782162000,
+      "date_match": "22/06/2026 à 23:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.07,
+            "N": 7.5,
+            "2": 15.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 23:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 1.07,
+            "N": 7.5,
+            "2": 15.0
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "22/06/2026 à 23:00"
+        }
+      ]
+    },
+    "66457012": {
+      "id_match": "66457012",
+      "equipe_domicile": "Norvège",
+      "equipe_exterieur": "Sénégal",
+      "match_start_ts": 1782172800,
+      "date_match": "23/06/2026 à 02:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 2.0,
+            "N": 3.25,
+            "2": 3.05
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "23/06/2026 à 02:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "Privilégier le +2.5 buts",
+          "opportunite_detail": "Privilégier le +2.5 buts",
+          "opportunite_type": "over_25",
+          "value_bet_type": null,
+          "marche": "over_25",
+          "cotes": {
+            "1": 2.0,
+            "N": 3.25,
+            "2": 3.05
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "23/06/2026 à 02:00"
+        }
+      ]
+    },
+    "66457024": {
+      "id_match": "66457024",
+      "equipe_domicile": "Jordanie",
+      "equipe_exterieur": "Algérie",
+      "match_start_ts": 1782183600,
+      "date_match": "23/06/2026 à 05:00",
+      "snapshots": [
+        {
+          "ts": 1781674383,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 5.7,
+            "N": 3.95,
+            "2": 1.41
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "23/06/2026 à 05:00"
+        },
+        {
+          "ts": 1781674736,
+          "conseil": "🔥 Value Bet Détecté : Dom",
+          "opportunite_detail": "🔥 Value Bet Détecté : Dom",
+          "opportunite_type": "1n2",
+          "value_bet_type": null,
+          "marche": "1n2",
+          "cotes": {
+            "1": 5.7,
+            "N": 3.95,
+            "2": 1.41
+          },
+          "pronostic_1n2": null,
+          "pronostic_label": null,
+          "primary_pick": null,
+          "velora_score": null,
+          "indice_velora": 0,
+          "is_opportunite": null,
+          "date_match": "23/06/2026 à 05:00"
+        }
+      ]
+    }
+  },
+  "updated_at": 1781674736,
+  "snapshot_count": 67
+}

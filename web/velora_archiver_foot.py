@@ -1625,6 +1625,22 @@ def traiter_archives_foot() -> dict[str, Any]:
 
     nouvelles = resolve_stats.get("resolus", 0)
 
+    try:
+        from velora_pronos_history import (  # noqa: PLC0415
+            backfill_archives_from_pronos_history,
+            snapshot_pronos_from_json_files,
+        )
+
+        snapshot_pronos_from_json_files(MATCHS_JSON_PATH, SNAPSHOT_PREMIUM_PATH)
+        retro = backfill_archives_from_pronos_history(
+            par_id, resultats, snapshots, catalogue, now_paris,
+        )
+        if retro:
+            print(f"[archiver-foot] {retro} archive(s) reconstituée(s) depuis historique pronos")
+            nouvelles += retro
+    except Exception as exc:
+        print(f"[archiver-foot] Historique pronos ignoré : {exc}")
+
     for match in snapshots:
         mid = str(match.get("id_match") or "")
         if not mid:
