@@ -186,6 +186,103 @@ def _collect_1n2_and_dc(
     # Sans cotes Winamax « Double chance », ne pas estimer via 1N2 (ex. DC 12 @ cote victoire dom).
 
 
+MODEL_FALLBACK_MIN_PROB = 55
+
+
+def _to_model_recommendation(opp: _Opp) -> BetRecommendation:
+    tier = "excellent" if opp.prob_pct >= 70 else "bon"
+    stars = 3 if opp.prob_pct >= 65 else 2
+    return BetRecommendation(
+        market=opp.market,
+        pick=opp.pick,
+        label=opp.label,
+        cote=None,
+        prob_pct=opp.prob_pct,
+        edge=0.0,
+        score=float(opp.prob_pct),
+        tier=tier,
+        raison=f"Signal modèle Velora — {opp.prob_pct}% (cote Winamax absente sur ce marché)",
+        stars=stars,
+    )
+
+
+def _collect_model_fallback(
+    seen: set[tuple[str, str]],
+    *,
+    markets: MarketsRaw,
+    probs: dict[str, int],
+    prob_over_25_modele: int | None,
+    prob_btts_modele: int | None,
+    les_deux_marquent: int | None,
+) -> list[_Opp]:
+    """BTTS / O/U / DC depuis Poisson quand Winamax n'a pas publié ces marchés."""
+    out: list[_Opp] = []
+
+    if not markets.btts:
+        base = les_deux_marquent if les_deux_marquent is not None else prob_btts_modele
+        if base is not None:
+            oui_prob = int(base)
+            side = "oui" if oui_prob >= 50 else "non"
+            prob = oui_prob if side == "oui" else 100 - oui_prob
+            key = ("btts", side)
+            if key not in seen and prob >= MODEL_FALLBACK_MIN_PROB:
+                out.append(
+                    _Opp(
+                        market="btts",
+                        pick=side,
+                        label="BTTS Oui" if side == "oui" else "BTTS Non",
+                        cote=None,
+                        prob_pct=prob,
+                        edge=0.0,
+                    )
+                )
+
+    if "2.5" not in (markets.over_under_total or {}):
+        if prob_over_25_modele is not None:
+            side_plus = prob_over_25_modele >= 50
+            pick_side = "plus" if side_plus else "moins"
+            prob = prob_over_25_modele if side_plus else 100 - prob_over_25_modele
+            keys = {("ou_total", f"{pick_side}_2.5"), ("over_25", pick_side)}
+            if not keys & seen and prob >= MODEL_FALLBACK_MIN_PROB:
+                label = "Plus de 2.5 buts" if side_plus else "Moins de 2.5 buts"
+                out.append(
+                    _Opp(
+                        market="over_25",
+                        pick=pick_side,
+                        label=label,
+                        cote=None,
+                        prob_pct=int(prob),
+                        edge=0.0,
+                    )
+                )
+
+    if not (markets.double_chance or {}):
+        dc_model = _dc_probs(probs)
+        dc_labels = {
+            "1x": "Double chance 1X",
+            "x2": "Double chance X2",
+            "12": "Double chance 12",
+        }
+        dc_market_keys = {"1x": "dc_1x", "x2": "dc_x2", "12": "dc_12"}
+        best_pick, best_prob = max(dc_model.items(), key=lambda x: x[1])
+        if best_prob >= MODEL_FALLBACK_MIN_PROB:
+            mk = dc_market_keys.get(best_pick, "dc_1x")
+            key = (mk, best_pick)
+            if key not in seen:
+                out.append(
+                    _Opp(
+                        market=mk,
+                        pick=best_pick,
+                        label=dc_labels.get(best_pick, f"Double chance {best_pick.upper()}"),
+                        cote=None,
+                        prob_pct=best_prob,
+                        edge=0.0,
+                    )
+                )
+
+    return out
+
+
 def _dedupe_dc_same_cote(pool: list[_Opp]) -> list[_Opp]:
     """Si plusieurs DC partagent la même cote bookmaker, ne garder que le meilleur score."""
     dc_rows: list[_Opp] = []
@@ -492,7 +589,29 @@ def build_intelligent_conseils(
         seen.add(key)
         unique.append(o)
 
-    recs = [_to_recommendation(o) for o in unique if _advantage_score(o.prob_pct, o.cote, o.edge) > 0]
+    seen_keys = {(o.market, o.pick) for o in unique}
+    for o in _collect_model_fallback(
+        seen_keys,
+        markets=markets,
+        probs=probs,
+        prob_over_25_modele=prob_over_25_modele,
+        prob_btts_modele=prob_btts_modele,
+        les_deux_marquent=les_deux_marquent,
+    ):
+        unique.append(o)
+        seen_keys.add((o.market, o.pick))
+
+    book_recs = [
+        _to_recommendation(o)
+        for o in unique
+        if o.cote is not None and _advantage_score(o.prob_pct, o.cote, o.edge) > 0
+    ]
+    model_recs = [
+        _to_model_recommendation(o)
+        for o in unique
+        if o.cote is None and o.prob_pct >= MODEL_FALLBACK_MIN_PROB
+    ]
+    recs = book_recs + model_recs
     recs.sort(key=lambda r: r.score, reverse=True)
     top = recs[:limit]
     best = top[0] if top else None

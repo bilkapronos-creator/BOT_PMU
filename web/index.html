@@ -8000,11 +8000,95 @@
             return cote ? `${label} · Cote ${cote}` : label;
         }
 
+        /** Repli UI quand conseils_intelligents absents du JSON (modèle Poisson + probs 1N2). */
+        function synthesizeConseilsVelora(m) {
+            const out = [];
+            const fa = m?.free_analysis || {};
+            const probs = m?.probabilites || fa.probabilites || {};
+            const p1 = Number(probs['1']) || 0;
+            const pn = Number(probs.N) || 0;
+            const p2 = Number(probs['2']) || 0;
+            const bttsPct = probModeleFoot(m, 'prob_btts_modele');
+            if (bttsPct != null) {
+                const oui = bttsPct >= 50;
+                out.push({
+                    market: 'btts',
+                    pick: oui ? 'oui' : 'non',
+                    label: oui ? 'Les 2 équipes marquent' : 'BTTS Non',
+                    prob_pct: oui ? Math.round(bttsPct) : Math.round(100 - bttsPct),
+                    tier: 'bon',
+                    stars: 2,
+                });
+            }
+            const ouPct = probModeleFoot(m, 'prob_over_25_modele');
+            if (ouPct != null) {
+                const plus = ouPct >= 50;
+                out.push({
+                    market: 'over_25',
+                    pick: plus ? 'plus' : 'moins',
+                    label: plus ? '+2.5 buts' : '-2.5 buts',
+                    prob_pct: plus ? Math.round(ouPct) : Math.round(100 - ouPct),
+                    tier: 'bon',
+                    stars: 2,
+                });
+            }
+            const dc1x = p1 + pn;
+            const dcx2 = pn + p2;
+            const dc12 = p1 + p2;
+            if (dc1x >= 55 && dc1x >= dcx2 && dc1x >= dc12) {
+                out.push({
+                    market: 'dc_1x',
+                    pick: '1x',
+                    label: 'Double chance 1X',
+                    prob_pct: Math.round(dc1x),
+                    tier: 'prudent',
+                    stars: 2,
+                });
+            } else if (dcx2 >= 55 && dcx2 >= dc12) {
+                out.push({
+                    market: 'dc_x2',
+                    pick: 'x2',
+                    label: 'Double chance X2',
+                    prob_pct: Math.round(dcx2),
+                    tier: 'prudent',
+                    stars: 2,
+                });
+            } else if (dc12 >= 55) {
+                out.push({
+                    market: 'dc_12',
+                    pick: '12',
+                    label: 'Double chance 12',
+                    prob_pct: Math.round(dc12),
+                    tier: 'prudent',
+                    stars: 2,
+                });
+            }
+            const pick1n2 = pronosticVelora1n2Pick(m);
+            const labels1n2 = { '1': 'Victoire domicile', N: 'Match nul', '2': 'Victoire extérieur' };
+            const cotes = m?.cotes || fa.cotes_1n2 || {};
+            if (pick1n2 && labels1n2[pick1n2]) {
+                const cote = Number(cotes[pick1n2]);
+                out.push({
+                    market: '1n2',
+                    pick: pick1n2,
+                    label: labels1n2[pick1n2],
+                    cote: Number.isFinite(cote) ? cote : null,
+                    prob_pct: Math.round(Number(probs[pick1n2]) || 0),
+                    tier: 'bon',
+                    stars: 2,
+                });
+            }
+            return out;
+        }
+
         function conseilsIntelligentsFromMatch(m) {
             const fa = m?.free_analysis || {};
-            const list = Array.isArray(m?.conseils_intelligents)
+            let list = Array.isArray(m?.conseils_intelligents)
                 ? m.conseils_intelligents
                 : (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents : []);
+            if (!list.length) {
+                list = synthesizeConseilsVelora(m);
+            }
             const pick = pronosticVelora1n2Pick(m);
             const cotes = m?.cotes || fa.cotes_1n2 || {};
             return list.filter((c) => {
@@ -8038,6 +8122,43 @@
                 if (mk === '1n2') return false;
                 return MARCHES_PREMIUM_CONSEIL.has(mk) || mk.startsWith('dc_');
             });
+        }
+
+        function appendModelMarketRows(m, rows) {
+            const hasLabel = (needle) => rows.some((r) => String(r.label || '').toLowerCase().includes(needle));
+            const fa = m?.free_analysis || {};
+            const probs = m?.probabilites || fa.probabilites || {};
+            const p1 = Number(probs['1']) || 0;
+            const pn = Number(probs.N) || 0;
+            const p2 = Number(probs['2']) || 0;
+            const bttsM = probModeleFoot(m, 'prob_btts_modele');
+            if (bttsM != null && !hasLabel('btts')) {
+                rows.push({
+                    label: bttsM >= 50 ? 'BTTS Oui (modèle)' : 'BTTS Non (modèle)',
+                    suffix: `${bttsM >= 50 ? Math.round(bttsM) : Math.round(100 - bttsM)}%`,
+                    prob: bttsM,
+                });
+            }
+            const ouM = probModeleFoot(m, 'prob_over_25_modele');
+            if (ouM != null && !hasLabel('over 2.5') && !hasLabel('under 2.5')) {
+                rows.push({
+                    label: ouM >= 50 ? 'Over 2.5 (modèle)' : 'Under 2.5 (modèle)',
+                    suffix: `${ouM >= 50 ? Math.round(ouM) : Math.round(100 - ouM)}%`,
+                    prob: ouM,
+                });
+            }
+            const dc1x = p1 + pn;
+            const dcx2 = pn + p2;
+            const dc12 = p1 + p2;
+            if (!hasLabel('double chance')) {
+                if (dc1x >= 55 && dc1x >= dcx2 && dc1x >= dc12) {
+                    rows.push({ label: 'Double chance 1X (modèle)', suffix: `${Math.round(dc1x)}%`, prob: dc1x });
+                } else if (dcx2 >= 55 && dcx2 >= dc12) {
+                    rows.push({ label: 'Double chance X2 (modèle)', suffix: `${Math.round(dcx2)}%`, prob: dcx2 });
+                } else if (dc12 >= 55) {
+                    rows.push({ label: 'Double chance 12 (modèle)', suffix: `${Math.round(dc12)}%`, prob: dc12 });
+                }
+            }
         }
 
         function htmlMarketsRawPremiumPanel(m, theme = 'foot') {
@@ -8113,24 +8234,7 @@
                 pushOutcome(`Exactement ${pick} but(s)`, val);
             }
 
-            if (!rows.length) {
-                const bttsM = probModeleFoot(m, 'prob_btts_modele');
-                const ouM = probModeleFoot(m, 'prob_over_25_modele');
-                if (bttsM != null) {
-                    rows.push({
-                        label: bttsM >= 50 ? 'BTTS Oui (modèle)' : 'BTTS Non (modèle)',
-                        suffix: `${bttsM >= 50 ? bttsM : 100 - bttsM}%`,
-                        prob: bttsM,
-                    });
-                }
-                if (ouM != null) {
-                    rows.push({
-                        label: ouM >= 50 ? 'Over 2.5 (modèle)' : 'Under 2.5 (modèle)',
-                        suffix: `${ouM >= 50 ? ouM : 100 - ouM}%`,
-                        prob: ouM,
-                    });
-                }
-            }
+            appendModelMarketRows(m, rows);
             if (!rows.length) return '';
 
             const titleCls = theme === 'opp' ? 'text-amber-400/85' : 'text-cyan-400/85';
@@ -8184,13 +8288,13 @@
                         <span class="text-xs font-bold leading-snug">${i + 1}. ${escHtml(c.label)} ${escHtml(cote)}</span>
                         <span class="shrink-0 text-[10px] opacity-80">${escHtml(stars)}</span>
                     </div>
-                    <p class="mt-0.5 text-[10px] opacity-90">Proba ${escHtml(String(c.prob_pct || '?'))}% · edge ${escHtml(String(c.edge || '?'))}</p>
+                    <p class="mt-0.5 text-[10px] opacity-90">Proba ${escHtml(String(c.prob_pct || '?'))}%${c.cote && c.edge ? ` · edge ${escHtml(String(c.edge))}` : ' · signal modèle'}</p>
                     ${raison}
                 </li>`;
             }).join('');
             return `
                 <div class="rounded-xl border border-white/10 bg-black/25 px-3 py-3">
-                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-violet-300/90">${scope === 'premium' ? 'Meilleurs paris premium' : 'Meilleurs paris (proba × cote)'}</p>
+                    <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-violet-300/90">${scope === 'premium' ? 'Meilleurs paris premium' : 'Autres paris Velora'}</p>
                     <p class="mb-2 text-[10px] text-gray-500">Une cote &lt; 1,50 est rarement avantageuse — Velora privilégie le rendement réel.</p>
                     <ol class="space-y-2">${rows}</ol>
                 </div>`;
@@ -8259,9 +8363,8 @@
             const tendance = m.tendance_buts || 'Match Tactique';
             const offensif = tendance === 'Match Offensif';
             const pillsMarches = htmlMarchesPillsRow(m, theme, false);
-            if (!offensif && !pillsMarches) return '';
             const tendancePill = `<span class="velora-marche-pill inline-flex items-center gap-1 ${offensif ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-300' : 'border-white/15 bg-white/5 text-gray-300'}">${offensif ? '📈' : '🛡️'} ${escHtml(tendance)}</span>`;
-            return `<div class="velora-match-badges-row">${tendancePill}${pillsMarches}</div>`;
+            return `<div class="velora-match-badges-row">${tendancePill}${pillsMarches || ''}</div>`;
         }
 
         /** Données premium réelles (sans placeholders) pour affichage / teaser paywall. */
@@ -8578,6 +8681,7 @@
                     : '';
             const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
+            const conseilsMarches = htmlConseilsIntelligents(m, { scope: 'all', theme: 'foot' });
             const blocsPronosticValue = htmlBlocPronosticValue(m);
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
@@ -8614,6 +8718,7 @@
                         ${htmlOddsMovement(m)}
                         ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
+                        ${conseilsMarches}
                         ${plusParis}
                         ${htmlVeloraAdminTechnique(m)}
                         ${scoresMoteurHtml ? `

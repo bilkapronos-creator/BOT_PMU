@@ -116,6 +116,26 @@ def test_prudent_tier_cap_stars():
     assert x2.stars <= 3
 
 
+def test_model_fallback_btts_ou_sans_cotes_winamax():
+    """Sans marchés BTTS/O/U Winamax, conseils depuis Poisson."""
+    markets = MarketsRaw()
+    conseils, best = build_intelligent_conseils(
+        cotes_1n2={"1": 1.43, "N": 4.3, "2": 6.25},
+        probs={"1": 66, "N": 22, "2": 12},
+        markets=markets,
+        prob_over_25_modele=71,
+        prob_btts_modele=64,
+        home="France",
+        away="Sénégal",
+        pronostic_1n2="1",
+    )
+    markets_found = {c.market for c in conseils}
+    assert "btts" in markets_found
+    assert "over_25" in markets_found
+    assert any(c.market == "dc_1x" for c in conseils)
+    assert best is not None
+
+
 if __name__ == "__main__":
     test_favori_1_20_exclu_si_edge_faible()
     test_over_2_5_prefere_a_favori_bas()
@@ -123,4 +143,5 @@ if __name__ == "__main__":
     test_dc_same_cote_ne_garde_qu_un()
     test_dc_12_sans_scrape_ignore_faux_edge()
     test_prudent_tier_cap_stars()
+    test_model_fallback_btts_ou_sans_cotes_winamax()
     print("OK — test_bet_advisor")

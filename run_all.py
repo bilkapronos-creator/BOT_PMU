@@ -874,7 +874,22 @@ def executer_phase_scraper() -> bool:
         )
         return False
 
+    if not rebuild_foot_conseils_json():
+        log("Attention : rebuild conseils Foot en échec (cartes sans BTTS/O/U/DC).")
+
     return True
+
+
+def rebuild_foot_conseils_json() -> bool:
+    """Recalcule conseils_intelligents (BTTS, O/U, DC…) dans api_velora_matchs.json."""
+    script = (ROOT / "scripts" / "rebuild_conseils_json.py").resolve()
+    if not script.is_file():
+        log("[conseils] scripts/rebuild_conseils_json.py absent — ignoré.")
+        return True
+    if not MATCHS_JSON.is_file():
+        log("[conseils] api_velora_matchs.json absent — ignoré.")
+        return True
+    return run_step("scripts/rebuild_conseils_json.py", "Recalcul conseils intelligents Foot (BTTS, O/U, DC…)", None)
 
 
 def post_traitement_communaute() -> bool:

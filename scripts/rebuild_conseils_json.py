@@ -90,14 +90,30 @@ def patch_match(m: dict) -> bool:
 
 
 def main() -> int:
-    path = ROOT / "web" / "api_velora_matchs.json"
+    path = ROOT / "api_velora_matchs.json"
     if len(sys.argv) > 1:
         path = Path(sys.argv[1])
+    if not path.is_file():
+        alt = ROOT / "web" / "api_velora_matchs.json"
+        if alt.is_file():
+            path = alt
+        else:
+            print(f"[rebuild_conseils] fichier introuvable : {path}")
+            return 1
     data = json.loads(path.read_text(encoding="utf-8"))
     matchs = data.get("matchs") or []
     n = sum(1 for m in matchs if isinstance(m, dict) and patch_match(m))
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    out = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    path.write_text(out, encoding="utf-8")
     print(f"[rebuild_conseils] {n} match(s) -> {path}")
+    web_copy = ROOT / "web" / "api_velora_matchs.json"
+    if path.resolve() != web_copy.resolve() and web_copy.parent.is_dir():
+        web_copy.write_text(out, encoding="utf-8")
+        print(f"[rebuild_conseils] copie -> {web_copy}")
+    root_copy = ROOT / "api_velora_matchs.json"
+    if path.resolve() != root_copy.resolve() and root_copy.parent.is_dir():
+        root_copy.write_text(out, encoding="utf-8")
+        print(f"[rebuild_conseils] copie -> {root_copy}")
     return 0
 
 
