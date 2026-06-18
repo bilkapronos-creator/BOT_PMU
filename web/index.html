@@ -3104,7 +3104,27 @@
             if (animer) {
                 pulseVitrineTaux([kpiTaux, pmuTaux, footTaux, kpiRoi]);
             }
-            if (section) section.classList.remove('hidden');
+            if (section) appliquerVisibiliteVitrineCommunaute();
+        }
+
+        /** Masque la vitrine communauté pendant une analyse Foot/Tennis (Voir tous / recherche). */
+        function focusAnalyseSportActif() {
+            if (typeof sportActif === 'undefined') return false;
+            if (sportActif === 'foot' && !footModeOpportunites && footAnalyseAffichee) {
+                return footVoirTousMatchs || Boolean(String(footFiltre || '').trim());
+            }
+            if (sportActif === 'tennis' && tennisAnalyseAffichee) {
+                return tennisVoirTousMatchs || Boolean(String(tennisFiltre || '').trim());
+            }
+            return false;
+        }
+
+        function appliquerVisibiliteVitrineCommunaute() {
+            const section = document.getElementById('sectionVitrine');
+            if (!section) return;
+            const masquer = focusAnalyseSportActif();
+            section.classList.toggle('hidden', masquer);
+            if (masquer) replierVitrineCommunauteDetail();
         }
 
         /** Replie le panneau détaillé (PMU / Foot) sans masquer les KPI. */
@@ -3232,9 +3252,6 @@
 
         /** Charge Supabase + JSON communauté + API publiques (remix PMU / Foot). */
         async function chargerStatsPlateforme(options = {}) {
-            const section = document.getElementById('sectionVitrine');
-            if (section) section.classList.remove('hidden');
-
             masquerErreurSync('vitrineSyncErreur');
             try {
                 const [{ row, erreur }, communaute, statsPub, historiqueFootLocal] = await Promise.all([
@@ -5270,6 +5287,7 @@
                 injecterStatsCommunauteUI(window.__dernieresStatsCommunaute, { animer: false });
                 majVitrineCta(window.__dernieresStatsCommunaute);
             }
+            appliquerVisibiliteVitrineCommunaute();
         }
 
         function mettreAJourGuideSport() {
@@ -5667,6 +5685,7 @@
                 footAnalyseAffichee = false;
             }
             renderFootMatchs();
+            appliquerVisibiliteVitrineCommunaute();
         }
 
         function footPeutAfficherResultats() {
@@ -5705,6 +5724,7 @@
             if (sportActif !== 'foot') changerSport('foot');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
             replierVitrineCommunauteDetail();
+            appliquerVisibiliteVitrineCommunaute();
 
             const btn = document.getElementById('btnFootVoirTous');
             if (btn) {
@@ -5724,8 +5744,8 @@
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
                     preparerHistoriqueFootCommunaute().catch(() => {});
-                    defilerVersResultatsFoot();
                 }
+                defilerVersResultatsFoot();
             } catch (err) {
                 console.error('[Velora] Voir tous les matchs :', err);
                 const erreur = document.getElementById('footErreur');
@@ -5745,11 +5765,13 @@
 
         function defilerVersResultatsFoot() {
             const cible = document.getElementById('footResultats')
+                || document.getElementById('footZoneVide')
                 || document.getElementById('sectionFootball')
                 || document.getElementById('colonneDroite');
             if (!cible) return;
+            const mobile = window.matchMedia('(max-width: 1023px)').matches;
             requestAnimationFrame(() => {
-                cible.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                cible.scrollIntoView({ behavior: 'smooth', block: mobile ? 'start' : 'nearest' });
             });
         }
 
@@ -5797,6 +5819,7 @@
             if (sportActif !== 'foot') changerSport('foot');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
             replierVitrineCommunauteDetail();
+            appliquerVisibiliteVitrineCommunaute();
 
             if (btn) {
                 btn.disabled = true;
@@ -5812,8 +5835,8 @@
                 if (liste.length) {
                     synchroniserArchivesFootDepuisMatchs(liste);
                     preparerHistoriqueFootCommunaute().catch(() => {});
-                    defilerVersResultatsFoot();
                 }
+                defilerVersResultatsFoot();
             } catch (err) {
                 console.error('[Velora] Analyse Foot :', err);
                 const erreur = document.getElementById('footErreur');
@@ -8940,6 +8963,13 @@
             }
             if (footVoirTousMatchs && estVeloraPremiumFoot()) {
                 const liste = listeFootCartesAffichees();
+                const meta = footMetaDonneesMatchs();
+                if (!liste.length && meta.perime) {
+                    meta.textContent = meta.derniereDate
+                        ? `Base périmée (dernier match : ${meta.derniereDate}) — actualisation auto sous ~15 min`
+                        : 'Base périmée — actualisation automatique sous ~15 min';
+                    return;
+                }
                 meta.textContent = liste.length
                     ? `${liste.length} match${liste.length > 1 ? 's' : ''} à venir — vue complète Premium`
                     : 'Aucun match à venir dans la base pour le moment';
@@ -9025,7 +9055,14 @@
             const titre = titres[0];
             const sous = titres[1];
             const meta = footMetaDonneesMatchs();
-            if (listeLength === 0 && meta.perime && titre && sous) {
+            if (footVoirTousMatchs && estVeloraPremiumFoot() && listeLength === 0 && titre && sous) {
+                titre.textContent = meta.perime
+                    ? 'Aucun match à venir — base Winamax périmée'
+                    : 'Aucun match à venir pour le moment';
+                sous.textContent = meta.perime && meta.derniereDate
+                    ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous ~15 min.`
+                    : 'Les prochains matchs apparaîtront dès la prochaine extraction Winamax.';
+            } else if (listeLength === 0 && meta.perime && titre && sous) {
                 titre.textContent = 'Aucun match à venir en base';
                 sous.textContent = meta.derniereDate
                     ? `Les matchs du ${meta.derniereDate} sont passés. Attendez la prochaine extraction Winamax.`
@@ -9074,6 +9111,7 @@
                 if (accueil) {
                     accueil.classList.toggle('hidden', !footMatchsCharges);
                 }
+                appliquerVisibiliteVitrineCommunaute();
                 return;
             }
 
@@ -9099,6 +9137,7 @@
             zone.classList.toggle('hidden', liste.length === 0);
             const loading = document.getElementById('footLoading');
             if (loading) loading.classList.add('hidden');
+            appliquerVisibiliteVitrineCommunaute();
         }
 
         function impliedProbas1n2FromCotes(cotes) {
@@ -9576,6 +9615,7 @@
             if (sportActif !== 'tennis') changerSport('tennis');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
             replierVitrineCommunauteDetail();
+            appliquerVisibiliteVitrineCommunaute();
 
             const btn = document.getElementById('btnTennisVoirTous');
             if (btn) {
@@ -9618,6 +9658,7 @@
             }
             renderTennisMatchs();
             majTennisMeta();
+            appliquerVisibiliteVitrineCommunaute();
         }
 
         function tennisMatchsFiltres() {
@@ -9708,6 +9749,7 @@
                 zone.innerHTML = '';
                 if (accueil) accueil.classList.remove('hidden');
                 if (vide) vide.classList.add('hidden');
+                appliquerVisibiliteVitrineCommunaute();
                 return;
             }
 
@@ -9715,6 +9757,7 @@
                 zone.innerHTML = '';
                 if (accueil) accueil.classList.remove('hidden');
                 if (vide) vide.classList.add('hidden');
+                appliquerVisibiliteVitrineCommunaute();
                 return;
             }
 
@@ -9728,6 +9771,7 @@
                 zone.innerHTML = '';
                 if (vide) vide.classList.remove('hidden');
             }
+            appliquerVisibiliteVitrineCommunaute();
         }
 
         async function lancerAnalyseTennis() {
@@ -9766,6 +9810,7 @@
             if (sportActif !== 'tennis') changerSport('tennis');
             if (sectionActive !== 'pronostic') afficherSection('pronostic');
             replierVitrineCommunauteDetail();
+            appliquerVisibiliteVitrineCommunaute();
             if (btn) { btn.disabled = true; btn.textContent = 'Génération…'; }
             try {
                 await rechargerTennisMatchsServeur({ force: true, silent: true });
