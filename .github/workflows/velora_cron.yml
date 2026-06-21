@@ -109,6 +109,8 @@ jobs:
           VELORA_PARSER_HORIZON_HOURS: "168"
           VELORA_BETTING_DAY_END_HOUR: "8"
           VELORA_DUMP_TENNIS_POLL_SEC: "50"
+          SNIPER_WINDOW_HOURS: "168"
+          VELORA_CI_MATCHS_MAX_AGE_H: "6"
         run: xvfb-run -a python run_all.py
 
       - name: Vérifier matchs du jour (recherche Foot vide si 0)
@@ -120,6 +122,7 @@ jobs:
           from parser_winamax import is_kickoff_in_betting_day
           from run_all import (
               _dump_contient_match_journee_pari,
+              _json_matchs_a_venir_count,
               _match_kickoff_paris,
           )
 
@@ -160,8 +163,14 @@ jobs:
                   and _match_kickoff_paris(m)
                   and is_kickoff_in_betting_day(_match_kickoff_paris(m))
               )
-              print(f"{path}: {len(matchs)} match(s), {jour} dans la journée de paris")
-              if matchs and jour == 0:
+              a_venir = _json_matchs_a_venir_count(path)
+              print(f"{path}: {len(matchs)} match(s), {jour} dans la journée de paris, {a_venir} à venir")
+              if matchs and a_venir == 0:
+                  print(
+                      "::warning::Aucun match à venir — recherche Foot vide. "
+                      "Le parser doit regénérer api_velora_matchs.json depuis le dump."
+                  )
+              elif matchs and jour == 0:
                   print(
                       "::warning::Aucun match du jour — recherche Foot vide. "
                       "Vérifier VELORA_PROXY_URL (proxy France) si le scrape a échoué."

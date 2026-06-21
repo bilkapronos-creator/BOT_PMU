@@ -1508,7 +1508,7 @@ def parse_football_matches(data: dict) -> list[dict]:
     if skipped_horizon:
         print(
             f"[parser] {skipped_horizon} match(s) hors fenêtre "
-            f"(hors fenêtre {'24 h' if MATCH_PARSER_HORIZON_MODE == 'rolling' else 'journée+nocturnes'} "
+            f"(hors fenêtre {'168 h' if MATCH_PARSER_HORIZON_MODE == 'rolling' else 'journée+nocturnes'} "
             f"ou date inconnue) — ignorés du JSON."
         )
     if live_included:

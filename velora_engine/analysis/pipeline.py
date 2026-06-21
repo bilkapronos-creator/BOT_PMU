@@ -23,7 +23,10 @@ from velora_engine.analysis.model_poisson import (
     blend_probability_dicts,
     build_poisson_analysis,
 )
-from velora_engine.analysis.bet_advisor import build_intelligent_conseils
+from velora_engine.analysis.bet_advisor import (
+    build_intelligent_conseils,
+    display_badges_from_conseils,
+)
 from velora_engine.analysis.value_detectors import detect_all_free_values
 from velora_engine.odds_snapshots import (
     default_history_path,
@@ -254,6 +257,10 @@ def build_match_v2(
     if legacy_conseil:
         legacy["conseil"] = legacy_conseil
 
+    display_badges = list(free_values.display_badges)
+    if not display_badges:
+        display_badges = display_badges_from_conseils(conseils)
+
     free = FreeAnalysis(
         cotes_1n2=cotes_out,
         probabilites=probs_modele,
@@ -261,7 +268,7 @@ def build_match_v2(
         markets_raw=extracted.markets_raw,
         value_bets=free_values.value_bets,
         primary_pick=primary_pick,
-        display_badges=free_values.display_badges,
+        display_badges=display_badges,
         conseils_intelligents=conseils,
         meilleur_conseil=meilleur,
         pronostic_1n2=pronostic_pick or None,

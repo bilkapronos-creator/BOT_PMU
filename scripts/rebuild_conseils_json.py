@@ -9,7 +9,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from velora_engine.analysis.bet_advisor import build_intelligent_conseils
+from velora_engine.analysis.bet_advisor import (
+    build_intelligent_conseils,
+    display_badges_from_conseils,
+)
 from velora_engine.models import MarketOutcome, MarketsRaw, OuLine, PremiumAnalysis, ValueBet
 
 
@@ -78,14 +81,30 @@ def patch_match(m: dict) -> bool:
     )
     fa["conseils_intelligents"] = [c.to_dict() for c in conseils]
     fa["meilleur_conseil"] = meilleur.to_dict() if meilleur else None
-    label = str(fa.get("pronostic_label") or "").strip()
+    badges = display_badges_from_conseils(conseils)
+    if badges:
+        fa["display_badges"] = badges
     if meilleur and meilleur.label:
-        label = meilleur.label
-    if label:
-        m["conseil"] = label
+        prefix = "🎯" if meilleur.tier == "excellent" else "💡"
+        conseil_short = f"{prefix} {meilleur.label}"
+        if meilleur.cote:
+            conseil_short = f"{conseil_short} @ {meilleur.cote:.2f}"
+        fa["primary_pick"] = {
+            "market": meilleur.market,
+            "pick": meilleur.pick,
+            "label": meilleur.label,
+            "cote": meilleur.cote,
+            "conseil_short": conseil_short,
+        }
+        legacy_conseil = (
+            f"{meilleur.label} @ {meilleur.cote:.2f}"
+            if meilleur.cote
+            else meilleur.label
+        )
+        m["conseil"] = legacy_conseil
         leg = m.get("_legacy")
         if isinstance(leg, dict):
-            leg["conseil"] = label
+            leg["conseil"] = legacy_conseil
     return True
 
 

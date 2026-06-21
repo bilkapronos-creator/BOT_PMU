@@ -6822,16 +6822,29 @@
             return footMatchs.filter((m) => !estMatchTermine(m) && !estMatchEnDirect(m));
         }
 
-        /** Matchs du jour (Paris) non terminés — base gratuite (chips, recherche). */
+        /** Matchs du jour (Paris) non terminés — base gratuite (chips accueil). */
         function footMatchsRecherchables() {
             return footMatchs.filter((m) => isKickoffInBettingDayParis(m) && estMatchAVenirOuLive(m));
         }
 
+        function trierFootMatchsParKickoff(liste) {
+            return liste.slice().sort(
+                (a, b) => (parseMatchStartMs(a) || 0) - (parseMatchStartMs(b) || 0),
+            );
+        }
+
         /** Premium « Voir tous » : tous les matchs à venir / live dans le JSON (fenêtre parser ~7 j). */
         function footMatchsPremiumListe() {
-            return footMatchs
-                .filter((m) => estMatchAVenirOuLive(m))
-                .sort((a, b) => (Number(a.match_start_ts) || 0) - (Number(b.match_start_ts) || 0));
+            return trierFootMatchsParKickoff(footMatchs.filter((m) => estMatchAVenirOuLive(m)));
+        }
+
+        /**
+         * Pool recherche : uniquement matchs à venir / live (jamais les passés).
+         * Premium = horizon ~7 j ; gratuit = journée Paris + nocturnes.
+         */
+        function footMatchsPoolRecherche() {
+            if (estVeloraPremiumFoot()) return footMatchsPremiumListe();
+            return footMatchsRecherchables();
         }
 
         function equipesFootRecherchables() {
@@ -6875,7 +6888,7 @@
         function footMatchsFiltres() {
             const q = normaliserTexteRechercheFoot(footFiltre);
             if (!q) return [];
-            const actifs = footMatchsRecherchables();
+            const actifs = footMatchsPoolRecherche();
             let liste = actifs.filter((m) => {
                 const blob = normaliserTexteRechercheFoot(
                     `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
@@ -7347,6 +7360,60 @@
             return Number.isFinite(n) ? n : null;
         }
 
+        function conseilParMarche(m, marketKeys) {
+            const keys = new Set(marketKeys.map((k) => String(k).toLowerCase()));
+            for (const c of conseilsIntelligentsFromMatch(m)) {
+                const mk = String(c.market || '').toLowerCase();
+                if (keys.has(mk)) return c;
+            }
+            return null;
+        }
+
+        function displayBadgesFromConseils(m) {
+            const order = ['dc_12', 'dc_1x', 'dc_x2', 'btts', 'over_25', 'under_25', 'ou_total'];
+            const list = conseilsIntelligentsFromMatch(m);
+            const byMarket = {};
+            for (const c of list) {
+                const mk = String(c.market || '').toLowerCase();
+                if (mk && !byMarket[mk]) byMarket[mk] = c;
+            }
+            const badges = [];
+            const seen = new Set();
+            for (const mk of order) {
+                const c = byMarket[mk];
+                const label = String(c?.label || '').trim();
+                if (!label || seen.has(label)) continue;
+                badges.push(label);
+                seen.add(label);
+            }
+            return badges.slice(0, 4);
+        }
+
+        function htmlBlocParisSecondaires(m) {
+            const dc = conseilParMarche(m, ['dc_12', 'dc_1x', 'dc_x2']);
+            const btts = conseilParMarche(m, ['btts']);
+            const ou = conseilParMarche(m, ['over_25', 'under_25', 'ou_total']);
+            const cells = [
+                { icon: '🛡️', title: 'Double chance', c: dc },
+                { icon: '⚽', title: 'BTTS', c: btts },
+                { icon: '📊', title: 'Buts 2,5', c: ou },
+            ].filter((x) => x.c);
+            if (!cells.length) return '';
+            const renderCell = ({ icon, title, c }) => {
+                const cote = c.cote ? `@ ${Number(c.cote).toFixed(2)}` : '';
+                const prob = c.prob_pct != null ? `${c.prob_pct}%` : '—';
+                return `<div class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2.5">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-gray-500">${icon} ${escHtml(title)}</p>
+                    <p class="mt-1 text-xs font-bold leading-snug text-white">${escHtml(c.label)} ${escHtml(cote)}</p>
+                    <p class="mt-0.5 text-[10px] text-cyan-300/90">Proba modèle ${escHtml(prob)}</p>
+                </div>`;
+            };
+            const cols = cells.length >= 3 ? 'sm:grid-cols-3' : cells.length === 2 ? 'sm:grid-cols-2' : 'grid-cols-1';
+            return `<div class="velora-paris-secondaires grid gap-2 ${cols}" role="region" aria-label="Paris secondaires Velora">
+                ${cells.map(renderCell).join('')}
+            </div>`;
+        }
+
         /** Choix Velora BTTS (oui | non), aligné velora_archiver_foot / detect_value_btts_expert. */
         function inferVeloraBttsPick(m) {
             const pp = primaryPickFromMatch(m);
@@ -7354,6 +7421,11 @@
                 const side = String(pp.pick || pp.side || '').toLowerCase();
                 if (side === 'non') return 'non';
                 if (side === 'oui') return 'oui';
+            }
+            const bttsCi = conseilParMarche(m, ['btts']);
+            if (bttsCi) {
+                const side = String(bttsCi.pick || '').toLowerCase();
+                return side === 'non' ? 'non' : 'oui';
             }
             const oppType = String(m?.opportunite_type || m?.value_bet_type || '').trim().toLowerCase();
             const blob = `${m?.opportunite_detail || ''} ${m?.conseil || ''} ${m?.pronostic_label || ''}`.toLowerCase();
@@ -7384,6 +7456,12 @@
             const pp = primaryPickFromMatch(m);
             if (pp && (pp.market === 'ou_total' || pp.market === 'over_25')) {
                 const side = String(pp.pick || pp.side || '').toLowerCase();
+                if (side === 'moins' || side === 'minus') return 'moins';
+                if (side === 'plus') return 'plus';
+            }
+            const ouCi = conseilParMarche(m, ['over_25', 'under_25', 'ou_total']);
+            if (ouCi) {
+                const side = String(ouCi.pick || '').toLowerCase();
                 if (side === 'moins' || side === 'minus') return 'moins';
                 if (side === 'plus') return 'plus';
             }
@@ -7899,6 +7977,17 @@
                     labelOu25Velora(ouPick, coteStr, modelPct),
                     theme,
                     marcheVeloraEstOpportunite(m, 'over_25')
+                ));
+            }
+            const dcCi = conseilParMarche(m, ['dc_12', 'dc_1x', 'dc_x2']);
+            if (dcCi) {
+                const coteStr = fmtCoteMarche(dcCi.cote);
+                const suffix = coteStr ? ` (Cote ${coteStr})` : (dcCi.prob_pct != null ? ` (Modèle ${dcCi.prob_pct}%)` : '');
+                pills.push(htmlVeloraPickPill(
+                    '🛡️',
+                    `${dcCi.label}${suffix}`,
+                    theme,
+                    String(dcCi.market || '').toLowerCase().startsWith('dc_')
                 ));
             }
             if (!pills.length) return '';
@@ -8445,6 +8534,8 @@
                 conseils = conseilsPremiumFromMatch(m);
             } else if (scope === '1n2') {
                 conseils = conseils.filter((c) => String(c.market || '').toLowerCase() === '1n2');
+            } else if (scope === 'all') {
+                conseils = conseils.filter((c) => String(c.market || '').toLowerCase() !== '1n2');
             }
             if (!conseils.length) return '';
             const tierCls = {
@@ -8529,7 +8620,8 @@
         }
 
         function htmlFootFreeBadgesRow(m, theme = 'foot') {
-            const badges = Array.isArray(m?.display_badges) ? m.display_badges.filter(Boolean) : [];
+            let badges = Array.isArray(m?.display_badges) ? m.display_badges.filter(Boolean) : [];
+            if (!badges.length) badges = displayBadgesFromConseils(m);
             if (badges.length) {
                 return `<div class="velora-match-badges-row">${badges.map((label) =>
                     htmlVeloraPickPill('✨', label, theme, false)
@@ -8858,6 +8950,7 @@
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
             const conseilsMarches = htmlConseilsIntelligents(m, { scope: 'all', theme: 'foot' });
             const blocsPronosticValue = htmlBlocPronosticValue(m);
+            const parisSecondaires = htmlBlocParisSecondaires(m);
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
                 ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
@@ -8890,6 +8983,7 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${blocsPronosticValue}
+                        ${parisSecondaires}
                         ${htmlOddsMovement(m)}
                         ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(m.conseil, 'foot')}
                         ${badgesRow}
@@ -8963,26 +9057,29 @@
             }
             if (footVoirTousMatchs && estVeloraPremiumFoot()) {
                 const liste = listeFootCartesAffichees();
-                const meta = footMetaDonneesMatchs();
-                if (!liste.length && meta.perime) {
-                    meta.textContent = meta.derniereDate
-                        ? `Base périmée (dernier match : ${meta.derniereDate}) — actualisation auto sous ~15 min`
-                        : 'Base périmée — actualisation automatique sous ~15 min';
+                const fm = footMetaDonneesMatchs();
+                if (!liste.length) {
+                    meta.textContent = fm.perime
+                        ? (fm.derniereDate
+                            ? `Base périmée (dernier match : ${fm.derniereDate}) — actualisation auto sous ~15 min`
+                            : 'Base périmée — actualisation automatique sous ~15 min')
+                        : 'Aucun match à venir dans la base pour le moment';
                     return;
                 }
-                meta.textContent = liste.length
-                    ? `${liste.length} match${liste.length > 1 ? 's' : ''} à venir — vue complète Premium`
-                    : 'Aucun match à venir dans la base pour le moment';
+                meta.textContent = `${liste.length} match${liste.length > 1 ? 's' : ''} à venir — vue complète Premium`;
                 return;
             }
             const liste = footMatchAnalyseUnique();
             const total = footMatchsFiltres().length;
-            const totalBase = footMatchs.length;
+            const aVenir = footMatchsPoolRecherche().length;
+            const fmSearch = footMetaDonneesMatchs();
             meta.textContent = liste.length
                 ? (total > 1
-                    ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} en base)`
+                    ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} à venir)`
                     : `Analyse pour « ${q} »`)
-                : `Aucun résultat pour « ${q} » (${actifs.length || totalBase} match${(actifs.length || totalBase) > 1 ? 's' : ''} en base)`;
+                : (fmSearch.perime
+                    ? `Aucun match à venir pour « ${q} » — base Winamax en mise à jour (~15 min)`
+                    : `Aucun résultat pour « ${q} » (${aVenir} match${aVenir > 1 ? 's' : ''} à venir en base)`);
         }
 
         function majFootAlerteDonneesUi() {
@@ -9007,7 +9104,7 @@
             const fm = footMetaDonneesMatchs();
             if (n === 0 && total > 0) {
                 const quand = fm.derniereDate ? ` (dernier : ${fm.derniereDate})` : '';
-                el.innerHTML = `Les matchs en base sont passés${quand}. Patientez ~15&nbsp;min puis saisissez une équipe et <span class="text-cyan-400">Générer l'analyse</span>.${htmlFootAlerteDonneesPerimees()}`;
+                el.innerHTML = `Aucun match à venir en base${quand}. Actualisation Winamax automatique ~15&nbsp;min — réessayez ensuite.${htmlFootAlerteDonneesPerimees()}`;
                 majFootAlerteDonneesUi();
                 return;
             }
@@ -9062,11 +9159,16 @@
                 sous.textContent = meta.perime && meta.derniereDate
                     ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous ~15 min.`
                     : 'Les prochains matchs apparaîtront dès la prochaine extraction Winamax.';
+            } else if (listeLength === 0 && meta.perime && footFiltre.trim() && titre && sous) {
+                titre.textContent = 'Aucun match à venir pour cette recherche';
+                sous.textContent = meta.derniereDate
+                    ? `La base date du ${meta.derniereDate} — mise à jour Winamax sous ~15 min.`
+                    : 'Base Winamax en cours de mise à jour — réessayez dans ~15 min.';
             } else if (listeLength === 0 && meta.perime && titre && sous) {
                 titre.textContent = 'Aucun match à venir en base';
                 sous.textContent = meta.derniereDate
-                    ? `Les matchs du ${meta.derniereDate} sont passés. Attendez la prochaine extraction Winamax.`
-                    : 'Attendez la prochaine extraction Winamax (~15 min) ou cliquez Générer l\'analyse.';
+                    ? `Les matchs du ${meta.derniereDate} sont passés. Prochaine extraction Winamax sous ~15 min.`
+                    : 'Attendez la prochaine extraction Winamax (~15 min).';
             } else if (titre && sous) {
                 titre.textContent = 'Aucun match pour cette recherche';
                 sous.textContent = 'Essayez un autre nom d\'équipe ou vérifiez l\'orthographe.';

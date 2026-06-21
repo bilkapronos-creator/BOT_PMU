@@ -616,3 +616,35 @@ def build_intelligent_conseils(
     top = recs[:limit]
     best = top[0] if top else None
     return top, best
+
+
+_BADGE_MARKET_ORDER = (
+    "dc_12",
+    "dc_1x",
+    "dc_x2",
+    "btts",
+    "over_25",
+    "under_25",
+    "ou_total",
+)
+
+
+def display_badges_from_conseils(conseils: list[BetRecommendation]) -> list[str]:
+    """Badges carte Foot (BTTS, O/U, DC) quand Winamax n'a pas publié les cotes."""
+    badges: list[str] = []
+    seen: set[str] = set()
+    by_market: dict[str, BetRecommendation] = {}
+    for c in conseils:
+        mk = str(c.market or "").lower()
+        if mk and mk not in by_market:
+            by_market[mk] = c
+    for mk in _BADGE_MARKET_ORDER:
+        c = by_market.get(mk)
+        if not c or not c.label:
+            continue
+        label = str(c.label).strip()
+        if not label or label in seen:
+            continue
+        badges.append(label)
+        seen.add(label)
+    return badges[:4]
