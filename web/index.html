@@ -5701,12 +5701,7 @@
                 if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
                 const q = normaliserTexteRechercheFoot(footFiltre);
                 if (q) {
-                    liste = liste.filter((m) => {
-                        const blob = normaliserTexteRechercheFoot(
-                            `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
-                        );
-                        return blob.includes(q);
-                    });
+                    liste = liste.filter((m) => blobRechercheFootMatch(m).includes(q));
                 }
                 return liste;
             }
@@ -6839,11 +6834,16 @@
         }
 
         /**
-         * Pool recherche : uniquement matchs à venir / live (jamais les passés).
-         * Premium = horizon ~7 j ; gratuit = journée Paris + nocturnes.
+         * Pool recherche explicite : tous les matchs à venir (~7 j) pour tout membre connecté.
+         * La fenêtre « journée Paris » reste réservée aux chips d'accueil (mode passif).
          */
-        function footMatchsPoolRecherche() {
-            if (estVeloraPremiumFoot()) return footMatchsPremiumListe();
+        function footMatchsPoolRecherche(options = {}) {
+            const rechercheActive = options.rechercheActive != null
+                ? options.rechercheActive
+                : Boolean(footFiltre.trim());
+            if (rechercheActive || estVeloraPremiumFoot()) {
+                return footMatchsPremiumListe();
+            }
             return footMatchsRecherchables();
         }
 
@@ -6881,20 +6881,35 @@
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
                 .toLowerCase()
+                .replace(/[''`´]/g, ' ')
+                .replace(/[-–—_/.,]+/g, ' ')
+                .replace(/\s+/g, ' ')
                 .trim();
+        }
+
+        function blobRechercheFootMatch(m) {
+            const fa = m?.free_analysis || {};
+            const comp = m?.meta_match?.competition?.name || '';
+            return normaliserTexteRechercheFoot(
+                `${m.equipe_domicile} ${m.equipe_exterieur} ${comp} ${m.conseil || ''} ${fa.pronostic_label || ''}`,
+            );
+        }
+
+        function footMatchsCorrespondancesPassees() {
+            const q = normaliserTexteRechercheFoot(footFiltre);
+            if (!q) return [];
+            return footMatchs.filter((m) => {
+                if (estMatchAVenirOuLive(m)) return false;
+                return blobRechercheFootMatch(m).includes(q);
+            });
         }
 
         /** Mode recherche : résultats uniquement si l'utilisateur a saisi une requête. */
         function footMatchsFiltres() {
             const q = normaliserTexteRechercheFoot(footFiltre);
             if (!q) return [];
-            const actifs = footMatchsPoolRecherche();
-            let liste = actifs.filter((m) => {
-                const blob = normaliserTexteRechercheFoot(
-                    `${m.equipe_domicile} ${m.equipe_exterieur} ${m.conseil || ''}`,
-                );
-                return blob.includes(q);
-            });
+            const actifs = footMatchsPoolRecherche({ rechercheActive: true });
+            let liste = actifs.filter((m) => blobRechercheFootMatch(m).includes(q));
             if (footFiltreOutsiders) liste = liste.filter(estOutsiderValueMatch);
             return liste;
         }
@@ -9044,11 +9059,14 @@
                 const majHint = fm.genereAt && (fm.genereAgeH == null || fm.genereAgeH >= 1)
                     ? ` · base MAJ ${fm.genereAt}`
                     : '';
+                const aVenirBase = footMatchsPremiumListe().length;
                 const baseInfo = actifs.length > 0
                     ? `${actifs.length} match${actifs.length > 1 ? 's' : ''} Winamax (journée + nocturnes)${majHint}`
-                    : (totalBase > 0
-                        ? `${totalBase} match${totalBase > 1 ? 's' : ''} en base périmée${majHint || ''} — actualisation auto ~15 min`
-                        : '0 match aujourd\'hui');
+                    : (aVenirBase > 0
+                        ? `${aVenirBase} match${aVenirBase > 1 ? 's' : ''} à venir (7 j)${majHint}`
+                        : (totalBase > 0
+                            ? `Base expirée — 0 match à venir${majHint || ''} · MAJ Winamax ~15 min`
+                            : '0 match — extraction Winamax en cours'));
                 const voirTousHint = estVeloraPremiumFoot()
                     ? ' · ou Voir tous les matchs'
                     : ' · Voir tous les matchs = Premium';
@@ -9071,15 +9089,18 @@
             }
             const liste = footMatchAnalyseUnique();
             const total = footMatchsFiltres().length;
-            const aVenir = footMatchsPoolRecherche().length;
+            const aVenir = footMatchsPoolRecherche({ rechercheActive: true }).length;
+            const passes = footMatchsCorrespondancesPassees().length;
             const fmSearch = footMetaDonneesMatchs();
             meta.textContent = liste.length
                 ? (total > 1
                     ? `Analyse affichée pour « ${q} » (${total} correspondance${total > 1 ? 's' : ''} à venir)`
                     : `Analyse pour « ${q} »`)
-                : (fmSearch.perime
-                    ? `Aucun match à venir pour « ${q} » — base Winamax en mise à jour (~15 min)`
-                    : `Aucun résultat pour « ${q} » (${aVenir} match${aVenir > 1 ? 's' : ''} à venir en base)`);
+                : (passes > 0
+                    ? `« ${q} » : match passé — ${aVenir} match${aVenir > 1 ? 's' : ''} à venir en base`
+                    : (fmSearch.perime
+                        ? `Aucun match à venir pour « ${q} » — base en mise à jour (~15 min)`
+                        : `Aucun résultat pour « ${q} » (${aVenir} match${aVenir > 1 ? 's' : ''} à venir en base)`));
         }
 
         function majFootAlerteDonneesUi() {
@@ -9160,18 +9181,30 @@
                     ? `Derniers matchs extraits le ${meta.derniereDate}. Prochaine mise à jour auto sous ~15 min.`
                     : 'Les prochains matchs apparaîtront dès la prochaine extraction Winamax.';
             } else if (listeLength === 0 && meta.perime && footFiltre.trim() && titre && sous) {
-                titre.textContent = 'Aucun match à venir pour cette recherche';
-                sous.textContent = meta.derniereDate
-                    ? `La base date du ${meta.derniereDate} — mise à jour Winamax sous ~15 min.`
-                    : 'Base Winamax en cours de mise à jour — réessayez dans ~15 min.';
+                const passes = footMatchsCorrespondancesPassees();
+                if (passes.length) {
+                    titre.textContent = 'Match(s) passé(s) — non affichés';
+                    sous.textContent = `« ${footFiltre.trim()} » correspond à un match terminé. Essayez Belgique, Portugal, Espagne… ou attendez la MAJ Winamax.`;
+                } else {
+                    titre.textContent = 'Aucun match à venir pour cette recherche';
+                    sous.textContent = meta.derniereDate
+                        ? `Aucune équipe « ${footFiltre.trim()} » à venir (base du ${meta.derniereDate}).`
+                        : 'Essayez un autre nom ou vérifiez l\'orthographe.';
+                }
             } else if (listeLength === 0 && meta.perime && titre && sous) {
                 titre.textContent = 'Aucun match à venir en base';
                 sous.textContent = meta.derniereDate
                     ? `Les matchs du ${meta.derniereDate} sont passés. Prochaine extraction Winamax sous ~15 min.`
                     : 'Attendez la prochaine extraction Winamax (~15 min).';
             } else if (titre && sous) {
-                titre.textContent = 'Aucun match pour cette recherche';
-                sous.textContent = 'Essayez un autre nom d\'équipe ou vérifiez l\'orthographe.';
+                const passes = footFiltre.trim() ? footMatchsCorrespondancesPassees() : [];
+                if (passes.length) {
+                    titre.textContent = 'Match(s) passé(s) — non affichés';
+                    sous.textContent = `« ${footFiltre.trim()} » est terminé. Essayez Belgique, Portugal, Espagne…`;
+                } else {
+                    titre.textContent = 'Aucun match pour cette recherche';
+                    sous.textContent = 'Essayez un autre nom d\'équipe ou vérifiez l\'orthographe.';
+                }
             }
         }
 

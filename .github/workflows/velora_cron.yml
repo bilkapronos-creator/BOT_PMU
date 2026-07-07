@@ -122,6 +122,7 @@ jobs:
           from parser_winamax import is_kickoff_in_betting_day
           from run_all import (
               _dump_contient_match_journee_pari,
+              _dump_contient_matchs_a_venir,
               _json_matchs_a_venir_count,
               _match_kickoff_paris,
           )
@@ -167,9 +168,10 @@ jobs:
               print(f"{path}: {len(matchs)} match(s), {jour} dans la journée de paris, {a_venir} à venir")
               if matchs and a_venir == 0:
                   print(
-                      "::warning::Aucun match à venir — recherche Foot vide. "
-                      "Le parser doit regénérer api_velora_matchs.json depuis le dump."
+                      "::error::Aucun match Foot à venir — recherche et Voir tous vides. "
+                      "Vérifier VELORA_PROXY_URL (proxy France) et les logs winamax_dump."
                   )
+                  raise SystemExit(1)
               elif matchs and jour == 0:
                   print(
                       "::warning::Aucun match du jour — recherche Foot vide. "

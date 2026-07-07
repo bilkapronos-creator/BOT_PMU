@@ -661,6 +661,20 @@ def _matchs_json_besoin_regeneration() -> bool:
     return any(_matchs_json_necessite_parser(p) for p in paths)
 
 
+def _aucun_match_foot_a_venir_ci() -> bool:
+    """Vrai si aucun match à venir dans les JSON Foot — scrape obligatoire."""
+    assert WEB_ROOT is not None
+    for path in (MATCHS_JSON, WEB_ROOT / "api_velora_matchs.json"):
+        if path.is_file() and _json_matchs_a_venir_count(path) > 0:
+            return False
+    return True
+
+
+def _dump_utilisable_pour_parser(path: Path) -> bool:
+    """Dump présent ET contient au moins un match football non terminé."""
+    return path.is_file() and path.stat().st_size > 80 and _dump_contient_matchs_a_venir(path)
+
+
 def _dump_contient_match_journee_pari(path: Path) -> bool:
     """Vrai si le dump Winamax contient au moins un match dans la fenêtre betting_day."""
     if not path.is_file():
@@ -883,46 +897,47 @@ def executer_phase_scraper() -> bool:
             except (OSError, json.JSONDecodeError):
                 pass
         force_tennis_scrape = tennis_json_vide and dump_sans_tennis
-        if mode in ("premium", "premium_web") and not force_tennis_scrape:
-            if _matchs_json_besoin_regeneration():
-                dump_ok = DUMP_HTML.is_file() and DUMP_HTML.stat().st_size > 80
-                if dump_ok:
-                    if mode == "premium_web":
-                        _synchroniser_premium_depuis_web()
-                    log(
-                        "CI : premium récent mais api_velora_matchs.json périmé ou sans match à venir "
-                        "— reprise au parser depuis dump_winamax_html.json.",
-                    )
-                    debut = 1
-                else:
-                    log(
-                        "CI : matchs périmés et dump absent — scrape Winamax requis "
-                        "(proxy France : VELORA_PROXY_URL).",
-                    )
-            else:
-                if mode == "premium_web":
-                    _synchroniser_premium_depuis_web()
-                log(
-                    "CI : scraper Winamax ignoré — premium et matchs à jour "
-                    f"(fichiers < {os.environ.get('VELORA_CI_SCRAPER_MAX_AGE_H', '6')} h). "
-                    "Résolution PMU/Foot et publication communauté continuent.",
-                )
-                return True
+        force_scrape_foot = _aucun_match_foot_a_venir_ci()
+        if force_scrape_foot:
+            log(
+                "CI : 0 match Foot à venir en JSON — scrape Winamax forcé "
+                "(VELORA_PROXY_URL proxy France requis sur GitHub Actions).",
+            )
         if force_tennis_scrape:
             log(
                 "CI : tennis absent du dump/JSON — scrape Winamax forcé "
                 "(ignore repli premium / dump récent).",
             )
-        if mode == "dump" and not force_tennis_scrape:
-            log(
-                "CI : dump HTML récent — reprise à l'étape parser (sans re-scraper Winamax).",
-            )
-            debut = 1
-        elif mode in ("matchs", "matchs_web") and not force_tennis_scrape:
-            if mode == "matchs_web":
-                _synchroniser_premium_depuis_web()
-            log("CI : matchs JSON récents — reprise au sniper uniquement.")
-            debut = 2
+        if not force_scrape_foot and not force_tennis_scrape:
+            if mode in ("premium", "premium_web"):
+                if _matchs_json_besoin_regeneration() and _dump_utilisable_pour_parser(DUMP_HTML):
+                    if mode == "premium_web":
+                        _synchroniser_premium_depuis_web()
+                    log(
+                        "CI : premium récent mais matchs périmés — "
+                        "reprise au parser depuis dump Winamax (matchs à venir présents).",
+                    )
+                    debut = 1
+                elif not _matchs_json_besoin_regeneration():
+                    if mode == "premium_web":
+                        _synchroniser_premium_depuis_web()
+                    log(
+                        "CI : scraper Winamax ignoré — premium et matchs à jour "
+                        f"(fichiers < {os.environ.get('VELORA_CI_SCRAPER_MAX_AGE_H', '6')} h). "
+                        "Résolution PMU/Foot et publication communauté continuent.",
+                    )
+                    return True
+            elif mode == "dump" and _dump_utilisable_pour_parser(DUMP_HTML):
+                log(
+                    "CI : dump HTML récent avec matchs à venir — "
+                    "reprise à l'étape parser (sans re-scraper Winamax).",
+                )
+                debut = 1
+            elif mode in ("matchs", "matchs_web"):
+                if mode == "matchs_web":
+                    _synchroniser_premium_depuis_web()
+                log("CI : matchs JSON récents — reprise au sniper uniquement.")
+                debut = 2
 
     for script, label, extra in etapes[debut:]:
         if run_step(script, label, extra):
@@ -934,7 +949,7 @@ def executer_phase_scraper() -> bool:
 
         mode = _mode_repli_scraper_ci()
         if script == "winamax_dump.py":
-            dump_ok = DUMP_HTML.is_file() and DUMP_HTML.stat().st_size > 80
+            dump_ok = _dump_utilisable_pour_parser(DUMP_HTML)
             if dump_ok and (
                 mode in ("premium", "premium_web", "dump", "matchs", "matchs_web")
                 or _matchs_json_besoin_regeneration()
