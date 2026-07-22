@@ -40,6 +40,19 @@
         };
     }
 
+    function validerConfigSupabase(url, key) {
+        if (!url || !key) {
+            return 'Supabase non configuré. Copiez web/.env.example en .env.local puis exécutez : node scripts/generate-config.js (ou définissez SUPABASE_URL et SUPABASE_ANON_KEY sur Vercel).';
+        }
+        if (/VOTRE_REF|VOTRE_CLE|your-project|example\.com/i.test(`${url} ${key}`)) {
+            return 'Configuration Supabase invalide (valeurs placeholder). Renseignez les vraies clés dans .env.local ou Vercel.';
+        }
+        if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) {
+            return 'URL Supabase invalide (format attendu : https://xxxx.supabase.co, sans /rest/v1).';
+        }
+        return null;
+    }
+
     function creerStorageAuth() {
         const memoire = new Map();
         const candidats = [];
@@ -86,8 +99,9 @@
         if (client) return client;
 
         const { url, key } = getConfig();
-        if (!url || !key) {
-            console.warn('[Velora Auth] SUPABASE_URL ou SUPABASE_ANON_KEY manquant.');
+        const errConfig = validerConfigSupabase(url, key);
+        if (errConfig) {
+            console.warn('[Velora Auth]', errConfig);
             return null;
         }
         if (typeof global.supabase === 'undefined' || !global.supabase.createClient) {
@@ -485,47 +499,71 @@
         if (/email not confirmed/i.test(msg)) {
             return 'Confirmez votre email avant de vous connecter (vérifiez votre boîte mail).';
         }
+        if (/failed to fetch|networkerror|network error|load failed|fetch failed/i.test(msg)) {
+            if (global.location?.protocol === 'file:') {
+                return 'Ouvrez l\'app via un serveur HTTP (pas en file://). Exemple : npx serve public -p 3000';
+            }
+            const { url, key } = getConfig();
+            if (validerConfigSupabase(url, key)) {
+                return validerConfigSupabase(url, key);
+            }
+            return 'Impossible de joindre Supabase. Vérifiez SUPABASE_URL et SUPABASE_ANON_KEY (config.js ou Vercel), votre connexion réseau, et que le projet Supabase est actif.';
+        }
         return msg;
     }
 
-    async function signIn(email, password) {
-        const supabase = getClient();
-        if (!supabase) {
-            return { ok: false, erreur: 'Supabase non configuré.' };
+    async function executerAuth(fn) {
+        try {
+            return await fn();
+        } catch (err) {
+            return { ok: false, erreur: formaterErreurAuth(err) };
         }
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: String(email || '').trim(),
-            password: String(password || ''),
-        });
-        if (error) return { ok: false, erreur: formaterErreurAuth(error) };
-        session = data.session;
-        notifier(session);
-        await chargerProfil();
-        return { ok: true, session };
     }
 
-    async function signUp(email, password) {
-        const supabase = getClient();
-        if (!supabase) {
-            return { ok: false, erreur: 'Supabase non configuré.' };
-        }
-        const { data, error } = await supabase.auth.signUp({
-            email: String(email || '').trim(),
-            password: String(password || ''),
-        });
-        if (error) return { ok: false, erreur: formaterErreurAuth(error) };
-        if (data.session) {
+    async function signIn(email, password) {
+        return executerAuth(async () => {
+            const supabase = getClient();
+            if (!supabase) {
+                const { url, key } = getConfig();
+                return { ok: false, erreur: validerConfigSupabase(url, key) || 'Supabase non configuré.' };
+            }
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: String(email || '').trim(),
+                password: String(password || ''),
+            });
+            if (error) return { ok: false, erreur: formaterErreurAuth(error) };
             session = data.session;
             notifier(session);
             await chargerProfil();
-            return { ok: true, session, confirmationEmail: false };
-        }
-        return {
-            ok: true,
-            session: null,
-            confirmationEmail: true,
-            message: '✉️ Compte créé avec succès ! Un lien de confirmation a été envoyé. Veuillez cliquer dessus pour activer votre compte.',
-        };
+            return { ok: true, session };
+        });
+    }
+
+    async function signUp(email, password) {
+        return executerAuth(async () => {
+            const supabase = getClient();
+            if (!supabase) {
+                const { url, key } = getConfig();
+                return { ok: false, erreur: validerConfigSupabase(url, key) || 'Supabase non configuré.' };
+            }
+            const { data, error } = await supabase.auth.signUp({
+                email: String(email || '').trim(),
+                password: String(password || ''),
+            });
+            if (error) return { ok: false, erreur: formaterErreurAuth(error) };
+            if (data.session) {
+                session = data.session;
+                notifier(session);
+                await chargerProfil();
+                return { ok: true, session, confirmationEmail: false };
+            }
+            return {
+                ok: true,
+                session: null,
+                confirmationEmail: true,
+                message: '✉️ Compte créé avec succès ! Un lien de confirmation a été envoyé. Veuillez cliquer dessus pour activer votre compte.',
+            };
+        });
     }
 
     function nettoyerHashAuth() {
