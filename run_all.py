@@ -330,21 +330,25 @@ def push_vercel_git() -> bool:
             log_success(label, "Aucun JSON présent — pipeline OK sans push")
             return True
 
-        r_add = run_git(["git", "add", "-f", *to_commit])
-        if r_add.returncode != 0:
-            log_error(label, "git add -f a échoué", f"{r_add.stdout}\n{r_add.stderr}")
-            return False
-        log(f"  git add -f {' '.join(to_commit)}")
-
         r_fetch = run_git(["git", "fetch", "origin", "main"])
         if r_fetch.returncode != 0:
             log_error(label, "git fetch origin main a échoué", f"{r_fetch.stdout}\n{r_fetch.stderr}")
             return False
 
-        r_reset = run_git(["git", "reset", "--soft", "origin/main"])
-        if r_reset.returncode != 0:
-            log_error(label, "git reset --soft origin/main a échoué", f"{r_reset.stdout}\n{r_reset.stderr}")
+        r_merge = run_git(["git", "merge", "--ff-only", "origin/main"])
+        if r_merge.returncode != 0:
+            log_error(
+                label,
+                "git merge --ff-only origin/main a échoué",
+                f"{r_merge.stdout}\n{r_merge.stderr}",
+            )
             return False
+
+        r_add = run_git(["git", "add", "-f", *to_commit])
+        if r_add.returncode != 0:
+            log_error(label, "git add -f a échoué", f"{r_add.stdout}\n{r_add.stderr}")
+            return False
+        log(f"  git add -f {' '.join(to_commit)}")
 
         r_commit = run_git(["git", "commit", "-m", GIT_COMMIT_MSG])
         if r_commit.returncode != 0:
