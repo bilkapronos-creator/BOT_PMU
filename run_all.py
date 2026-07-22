@@ -45,6 +45,7 @@ GIT_JSON_FILES = (
     "velora_archives_foot.json",
     "velora_odds_history.json",
     "velora_foot_calibration.json",
+    "velora_pronos_history.json",
 )
 
 PYTHON = Path(sys.executable).resolve()
@@ -335,6 +336,16 @@ def push_vercel_git() -> bool:
             return False
         log(f"  git add -f {' '.join(to_commit)}")
 
+        r_fetch = run_git(["git", "fetch", "origin", "main"])
+        if r_fetch.returncode != 0:
+            log_error(label, "git fetch origin main a échoué", f"{r_fetch.stdout}\n{r_fetch.stderr}")
+            return False
+
+        r_reset = run_git(["git", "reset", "--soft", "origin/main"])
+        if r_reset.returncode != 0:
+            log_error(label, "git reset --soft origin/main a échoué", f"{r_reset.stdout}\n{r_reset.stderr}")
+            return False
+
         r_commit = run_git(["git", "commit", "-m", GIT_COMMIT_MSG])
         if r_commit.returncode != 0:
             if _commit_sans_modifications(r_commit):
@@ -345,7 +356,7 @@ def push_vercel_git() -> bool:
             return False
         log(f'  git commit -m "{GIT_COMMIT_MSG}"')
 
-        r_push = run_git(["git", "push"])
+        r_push = run_git(["git", "push", "origin", "HEAD:main"])
         if r_push.returncode != 0:
             log_error(label, "git push a échoué", f"{r_push.stdout}\n{r_push.stderr}")
             return False

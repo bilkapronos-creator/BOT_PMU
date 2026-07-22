@@ -199,6 +199,7 @@ jobs:
         if: success()
         run: |
           set -e
+          git fetch origin main
           added=0
           for f in \
             api_velora_matchs.json \
@@ -212,7 +213,8 @@ jobs:
             web/velora_archives_foot.json \
             web/velora_foot_resultats.json \
             web/velora_odds_history.json \
-            web/velora_foot_calibration.json; do
+            web/velora_foot_calibration.json \
+            web/velora_pronos_history.json; do
             if [ -f "$f" ]; then
               git add -f "$f"
               added=1
@@ -226,6 +228,19 @@ jobs:
             echo "JSON inchangés — pas de push."
             exit 0
           fi
+          # Un commit unique sur origin/main (évite pull --rebase bloqué par des modifs hors staging)
+          git reset --soft origin/main
           git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Push réussi (tentative ${attempt})."
+              exit 0
+            fi
+            echo "Push refusé (tentative ${attempt}/3) — resync origin/main…"
+            git fetch origin main
+            git reset --soft origin/main
+            git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
+            sleep $((attempt * 2))
+          done
+          echo "::error::git push échoué après 3 tentatives (conflit ou permissions)."
+          exit 1
