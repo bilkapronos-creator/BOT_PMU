@@ -2,9 +2,1638 @@
   "schema_version": 2,
   "meta": {
     "sport": "tennis",
-    "generated_at": "2026-06-19T02:18:27.061591+02:00",
+    "generated_at": "2026-07-22T18:37:24.117028+02:00",
     "engine": "velora-tennis-1",
-    "match_count": 0
+    "match_count": 21
   },
-  "matchs": []
+  "matchs": [
+    {
+      "id_match": "72827260",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 13:00",
+      "match_start_ts": 1784804400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Pedro Martinez ",
+      "equipe_exterieur": "Luciano Darderi",
+      "joueur_1": "Pedro Martinez ",
+      "joueur_2": "Luciano Darderi",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.7,
+          "2": 1.27
+        },
+        "probabilites": {
+          "1": 26,
+          "2": 74
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Luciano Darderi",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Luciano Darderi",
+            "cote": 1.27,
+            "prob_pct": 74,
+            "edge": 0.94,
+            "score": -0.06,
+            "tier": "bon",
+            "raison": "Favori net Luciano Darderi (74% implicite, cote 1.27)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Luciano Darderi",
+          "cote": 1.27,
+          "prob_pct": 74,
+          "edge": 0.94,
+          "score": -0.06,
+          "tier": "bon",
+          "raison": "Favori net Luciano Darderi (74% implicite, cote 1.27)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Luciano Darderi",
+      "cotes": {
+        "1": 3.7,
+        "2": 1.27
+      },
+      "probabilites": {
+        "1": 26,
+        "2": 74
+      }
+    },
+    {
+      "id_match": "72827262",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 13:00",
+      "match_start_ts": 1784804400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Jaime Faria",
+      "equipe_exterieur": "Gonzalo Bueno",
+      "joueur_1": "Jaime Faria",
+      "joueur_2": "Gonzalo Bueno",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.16,
+          "2": 5.2
+        },
+        "probabilites": {
+          "1": 75,
+          "2": 25
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Gonzalo Bueno",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Gonzalo Bueno",
+            "cote": 5.2,
+            "prob_pct": 25,
+            "edge": 1.3,
+            "score": 0.3,
+            "tier": "excellent",
+            "raison": "Outsider Gonzalo Bueno : proba 25% × cote 5.20 → edge 1.30",
+            "stars": 5
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Jaime Faria",
+            "cote": 1.16,
+            "prob_pct": 75,
+            "edge": 0.87,
+            "score": -0.13,
+            "tier": "bon",
+            "raison": "Favori net Jaime Faria (75% implicite, cote 1.16)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Gonzalo Bueno",
+          "cote": 5.2,
+          "prob_pct": 25,
+          "edge": 1.3,
+          "score": 0.3,
+          "tier": "excellent",
+          "raison": "Outsider Gonzalo Bueno : proba 25% × cote 5.20 → edge 1.30",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Gonzalo Bueno",
+            "cote": 5.2,
+            "prob_pct": 25,
+            "edge": 1.3,
+            "score": 0.3,
+            "tier": "excellent",
+            "raison": "Outsider Gonzalo Bueno : proba 25% × cote 5.20 → edge 1.30",
+            "stars": 5
+          }
+        ]
+      },
+      "conseil": "Vainqueur Gonzalo Bueno",
+      "cotes": {
+        "1": 1.16,
+        "2": 5.2
+      },
+      "probabilites": {
+        "1": 75,
+        "2": 25
+      }
+    },
+    {
+      "id_match": "72827264",
+      "sport": "tennis",
+      "date_match": "22/07/2026 à 19:10",
+      "match_start_ts": 1784740200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Kyrian Jacquet",
+      "equipe_exterieur": "Alexander Blockx",
+      "joueur_1": "Kyrian Jacquet",
+      "joueur_2": "Alexander Blockx",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.7,
+          "2": 1.45
+        },
+        "probabilites": {
+          "1": 5,
+          "2": 95
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Alexander Blockx",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Alexander Blockx",
+            "cote": 1.45,
+            "prob_pct": 95,
+            "edge": 1.377,
+            "score": 0.377,
+            "tier": "bon",
+            "raison": "Favori net Alexander Blockx (95% implicite, cote 1.45)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Alexander Blockx",
+          "cote": 1.45,
+          "prob_pct": 95,
+          "edge": 1.377,
+          "score": 0.377,
+          "tier": "bon",
+          "raison": "Favori net Alexander Blockx (95% implicite, cote 1.45)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Alexander Blockx",
+            "cote": 1.45,
+            "prob_pct": 95,
+            "edge": 1.377,
+            "score": 0.377,
+            "tier": "bon",
+            "raison": "Favori net Alexander Blockx (95% implicite, cote 1.45)",
+            "stars": 4
+          }
+        ]
+      },
+      "conseil": "Vainqueur Alexander Blockx",
+      "cotes": {
+        "1": 2.7,
+        "2": 1.45
+      },
+      "probabilites": {
+        "1": 5,
+        "2": 95
+      }
+    },
+    {
+      "id_match": "72827284",
+      "sport": "tennis",
+      "date_match": "22/07/2026 à 18:00",
+      "match_start_ts": 1784736000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Alejandro Tabilo",
+      "equipe_exterieur": "Tiago Torres",
+      "joueur_1": "Alejandro Tabilo",
+      "joueur_2": "Tiago Torres",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.1,
+          "2": 6.5
+        },
+        "probabilites": {
+          "1": 86,
+          "2": 14
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Alejandro Tabilo",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Alejandro Tabilo",
+            "cote": 1.1,
+            "prob_pct": 86,
+            "edge": 0.946,
+            "score": -0.054,
+            "tier": "bon",
+            "raison": "Favori net Alejandro Tabilo (86% implicite, cote 1.10)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Alejandro Tabilo",
+          "cote": 1.1,
+          "prob_pct": 86,
+          "edge": 0.946,
+          "score": -0.054,
+          "tier": "bon",
+          "raison": "Favori net Alejandro Tabilo (86% implicite, cote 1.10)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Alejandro Tabilo",
+      "cotes": {
+        "1": 1.1,
+        "2": 6.5
+      },
+      "probabilites": {
+        "1": 86,
+        "2": 14
+      }
+    },
+    {
+      "id_match": "72827286",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 13:00",
+      "match_start_ts": 1784804400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Luca van Assche",
+      "equipe_exterieur": "Pablo Carreno-Busta",
+      "joueur_1": "Luca van Assche",
+      "joueur_2": "Pablo Carreno-Busta",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.6,
+          "2": 1.49
+        },
+        "probabilites": {
+          "1": 36,
+          "2": 64
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Pablo Carreno-Busta",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Pablo Carreno-Busta",
+            "cote": 1.49,
+            "prob_pct": 64,
+            "edge": 0.954,
+            "score": -0.046,
+            "tier": "standard",
+            "raison": "Pronostic marché : Pablo Carreno-Busta (64%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Pablo Carreno-Busta",
+          "cote": 1.49,
+          "prob_pct": 64,
+          "edge": 0.954,
+          "score": -0.046,
+          "tier": "standard",
+          "raison": "Pronostic marché : Pablo Carreno-Busta (64%)",
+          "stars": 3
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Pablo Carreno-Busta",
+      "cotes": {
+        "1": 2.6,
+        "2": 1.49
+      },
+      "probabilites": {
+        "1": 36,
+        "2": 64
+      }
+    },
+    {
+      "id_match": "72827288",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 13:00",
+      "match_start_ts": 1784804400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Andrey Rublev",
+      "equipe_exterieur": "Timofey Skatov",
+      "joueur_1": "Andrey Rublev",
+      "joueur_2": "Timofey Skatov",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.08,
+          "2": 7.5
+        },
+        "probabilites": {
+          "1": 87,
+          "2": 13
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Andrey Rublev",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Andrey Rublev",
+            "cote": 1.08,
+            "prob_pct": 87,
+            "edge": 0.94,
+            "score": -0.06,
+            "tier": "bon",
+            "raison": "Favori net Andrey Rublev (87% implicite, cote 1.08)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Andrey Rublev",
+          "cote": 1.08,
+          "prob_pct": 87,
+          "edge": 0.94,
+          "score": -0.06,
+          "tier": "bon",
+          "raison": "Favori net Andrey Rublev (87% implicite, cote 1.08)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Andrey Rublev",
+      "cotes": {
+        "1": 1.08,
+        "2": 7.5
+      },
+      "probabilites": {
+        "1": 87,
+        "2": 13
+      }
+    },
+    {
+      "id_match": "72827322",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 11:00",
+      "match_start_ts": 1784797200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Mariano Navone",
+      "equipe_exterieur": "Quentin Halys",
+      "joueur_1": "Mariano Navone",
+      "joueur_2": "Quentin Halys",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.45,
+          "2": 2.4
+        },
+        "probabilites": {
+          "1": 62,
+          "2": 38
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Mariano Navone",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Mariano Navone",
+            "cote": 1.45,
+            "prob_pct": 62,
+            "edge": 0.899,
+            "score": -0.101,
+            "tier": "bon",
+            "raison": "Favori net Mariano Navone (62% implicite, cote 1.45)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Mariano Navone",
+          "cote": 1.45,
+          "prob_pct": 62,
+          "edge": 0.899,
+          "score": -0.101,
+          "tier": "bon",
+          "raison": "Favori net Mariano Navone (62% implicite, cote 1.45)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Mariano Navone",
+      "cotes": {
+        "1": 1.45,
+        "2": 2.4
+      },
+      "probabilites": {
+        "1": 62,
+        "2": 38
+      }
+    },
+    {
+      "id_match": "72827324",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 11:00",
+      "match_start_ts": 1784797200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Yannick Hanfmann",
+      "equipe_exterieur": "Sebastian Baez",
+      "joueur_1": "Yannick Hanfmann",
+      "joueur_2": "Sebastian Baez",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.72,
+          "2": 1.9
+        },
+        "probabilites": {
+          "1": 25,
+          "2": 75
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Sebastian Baez",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Sebastian Baez",
+            "cote": 1.9,
+            "prob_pct": 75,
+            "edge": 1.425,
+            "score": 0.425,
+            "tier": "excellent",
+            "raison": "Outsider Sebastian Baez : proba 75% × cote 1.90 → edge 1.42",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Sebastian Baez",
+          "cote": 1.9,
+          "prob_pct": 75,
+          "edge": 1.425,
+          "score": 0.425,
+          "tier": "excellent",
+          "raison": "Outsider Sebastian Baez : proba 75% × cote 1.90 → edge 1.42",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Sebastian Baez",
+            "cote": 1.9,
+            "prob_pct": 75,
+            "edge": 1.425,
+            "score": 0.425,
+            "tier": "excellent",
+            "raison": "Outsider Sebastian Baez : proba 75% × cote 1.90 → edge 1.42",
+            "stars": 5
+          }
+        ]
+      },
+      "conseil": "Vainqueur Sebastian Baez",
+      "cotes": {
+        "1": 1.72,
+        "2": 1.9
+      },
+      "probabilites": {
+        "1": 25,
+        "2": 75
+      }
+    },
+    {
+      "id_match": "72827326",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 11:00",
+      "match_start_ts": 1784797200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Tomas Martin Etcheverry",
+      "equipe_exterieur": "Ignacio Buse",
+      "joueur_1": "Tomas Martin Etcheverry",
+      "joueur_2": "Ignacio Buse",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.15,
+          "2": 1.7
+        },
+        "probabilites": {
+          "1": 23,
+          "2": 77
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Ignacio Buse",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ignacio Buse",
+            "cote": 1.7,
+            "prob_pct": 77,
+            "edge": 1.309,
+            "score": 0.309,
+            "tier": "standard",
+            "raison": "Pronostic marché : Ignacio Buse (77%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Ignacio Buse",
+          "cote": 1.7,
+          "prob_pct": 77,
+          "edge": 1.309,
+          "score": 0.309,
+          "tier": "standard",
+          "raison": "Pronostic marché : Ignacio Buse (77%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ignacio Buse",
+            "cote": 1.7,
+            "prob_pct": 77,
+            "edge": 1.309,
+            "score": 0.309,
+            "tier": "standard",
+            "raison": "Pronostic marché : Ignacio Buse (77%)",
+            "stars": 3
+          }
+        ]
+      },
+      "conseil": "Vainqueur Ignacio Buse",
+      "cotes": {
+        "1": 2.15,
+        "2": 1.7
+      },
+      "probabilites": {
+        "1": 23,
+        "2": 77
+      }
+    },
+    {
+      "id_match": "72829928",
+      "sport": "tennis",
+      "date_match": "22/07/2026 à 18:06",
+      "match_start_ts": 1784736415,
+      "match_status": "LIVE",
+      "equipe_domicile": "Alina Charaeva",
+      "equipe_exterieur": "Sinja Kraus",
+      "joueur_1": "Alina Charaeva",
+      "joueur_2": "Sinja Kraus",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.14,
+          "2": 4.0
+        },
+        "probabilites": {
+          "1": 78,
+          "2": 22
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Alina Charaeva",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Alina Charaeva",
+            "cote": 1.14,
+            "prob_pct": 78,
+            "edge": 0.889,
+            "score": -0.111,
+            "tier": "bon",
+            "raison": "Favori net Alina Charaeva (78% implicite, cote 1.14)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Alina Charaeva",
+          "cote": 1.14,
+          "prob_pct": 78,
+          "edge": 0.889,
+          "score": -0.111,
+          "tier": "bon",
+          "raison": "Favori net Alina Charaeva (78% implicite, cote 1.14)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Alina Charaeva",
+      "cotes": {
+        "1": 1.14,
+        "2": 4.0
+      },
+      "probabilites": {
+        "1": 78,
+        "2": 22
+      }
+    },
+    {
+      "id_match": "72829930",
+      "sport": "tennis",
+      "date_match": "22/07/2026 à 18:45",
+      "match_start_ts": 1784738700,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Anna Bondar",
+      "equipe_exterieur": "Noma Noha Akugue",
+      "joueur_1": "Anna Bondar",
+      "joueur_2": "Noma Noha Akugue",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.22,
+          "2": 4.3
+        },
+        "probabilites": {
+          "1": 95,
+          "2": 5
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Anna Bondar",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Anna Bondar",
+            "cote": 1.22,
+            "prob_pct": 95,
+            "edge": 1.159,
+            "score": 0.159,
+            "tier": "bon",
+            "raison": "Favori net Anna Bondar (95% implicite, cote 1.22)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Anna Bondar",
+          "cote": 1.22,
+          "prob_pct": 95,
+          "edge": 1.159,
+          "score": 0.159,
+          "tier": "bon",
+          "raison": "Favori net Anna Bondar (95% implicite, cote 1.22)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Anna Bondar",
+            "cote": 1.22,
+            "prob_pct": 95,
+            "edge": 1.159,
+            "score": 0.159,
+            "tier": "bon",
+            "raison": "Favori net Anna Bondar (95% implicite, cote 1.22)",
+            "stars": 4
+          }
+        ]
+      },
+      "conseil": "Vainqueur Anna Bondar",
+      "cotes": {
+        "1": 1.22,
+        "2": 4.3
+      },
+      "probabilites": {
+        "1": 95,
+        "2": 5
+      }
+    },
+    {
+      "id_match": "72829932",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 10:00",
+      "match_start_ts": 1784793600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Elina Avanesyan",
+      "equipe_exterieur": "Yulia Putintseva",
+      "joueur_1": "Elina Avanesyan",
+      "joueur_2": "Yulia Putintseva",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.5,
+          "2": 1.52
+        },
+        "probabilites": {
+          "1": 38,
+          "2": 62
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Yulia Putintseva",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Yulia Putintseva",
+            "cote": 1.52,
+            "prob_pct": 62,
+            "edge": 0.942,
+            "score": -0.058,
+            "tier": "standard",
+            "raison": "Pronostic marché : Yulia Putintseva (62%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Yulia Putintseva",
+          "cote": 1.52,
+          "prob_pct": 62,
+          "edge": 0.942,
+          "score": -0.058,
+          "tier": "standard",
+          "raison": "Pronostic marché : Yulia Putintseva (62%)",
+          "stars": 3
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Yulia Putintseva",
+      "cotes": {
+        "1": 2.5,
+        "2": 1.52
+      },
+      "probabilites": {
+        "1": 38,
+        "2": 62
+      }
+    },
+    {
+      "id_match": "72829934",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 10:00",
+      "match_start_ts": 1784793600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Oleksandra Oliynykova",
+      "equipe_exterieur": "Leyre Romero Gormaz",
+      "joueur_1": "Oleksandra Oliynykova",
+      "joueur_2": "Leyre Romero Gormaz",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.6,
+          "2": 2.3
+        },
+        "probabilites": {
+          "1": 84,
+          "2": 16
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Oleksandra Oliynykova",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Oleksandra Oliynykova",
+            "cote": 1.6,
+            "prob_pct": 84,
+            "edge": 1.344,
+            "score": 0.344,
+            "tier": "standard",
+            "raison": "Pronostic marché : Oleksandra Oliynykova (84%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Oleksandra Oliynykova",
+          "cote": 1.6,
+          "prob_pct": 84,
+          "edge": 1.344,
+          "score": 0.344,
+          "tier": "standard",
+          "raison": "Pronostic marché : Oleksandra Oliynykova (84%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Oleksandra Oliynykova",
+            "cote": 1.6,
+            "prob_pct": 84,
+            "edge": 1.344,
+            "score": 0.344,
+            "tier": "standard",
+            "raison": "Pronostic marché : Oleksandra Oliynykova (84%)",
+            "stars": 3
+          }
+        ]
+      },
+      "conseil": "Vainqueur Oleksandra Oliynykova",
+      "cotes": {
+        "1": 1.6,
+        "2": 2.3
+      },
+      "probabilites": {
+        "1": 84,
+        "2": 16
+      }
+    },
+    {
+      "id_match": "72829938",
+      "sport": "tennis",
+      "date_match": "22/07/2026 à 16:45",
+      "match_start_ts": 1784731548,
+      "match_status": "LIVE",
+      "equipe_domicile": "Tamara Korpatsch",
+      "equipe_exterieur": "Julia Stusek",
+      "joueur_1": "Tamara Korpatsch",
+      "joueur_2": "Julia Stusek",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.05,
+          "2": 5.5
+        },
+        "probabilites": {
+          "1": 84,
+          "2": 16
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Tamara Korpatsch",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Tamara Korpatsch",
+            "cote": 1.05,
+            "prob_pct": 84,
+            "edge": 0.882,
+            "score": -0.118,
+            "tier": "bon",
+            "raison": "Favori net Tamara Korpatsch (84% implicite, cote 1.05)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Tamara Korpatsch",
+          "cote": 1.05,
+          "prob_pct": 84,
+          "edge": 0.882,
+          "score": -0.118,
+          "tier": "bon",
+          "raison": "Favori net Tamara Korpatsch (84% implicite, cote 1.05)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Tamara Korpatsch",
+      "cotes": {
+        "1": 1.05,
+        "2": 5.5
+      },
+      "probabilites": {
+        "1": 84,
+        "2": 16
+      }
+    },
+    {
+      "id_match": "72829940",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 10:00",
+      "match_start_ts": 1784793600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Paula Badosa ",
+      "equipe_exterieur": "Panna Udvardy",
+      "joueur_1": "Paula Badosa ",
+      "joueur_2": "Panna Udvardy",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.36,
+          "2": 3.1
+        },
+        "probabilites": {
+          "1": 29,
+          "2": 71
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Panna Udvardy",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Panna Udvardy",
+            "cote": 3.1,
+            "prob_pct": 71,
+            "edge": 2.201,
+            "score": 1.201,
+            "tier": "excellent",
+            "raison": "Outsider Panna Udvardy : proba 71% × cote 3.10 → edge 2.20",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Panna Udvardy",
+          "cote": 3.1,
+          "prob_pct": 71,
+          "edge": 2.201,
+          "score": 1.201,
+          "tier": "excellent",
+          "raison": "Outsider Panna Udvardy : proba 71% × cote 3.10 → edge 2.20",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Panna Udvardy",
+            "cote": 3.1,
+            "prob_pct": 71,
+            "edge": 2.201,
+            "score": 1.201,
+            "tier": "excellent",
+            "raison": "Outsider Panna Udvardy : proba 71% × cote 3.10 → edge 2.20",
+            "stars": 5
+          }
+        ]
+      },
+      "conseil": "Vainqueur Panna Udvardy",
+      "cotes": {
+        "1": 1.36,
+        "2": 3.1
+      },
+      "probabilites": {
+        "1": 29,
+        "2": 71
+      }
+    },
+    {
+      "id_match": "72829942",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 10:00",
+      "match_start_ts": 1784793600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Mayar Sherif",
+      "equipe_exterieur": "Elsa Jacquemot",
+      "joueur_1": "Mayar Sherif",
+      "joueur_2": "Elsa Jacquemot",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.25,
+          "2": 3.95
+        },
+        "probabilites": {
+          "1": 91,
+          "2": 9
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Mayar Sherif",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Mayar Sherif",
+            "cote": 1.25,
+            "prob_pct": 91,
+            "edge": 1.137,
+            "score": 0.137,
+            "tier": "bon",
+            "raison": "Favori net Mayar Sherif (91% implicite, cote 1.25)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Mayar Sherif",
+          "cote": 1.25,
+          "prob_pct": 91,
+          "edge": 1.137,
+          "score": 0.137,
+          "tier": "bon",
+          "raison": "Favori net Mayar Sherif (91% implicite, cote 1.25)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Mayar Sherif",
+            "cote": 1.25,
+            "prob_pct": 91,
+            "edge": 1.137,
+            "score": 0.137,
+            "tier": "bon",
+            "raison": "Favori net Mayar Sherif (91% implicite, cote 1.25)",
+            "stars": 4
+          }
+        ]
+      },
+      "conseil": "Vainqueur Mayar Sherif",
+      "cotes": {
+        "1": 1.25,
+        "2": 3.95
+      },
+      "probabilites": {
+        "1": 91,
+        "2": 9
+      }
+    },
+    {
+      "id_match": "72830080",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 14:00",
+      "match_start_ts": 1784808000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Maria Timofeeva",
+      "equipe_exterieur": "Sara Bejlek",
+      "joueur_1": "Maria Timofeeva",
+      "joueur_2": "Sara Bejlek",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.3,
+          "2": 1.6
+        },
+        "probabilites": {
+          "1": 41,
+          "2": 59
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Sara Bejlek",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Sara Bejlek",
+            "cote": 1.6,
+            "prob_pct": 59,
+            "edge": 0.944,
+            "score": -0.056,
+            "tier": "standard",
+            "raison": "Pronostic marché : Sara Bejlek (59%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Sara Bejlek",
+          "cote": 1.6,
+          "prob_pct": 59,
+          "edge": 0.944,
+          "score": -0.056,
+          "tier": "standard",
+          "raison": "Pronostic marché : Sara Bejlek (59%)",
+          "stars": 3
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Sara Bejlek",
+      "cotes": {
+        "1": 2.3,
+        "2": 1.6
+      },
+      "probabilites": {
+        "1": 41,
+        "2": 59
+      }
+    },
+    {
+      "id_match": "72830082",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 12:30",
+      "match_start_ts": 1784802600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Mai Hontama",
+      "equipe_exterieur": "Lilli Tagger",
+      "joueur_1": "Mai Hontama",
+      "joueur_2": "Lilli Tagger",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.1,
+          "2": 1.36
+        },
+        "probabilites": {
+          "1": 30,
+          "2": 70
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Lilli Tagger",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Lilli Tagger",
+            "cote": 1.36,
+            "prob_pct": 70,
+            "edge": 0.952,
+            "score": -0.048,
+            "tier": "bon",
+            "raison": "Favori net Lilli Tagger (70% implicite, cote 1.36)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Lilli Tagger",
+          "cote": 1.36,
+          "prob_pct": 70,
+          "edge": 0.952,
+          "score": -0.048,
+          "tier": "bon",
+          "raison": "Favori net Lilli Tagger (70% implicite, cote 1.36)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Lilli Tagger",
+      "cotes": {
+        "1": 3.1,
+        "2": 1.36
+      },
+      "probabilites": {
+        "1": 30,
+        "2": 70
+      }
+    },
+    {
+      "id_match": "72830086",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 11:00",
+      "match_start_ts": 1784797200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Nikola Bartunkova",
+      "equipe_exterieur": "Lanlana Tararudee",
+      "joueur_1": "Nikola Bartunkova",
+      "joueur_2": "Lanlana Tararudee",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.64,
+          "2": 2.2
+        },
+        "probabilites": {
+          "1": 57,
+          "2": 43
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Nikola Bartunkova",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Nikola Bartunkova",
+            "cote": 1.64,
+            "prob_pct": 57,
+            "edge": 0.935,
+            "score": -0.065,
+            "tier": "standard",
+            "raison": "Pronostic marché : Nikola Bartunkova (57%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Nikola Bartunkova",
+          "cote": 1.64,
+          "prob_pct": 57,
+          "edge": 0.935,
+          "score": -0.065,
+          "tier": "standard",
+          "raison": "Pronostic marché : Nikola Bartunkova (57%)",
+          "stars": 3
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Nikola Bartunkova",
+      "cotes": {
+        "1": 1.64,
+        "2": 2.2
+      },
+      "probabilites": {
+        "1": 57,
+        "2": 43
+      }
+    },
+    {
+      "id_match": "72830090",
+      "sport": "tennis",
+      "date_match": "24/07/2026 à 11:00",
+      "match_start_ts": 1784883600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Marie Bouzkova",
+      "equipe_exterieur": "Tereza Valentova",
+      "joueur_1": "Marie Bouzkova",
+      "joueur_2": "Tereza Valentova",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.49,
+          "2": 2.25
+        },
+        "probabilites": {
+          "1": 60,
+          "2": 40
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Marie Bouzkova",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Marie Bouzkova",
+            "cote": 1.49,
+            "prob_pct": 60,
+            "edge": 0.894,
+            "score": -0.106,
+            "tier": "standard",
+            "raison": "Pronostic marché : Marie Bouzkova (60%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Marie Bouzkova",
+          "cote": 1.49,
+          "prob_pct": 60,
+          "edge": 0.894,
+          "score": -0.106,
+          "tier": "standard",
+          "raison": "Pronostic marché : Marie Bouzkova (60%)",
+          "stars": 3
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Marie Bouzkova",
+      "cotes": {
+        "1": 1.49,
+        "2": 2.25
+      },
+      "probabilites": {
+        "1": 60,
+        "2": 40
+      }
+    },
+    {
+      "id_match": "72830092",
+      "sport": "tennis",
+      "date_match": "23/07/2026 à 15:30",
+      "match_start_ts": 1784813400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Lucie Havlickova",
+      "equipe_exterieur": "Barbora Krejcikova",
+      "joueur_1": "Lucie Havlickova",
+      "joueur_2": "Barbora Krejcikova",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 6.5,
+          "2": 1.1
+        },
+        "probabilites": {
+          "1": 14,
+          "2": 86
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Barbora Krejcikova",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Barbora Krejcikova",
+            "cote": 1.1,
+            "prob_pct": 86,
+            "edge": 0.946,
+            "score": -0.054,
+            "tier": "bon",
+            "raison": "Favori net Barbora Krejcikova (86% implicite, cote 1.10)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Barbora Krejcikova",
+          "cote": 1.1,
+          "prob_pct": 86,
+          "edge": 0.946,
+          "score": -0.054,
+          "tier": "bon",
+          "raison": "Favori net Barbora Krejcikova (86% implicite, cote 1.10)",
+          "stars": 4
+        },
+        "value_bets": []
+      },
+      "conseil": "Vainqueur Barbora Krejcikova",
+      "cotes": {
+        "1": 6.5,
+        "2": 1.1
+      },
+      "probabilites": {
+        "1": 14,
+        "2": 86
+      }
+    }
+  ]
 }

@@ -1,9 +1,5 @@
 .env
 web/.env
-web/.env.local
-# Config Supabase générée localement (generate-config.js) — ne pas committer
-web/config.js
-public/config.js
 velora_engine/data/fd_cache/
 __pycache__/
 *.pyc

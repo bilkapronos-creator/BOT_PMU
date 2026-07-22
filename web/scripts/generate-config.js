@@ -81,11 +81,6 @@ if (!url || !anonKey) {
     '[Velora] ATTENTION : SUPABASE_URL ou SUPABASE_ANON_KEY manquant. '
     + 'Définissez-les dans Vercel (Environment Variables) ou dans un fichier .env local.',
   );
-} else if (/VOTRE_REF|VOTRE_CLE|your-project/i.test(`${url} ${anonKey}`)) {
-  console.warn(
-    '[Velora] ATTENTION : valeurs placeholder détectées dans SUPABASE_URL / SUPABASE_ANON_KEY. '
-    + 'Copiez les vraies clés depuis le dashboard Supabase (Settings → API).',
-  );
 } else {
   console.log('[Velora] config.js généré →', outPath);
 }
