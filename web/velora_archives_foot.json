@@ -45,16 +45,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Ext",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784833200,
+    "selection": "1N2 Extérieur",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 2.2,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841830218,
+    "valide_at": "2026-07-23T21:23:50.218160+00:00",
     "archive_key": "72180186"
   },
   {
@@ -74,16 +80,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : DC 1X",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784833200,
+    "selection": "Double chance 1X",
+    "score_final": "4-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "Double chance 1X",
+    "cote_jouee": 1.16,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 11.6,
+      "profit": 1.6,
+      "roi_pari": 16.0
+    },
+    "profit": 1.6,
+    "timestamp": 1784841830218,
+    "valide_at": "2026-07-23T21:23:50.218345+00:00",
     "archive_key": "72180358"
   },
   {
@@ -103,16 +115,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Dom",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784832300,
+    "selection": "1N2 Domicile",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": 1.11,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 11.1,
+      "profit": 1.1,
+      "roi_pari": 11.0
+    },
+    "profit": 1.1,
+    "timestamp": 1784841830218,
+    "valide_at": "2026-07-23T21:23:50.218517+00:00",
     "archive_key": "72180086"
   },
   {
@@ -132,16 +150,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Nul",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784832300,
+    "selection": "1N2 Nul",
+    "score_final": "2-1",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 3.6,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198145+00:00",
     "archive_key": "72180150"
   },
   {
@@ -161,16 +185,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Nul",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784832300,
+    "selection": "1N2 Nul",
+    "score_final": "5-2",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 4.4,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198271+00:00",
     "archive_key": "72180158"
   },
   {
@@ -190,16 +220,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Ext",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784832300,
+    "selection": "1N2 Extérieur",
+    "score_final": "2-0",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 11.5,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198376+00:00",
     "archive_key": "72180190"
   },
   {
@@ -219,16 +255,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : DC X2",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784832300,
+    "selection": "Double chance X2",
+    "score_final": "0-2",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "Double chance X2",
+    "cote_jouee": 2.0,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 20.0,
+      "profit": 10.0,
+      "roi_pari": 100.0
+    },
+    "profit": 10.0,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198476+00:00",
     "archive_key": "72180346"
   },
   {
@@ -248,16 +290,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Dom",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784831400,
+    "selection": "1N2 Domicile",
+    "score_final": "3-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": 1.41,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 14.1,
+      "profit": 4.1,
+      "roi_pari": 41.0
+    },
+    "profit": 4.1,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198588+00:00",
     "archive_key": "72180036"
   },
   {
@@ -277,16 +325,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Dom",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784831400,
+    "selection": "1N2 Domicile",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": 1.12,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 11.2,
+      "profit": 1.2,
+      "roi_pari": 12.0
+    },
+    "profit": 1.2,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198688+00:00",
     "archive_key": "72180094"
   },
   {
@@ -306,16 +360,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Dom",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784831400,
+    "selection": "1N2 Domicile",
+    "score_final": "2-1",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": 2.45,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 24.5,
+      "profit": 14.5,
+      "roi_pari": 145.0
+    },
+    "profit": 14.5,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198827+00:00",
     "archive_key": "72180138"
   },
   {
@@ -335,16 +395,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Ext",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784831400,
+    "selection": "1N2 Extérieur",
+    "score_final": "0-0",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 1.88,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841008198,
+    "valide_at": "2026-07-23T21:10:08.198936+00:00",
     "archive_key": "72180308"
   },
   {
@@ -364,16 +430,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Ext",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784831400,
+    "selection": "1N2 Extérieur",
+    "score_final": "2-0",
+    "statut": "Terminée",
+    "statut_pari": "PERDANT",
+    "reussi_foot": false,
+    "type_pari_foot": "Perdu",
+    "cote_jouee": 2.1,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 0.0,
+      "profit": -10.0,
+      "roi_pari": -100.0
+    },
+    "profit": -10.0,
+    "timestamp": 1784841008199,
+    "valide_at": "2026-07-23T21:10:08.199035+00:00",
     "archive_key": "72180316"
   },
   {
@@ -393,16 +465,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Ext",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784829600,
+    "selection": "1N2 Extérieur",
+    "score_final": "1-2",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Extérieur",
+    "cote_jouee": 4.6,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 46.0,
+      "profit": 36.0,
+      "roi_pari": 360.0
+    },
+    "profit": 36.0,
+    "timestamp": 1784841008199,
+    "valide_at": "2026-07-23T21:10:08.199130+00:00",
     "archive_key": "72179680"
   },
   {
@@ -422,16 +500,22 @@
     "opportunite_type": "1n2",
     "opportunite_detail": "🔥 Value Bet Détecté : Dom",
     "marche": "1n2",
-    "selection": "",
-    "score_final": null,
-    "statut": "EN_ATTENTE",
-    "statut_pari": "EN_ATTENTE",
-    "reussi_foot": null,
-    "type_pari_foot": null,
-    "cote_jouee": null,
-    "financier": null,
-    "profit": null,
-    "timestamp": 1784829600,
+    "selection": "1N2 Domicile",
+    "score_final": "1-0",
+    "statut": "Terminée",
+    "statut_pari": "GAGNANT",
+    "reussi_foot": true,
+    "type_pari_foot": "1N2 Domicile",
+    "cote_jouee": 2.0,
+    "financier": {
+      "mise": 10.0,
+      "gain_brut": 20.0,
+      "profit": 10.0,
+      "roi_pari": 100.0
+    },
+    "profit": 10.0,
+    "timestamp": 1784841008199,
+    "valide_at": "2026-07-23T21:10:08.199226+00:00",
     "archive_key": "72179686"
   },
   {
@@ -4208,8 +4292,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202849,
-    "valide_at": "2026-07-23T20:23:22.849798+00:00",
+    "timestamp": 1784841830245,
+    "valide_at": "2026-07-23T21:23:50.245351+00:00",
     "scores_proposes": [
       "1-2",
       "0-2",
@@ -4298,8 +4382,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202849,
-    "valide_at": "2026-07-23T20:23:22.849971+00:00",
+    "timestamp": 1784841830245,
+    "valide_at": "2026-07-23T21:23:50.245531+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -4388,8 +4472,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850131+00:00",
+    "timestamp": 1784841830245,
+    "valide_at": "2026-07-23T21:23:50.245690+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -4474,8 +4558,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850288+00:00",
+    "timestamp": 1784841830245,
+    "valide_at": "2026-07-23T21:23:50.245897+00:00",
     "scores_proposes": [
       "1-0",
       "2-0",
@@ -4564,8 +4648,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850445+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246057+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -4654,8 +4738,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850599+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246213+00:00",
     "scores_proposes": [
       "4-5",
       "3-4",
@@ -4744,8 +4828,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850813+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246372+00:00",
     "scores_proposes": [
       "3-0",
       "2-0",
@@ -4834,8 +4918,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202850,
-    "valide_at": "2026-07-23T20:23:22.850970+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246536+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -4920,8 +5004,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851124+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246690+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -5006,8 +5090,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851278+00:00",
+    "timestamp": 1784841830246,
+    "valide_at": "2026-07-23T21:23:50.246895+00:00",
     "scores_proposes": [
       "1-2",
       "1-3",
@@ -5096,8 +5180,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851432+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247056+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -5186,8 +5270,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851585+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247213+00:00",
     "scores_proposes": [
       "0-2",
       "1-2",
@@ -5432,8 +5516,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851767+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247371+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -5522,8 +5606,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202851,
-    "valide_at": "2026-07-23T20:23:22.851921+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247524+00:00",
     "scores_proposes": [
       "1-2",
       "1-3",
@@ -5612,8 +5696,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852071+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247675+00:00",
     "scores_proposes": [
       "1-1",
       "2-2",
@@ -5702,8 +5786,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852221+00:00",
+    "timestamp": 1784841830247,
+    "valide_at": "2026-07-23T21:23:50.247866+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -5792,8 +5876,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852372+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248020+00:00",
     "scores_proposes": [
       "1-2",
       "1-3",
@@ -5882,8 +5966,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852522+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248171+00:00",
     "scores_proposes": [
       "1-2",
       "1-3",
@@ -5972,8 +6056,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852694+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248328+00:00",
     "scores_proposes": [
       "1-1",
       "2-2",
@@ -6062,8 +6146,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852848+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248478+00:00",
     "scores_proposes": [
       "0-2",
       "0-3",
@@ -6152,8 +6236,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202852,
-    "valide_at": "2026-07-23T20:23:22.852998+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248634+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -6242,8 +6326,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853151+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248829+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -6332,8 +6416,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853302+00:00",
+    "timestamp": 1784841830248,
+    "valide_at": "2026-07-23T21:23:50.248988+00:00",
     "scores_proposes": [
       "3-4",
       "4-5",
@@ -6422,8 +6506,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853454+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249141+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -6508,8 +6592,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853605+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249311+00:00",
     "scores_proposes": [
       "1-4",
       "2-4",
@@ -6598,8 +6682,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853780+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249477+00:00",
     "scores_proposes": [
       "3-2",
       "4-2",
@@ -6766,8 +6850,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202853,
-    "valide_at": "2026-07-23T20:23:22.853934+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249630+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -6856,8 +6940,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854086+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249827+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -6946,8 +7030,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854241+00:00",
+    "timestamp": 1784841830249,
+    "valide_at": "2026-07-23T21:23:50.249989+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -7036,8 +7120,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854391+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250145+00:00",
     "scores_proposes": [
       "1-2",
       "2-3",
@@ -7126,8 +7210,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854542+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250300+00:00",
     "scores_proposes": [
       "2-1",
       "2-0",
@@ -7216,8 +7300,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854765+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250452+00:00",
     "scores_proposes": [
       "1-1",
       "2-2",
@@ -7302,8 +7386,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202854,
-    "valide_at": "2026-07-23T20:23:22.854920+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250604+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -7388,8 +7472,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855069+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250788+00:00",
     "scores_proposes": [
       "2-0",
       "3-0",
@@ -7478,8 +7562,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855222+00:00",
+    "timestamp": 1784841830250,
+    "valide_at": "2026-07-23T21:23:50.250960+00:00",
     "scores_proposes": [
       "2-1",
       "3-1",
@@ -7568,8 +7652,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855371+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251119+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -7654,8 +7738,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855519+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251286+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -7740,8 +7824,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855743+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251446+00:00",
     "scores_proposes": [
       "1-2",
       "1-3",
@@ -7830,8 +7914,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202855,
-    "valide_at": "2026-07-23T20:23:22.855908+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251601+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -7916,8 +8000,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856062+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251753+00:00",
     "scores_proposes": [
       "2-1",
       "2-0",
@@ -8006,8 +8090,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856212+00:00",
+    "timestamp": 1784841830251,
+    "valide_at": "2026-07-23T21:23:50.251945+00:00",
     "scores_proposes": [
       "1-2",
       "0-1",
@@ -8096,8 +8180,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856359+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252100+00:00",
     "scores_proposes": [
       "1-1",
       "0-0",
@@ -8516,8 +8600,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856510+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252260+00:00",
     "scores_proposes": [
       "0-1",
       "1-1",
@@ -8695,8 +8779,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856680+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252412+00:00",
     "scores_proposes": [
       "2-1",
       "1-0",
@@ -8874,8 +8958,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856838+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252564+00:00",
     "scores_proposes": [
       "1-1",
       "1-0",
@@ -9725,8 +9809,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202856,
-    "valide_at": "2026-07-23T20:23:22.856994+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252732+00:00",
     "scores_proposes": [
       "1-0",
       "1-1",
@@ -9819,8 +9903,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857143+00:00",
+    "timestamp": 1784841830252,
+    "valide_at": "2026-07-23T21:23:50.252933+00:00",
     "scores_proposes": [
       "2-1",
       "1-0",
@@ -9998,8 +10082,8 @@
       "roi_pari": 420.0
     },
     "profit": 42.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857295+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253111+00:00",
     "scores_proposes": [
       "1-0",
       "1-1",
@@ -10096,8 +10180,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857444+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253274+00:00",
     "scores_proposes": [
       "0-1",
       "1-1",
@@ -10194,8 +10278,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857577+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253420+00:00",
     "scores_proposes": [
       "1-0"
     ],
@@ -10345,8 +10429,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857749+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253588+00:00",
     "scores_proposes": [
       "3-0",
       "2-0",
@@ -10435,8 +10519,8 @@
       "roi_pari": 650.0
     },
     "profit": 65.0,
-    "timestamp": 1784838202857,
-    "valide_at": "2026-07-23T20:23:22.857901+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253744+00:00",
     "scores_proposes": [
       "3-0",
       "2-0",
@@ -10525,8 +10609,8 @@
       "roi_pari": 1.0
     },
     "profit": 0.1,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858051+00:00",
+    "timestamp": 1784841830253,
+    "valide_at": "2026-07-23T21:23:50.253956+00:00",
     "scores_proposes": [
       "1-0",
       "2-1",
@@ -10674,8 +10758,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858186+00:00",
+    "timestamp": 1784841830254,
+    "valide_at": "2026-07-23T21:23:50.254108+00:00",
     "scores_proposes": [
       "1-0"
     ],
@@ -10716,8 +10800,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858334+00:00",
+    "timestamp": 1784841830254,
+    "valide_at": "2026-07-23T21:23:50.254261+00:00",
     "scores_proposes": [
       "1-1",
       "1-0",
@@ -10775,8 +10859,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858482+00:00",
+    "timestamp": 1784841830254,
+    "valide_at": "2026-07-23T21:23:50.254416+00:00",
     "scores_proposes": [
       "1-1",
       "1-0",
@@ -10864,8 +10948,8 @@
       "roi_pari": -100.0
     },
     "profit": -10.0,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858675+00:00",
+    "timestamp": 1784841830254,
+    "valide_at": "2026-07-23T21:23:50.254567+00:00",
     "scores_proposes": [
       "0-1",
       "1-2",
@@ -10948,8 +11032,8 @@
       "roi_pari": 650.0
     },
     "profit": 65.0,
-    "timestamp": 1784838202858,
-    "valide_at": "2026-07-23T20:23:22.858837+00:00",
+    "timestamp": 1784841830254,
+    "valide_at": "2026-07-23T21:23:50.254719+00:00",
     "scores_proposes": [
       "1-0",
       "2-1",
