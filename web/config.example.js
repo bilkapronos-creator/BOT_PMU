@@ -14,6 +14,12 @@ window.VELORA_ENV = Object.freeze({
   VELORA_ADMIN_PASSWORD: 'ChoisissezUnMotDePasseFort',
   /** Optionnel : hash SHA-256 du mot de passe (prioritaire sur VELORA_ADMIN_PASSWORD) */
   VELORA_ADMIN_PASSWORD_HASH: '',
-  /** Stripe Payment Link Pass Tennis — redirection succès : ?premium_tennis=success */
+  /**
+   * Stripe Payment Links (optionnel) — sinon checkout API Render (/create-checkout-session).
+   * URLs de succès à configurer dans Stripe : ?premium_pmu=success | premium_foot | premium_tennis | premium_bundle=success
+   */
+  STRIPE_CHECKOUT_URL_PMU: '',
+  STRIPE_CHECKOUT_URL_FOOT: 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00',
   STRIPE_CHECKOUT_URL_TENNIS: '',
+  STRIPE_CHECKOUT_URL_BUNDLE: 'https://buy.stripe.com/9B6dR9dqtbA7aej5gWgEg01',
 });

@@ -1352,6 +1352,22 @@
         .velora-paywall-card-simple {
             border-color: rgba(255, 255, 255, 0.18);
         }
+        .velora-paywall-card--pmu {
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        .velora-paywall-card--foot {
+            border-color: rgba(34, 211, 238, 0.35);
+        }
+        .velora-paywall-card--tennis {
+            border-color: rgba(163, 230, 53, 0.35);
+        }
+        .velora-paywall-card--focus {
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.35);
+            transform: translateY(-2px);
+        }
+        .velora-paywall-card--muted {
+            opacity: 0.72;
+        }
         .velora-paywall-card-bundle {
             border: 2px solid rgba(255, 215, 0, 0.65);
             background: linear-gradient(155deg, rgba(255, 215, 0, 0.1) 0%, rgba(30, 27, 20, 0.85) 45%, rgba(15, 23, 42, 0.9) 100%);
@@ -1427,28 +1443,60 @@
             <h2 id="veloraPaywallTitre" class="mt-2 text-center text-xl font-black leading-tight text-white sm:text-2xl">🔒 Limite quotidienne atteinte</h2>
             <p id="veloraPaywallTexte" class="mt-3 text-center text-sm leading-relaxed text-gray-300"></p>
             <div class="velora-paywall-plans mt-5">
-                <div class="velora-paywall-card velora-paywall-card-simple">
-                    <p id="veloraPaywallSimpleLabel" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pass Premium Foot</p>
-                    <p class="mt-2 text-2xl font-black text-white">19,99€ <span class="text-sm font-semibold text-gray-400">/ mois</span></p>
+                <div id="veloraPaywallCardPmu" class="velora-paywall-card velora-paywall-card-simple velora-paywall-card--pmu">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-400/90">Pass Premium PMU</p>
+                    <p class="mt-2 text-2xl font-black text-white">14,99€ <span class="text-sm font-semibold text-gray-400">/ mois</span></p>
                     <p class="mt-0.5 text-[10px] text-gray-500">Sans engagement</p>
-                    <ul id="veloraPaywallSimpleBenefits" class="velora-paywall-benefits space-y-1.5"></ul>
-                    <button type="button" id="btnVeloraPaywallSimple"
-                        class="mt-auto w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-xs font-bold text-white transition hover:border-cyan-400/40 hover:bg-cyan-500/15 disabled:opacity-60">
-                        Prendre le Pass Simple
+                    <ul class="velora-paywall-benefits space-y-1.5">
+                        <li>Analyses de courses illimitées</li>
+                        <li>Archives &amp; historique complet</li>
+                        <li>Indice Velora sans quota journalier</li>
+                    </ul>
+                    <button type="button" id="btnVeloraPaywallPmu" data-velora-plan="pmu"
+                        class="mt-auto w-full rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs font-bold text-emerald-100 transition hover:border-emerald-400/50 hover:bg-emerald-500/20 disabled:opacity-60">
+                        Pass PMU
                     </button>
                 </div>
-                <div class="velora-paywall-card velora-paywall-card-bundle">
-                    <span class="velora-paywall-badge">Meilleur choix · -25%</span>
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-amber-200/95">Pack Intégral (Foot + PMU) 👑</p>
-                    <p class="mt-2 text-2xl font-black text-amber-50">29,99€ <span class="text-sm font-semibold text-amber-200/80">/ mois</span></p>
-                    <p class="velora-paywall-price-old mt-0.5">39,98€ / mois</p>
+                <div id="veloraPaywallCardFoot" class="velora-paywall-card velora-paywall-card-simple velora-paywall-card--foot">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-cyan-400/90">Pass Premium Foot</p>
+                    <p class="mt-2 text-2xl font-black text-white">19,99€ <span class="text-sm font-semibold text-gray-400">/ mois</span></p>
+                    <p class="mt-0.5 text-[10px] text-gray-500">Sans engagement</p>
                     <ul class="velora-paywall-benefits space-y-1.5">
-                        <li>100% du site : PMU + Football</li>
-                        <li>Analyses courses illimitées</li>
-                        <li>Radar Value Bets &amp; recherches Foot illimitées</li>
-                        <li>Accès prioritaire</li>
+                        <li>Moteur de recherche illimité</li>
+                        <li>Radar Value Bets (scores, BTTS, buteurs)</li>
+                        <li>Voir tous les matchs &amp; archives Foot</li>
                     </ul>
-                    <button type="button" id="btnVeloraPaywallBundle"
+                    <button type="button" id="btnVeloraPaywallFoot" data-velora-plan="foot"
+                        class="mt-auto w-full rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-xs font-bold text-cyan-100 transition hover:border-cyan-400/50 hover:bg-cyan-500/20 disabled:opacity-60">
+                        Pass Foot
+                    </button>
+                </div>
+                <div id="veloraPaywallCardTennis" class="velora-paywall-card velora-paywall-card-simple velora-paywall-card--tennis">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-lime-400/90">Pass Premium Tennis</p>
+                    <p class="mt-2 text-2xl font-black text-white">19,99€ <span class="text-sm font-semibold text-gray-400">/ mois</span></p>
+                    <p class="mt-0.5 text-[10px] text-gray-500">Sans engagement</p>
+                    <ul class="velora-paywall-benefits space-y-1.5">
+                        <li>Recherches joueurs illimitées</li>
+                        <li>Vainqueur, sets &amp; jeux Winamax</li>
+                        <li>Scores exact sets &amp; value bets</li>
+                    </ul>
+                    <button type="button" id="btnVeloraPaywallTennis" data-velora-plan="tennis"
+                        class="mt-auto w-full rounded-xl border border-lime-500/30 bg-lime-500/10 px-4 py-3 text-xs font-bold text-lime-100 transition hover:border-lime-400/50 hover:bg-lime-500/20 disabled:opacity-60">
+                        Pass Tennis
+                    </button>
+                </div>
+                <div id="veloraPaywallCardBundle" class="velora-paywall-card velora-paywall-card-bundle sm:col-span-2">
+                    <span class="velora-paywall-badge">Meilleur choix · -25%</span>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-amber-200/95">Pack Intégral (PMU + Foot + Tennis) 👑</p>
+                    <p class="mt-2 text-2xl font-black text-amber-50">29,99€ <span class="text-sm font-semibold text-amber-200/80">/ mois</span></p>
+                    <p class="velora-paywall-price-old mt-0.5">39,90€ / mois</p>
+                    <ul class="velora-paywall-benefits space-y-1.5 sm:columns-2 sm:gap-8">
+                        <li>100% Velora : PMU, Football &amp; Tennis</li>
+                        <li>Analyses courses &amp; recherches illimitées</li>
+                        <li>Radar Value Bets Foot + sets/jeux Tennis</li>
+                        <li>Accès prioritaire &amp; une seule facture</li>
+                    </ul>
+                    <button type="button" id="btnVeloraPaywallBundle" data-velora-plan="bundle"
                         class="mt-auto w-full rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 px-4 py-3.5 text-sm font-black text-gray-950 shadow-lg shadow-amber-500/35 transition hover:from-amber-400 hover:via-yellow-400 hover:to-amber-500 disabled:opacity-60">
                         Débloquer 100% du site
                     </button>
@@ -3361,13 +3409,17 @@
             'tennis', 'premium_tennis', 'integral', 'pack_integral',
         ]);
         const VELORA_GODMODE_EMAIL = 'loudamou14@gmail.com';
-        /** Legacy Payment Link Foot (préférer checkout API Render — lancerCheckoutStripeVelora('foot')). */
-        const STRIPE_CHECKOUT_URL_FOOT = 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00';
-        const STRIPE_CHECKOUT_URL_BUNDLE = 'https://buy.stripe.com/9B6dR9dqtbA7aej5gWgEg01';
-        /** Pass Tennis — configurer dans config.js (STRIPE_CHECKOUT_URL_TENNIS) ; succès : ?premium_tennis=success */
-        const STRIPE_CHECKOUT_URL_TENNIS = String(
-            (window.VELORA_ENV && window.VELORA_ENV.STRIPE_CHECKOUT_URL_TENNIS) || '',
-        ).trim();
+        const STRIPE_CHECKOUT_DEFAULT_FOOT = 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00';
+        const STRIPE_CHECKOUT_DEFAULT_BUNDLE = 'https://buy.stripe.com/9B6dR9dqtbA7aej5gWgEg01';
+        function lireCheckoutUrlVelora(cle, fallbackDefaut) {
+            const brut = window.VELORA_ENV && window.VELORA_ENV[cle];
+            return String(brut != null ? brut : fallbackDefaut || '').trim();
+        }
+        /** Payment Links Stripe (config.js / Vercel) — succès : ?premium_pmu | premium_foot | premium_tennis | premium_bundle=success */
+        const STRIPE_CHECKOUT_URL_PMU = lireCheckoutUrlVelora('STRIPE_CHECKOUT_URL_PMU', '');
+        const STRIPE_CHECKOUT_URL_FOOT = lireCheckoutUrlVelora('STRIPE_CHECKOUT_URL_FOOT', STRIPE_CHECKOUT_DEFAULT_FOOT);
+        const STRIPE_CHECKOUT_URL_BUNDLE = lireCheckoutUrlVelora('STRIPE_CHECKOUT_URL_BUNDLE', STRIPE_CHECKOUT_DEFAULT_BUNDLE);
+        const STRIPE_CHECKOUT_URL_TENNIS = lireCheckoutUrlVelora('STRIPE_CHECKOUT_URL_TENNIS', '');
 
         function normaliserEmailVelora(email) {
             return String(email || '').trim().toLowerCase();
@@ -3528,8 +3580,16 @@
 
         const BADGE_PLAN_PREMIUM_CLASS = 'rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/25 to-orange-500/20 px-3 py-1 text-xs font-bold tracking-wide text-amber-300 shadow-sm shadow-amber-500/10';
 
+        function profilEstPackIntegralDb() {
+            const plan = String(window.VeloraAuth?.getProfile?.()?.plan_type || '').toLowerCase();
+            return ['bundle', 'integral', 'pack_integral', 'pmu_foot'].includes(plan);
+        }
+
         function aPackIntegralVelora() {
-            return estVeloraPremiumPmu() && estVeloraPremiumFoot();
+            if (profilEstPackIntegralDb()) return true;
+            if (estVeloraPremiumPmu() && estVeloraPremiumFoot() && estVeloraPremiumTennis()) return true;
+            if (estVeloraPremiumPmu() && estVeloraPremiumFoot()) return true;
+            return false;
         }
 
         /** Au moins un pass actif (PMU, Foot, Tennis ou profil Stripe PMU). */
@@ -4029,11 +4089,12 @@
             }
         }
 
-        async function lancerCheckoutStripeVelora(plan) {
+        async function lancerCheckoutStripeVelora(plan, triggerBtn) {
             const planNorm = String(plan || 'pmu').toLowerCase();
             const errEl = document.getElementById('veloraPaywallCheckoutErreur')
                 || document.getElementById('premiumCheckoutErreur');
-            const btn = document.getElementById('btnVeloraPaywallSimple');
+            const btn = triggerBtn
+                || document.querySelector('#veloraPaywallOverlay [data-velora-plan="' + planNorm + '"]');
 
             if (!estMembreConnecte()) {
                 if (errEl) {
@@ -4056,7 +4117,9 @@
 
             if (btn) {
                 btn.disabled = true;
-                btn.dataset.veloraLabel = btn.textContent;
+                if (!btn.dataset.veloraLabelDefault) {
+                    btn.dataset.veloraLabelDefault = btn.textContent;
+                }
                 btn.textContent = 'Redirection Stripe…';
             }
             if (errEl) errEl.classList.add('hidden');
@@ -4081,7 +4144,8 @@
 
             if (btn) {
                 btn.disabled = false;
-                btn.textContent = btn.dataset.veloraLabel || 'Prendre le Pass Simple';
+                const def = btn.dataset.veloraLabelDefault || btn.textContent;
+                btn.textContent = def;
             }
 
             if (result.ok && result.data?.url) {
@@ -4885,7 +4949,10 @@
 
         async function gererRetourStripeAbonnements() {
             const params = new URLSearchParams(window.location.search);
-            const bundleOk = params.get('premium_bundle') === 'success';
+            const bundleOk = params.get('premium_bundle') === 'success'
+                || params.get('bundle') === 'success'
+                || params.get('integral') === 'success'
+                || params.get('pack_integral') === 'success';
             const pmuOk = params.get('premium_pmu') === 'success' || params.get('premium') === 'success';
             const footOk = params.get('premium_foot') === 'success';
             const tennisOk = params.get('premium_tennis') === 'success';
@@ -4899,11 +4966,12 @@
                 }
                 localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
                 marquerPassFootLocal(true);
+                marquerPassTennisLocal(true);
                 if (typeof window.VeloraAuth?.appliquerPremiumOptimiste === 'function') {
                     window.VeloraAuth.appliquerPremiumOptimiste();
                 }
                 closePaywallModal();
-                afficherToastVelora('👑 Pack Intégral activé — PMU & Foot débloqués !');
+                afficherToastVelora('👑 Pack Intégral activé — PMU, Foot & Tennis débloqués !');
                 synchroniserProfilPremiumArrierePlan();
             } else {
                 if (pmuOk) {
@@ -5066,73 +5134,53 @@
         const TENNIS_SEARCH_QUOTA_FREE = 3;
         const FOOT_SEARCH_MIN_LEN = 2;
         const TENNIS_SEARCH_MIN_LEN = 2;
-        const VELORA_PAYWALL_OFFRE_SIMPLE = {
-            foot: {
-                label: 'Pass Premium Foot',
-                benefits: [
-                    'Moteur de recherche illimité',
-                    'Radar Value Bets (scores, BTTS, buteurs)',
-                    'Accès prioritaire Foot',
-                ],
-            },
-            pmu: {
-                label: 'Pass Premium PMU',
-                benefits: [
-                    'Analyses de courses illimitées',
-                    'Archives & historique complet',
-                    'Indice Velora sans quota journalier',
-                ],
-            },
-            tennis: {
-                label: 'Pass Premium Tennis',
-                benefits: [
-                    'Recherches joueurs illimitées',
-                    'Vainqueur, sets & jeux Winamax',
-                    'Scores exact sets & value bets',
-                ],
-            },
+        const VELORA_PAYWALL_PLAN_CARDS = {
+            pmu: 'veloraPaywallCardPmu',
+            foot: 'veloraPaywallCardFoot',
+            tennis: 'veloraPaywallCardTennis',
+            bundle: 'veloraPaywallCardBundle',
         };
         const VELORA_PAYWALL_CONTEXTS = {
             search_limit: {
                 titre: '🔒 Limite quotidienne atteinte',
-                texte: "Vous avez épuisé vos 3 recherches gratuites pour aujourd'hui. Revenez demain ou passez Premium Foot — ou optez pour le Pack Intégral.",
+                texte: "Vous avez épuisé vos 3 recherches gratuites pour aujourd'hui. Revenez demain ou choisissez un Pass Foot, Tennis ou le Pack Intégral.",
                 showWait: true,
                 produit: 'foot',
             },
             opp_radar: {
                 titre: '🔒 Radar Premium',
-                texte: 'Le scanner Value Bets est réservé au Pass Foot ou au Pack Intégral (Foot + PMU).',
+                texte: 'Le scanner Value Bets est réservé au Pass Foot ou au Pack Intégral (PMU + Foot + Tennis).',
                 showWait: false,
                 produit: 'foot',
             },
             pmu_quota: {
                 titre: '🔒 Limite d\'analyses atteinte',
-                texte: 'Vous avez épuisé vos analyses gratuites du jour. Revenez demain ou débloquez le Pass PMU — ou le Pack Intégral pour tout le site.',
+                texte: 'Vous avez épuisé vos analyses gratuites du jour. Revenez demain ou prenez le Pass PMU — ou le Pack Intégral pour 100 % du site.',
                 showWait: true,
                 produit: 'pmu',
             },
             premium_offer_pmu: {
                 titre: '⭐ Passez Premium Velora',
-                texte: 'Débloquez analyses illimitées, archives complètes et l\'indice Velora. Choisissez le Pass PMU ou le Pack Intégral Foot + PMU à -25 %.',
+                texte: 'PMU, Foot, Tennis ou Pack Intégral à -25 % : choisissez le pass adapté à votre pratique.',
                 showWait: false,
                 produit: 'pmu',
             },
             premium_offer_foot: {
                 titre: '⭐ Passez Premium Velora',
-                texte: 'Débloquez recherches illimitées, le radar Value Bets et les archives Foot. Choisissez le Pass Foot ou le Pack Intégral à -25 %.',
+                texte: 'Débloquez recherches illimitées, le radar Value Bets et les archives Foot — ou optez pour le Pack Intégral.',
                 showWait: false,
                 produit: 'foot',
             },
             premium_manage_pmu: {
                 titre: '👑 Pass PMU actif',
-                texte: 'Complétez avec le Pass Foot ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
+                texte: 'Complétez avec Foot, Tennis ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
                 showWait: false,
                 produit: 'foot',
                 showPortal: true,
             },
             premium_manage_foot: {
                 titre: '👑 Pass Foot actif',
-                texte: 'Complétez avec le Pass PMU ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
+                texte: 'Complétez avec PMU, Tennis ou le Pack Intégral (-25 %). Pour résilier ou modifier votre facturation, utilisez le portail Stripe.',
                 showWait: false,
                 produit: 'pmu',
                 showPortal: true,
@@ -5145,7 +5193,7 @@
             },
             premium_offer_tennis: {
                 titre: '⭐ Passez Premium Velora',
-                texte: 'Débloquez recherches illimitées, sets/jeux et scores exacts Tennis. Choisissez le Pass Tennis ou complétez avec Foot / PMU.',
+                texte: 'Débloquez recherches illimitées, sets/jeux et scores exacts Tennis — ou le Pack Intégral pour tout Velora.',
                 showWait: false,
                 produit: 'tennis',
             },
@@ -5540,16 +5588,35 @@
             return { allowed: true };
         }
 
-        function majCartePaywallSimple(produit) {
-            const offre = VELORA_PAYWALL_OFFRE_SIMPLE[produit] || VELORA_PAYWALL_OFFRE_SIMPLE.foot;
-            const labelEl = document.getElementById('veloraPaywallSimpleLabel');
-            const listEl = document.getElementById('veloraPaywallSimpleBenefits');
-            if (labelEl) labelEl.textContent = offre.label;
-            if (listEl) {
-                listEl.innerHTML = offre.benefits
-                    .map((b) => `<li>${escHtml(b)}</li>`)
-                    .join('');
-            }
+        function paywallPlanDejaActif(plan) {
+            if (plan === 'pmu') return estVeloraPremiumPmu();
+            if (plan === 'foot') return estVeloraPremiumFoot();
+            if (plan === 'tennis') return estVeloraPremiumTennis();
+            if (plan === 'bundle') return aPackIntegralVelora();
+            return false;
+        }
+
+        function majGrillePaywallOffres(produitFocus) {
+            const focus = produitFocus || veloraPaywallProduitActif || 'foot';
+            Object.entries(VELORA_PAYWALL_PLAN_CARDS).forEach(([plan, cardId]) => {
+                const card = document.getElementById(cardId);
+                if (!card) return;
+                card.classList.toggle('velora-paywall-card--focus', plan === focus);
+                card.classList.toggle('velora-paywall-card--muted', paywallPlanDejaActif(plan));
+            });
+            const boutons = [
+                ['btnVeloraPaywallPmu', 'pmu', 'Pass PMU'],
+                ['btnVeloraPaywallFoot', 'foot', 'Pass Foot'],
+                ['btnVeloraPaywallTennis', 'tennis', 'Pass Tennis'],
+                ['btnVeloraPaywallBundle', 'bundle', 'Débloquer 100% du site'],
+            ];
+            boutons.forEach(([id, plan, label]) => {
+                const btn = document.getElementById(id);
+                if (!btn) return;
+                const actif = paywallPlanDejaActif(plan);
+                btn.disabled = actif;
+                btn.textContent = actif ? 'Déjà actif' : label;
+            });
         }
 
         function showPaywallModal(context = 'search_limit', messageOverride) {
@@ -5559,7 +5626,7 @@
                 || (typeof sportActif !== 'undefined' && sportActif === 'pmu' ? 'pmu'
                     : typeof sportActif !== 'undefined' && sportActif === 'tennis' ? 'tennis'
                         : 'foot');
-            majCartePaywallSimple(veloraPaywallProduitActif);
+            majGrillePaywallOffres(veloraPaywallProduitActif);
             const titre = document.getElementById('veloraPaywallTitre');
             const texte = document.getElementById('veloraPaywallTexte');
             const btnWait = document.getElementById('btnVeloraPaywallWait');
@@ -5590,83 +5657,108 @@
             setTimeout(() => overlay.classList.add('hidden'), 280);
         }
 
-        async function lancerCheckoutPremiumFoot() {
+        async function lancerCheckoutPlanVelora(plan, triggerBtn) {
+            const planNorm = String(plan || 'pmu').toLowerCase();
             const errEl = document.getElementById('veloraPaywallCheckoutErreur');
-            if (estVeloraPremiumFoot()) {
-                if (errEl) {
-                    errEl.textContent = 'Vous avez déjà le Pass Premium Foot.';
-                    errEl.classList.remove('hidden');
-                }
-                return;
-            }
-            if (errEl) errEl.classList.add('hidden');
-            await lancerCheckoutStripeVelora('foot');
-        }
 
-        async function lancerCheckoutPremiumTennis() {
-            const errEl = document.getElementById('veloraPaywallCheckoutErreur');
-            if (estVeloraPremiumTennis()) {
+            if (planNorm === 'bundle') {
+                lancerCheckoutBundle(triggerBtn);
+                return;
+            }
+
+            if (paywallPlanDejaActif(planNorm)) {
                 if (errEl) {
-                    errEl.textContent = 'Vous avez déjà le Pass Premium Tennis.';
+                    const labels = { pmu: 'PMU', foot: 'Foot', tennis: 'Tennis' };
+                    errEl.textContent = `Vous avez déjà le Pass Premium ${labels[planNorm] || planNorm}.`;
                     errEl.classList.remove('hidden');
                 }
                 return;
             }
-            if (STRIPE_CHECKOUT_URL_TENNIS) {
+
+            if (!estMembreConnecte()) {
+                if (errEl) {
+                    errEl.textContent = 'Connectez-vous pour souscrire à Premium.';
+                    errEl.classList.remove('hidden');
+                }
+                ouvrirModalAuth('login');
+                return;
+            }
+
+            const urlParPlan = {
+                pmu: STRIPE_CHECKOUT_URL_PMU,
+                foot: STRIPE_CHECKOUT_URL_FOOT,
+                tennis: STRIPE_CHECKOUT_URL_TENNIS,
+            };
+            const paymentLink = urlParPlan[planNorm] || '';
+            if (paymentLink) {
                 if (errEl) errEl.classList.add('hidden');
-                window.location.href = STRIPE_CHECKOUT_URL_TENNIS;
-                return;
-            }
-            if (errEl) errEl.classList.add('hidden');
-            await lancerCheckoutStripeVelora('tennis');
-        }
-
-        function lancerCheckoutPassSimple() {
-            const errEl = document.getElementById('veloraPaywallCheckoutErreur');
-            if (veloraPaywallProduitActif === 'pmu') {
-                if (estVeloraPremiumPmu()) {
-                    if (errEl) {
-                        errEl.textContent = 'Vous avez déjà le Pass Premium PMU.';
-                        errEl.classList.remove('hidden');
-                    }
-                    return;
+                if (triggerBtn) {
+                    triggerBtn.disabled = true;
+                    triggerBtn.textContent = 'Redirection Stripe…';
                 }
-                if (errEl) errEl.classList.add('hidden');
-                lancerCheckoutPremium();
+                window.location.href = paymentLink;
                 return;
             }
-            if (veloraPaywallProduitActif === 'tennis') {
-                lancerCheckoutPremiumTennis();
-                return;
-            }
-            lancerCheckoutPremiumFoot();
+
+            await lancerCheckoutStripeVelora(planNorm, triggerBtn);
         }
 
-        function lancerCheckoutBundle() {
+        async function lancerCheckoutPremiumFoot(triggerBtn) {
+            await lancerCheckoutPlanVelora('foot', triggerBtn);
+        }
+
+        async function lancerCheckoutPremiumTennis(triggerBtn) {
+            await lancerCheckoutPlanVelora('tennis', triggerBtn);
+        }
+
+        async function lancerCheckoutPremiumPmu(triggerBtn) {
+            await lancerCheckoutPlanVelora('pmu', triggerBtn);
+        }
+
+        function lancerCheckoutBundle(triggerBtn) {
             const errEl = document.getElementById('veloraPaywallCheckoutErreur');
-            if (estVeloraPremiumPmu() && estVeloraPremiumFoot()) {
+            if (aPackIntegralVelora()) {
                 if (errEl) {
-                    errEl.textContent = 'Vous avez déjà le Pack Intégral (PMU + Foot).';
+                    errEl.textContent = 'Vous avez déjà le Pack Intégral.';
                     errEl.classList.remove('hidden');
                 }
                 return;
             }
+            if (!estMembreConnecte()) {
+                if (errEl) {
+                    errEl.textContent = 'Connectez-vous pour souscrire au Pack Intégral.';
+                    errEl.classList.remove('hidden');
+                }
+                ouvrirModalAuth('login');
+                return;
+            }
             if (errEl) errEl.classList.add('hidden');
-            const btn = document.getElementById('btnVeloraPaywallBundle');
+            const btn = triggerBtn || document.getElementById('btnVeloraPaywallBundle');
             if (btn) {
                 btn.disabled = true;
                 btn.textContent = 'Redirection Stripe…';
+            }
+            if (!STRIPE_CHECKOUT_URL_BUNDLE) {
+                if (errEl) {
+                    errEl.textContent = 'Lien Pack Intégral non configuré (STRIPE_CHECKOUT_URL_BUNDLE).';
+                    errEl.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Débloquer 100% du site';
+                }
+                return;
             }
             window.location.href = STRIPE_CHECKOUT_URL_BUNDLE;
         }
 
         function passerPremiumFoot() {
-            lancerCheckoutPassSimple();
+            lancerCheckoutPremiumFoot();
         }
         window.passerPremiumFoot = passerPremiumFoot;
         window.lancerCheckoutPremiumFoot = lancerCheckoutPremiumFoot;
         window.lancerCheckoutPremiumTennis = lancerCheckoutPremiumTennis;
-        window.lancerCheckoutPassSimple = lancerCheckoutPassSimple;
+        window.lancerCheckoutPremiumPmu = lancerCheckoutPremiumPmu;
         window.lancerCheckoutBundle = lancerCheckoutBundle;
 
         function setFootLoadingMessage(modeOpp) {
@@ -10052,8 +10144,18 @@
                 showPaywallModal('premium_offer_foot');
             }
         });
-        document.getElementById('btnVeloraPaywallSimple')?.addEventListener('click', lancerCheckoutPassSimple);
-        document.getElementById('btnVeloraPaywallBundle')?.addEventListener('click', lancerCheckoutBundle);
+        document.getElementById('btnVeloraPaywallPmu')?.addEventListener('click', (ev) => {
+            lancerCheckoutPremiumPmu(ev.currentTarget);
+        });
+        document.getElementById('btnVeloraPaywallFoot')?.addEventListener('click', (ev) => {
+            lancerCheckoutPremiumFoot(ev.currentTarget);
+        });
+        document.getElementById('btnVeloraPaywallTennis')?.addEventListener('click', (ev) => {
+            lancerCheckoutPremiumTennis(ev.currentTarget);
+        });
+        document.getElementById('btnVeloraPaywallBundle')?.addEventListener('click', (ev) => {
+            lancerCheckoutBundle(ev.currentTarget);
+        });
         document.getElementById('btnVeloraPaywallPortal')?.addEventListener('click', () => {
             const btn = document.getElementById('btnVeloraPaywallPortal');
             ouvrirPortailStripeAbonnement(btn);
