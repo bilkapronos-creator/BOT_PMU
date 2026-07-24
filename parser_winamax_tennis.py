@@ -22,6 +22,7 @@ from parser_winamax import (
     lookup,
     lookup_odd,
 )
+from velora_intel import extract_intel_from_state, intel_stats_suffisantes
 
 if hasattr(sys.stdout, "reconfigure"):
     try:
@@ -229,12 +230,101 @@ def _edge_score(prob_pct: int, cote: float | None) -> float:
     return (prob_pct / 100.0) * float(cote)
 
 
+def _intel_conseils_tennis(
+    home: str,
+    away: str,
+    cotes: dict,
+    probs: dict[str, int],
+    intel: dict,
+) -> list[dict]:
+    """Conseils basés sur forme / classement Winamax (aligné velora_intel Foot)."""
+    if not intel_stats_suffisantes(intel):
+        return []
+
+    def _row(market: str, pick: str, label: str, cote, prob_pct: int, tier: str, raison: str):
+        edge = _edge_score(prob_pct, cote)
+        return {
+            "market": market,
+            "pick": pick,
+            "label": label,
+            "cote": round(float(cote), 2) if cote else None,
+            "prob_pct": prob_pct,
+            "edge": round(edge, 3),
+            "score": round(edge - 1.0, 3),
+            "tier": tier,
+            "raison": raison,
+            "stars": 4 if tier == "excellent" else 3,
+        }
+
+    out: list[dict] = []
+    fe = int(intel.get("form_edge") or 0)
+    if abs(fe) >= 3:
+        pick = "1" if fe > 0 else "2"
+        name = home if pick == "1" else away
+        cote = cotes.get(pick)
+        prob = probs.get(pick, 50)
+        out.append(
+            _row(
+                "vainqueur",
+                pick,
+                f"Vainqueur {name}",
+                cote,
+                min(75, prob + 4),
+                "bon",
+                f"Forme récente Winamax favorable à {name} (écart {abs(fe)} pts sur 5 matchs)",
+            )
+        )
+
+    hr, ar = intel.get("home_rank"), intel.get("away_rank")
+    if hr is not None and ar is not None:
+        diff = abs(int(hr) - int(ar))
+        if diff >= 8:
+            pick = "1" if int(hr) < int(ar) else "2"
+            name = home if pick == "1" else away
+            cote = cotes.get(pick)
+            prob = probs.get(pick, 50)
+            out.append(
+                _row(
+                    "vainqueur",
+                    pick,
+                    f"Vainqueur {name}",
+                    cote,
+                    min(72, prob + 3),
+                    "bon",
+                    f"Écart classement ATP/WTA ({hr} vs {ar}) — avantage {name}",
+                )
+            )
+
+    h2h = intel.get("h2h")
+    if h2h:
+        hw = int(h2h.get("home_wins") or 0)
+        aw = int(h2h.get("away_wins") or 0)
+        if max(hw, aw) >= 2 and hw != aw:
+            pick = "1" if hw > aw else "2"
+            name = home if pick == "1" else away
+            cote = cotes.get(pick)
+            prob = probs.get(pick, 50)
+            out.append(
+                _row(
+                    "vainqueur",
+                    pick,
+                    f"Vainqueur {name}",
+                    cote,
+                    min(70, prob + 2),
+                    "bon",
+                    f"Face-à-face Winamax {h2h.get('label') or f'{hw}-{aw}'}",
+                )
+            )
+    return out
+
+
 def build_conseils_tennis(
     home: str,
     away: str,
     cotes: dict,
     probs: dict[str, int],
     marches: dict,
+    intel: dict | None = None,
 ) -> tuple[list[dict], dict | None]:
     conseils: list[dict] = []
     c1, c2 = cotes.get("1"), cotes.get("2")
@@ -335,6 +425,9 @@ def build_conseils_tennis(
             )
         )
 
+    for row in _intel_conseils_tennis(home, away, cotes, probs, intel or {}):
+        conseils.append(row)
+
     conseils.sort(key=lambda x: (-(x.get("edge") or 0), x.get("cote") or 0))
     meilleur = conseils[0] if conseils else None
     if not meilleur and fav_cote:
@@ -365,6 +458,7 @@ def build_tennis_record(
     match_start_ts: int | None,
     competition: str,
     match_status: str | None = None,
+    intel: dict | None = None,
 ) -> dict:
     sets_ou = extract_ou_markets(
         match_bets, outcomes, odds, ("nb de sets", "nombre de sets", "sets", "nb sets")
@@ -378,7 +472,9 @@ def build_tennis_record(
         "games_total": games_ou,
         "score_exact_sets": score_sets,
     }
-    conseils, meilleur = build_conseils_tennis(home, away, cotes, probs, marches)
+    intel = intel or {}
+    conseils, meilleur = build_conseils_tennis(home, away, cotes, probs, marches, intel=intel)
+    winamax_intel = intel_stats_suffisantes(intel)
     pronostic = meilleur.get("pick") if meilleur else ("1" if probs.get("1", 0) >= probs.get("2", 0) else "2")
     pick_name = home if pronostic == "1" else away
 
@@ -409,11 +505,22 @@ def build_tennis_record(
             "conseils_intelligents": conseils,
             "meilleur_conseil": meilleur,
             "value_bets": [c for c in conseils if (c.get("edge") or 0) >= VALUE_EDGE_MIN],
+            "winamax_intel_enriched": winamax_intel,
         },
         "conseil": meilleur.get("label") if meilleur else f"Vainqueur {pick_name}",
         "cotes": {"1": cotes.get("1"), "2": cotes.get("2")},
         "probabilites": {"1": probs.get("1", 0), "2": probs.get("2", 0)},
     }
+    if winamax_intel:
+        record["velora_intel"] = {
+            "home_form": intel.get("home_form"),
+            "away_form": intel.get("away_form"),
+            "home_rank": intel.get("home_rank"),
+            "away_rank": intel.get("away_rank"),
+            "h2h": intel.get("h2h"),
+            "form_edge": intel.get("form_edge"),
+            "rank_edge": intel.get("rank_edge"),
+        }
     return record
 
 
@@ -455,6 +562,7 @@ def parse_tennis_matches(data: dict) -> list[dict]:
             status = str(match.get("status") or "PREMATCH").strip().upper()
             if is_match_live(match):
                 status = "LIVE"
+            intel = extract_intel_from_state(data, mid)
             rec = build_tennis_record(
                 mid,
                 home,
@@ -468,6 +576,7 @@ def parse_tennis_matches(data: dict) -> list[dict]:
                 sort_ts,
                 comp,
                 match_status=status,
+                intel=intel,
             )
             results.append(rec)
         except Exception:
