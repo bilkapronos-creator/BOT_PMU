@@ -728,28 +728,74 @@ def _extraire_user_id_stripe_metadata(objet: Any) -> Optional[str]:
     return uid or None
 
 
-def activer_premium_stripe(user_id: str, stripe_customer_id: Optional[str] = None) -> None:
-    """Webhook Stripe : passage Premium via service_role (PATCH REST, bypass RLS)."""
-    uid = str(user_id).strip()
-    obtenir_ou_creer_profil(uid)
+def _extraire_velora_plan_stripe_session(session: Any) -> str:
+    """Lit metadata.velora_plan (pmu | foot | tennis | bundle) sur une session Checkout."""
+    metadata = getattr(session, "metadata", None)
+    if metadata is None:
+        metadata = _lire_champ_stripe(session, "metadata")
+    if metadata is None:
+        return "pmu"
+    if isinstance(metadata, dict):
+        plan = metadata.get("velora_plan")
+    else:
+        plan = getattr(metadata, "velora_plan", None)
+    plan_norm = str(plan or "pmu").strip().lower()
+    if plan_norm not in ("pmu", "foot", "tennis", "bundle"):
+        return "pmu"
+    return plan_norm
 
-    payloads: list[dict[str, Any]] = []
-    complet: dict[str, Any] = {
+
+def _profil_apres_checkout_velora_plan(velora_plan: str) -> dict[str, Any]:
+    """
+    Schéma Supabase actuel : plan_type ∈ {free, premium, admin}.
+    Pass Foot / Tennis : pas de is_premium (quota PMU inchangé) ; déblocage UI via retour ?premium_*=success.
+    PMU / Pack : is_premium pour analyses PMU illimitées (VeloraAuth).
+    """
+    plan = str(velora_plan or "pmu").strip().lower()
+    if plan in ("foot", "tennis"):
+        return {
+            "is_premium": False,
+            "role": "free",
+            "plan_type": "free",
+        }
+    return {
         "is_premium": True,
         "role": "premium",
         "plan_type": "premium",
+    }
+
+
+def activer_premium_stripe(
+    user_id: str,
+    stripe_customer_id: Optional[str] = None,
+    *,
+    velora_plan: Optional[str] = None,
+) -> None:
+    """Webhook Stripe : mise à jour profil via service_role (PATCH REST, bypass RLS)."""
+    uid = str(user_id).strip()
+    obtenir_ou_creer_profil(uid)
+
+    plan_norm = str(velora_plan or "pmu").strip().lower()
+    statut = _profil_apres_checkout_velora_plan(plan_norm)
+
+    payloads: list[dict[str, Any]] = []
+    complet: dict[str, Any] = {
+        **statut,
         "updated_at": _now_iso(),
     }
     if stripe_customer_id:
         complet["stripe_customer_id"] = stripe_customer_id
     payloads.append(complet)
-    payloads.append({"role": "premium", "plan_type": "premium", "updated_at": _now_iso()})
+    payloads.append({**statut, "updated_at": _now_iso()})
 
     derniere_erreur: Optional[Exception] = None
     for payload in payloads:
         try:
             rows = _patch_profil_rest(uid, payload)
-            print(f"[Velora] Premium activé (REST service_role) : {uid} → {rows[0]}")
+            print(
+                f"[Velora] Profil Stripe activé (REST service_role) : {uid} "
+                f"plan={plan_norm} → {rows[0]}",
+            )
             return
         except Exception as exc:
             derniere_erreur = exc
@@ -923,9 +969,19 @@ def traiter_webhook_stripe(payload: bytes, signature: Optional[str]) -> dict[str
         if event_type == "checkout.session.completed":
             user_id = _extraire_user_id_stripe_session(obj)
             stripe_customer_id = _extraire_stripe_customer_id(obj)
+            velora_plan = _extraire_velora_plan_stripe_session(obj)
 
-            activer_premium_stripe(user_id, stripe_customer_id)
-            return {"status": "success", "user_id": user_id, "event": event_type}
+            activer_premium_stripe(
+                user_id,
+                stripe_customer_id,
+                velora_plan=velora_plan,
+            )
+            return {
+                "status": "success",
+                "user_id": user_id,
+                "velora_plan": velora_plan,
+                "event": event_type,
+            }
 
         if event_type == "customer.subscription.deleted":
             stripe_customer_id = _extraire_stripe_customer_id(obj)

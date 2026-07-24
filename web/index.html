@@ -1316,8 +1316,8 @@
             visibility: visible;
         }
         .velora-paywall-modal {
-            width: min(100%, 52rem);
-            max-height: min(92vh, 720px);
+            width: min(100%, 56rem);
+            max-height: min(94vh, 820px);
             overflow-y: auto;
             border-radius: 1.25rem;
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -3352,13 +3352,16 @@
         const PLANS_PASS_FOOT_DB = new Set([
             'foot', 'premium_foot', 'bundle', 'integral', 'pack_integral', 'pmu_foot',
         ]);
+        const PLANS_PASS_PMU_DB = new Set([
+            'pmu', 'premium', 'bundle', 'integral', 'pack_integral', 'pmu_foot',
+        ]);
         const VELORA_PREMIUM_TENNIS_LS_KEY = 'velora_is_premium_tennis';
         const VELORA_PREMIUM_TENNIS_UID_KEY = 'velora_premium_tennis_uid';
         const PLANS_PASS_TENNIS_DB = new Set([
             'tennis', 'premium_tennis', 'integral', 'pack_integral',
         ]);
         const VELORA_GODMODE_EMAIL = 'loudamou14@gmail.com';
-        /** Lien Stripe Payment Link — Pass Premium Foot (succès : ?premium_foot=success dans le dashboard Stripe). */
+        /** Legacy Payment Link Foot (préférer checkout API Render — lancerCheckoutStripeVelora('foot')). */
         const STRIPE_CHECKOUT_URL_FOOT = 'https://buy.stripe.com/cNidR92LPdIf72724KgEg00';
         const STRIPE_CHECKOUT_URL_BUNDLE = 'https://buy.stripe.com/9B6dR9dqtbA7aej5gWgEg01';
         /** Pass Tennis — configurer dans config.js (STRIPE_CHECKOUT_URL_TENNIS) ; succès : ?premium_tennis=success */
@@ -3421,6 +3424,15 @@
             return PLANS_PASS_FOOT_DB.has(plan);
         }
 
+        function profilDbAutorisePassPmu() {
+            const p = window.VeloraAuth?.getProfile?.();
+            if (!p) return false;
+            const role = String(p.role || '').toLowerCase();
+            if (role === 'admin') return true;
+            const plan = String(p.plan_type || '').toLowerCase();
+            return PLANS_PASS_PMU_DB.has(plan);
+        }
+
         function marquerPassTennisLocal(actif = true) {
             const uid = window.VeloraAuth?.getUserId?.();
             if (!uid) return false;
@@ -3475,10 +3487,14 @@
             localStorage.removeItem(VELORA_PREMIUM_LEGACY_LS_KEY);
         }
 
-        /** Pass PMU : analyses courses + quota VeloraAuth / Stripe PMU. */
+        /** Pass PMU : analyses courses + quota VeloraAuth (is_premium) ou LS / profil PMU. */
         function estVeloraPremiumPmu() {
             migrerAncienneClePremiumUnifiee();
             if (forcerGodModePremiumLocal()) return true;
+            if (profilDbAutorisePassPmu()) {
+                localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
+                return true;
+            }
             if (Boolean(window.VeloraAuth?.isPremiumUser?.())) {
                 localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
                 return true;
@@ -4013,7 +4029,8 @@
             }
         }
 
-        async function lancerCheckoutPremium() {
+        async function lancerCheckoutStripeVelora(plan) {
+            const planNorm = String(plan || 'pmu').toLowerCase();
             const errEl = document.getElementById('veloraPaywallCheckoutErreur')
                 || document.getElementById('premiumCheckoutErreur');
             const btn = document.getElementById('btnVeloraPaywallSimple');
@@ -4024,14 +4041,6 @@
                     errEl.classList.remove('hidden');
                 }
                 ouvrirModalAuth('login');
-                return;
-            }
-
-            if (estVeloraPremiumPmu()) {
-                if (errEl) {
-                    errEl.textContent = 'Vous avez déjà le Pass Premium PMU.';
-                    errEl.classList.remove('hidden');
-                }
                 return;
             }
 
@@ -4053,15 +4062,20 @@
             if (errEl) errEl.classList.add('hidden');
 
             const origin = window.location.origin.replace(/\/$/, '');
+            const suffix = planNorm === 'foot'
+                ? 'foot'
+                : planNorm === 'tennis'
+                    ? 'tennis'
+                    : 'pmu';
             const result = await veloraApi('/create-checkout-session', {
                 method: 'POST',
                 headers: entetesJson(),
                 body: JSON.stringify({
                     user_id: userId,
                     email: window.VeloraAuth.getUserEmail?.() || undefined,
-                    plan: 'pmu',
-                    success_url: `${origin}/?premium_pmu=success`,
-                    cancel_url: `${origin}/?premium_pmu=cancel`,
+                    plan: planNorm,
+                    success_url: `${origin}/?premium_${suffix}=success`,
+                    cancel_url: `${origin}/?premium_${suffix}=cancel`,
                 }),
             });
 
@@ -4082,6 +4096,21 @@
             } else {
                 afficherToastVelora(msg, 8000, 'error');
             }
+        }
+
+        async function lancerCheckoutPremium() {
+            const errEl = document.getElementById('veloraPaywallCheckoutErreur')
+                || document.getElementById('premiumCheckoutErreur');
+
+            if (estVeloraPremiumPmu()) {
+                if (errEl) {
+                    errEl.textContent = 'Vous avez déjà le Pass Premium PMU.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            await lancerCheckoutStripeVelora('pmu');
         }
 
         async function ouvrirPortailStripeAbonnement(triggerBtn) {
@@ -5561,7 +5590,7 @@
             setTimeout(() => overlay.classList.add('hidden'), 280);
         }
 
-        function lancerCheckoutPremiumFoot() {
+        async function lancerCheckoutPremiumFoot() {
             const errEl = document.getElementById('veloraPaywallCheckoutErreur');
             if (estVeloraPremiumFoot()) {
                 if (errEl) {
@@ -5571,10 +5600,10 @@
                 return;
             }
             if (errEl) errEl.classList.add('hidden');
-            window.location.href = STRIPE_CHECKOUT_URL_FOOT;
+            await lancerCheckoutStripeVelora('foot');
         }
 
-        function lancerCheckoutPremiumTennis() {
+        async function lancerCheckoutPremiumTennis() {
             const errEl = document.getElementById('veloraPaywallCheckoutErreur');
             if (estVeloraPremiumTennis()) {
                 if (errEl) {
@@ -5583,15 +5612,13 @@
                 }
                 return;
             }
-            if (!STRIPE_CHECKOUT_URL_TENNIS) {
-                if (errEl) {
-                    errEl.textContent = 'Lien Stripe Tennis non configuré — contactez le support.';
-                    errEl.classList.remove('hidden');
-                }
+            if (STRIPE_CHECKOUT_URL_TENNIS) {
+                if (errEl) errEl.classList.add('hidden');
+                window.location.href = STRIPE_CHECKOUT_URL_TENNIS;
                 return;
             }
             if (errEl) errEl.classList.add('hidden');
-            window.location.href = STRIPE_CHECKOUT_URL_TENNIS;
+            await lancerCheckoutStripeVelora('tennis');
         }
 
         function lancerCheckoutPassSimple() {

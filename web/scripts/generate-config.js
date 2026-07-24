@@ -61,6 +61,11 @@ const mtechPublicKey = (
   || ''
 ).trim();
 
+const stripeCheckoutUrlPmu = (process.env.STRIPE_CHECKOUT_URL_PMU || '').trim();
+const stripeCheckoutUrlFoot = (process.env.STRIPE_CHECKOUT_URL_FOOT || '').trim();
+const stripeCheckoutUrlTennis = (process.env.STRIPE_CHECKOUT_URL_TENNIS || '').trim();
+const stripeCheckoutUrlBundle = (process.env.STRIPE_CHECKOUT_URL_BUNDLE || '').trim();
+
 const outPath = path.join(__dirname, '..', 'config.js');
 const content = `/* Généré par scripts/generate-config.js — ne pas modifier à la main */
 window.VELORA_ENV = Object.freeze({
@@ -71,6 +76,10 @@ window.VELORA_ENV = Object.freeze({
   MTECH_PUBLIC_API_KEY: ${JSON.stringify(mtechPublicKey)},
   VELORA_ADMIN_PASSWORD: ${JSON.stringify(adminPassword)},
   VELORA_ADMIN_PASSWORD_HASH: ${JSON.stringify(adminPasswordHash)},
+  STRIPE_CHECKOUT_URL_PMU: ${JSON.stringify(stripeCheckoutUrlPmu)},
+  STRIPE_CHECKOUT_URL_FOOT: ${JSON.stringify(stripeCheckoutUrlFoot)},
+  STRIPE_CHECKOUT_URL_TENNIS: ${JSON.stringify(stripeCheckoutUrlTennis)},
+  STRIPE_CHECKOUT_URL_BUNDLE: ${JSON.stringify(stripeCheckoutUrlBundle)},
 });
 `;
 
