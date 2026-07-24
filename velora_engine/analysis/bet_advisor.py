@@ -310,6 +310,34 @@ def _dedupe_dc_same_cote(pool: list[_Opp]) -> list[_Opp]:
     return other + kept_dc
 
 
+def _filter_cross_market_coherence(pool: list[_Opp]) -> list[_Opp]:
+    """Retire BTTS / O-U qui se contredisent (ex. BTTS Oui + Moins de 2,5)."""
+    by_market: dict[str, _Opp] = {}
+    for o in pool:
+        mk = str(o.market or "").lower()
+        if mk not in by_market or (o.edge or 0) > (by_market[mk].edge or 0):
+            by_market[mk] = o
+
+    ou = by_market.get("over_25") or by_market.get("ou_total")
+    ou_pick = str(ou.pick or "").lower() if ou else ""
+    ou_moins = ou_pick.startswith("moins") or ou_pick == "moins"
+    ou_plus = ou_pick.startswith("plus") or ou_pick == "plus"
+
+    btts = by_market.get("btts")
+    btts_oui = btts and str(btts.pick or "").lower() == "oui"
+    btts_non = btts and str(btts.pick or "").lower() == "non"
+
+    drop: set[tuple[str, str]] = set()
+    if ou_moins and btts_oui:
+        drop.add((btts.market, btts.pick))
+    if ou_plus and btts_non and (ou.prob_pct or 0) >= 58:
+        drop.add((btts.market, btts.pick))
+
+    if not drop:
+        return pool
+    return [o for o in pool if (o.market, o.pick) not in drop]
+
+
 def _collect_dnb(
     pool: list[_Opp],
     *,
@@ -565,6 +593,7 @@ def build_intelligent_conseils(
     _collect_premium(pool, premium=premium)
 
     pool = _dedupe_dc_same_cote(pool)
+    pool = _filter_cross_market_coherence(pool)
 
     pick = str(pronostic_1n2 or "").strip()
     if pick in ("1", "N", "2"):

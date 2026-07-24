@@ -180,6 +180,58 @@ def extract_ou_markets(
     return buckets
 
 
+def _parse_score_sets_tuple(label: str) -> tuple[int, int] | None:
+    raw = str(label or "").replace(":", "-").replace("–", "-")
+    parts = [p.strip() for p in raw.split("-") if p.strip()]
+    if len(parts) != 2:
+        return None
+    try:
+        return int(parts[0]), int(parts[1])
+    except ValueError:
+        return None
+
+
+def filter_score_sets_for_pick(rows: list[dict], pick: str) -> list[dict]:
+    """Scores en sets cohérents avec le vainqueur pronostiqué (1 = joueur domicile)."""
+    out: list[dict] = []
+    for row in rows or []:
+        tpl = _parse_score_sets_tuple(row.get("score"))
+        if not tpl:
+            continue
+        home_sets, away_sets = tpl
+        if str(pick) == "1" and home_sets > away_sets:
+            out.append(row)
+        elif str(pick) == "2" and away_sets > home_sets:
+            out.append(row)
+    return out
+
+
+def build_pronostic_score_exact_sets(
+    rows: list[dict],
+    pick: str,
+    winner_cote: float | None = None,
+) -> dict | None:
+    """Meilleur score exact sets Winamax aligné sur le pronostic vainqueur."""
+    aligned = filter_score_sets_for_pick(rows, pick)
+    if not aligned:
+        return None
+    aligned = sorted(aligned, key=lambda x: float(x.get("cote") or 999))
+    chosen = aligned[0]
+    if winner_cote and winner_cote < 1.55:
+        for row in aligned:
+            tpl = _parse_score_sets_tuple(row.get("score"))
+            if tpl in ((2, 0), (0, 2)):
+                chosen = row
+                break
+    score = str(chosen.get("score") or "").replace(":", "-")
+    cote = chosen.get("cote")
+    return {
+        "score": score,
+        "cote": cote,
+        "label": f"Score exact {score.replace('-', ' ')}",
+    }
+
+
 def extract_score_exact_sets(
     match_bets: list, outcomes: dict, odds: dict, limit: int = 4
 ) -> list[dict]:
@@ -428,6 +480,23 @@ def build_conseils_tennis(
     for row in _intel_conseils_tennis(home, away, cotes, probs, intel or {}):
         conseils.append(row)
 
+    score_rows = marches.get("score_exact_sets") or []
+    prono_pick = "1" if p1 >= p2 else "2"
+    pse = build_pronostic_score_exact_sets(score_rows, prono_pick, cotes.get(prono_pick))
+    if pse and pse.get("cote"):
+        prono_prob = probs.get(prono_pick, 50)
+        conseils.append(
+            _row(
+                "score_exact_sets",
+                pse["score"],
+                pse["label"],
+                pse["cote"],
+                min(70, max(40, prono_prob - 5)),
+                "bon",
+                "Score en sets Winamax aligné sur le vainqueur Velora",
+            )
+        )
+
     conseils.sort(key=lambda x: (-(x.get("edge") or 0), x.get("cote") or 0))
     meilleur = conseils[0] if conseils else None
     if not meilleur and fav_cote:
@@ -477,6 +546,9 @@ def build_tennis_record(
     winamax_intel = intel_stats_suffisantes(intel)
     pronostic = meilleur.get("pick") if meilleur else ("1" if probs.get("1", 0) >= probs.get("2", 0) else "2")
     pick_name = home if pronostic == "1" else away
+    prono_score_sets = build_pronostic_score_exact_sets(
+        score_sets, "1" if probs.get("1", 0) >= probs.get("2", 0) else "2", cotes.get(pronostic)
+    )
 
     record = {
         "id_match": str(match_id),
@@ -506,6 +578,7 @@ def build_tennis_record(
             "meilleur_conseil": meilleur,
             "value_bets": [c for c in conseils if (c.get("edge") or 0) >= VALUE_EDGE_MIN],
             "winamax_intel_enriched": winamax_intel,
+            **({"pronostic_score_exact": prono_score_sets} if prono_score_sets else {}),
         },
         "conseil": meilleur.get("label") if meilleur else f"Vainqueur {pick_name}",
         "cotes": {"1": cotes.get("1"), "2": cotes.get("2")},

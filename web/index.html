@@ -14,26 +14,44 @@
     </script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velora Engine | Pronostics Algorithmiques PMU &amp; Paris Sportifs Football</title>
-    <meta name="description" content="Optimisez vos paris sportifs et hippiques avec Velora Engine. Découvrez les opportunités, statistiques avancées et Value Bets détectés en temps réel par notre algorithme pour le Football et le PMU.">
+    <title>Velora Engine | Pronostics PMU, Foot &amp; Tennis — Gratuit</title>
+    <meta name="description" content="Pronostics PMU, Foot &amp; Tennis en data : indice Velora, value bets, scores exacts et BTTS. Compte gratuit — 3 essais par jour et par sport, sans carte bancaire.">
     <link rel="canonical" href="https://velora-pronos.com/">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Velora Engine | Pronostics Algorithmiques PMU &amp; Paris Sportifs Football">
-    <meta property="og:description" content="Optimisez vos paris sportifs et hippiques avec Velora Engine. Découvrez les opportunités, statistiques avancées et Value Bets détectés en temps réel par notre algorithme pour le Football et le PMU.">
+    <meta property="og:title" content="Velora Engine | Pronostics PMU, Foot &amp; Tennis">
+    <meta property="og:description" content="Le moteur qui analyse hippisme et paris sportifs à votre place. Value bets, radar premium, tennis ATP/WTA. Inscription gratuite — testez sans CB.">
     <meta property="og:url" content="https://velora-pronos.com">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://velora-pronos.com/icons/og-image.png?v=3">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Velora Engine — Pronostics PMU et Football">
+    <meta property="og:image:alt" content="Velora Engine — Pronostics PMU, Foot et Tennis">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:site_name" content="Velora Engine">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Velora Engine | Pronostics Algorithmiques PMU &amp; Paris Sportifs Football">
-    <meta name="twitter:description" content="Optimisez vos paris sportifs et hippiques avec Velora Engine. Découvrez les opportunités, statistiques avancées et Value Bets détectés en temps réel par notre algorithme pour le Football et le PMU.">
-    <meta name="twitter:image" content="https://velora-pronos.com/icons/og-image.png?v=2">
-    <meta name="twitter:image:alt" content="Velora Engine — Moteur algorithmique d'analyse sportive et hippique">
+    <meta name="twitter:title" content="Velora Engine | Pronostics PMU, Foot &amp; Tennis">
+    <meta name="twitter:description" content="PMU, Foot &amp; Tennis : analyses algo, value bets et 3 essais gratuits/jour. Pack premium dès 14,99 €/mois.">
+    <meta name="twitter:image" content="https://velora-pronos.com/icons/og-image.png?v=3">
+    <meta name="twitter:image:alt" content="Velora Engine — Pronostics PMU, Foot et Tennis">
     <meta name="theme-color" content="#10B981">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Velora Engine",
+        "url": "https://velora-pronos.com/",
+        "description": "Pronostics algorithmiques PMU, Football et Tennis : value bets, scores exacts, BTTS et indice Velora. Compte gratuit avec 3 analyses par jour et par sport.",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "Compte gratuit — 3 analyses PMU, Foot et Tennis par jour"
+        },
+        "inLanguage": "fr-FR"
+    }
+    </script>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -7403,6 +7421,7 @@
             const lower = conseil.toLowerCase();
             if (/^double chance\s+dc\s*(1x|x2|12)/i.test(conseil)) return true;
             if (lower === 'double chance dc 1x' || lower === 'double chance dc x2') return true;
+            if (/btts|2 équipes marquent|2 equipes marquent|over 2\.5|under 2\.5|moins de 2\.5|plus de 2\.5/i.test(lower)) return true;
             const pronostic = libellePronosticCarte(m);
             if (pronostic && lower.includes(pronostic.toLowerCase().slice(0, 12))) return true;
             return false;
@@ -7681,11 +7700,176 @@
 
         function conseilParMarche(m, marketKeys) {
             const keys = new Set(marketKeys.map((k) => String(k).toLowerCase()));
-            for (const c of conseilsIntelligentsFromMatch(m)) {
+            for (const c of mergeConseilsMarchesFoot(m, baseConseilsListFoot(m))) {
                 const mk = String(c.market || '').toLowerCase();
                 if (keys.has(mk)) return c;
             }
             return null;
+        }
+
+        function enrichConseilAvecCotesFoot(m, conseil) {
+            if (!conseil || conseil.cote != null) return conseil;
+            const mk = String(conseil.market || '').toLowerCase();
+            const raw = marketsRawFromMatch(m);
+            if (mk === 'btts') {
+                const b = raw.btts || bttsCotesFromMatch(m);
+                const side = String(conseil.pick || '').toLowerCase();
+                if (b && side) {
+                    const cote = side === 'non' ? b.non : b.oui;
+                    if (fmtCoteMarche(cote) != null) return { ...conseil, cote };
+                }
+            }
+            if (mk === 'over_25' || mk === 'ou_total') {
+                const ou = ou25CotesFromMatch(m);
+                const side = String(conseil.pick || '').toLowerCase();
+                if (ou && (side === 'plus' || side.startsWith('plus'))) return { ...conseil, cote: ou.plus };
+                if (ou && (side === 'moins' || side.startsWith('moins'))) return { ...conseil, cote: ou.moins };
+            }
+            return conseil;
+        }
+
+        function mergeConseilsMarchesFoot(m, list) {
+            const out = [...(list || [])];
+            const mkSet = new Set(out.map((c) => String(c.market || '').toLowerCase()));
+            const synth = synthesizeConseilsVelora(m);
+            for (const c of synth) {
+                const mk = String(c.market || '').toLowerCase();
+                if (!mk || mk === '1n2') continue;
+                if (mkSet.has(mk)) continue;
+                out.push(enrichConseilAvecCotesFoot(m, c));
+                mkSet.add(mk);
+            }
+            return out;
+        }
+
+        function conseilMarcheEffectif(m, marketKeys) {
+            const direct = conseilParMarche(m, marketKeys);
+            if (direct) return enrichConseilAvecCotesFoot(m, direct);
+            const keys = marketKeys.map((k) => String(k).toLowerCase());
+            if (keys.includes('btts')) {
+                const pick = inferVeloraBttsPick(m);
+                if (!pick) return null;
+                const prob = probModeleFoot(m, 'prob_btts_modele');
+                const pct = pick === 'oui'
+                    ? (prob != null ? Math.round(prob) : 55)
+                    : (prob != null ? Math.round(100 - prob) : 55);
+                return enrichConseilAvecCotesFoot(m, {
+                    market: 'btts',
+                    pick,
+                    label: pick === 'oui' ? 'BTTS Oui' : 'BTTS Non',
+                    prob_pct: pct,
+                    tier: 'bon',
+                });
+            }
+            if (keys.some((k) => ['over_25', 'under_25', 'ou_total'].includes(k))) {
+                const pick = inferVeloraOu25Pick(m);
+                if (!pick) return null;
+                const prob = probModeleFoot(m, 'prob_over_25_modele');
+                const pct = pick === 'plus'
+                    ? (prob != null ? Math.round(prob) : 55)
+                    : (prob != null ? Math.round(100 - prob) : 55);
+                return enrichConseilAvecCotesFoot(m, {
+                    market: 'over_25',
+                    pick,
+                    label: pick === 'plus' ? 'Plus de 2.5 buts' : 'Moins de 2.5 buts',
+                    prob_pct: pct,
+                    tier: 'bon',
+                });
+            }
+            return null;
+        }
+
+        function marchesButeurDisponibles(m) {
+            const raw = m?.marches_supplementaires?.buteur_match;
+            if (typeof raw === 'string' && /indispo/i.test(raw)) return false;
+            if (typeof raw === 'string' && raw.trim()) return false;
+            return buteursFromMatch(m).length > 0;
+        }
+
+        function conseilButeurEffectif(m) {
+            if (!marchesButeurDisponibles(m)) return null;
+            const pp = primaryPickFromMatch(m);
+            if (pp && String(pp.market || '').toLowerCase().includes('buteur') && pp.label) {
+                return {
+                    market: pp.market,
+                    pick: pp.pick,
+                    label: pp.label,
+                    cote: pp.cote,
+                    prob_pct: null,
+                };
+            }
+            const premVb = m?.premium_analysis?.buteur_match?.value_bet;
+            if (premVb && premVb.label) {
+                return {
+                    market: 'buteur_match',
+                    pick: premVb.pick,
+                    label: premVb.label,
+                    cote: premVb.cote,
+                    prob_pct: null,
+                };
+            }
+            const list = buteursFromMatch(m)
+                .slice()
+                .sort((a, b) => (Number(a.cote) || 999) - (Number(b.cote) || 999));
+            const top = list[0];
+            if (!top?.joueur) return null;
+            return {
+                market: 'buteur_match',
+                pick: top.joueur,
+                label: `Buteur — ${top.joueur}`,
+                cote: top.cote,
+                prob_pct: null,
+            };
+        }
+
+        function scoreCoherentAvecBtts(scoreStr, bttsPick) {
+            if (!bttsPick) return true;
+            const parts = parseScoreLabel1n2(scoreStr);
+            if (!parts) return true;
+            const both = parts.home > 0 && parts.away > 0;
+            const clean = parts.home === 0 || parts.away === 0;
+            if (bttsPick === 'oui') return both;
+            if (bttsPick === 'non') return clean;
+            return true;
+        }
+
+        function filtrerScoresSelonMarchesFoot(m, scores) {
+            let rows = filtrerScoresSelonPronostic(m, scores);
+            const bttsPick = inferVeloraBttsPick(m);
+            if (bttsPick) {
+                rows = rows.filter((s) => scoreCoherentAvecBtts(s?.score, bttsPick));
+            }
+            const ouPick = inferVeloraOu25Pick(m);
+            if (ouPick === 'moins') {
+                rows = rows.filter((s) => {
+                    const parts = parseScoreLabel1n2(s?.score);
+                    if (!parts) return true;
+                    return parts.home + parts.away <= 2;
+                });
+            } else if (ouPick === 'plus') {
+                rows = rows.filter((s) => {
+                    const parts = parseScoreLabel1n2(s?.score);
+                    if (!parts) return true;
+                    return parts.home + parts.away >= 3;
+                });
+            }
+            return rows;
+        }
+
+        function conseilsCoherentsFoot(m, list) {
+            const btts = conseilMarcheEffectif(m, ['btts']);
+            const ou = conseilMarcheEffectif(m, ['over_25', 'ou_total']);
+            const bttsPick = btts ? String(btts.pick || '').toLowerCase() : null;
+            const ouPick = ou ? String(ou.pick || '').toLowerCase() : null;
+            return (list || []).filter((c) => {
+                const mk = String(c.market || '').toLowerCase();
+                const pk = String(c.pick || '').toLowerCase();
+                if (mk === 'btts' && bttsPick && pk && pk !== bttsPick) return false;
+                if (mk === 'btts' && ouPick === 'moins' && pk === 'oui') return false;
+                if ((mk === 'over_25' || mk === 'ou_total') && ouPick && pk && !pk.startsWith(ouPick) && pk !== ouPick) return false;
+                if (mk === 'over_25' && bttsPick === 'non' && pk === 'plus' && (c.prob_pct || 0) < 62) return false;
+                return true;
+            });
         }
 
         function displayBadgesFromConseils(m) {
@@ -7709,13 +7893,15 @@
         }
 
         function htmlBlocParisSecondaires(m) {
-            const dc = conseilParMarche(m, ['dc_12', 'dc_1x', 'dc_x2']);
-            const btts = conseilParMarche(m, ['btts']);
-            const ou = conseilParMarche(m, ['over_25', 'under_25', 'ou_total']);
+            const dc = conseilMarcheEffectif(m, ['dc_12', 'dc_1x', 'dc_x2']);
+            const btts = conseilMarcheEffectif(m, ['btts']);
+            const ou = conseilMarcheEffectif(m, ['over_25', 'under_25', 'ou_total']);
+            const buteur = conseilButeurEffectif(m);
             const cells = [
                 { icon: '🛡️', title: 'Double chance', c: dc },
                 { icon: '⚽', title: 'BTTS', c: btts },
                 { icon: '📊', title: 'Buts 2,5', c: ou },
+                { icon: '🥅', title: 'Buteur', c: buteur },
             ].filter((x) => x.c);
             if (!cells.length) return '';
             const renderCell = ({ icon, title, c }) => {
@@ -8557,14 +8743,18 @@
         function libellePronosticCarte(m) {
             const label = String(m?.pronostic_label || '').trim();
             if (label) return label;
-            const conseil = String(m?.conseil || '').trim();
-            if (conseil) return conseil.split('—')[0].trim();
             const pick = pronosticVelora1n2Pick(m);
             if (!pick) return '';
             const dom = String(m?.equipe_domicile || 'Domicile');
             const ext = String(m?.equipe_exterieur || 'Extérieur');
             const map = { 1: `Victoire ${dom}`, N: 'Match nul', 2: `Victoire ${ext}` };
-            return map[pick] || '';
+            const fromPick = map[pick] || '';
+            if (fromPick) return fromPick;
+            const conseil = String(m?.conseil || '').trim();
+            if (conseil && !/btts|2\.5|2,5|double chance|buteur|score exact/i.test(conseil)) {
+                return conseil.split('—')[0].trim();
+            }
+            return '';
         }
 
         function libelleValuePickAffichage(m) {
@@ -8666,12 +8856,8 @@
 
         function conseilsIntelligentsFromMatch(m) {
             const fa = m?.free_analysis || {};
-            let list = Array.isArray(m?.conseils_intelligents)
-                ? m.conseils_intelligents
-                : (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents : []);
-            if (!list.length) {
-                list = synthesizeConseilsVelora(m);
-            }
+            let list = mergeConseilsMarchesFoot(m, baseConseilsListFoot(m));
+            list = conseilsCoherentsFoot(m, list);
             const pick = pronosticVelora1n2Pick(m);
             const cotes = m?.cotes || fa.cotes_1n2 || {};
             return list.filter((c) => {
@@ -8687,6 +8873,18 @@
                 if (mk === 'dc_x2' && pick === '1') return false;
                 return true;
             });
+        }
+
+        /** Liste brute JSON (+ repli modèle) sans filtre pronostic. */
+        function baseConseilsListFoot(m) {
+            const fa = m?.free_analysis || {};
+            let list = Array.isArray(m?.conseils_intelligents)
+                ? m.conseils_intelligents
+                : (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents : []);
+            if (!list.length) {
+                list = synthesizeConseilsVelora(m);
+            }
+            return list;
         }
 
         const MARCHES_PREMIUM_CONSEIL = new Set([
@@ -9695,8 +9893,9 @@
         function filtrerScoresSelonPronostic(m, scores) {
             if (!Array.isArray(scores) || !scores.length) return [];
             const pick = pronosticPick1n2PourScores(m);
-            if (!pick) return scores;
-            return scores.filter((s) => scoreCoherentAvecPronostic(s?.score, pick));
+            if (!pick) return filtrerScoresSelonMarchesFoot(m, scores);
+            const aligned = scores.filter((s) => scoreCoherentAvecPronostic(s?.score, pick));
+            return filtrerScoresSelonMarchesFoot(m, aligned.length ? aligned : scores);
         }
 
         function trierScoresParProbDesc(scores) {

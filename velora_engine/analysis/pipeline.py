@@ -234,7 +234,12 @@ def build_match_v2(
         pronostic_1n2=pronostic_ref,
     )
     primary_pick = free_values.primary_pick
-    if meilleur:
+    if primary_pick is None and meilleur and str(meilleur.market or "").lower() not in (
+        "1n2",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+    ):
         prefix = "🎯" if meilleur.tier == "excellent" else "💡"
         conseil_short = f"{prefix} {meilleur.label}"
         if meilleur.cote:
@@ -247,15 +252,8 @@ def build_match_v2(
             conseil_short=conseil_short,
         )
 
-    legacy_conseil = pronostic_label or None
-    if meilleur and meilleur.label:
-        legacy_conseil = (
-            f"{meilleur.label} @ {meilleur.cote:.2f}"
-            if meilleur.cote
-            else meilleur.label
-        )
-    if legacy_conseil:
-        legacy["conseil"] = legacy_conseil
+    if pronostic_label:
+        legacy["conseil"] = pronostic_label
 
     display_badges = list(free_values.display_badges)
     if not display_badges:
