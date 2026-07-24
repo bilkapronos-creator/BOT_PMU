@@ -5127,6 +5127,25 @@
             return true;
         }
 
+        function profilSupabaseConfirmeAbonnement(profilSync) {
+            if (!profilSync) return false;
+            if (profilSync.is_premium === true) return true;
+            const plan = String(profilSync.plan_type || '').toLowerCase();
+            return PLANS_PASS_FOOT_DB.has(plan) || PLANS_PASS_TENNIS_DB.has(plan);
+        }
+
+        function appliquerPassesDepuisProfilSupabase(profilSync) {
+            if (!profilSync || !estMembreConnecte()) return;
+            const plan = String(profilSync.plan_type || '').toLowerCase();
+            if (profilSync.is_premium === true) {
+                localStorage.setItem(VELORA_PREMIUM_PMU_LS_KEY, 'true');
+            }
+            if (PLANS_PASS_FOOT_DB.has(plan)) marquerPassFootLocal(true);
+            if (PLANS_PASS_TENNIS_DB.has(plan)) marquerPassTennisLocal(true);
+            appliquerStatutPremiumGlobal();
+            mettreAJourUiPlanUtilisateur();
+        }
+
         function synchroniserProfilPremiumArrierePlan() {
             if (!window.VeloraAuth?.rafraichirProfil) return;
             (async () => {
@@ -5136,11 +5155,16 @@
                         await new Promise((resolve) => setTimeout(resolve, 2000));
                     }
                     const profilSync = await window.VeloraAuth.rafraichirProfil();
-                    if (profilSync?.is_premium === true && !window.VeloraAuth.isPremiumOptimiste?.()) {
-                        mettreAJourUiPlanUtilisateur();
-                        return;
+                    if (!profilSupabaseConfirmeAbonnement(profilSync)) continue;
+                    if (
+                        profilSync?.is_premium === true
+                        && typeof window.VeloraAuth?.appliquerPremiumOptimiste === 'function'
+                        && !window.VeloraAuth.isPremiumOptimiste?.()
+                    ) {
+                        window.VeloraAuth.appliquerPremiumOptimiste();
                     }
-                    if (profilSync?.is_premium === true) return;
+                    appliquerPassesDepuisProfilSupabase(profilSync);
+                    return;
                 }
                 console.warn('[Velora] Sync Premium arrière-plan : webhook non confirmé après attente.');
             })().catch((err) => console.warn('[Velora] Sync Premium arrière-plan :', err));
@@ -5195,6 +5219,7 @@
                     }
                     marquerPassFootLocal(true);
                     afficherToastVelora('⚽ Pass Premium Foot activé — radar et recherches débloqués.');
+                    synchroniserProfilPremiumArrierePlan();
                 }
 
                 if (tennisOk) {
@@ -5205,6 +5230,7 @@
                     }
                     marquerPassTennisLocal(true);
                     afficherToastVelora('🎾 Pass Premium Tennis activé — recherches illimitées.');
+                    synchroniserProfilPremiumArrierePlan();
                 }
             }
 

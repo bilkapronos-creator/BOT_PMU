@@ -747,16 +747,28 @@ def _extraire_velora_plan_stripe_session(session: Any) -> str:
 
 def _profil_apres_checkout_velora_plan(velora_plan: str) -> dict[str, Any]:
     """
-    Schéma Supabase actuel : plan_type ∈ {free, premium, admin}.
-    Pass Foot / Tennis : pas de is_premium (quota PMU inchangé) ; déblocage UI via retour ?premium_*=success.
-    PMU / Pack : is_premium pour analyses PMU illimitées (VeloraAuth).
+    Schéma Supabase (profiles_pass_plans.sql) : plan_type foot | tennis | bundle | premium.
+    Pass Foot / Tennis : is_premium False (quota PMU inchangé), plan_type dédié pour l'UI.
+    PMU / Pack : is_premium True pour analyses PMU illimitées (VeloraAuth).
     """
     plan = str(velora_plan or "pmu").strip().lower()
-    if plan in ("foot", "tennis"):
+    if plan == "foot":
         return {
             "is_premium": False,
             "role": "free",
-            "plan_type": "free",
+            "plan_type": "foot",
+        }
+    if plan == "tennis":
+        return {
+            "is_premium": False,
+            "role": "free",
+            "plan_type": "tennis",
+        }
+    if plan == "bundle":
+        return {
+            "is_premium": True,
+            "role": "premium",
+            "plan_type": "bundle",
         }
     return {
         "is_premium": True,
