@@ -3622,7 +3622,6 @@
         }
 
         function peutOuvrirPortailStripeVelora() {
-            if (window.VeloraAuth?.estGodModeUtilisateur?.()) return false;
             const cid = String(window.VeloraAuth?.getProfile?.()?.stripe_customer_id || '').trim();
             if (!cid) return false;
             return aAccesPremiumVelora();
@@ -4208,7 +4207,16 @@
                 return true;
             }
 
-            afficherToastVelora(result.erreur || 'Impossible d\'ouvrir le portail d\'abonnement.', 6000, 'error');
+            let msg = result.erreur || 'Impossible d\'ouvrir le portail d\'abonnement.';
+            if (/aucun abonnement stripe|stripe_customer|client stripe/i.test(msg)) {
+                if (window.VeloraAuth?.estGodModeUtilisateur?.()) {
+                    msg = 'Accès Premium administrateur : aucune facturation Stripe à gérer sur ce compte.';
+                    afficherToastVelora(msg, 7000, 'info');
+                    return false;
+                }
+                msg = 'Aucun abonnement Stripe lié à ce compte. Contactez le support avec l’email utilisé lors du paiement.';
+            }
+            afficherToastVelora(msg, 6000, 'error');
             return false;
         }
 
@@ -4231,11 +4239,6 @@
                 if (typeof showPaywallModal === 'function') {
                     showPaywallModal(context);
                 }
-                return;
-            }
-
-            if (!peutOuvrirPortailStripeVelora()) {
-                afficherToastVelora('Pack Intégral actif. Contactez le support si vous devez modifier votre facturation.', 7000, 'info');
                 return;
             }
 

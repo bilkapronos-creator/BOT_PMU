@@ -340,7 +340,7 @@
     }
 
     function peutGererAbonnementStripe() {
-        if (!isPremiumUser() || estGodModeUtilisateur()) return false;
+        if (!isPremiumUser()) return false;
         return Boolean(String(profil?.stripe_customer_id || '').trim());
     }
 
