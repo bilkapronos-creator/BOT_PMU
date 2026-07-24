@@ -1,869 +1,5 @@
 [
   {
-    "id_match": "72387882",
-    "date_match": "24/07/2026 à 17:30",
-    "match_start_ts": 1784907000,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "UTA Arad",
-    "equipe_exterieur": "SC Otelul Galati",
-    "meta_match": {
-      "competition": {
-        "name": "Roumanie — SuperLiga",
-        "type": "league",
-        "round": "J2",
-        "stakes_tier": "medium",
-        "category_id": "77",
-        "tournament_id": "219"
-      }
-    },
-    "confidence": {
-      "velora_score": 67.7,
-      "indice_velora": 3,
-      "base_confidence": 0.677,
-      "adjusted_confidence": 0.677,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 1.96,
-        "N": 3.1,
-        "2": 3.1
-      },
-      "probabilites": {
-        "1": 34,
-        "N": 23,
-        "2": 43
-      },
-      "probabilites_marche": {
-        "1": 44,
-        "N": 28,
-        "2": 28
-      },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire SC Otelul Galati",
-      "confiance_niveau": "haute",
-      "line_signal": "stable",
-      "poisson_lambdas": {
-        "home": 2.001,
-        "away": 1.596
-      },
-      "top_scores_modele": [
-        {
-          "score": "1-2",
-          "prob": 7
-        },
-        {
-          "score": "0-1",
-          "prob": 4
-        },
-        {
-          "score": "2-3",
-          "prob": 4
-        },
-        {
-          "score": "1-3",
-          "prob": 4
-        },
-        {
-          "score": "0-2",
-          "prob": 3
-        }
-      ],
-      "prob_over_25_modele": 69,
-      "prob_btts_modele": 68,
-      "football_data_enriched": true,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire SC Otelul Galati",
-          "cote": 3.1,
-          "edge": 1.333,
-          "stars": 5,
-          "is_primary": true
-        }
-      ],
-      "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
-      },
-      "display_badges": [
-        "Double chance 12",
-        "BTTS Oui",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 77,
-          "edge": 0.0,
-          "score": 77.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 77% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 69,
-          "edge": 0.0,
-          "score": 69.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "oui",
-          "label": "BTTS Oui",
-          "prob_pct": 68,
-          "edge": 0.0,
-          "score": 68.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire SC Otelul Galati",
-          "cote": 3.1,
-          "prob_pct": 43,
-          "edge": 1.333,
-          "score": 0.4659,
-          "tier": "excellent",
-          "raison": "Proba 43% × cote 3.10 → edge 1.33 — bon équilibre proba/rendement",
-          "stars": 5
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 77,
-        "edge": 0.0,
-        "score": 77.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 77% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Double chance 12",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
-      "is_opportunite": true
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "1-2",
-        "prob": 7
-      },
-      {
-        "score": "0-1",
-        "prob": 4
-      },
-      {
-        "score": "2-3",
-        "prob": 4
-      },
-      {
-        "score": "1-3",
-        "prob": 4
-      },
-      {
-        "score": "0-2",
-        "prob": 3
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 1.96,
-      "N": 3.1,
-      "2": 3.1
-    },
-    "probabilites": {
-      "1": 34,
-      "N": 23,
-      "2": 43
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
-    "velora_pick_1n2": "2"
-  },
-  {
-    "id_match": "67091424",
-    "date_match": "24/07/2026 à 18:00",
-    "match_start_ts": 1784908800,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "Jaro",
-    "equipe_exterieur": "Seinäjoen",
-    "meta_match": {
-      "competition": {
-        "name": "Finlande — Veikkausliiga",
-        "type": "other",
-        "round": "J17",
-        "stakes_tier": "medium",
-        "category_id": "19",
-        "tournament_id": "31"
-      }
-    },
-    "confidence": {
-      "velora_score": 38.0,
-      "indice_velora": 1,
-      "base_confidence": 0.38,
-      "adjusted_confidence": 0.38,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 2.7,
-        "N": 3.4,
-        "2": 1.94
-      },
-      "probabilites": {
-        "1": 29,
-        "N": 26,
-        "2": 45
-      },
-      "probabilites_marche": {
-        "1": 31,
-        "N": 25,
-        "2": 44
-      },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire Seinäjoen",
-      "confiance_niveau": "faible",
-      "line_signal": "stable",
-      "poisson_lambdas": {
-        "home": 1.624,
-        "away": 1.935
-      },
-      "top_scores_modele": [
-        {
-          "score": "1-2",
-          "prob": 9
-        },
-        {
-          "score": "1-3",
-          "prob": 6
-        },
-        {
-          "score": "0-1",
-          "prob": 6
-        },
-        {
-          "score": "0-2",
-          "prob": 5
-        },
-        {
-          "score": "2-3",
-          "prob": 5
-        }
-      ],
-      "prob_over_25_modele": 68,
-      "prob_btts_modele": 68,
-      "football_data_enriched": false,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [],
-      "display_badges": [
-        "Double chance 12",
-        "BTTS Oui",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 74,
-          "edge": 0.0,
-          "score": 74.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 74% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "oui",
-          "label": "BTTS Oui",
-          "prob_pct": 68,
-          "edge": 0.0,
-          "score": 68.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 68,
-          "edge": 0.0,
-          "score": 68.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 74,
-        "edge": 0.0,
-        "score": 74.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 74% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Double chance 12",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
-      "is_opportunite": false
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "1-2",
-        "prob": 9
-      },
-      {
-        "score": "1-3",
-        "prob": 6
-      },
-      {
-        "score": "0-1",
-        "prob": 6
-      },
-      {
-        "score": "0-2",
-        "prob": 5
-      },
-      {
-        "score": "2-3",
-        "prob": 5
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 2.7,
-      "N": 3.4,
-      "2": 1.94
-    },
-    "probabilites": {
-      "1": 29,
-      "N": 26,
-      "2": 45
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
-    "velora_pick_1n2": "2"
-  },
-  {
-    "id_match": "72043020",
-    "date_match": "24/07/2026 à 18:00",
-    "match_start_ts": 1784908800,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "Radomiak Radom",
-    "equipe_exterieur": "Wieczysta Cracovie",
-    "meta_match": {
-      "competition": {
-        "name": "Pologne — Ekstraklasa",
-        "type": "other",
-        "round": "J1",
-        "stakes_tier": "medium",
-        "category_id": "47",
-        "tournament_id": "64"
-      }
-    },
-    "confidence": {
-      "velora_score": 50.0,
-      "indice_velora": 2,
-      "base_confidence": 0.5,
-      "adjusted_confidence": 0.5,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 2.35,
-        "N": 3.2,
-        "2": 2.4
-      },
-      "probabilites": {
-        "1": 28,
-        "N": 23,
-        "2": 49
-      },
-      "probabilites_marche": {
-        "1": 37,
-        "N": 27,
-        "2": 36
-      },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire Wieczysta Cracovie",
-      "confiance_niveau": "moyenne",
-      "line_signal": "stable",
-      "poisson_lambdas": {
-        "home": 1.822,
-        "away": 1.797
-      },
-      "top_scores_modele": [
-        {
-          "score": "1-2",
-          "prob": 8
-        },
-        {
-          "score": "0-1",
-          "prob": 5
-        },
-        {
-          "score": "1-3",
-          "prob": 5
-        },
-        {
-          "score": "0-2",
-          "prob": 4
-        },
-        {
-          "score": "2-3",
-          "prob": 4
-        }
-      ],
-      "prob_over_25_modele": 70,
-      "prob_btts_modele": 69,
-      "football_data_enriched": true,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Wieczysta Cracovie",
-          "cote": 2.4,
-          "edge": 1.176,
-          "stars": 4,
-          "is_primary": true
-        }
-      ],
-      "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
-      },
-      "display_badges": [
-        "Double chance 12",
-        "BTTS Oui",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 77,
-          "edge": 0.0,
-          "score": 77.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 77% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 70,
-          "edge": 0.0,
-          "score": 70.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "oui",
-          "label": "BTTS Oui",
-          "prob_pct": 69,
-          "edge": 0.0,
-          "score": 69.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Wieczysta Cracovie",
-          "cote": 2.4,
-          "prob_pct": 49,
-          "edge": 1.176,
-          "score": 0.2414,
-          "tier": "excellent",
-          "raison": "Proba 49% × cote 2.40 → edge 1.18 — bon équilibre proba/rendement",
-          "stars": 4
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 77,
-        "edge": 0.0,
-        "score": 77.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 77% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Double chance 12",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
-      "is_opportunite": true
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "1-2",
-        "prob": 8
-      },
-      {
-        "score": "0-1",
-        "prob": 5
-      },
-      {
-        "score": "1-3",
-        "prob": 5
-      },
-      {
-        "score": "0-2",
-        "prob": 4
-      },
-      {
-        "score": "2-3",
-        "prob": 4
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 2.35,
-      "N": 3.2,
-      "2": 2.4
-    },
-    "probabilites": {
-      "1": 28,
-      "N": 23,
-      "2": 49
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
-    "velora_pick_1n2": "2"
-  },
-  {
-    "id_match": "72662772",
-    "date_match": "24/07/2026 à 18:00",
-    "match_start_ts": 1784908800,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "Šiauliai",
-    "equipe_exterieur": "Hegelmann",
-    "meta_match": {
-      "competition": {
-        "name": "Lituanie — A Lyga",
-        "type": "other",
-        "round": "J13",
-        "stakes_tier": "medium",
-        "category_id": "160",
-        "tournament_id": "1260"
-      }
-    },
-    "confidence": {
-      "velora_score": 43.8,
-      "indice_velora": 2,
-      "base_confidence": 0.438,
-      "adjusted_confidence": 0.438,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 2.3,
-        "N": 3.2,
-        "2": 2.3
-      },
-      "probabilites": {
-        "1": 35,
-        "N": 27,
-        "2": 38
-      },
-      "probabilites_marche": {
-        "1": 37,
-        "N": 26,
-        "2": 37
-      },
-      "pronostic_1n2": "N",
-      "pronostic_label": "Match nul",
-      "confiance_niveau": "moyenne",
-      "line_signal": "stable",
-      "poisson_lambdas": {
-        "home": 1.811,
-        "away": 1.811
-      },
-      "top_scores_modele": [
-        {
-          "score": "1-1",
-          "prob": 9
-        },
-        {
-          "score": "2-2",
-          "prob": 7
-        },
-        {
-          "score": "0-0",
-          "prob": 3
-        },
-        {
-          "score": "3-3",
-          "prob": 3
-        },
-        {
-          "score": "4-4",
-          "prob": 1
-        }
-      ],
-      "prob_over_25_modele": 70,
-      "prob_btts_modele": 70,
-      "football_data_enriched": false,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [],
-      "display_badges": [
-        "Double chance 12",
-        "BTTS Oui",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 73,
-          "edge": 0.0,
-          "score": 73.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 73% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "oui",
-          "label": "BTTS Oui",
-          "prob_pct": 70,
-          "edge": 0.0,
-          "score": 70.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 70,
-          "edge": 0.0,
-          "score": 70.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 73,
-        "edge": 0.0,
-        "score": 73.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 73% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Double chance 12",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
-      "is_opportunite": false
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "1-1",
-        "prob": 9
-      },
-      {
-        "score": "2-2",
-        "prob": 7
-      },
-      {
-        "score": "0-0",
-        "prob": 3
-      },
-      {
-        "score": "3-3",
-        "prob": 3
-      },
-      {
-        "score": "4-4",
-        "prob": 1
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 2.3,
-      "N": 3.2,
-      "2": 2.3
-    },
-    "probabilites": {
-      "1": 35,
-      "N": 27,
-      "2": 38
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
-    "velora_pick_1n2": "N"
-  },
-  {
     "id_match": "67126658",
     "date_match": "24/07/2026 à 19:00",
     "match_start_ts": 1784912400,
@@ -1010,7 +146,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Vasteras SK",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -1047,21 +183,6 @@
         "prob": 4
       }
     ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 1.44,
-      "N": 4.0,
-      "2": 4.6
-    },
-    "probabilites": {
-      "1": 61,
-      "N": 24,
-      "2": 15
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 1X",
     "velora_pick_1n2": "1"
   },
   {
@@ -1154,10 +275,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Odense",
+        "cote": 3.35,
+        "conseil_short": "🔥 Value Bet — Victoire Odense @ 3.35"
       },
       "display_badges": [
         "Double chance 12",
@@ -1239,10 +361,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Odense",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -1277,21 +399,6 @@
         "prob": 3
       }
     ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 1.78,
-      "N": 3.4,
-      "2": 3.35
-    },
-    "probabilites": {
-      "1": 42,
-      "N": 25,
-      "2": 33
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
     "velora_pick_1n2": "2"
   },
   {
@@ -1441,7 +548,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Nyiregyhaza",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -1635,7 +742,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -1771,10 +878,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Legia Varsovie",
+        "cote": 2.25,
+        "conseil_short": "🔥 Value Bet — Victoire Legia Varsovie @ 2.25"
       },
       "display_badges": [
         "Double chance 12",
@@ -1856,10 +964,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Legia Varsovie",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -2001,10 +1109,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire FC Petrolul Ploiesti",
+        "cote": 3.05,
+        "conseil_short": "🔥 Value Bet — Victoire FC Petrolul Ploiesti @ 3.05"
       },
       "display_badges": [
         "Double chance 12",
@@ -2086,10 +1195,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire FC Petrolul Ploiesti",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -2288,7 +1397,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire 2 de Mayo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -2490,7 +1599,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire St Patrick's",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -2666,7 +1775,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Gimnasia de Mendoza",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -2855,7 +1964,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Vikingur Reykjavik",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -3052,7 +2161,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Victoire Cerro Porteno",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -3193,10 +2302,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Everton",
+        "cote": 2.45,
+        "conseil_short": "🔥 Value Bet — Victoire Everton @ 2.45"
       },
       "display_badges": [
         "Double chance 12",
@@ -3278,10 +2388,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Everton",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -3480,7 +2590,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire HFX Wanderers",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -3623,10 +2733,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Gimnasia La Plata",
+        "cote": 4.2,
+        "conseil_short": "🔥 Value Bet — Victoire Gimnasia La Plata @ 4.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -3708,10 +2819,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Gimnasia La Plata",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -3860,10 +2971,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Instituto AC Cordoba",
+        "cote": 3.35,
+        "conseil_short": "🔥 Value Bet — Victoire Instituto AC Cordoba @ 3.35"
       },
       "display_badges": [
         "Double chance 12"
@@ -3921,10 +3033,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Instituto AC Cordoba",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -4123,7 +3235,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Llaneros FC",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -4266,10 +3378,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Banfield",
+        "cote": 4.1,
+        "conseil_short": "🔥 Value Bet — Victoire Banfield @ 4.10"
       },
       "display_badges": [
         "Double chance 12",
@@ -4351,10 +3464,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Banfield",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -4552,7 +3665,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Club Atletico Platense",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -4754,7 +3867,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Colo Colo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -4955,7 +4068,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Deportivo Cali",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -5156,7 +4269,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Cavalry",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -5357,7 +4470,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Club América",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -5394,6 +4507,21 @@
         "prob": 5
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 4.0,
+      "N": 3.5,
+      "2": 1.6
+    },
+    "probabilites": {
+      "1": 17,
+      "N": 25,
+      "2": 58
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance X2",
     "velora_pick_1n2": "2"
   },
   {
@@ -5543,10 +4671,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire Club Tijuana",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -5581,6 +4708,21 @@
         "prob": 5
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 1.9,
+      "N": 3.4,
+      "2": 3.0
+    },
+    "probabilites": {
+      "1": 56,
+      "N": 21,
+      "2": 23
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance 12",
     "velora_pick_1n2": "1"
   },
   {
@@ -5673,10 +4815,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Tianjin Tigers",
+        "cote": 2.3,
+        "conseil_short": "🔥 Value Bet — Victoire Tianjin Tigers @ 2.30"
       },
       "display_badges": [
         "Double chance 12",
@@ -5758,10 +4901,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Tianjin Tigers",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -5796,6 +4939,21 @@
         "prob": 3
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 2.45,
+      "N": 3.1,
+      "2": 2.3
+    },
+    "probabilites": {
+      "1": 28,
+      "N": 24,
+      "2": 48
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Plus de 2.5 buts",
     "velora_pick_1n2": "2"
   },
   {
@@ -5945,7 +5103,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Daejeon Citizen",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -5982,6 +5140,21 @@
         "prob": 4
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 2.65,
+      "N": 3.1,
+      "2": 2.15
+    },
+    "probabilites": {
+      "1": 27,
+      "N": 27,
+      "2": 46
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance X2",
     "velora_pick_1n2": "2"
   },
   {
@@ -6131,7 +5304,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -6169,12 +5342,22 @@
         "prob": 1
       }
     ],
-    "velora_pick_1n2": "N",
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 2.75,
+      "N": 2.9,
+      "2": 2.2
+    },
     "probabilites": {
       "1": 34,
       "N": 25,
       "2": 41
-    }
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Plus de 2.5 buts",
+    "velora_pick_1n2": "N"
   },
   {
     "id_match": "68995270",
@@ -6266,10 +5449,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Qingdao West Coast",
+        "cote": 2.95,
+        "conseil_short": "🔥 Value Bet — Victoire Qingdao West Coast @ 2.95"
       },
       "display_badges": [
         "Double chance 12",
@@ -6351,10 +5535,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Qingdao West Coast",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -6389,6 +5573,21 @@
         "prob": 3
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 1.92,
+      "N": 3.35,
+      "2": 2.95
+    },
+    "probabilites": {
+      "1": 36,
+      "N": 26,
+      "2": 38
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance 12",
     "velora_pick_1n2": "2"
   },
   {
@@ -6530,7 +5729,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Victoire Shanghai Shenhua",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -6652,10 +5851,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Chongqing Tonglianglong",
+        "cote": 2.8,
+        "conseil_short": "🔥 Value Bet — Victoire Chongqing Tonglianglong @ 2.80"
       },
       "display_badges": [
         "Double chance 12",
@@ -6737,10 +5937,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Chongqing Tonglianglong",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -6924,7 +6124,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Jagiellonia Białystok",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -7110,7 +6310,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Djurgardens",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -7296,7 +6496,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire AC Oulu",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -7482,10 +6682,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Kristiansund",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -7669,7 +6868,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire KuPS",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -7798,10 +6997,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Corvinul Hunedoara",
+        "cote": 3.05,
+        "conseil_short": "🔥 Value Bet — Victoire Corvinul Hunedoara @ 3.05"
       },
       "display_badges": [
         "Double chance 12",
@@ -7883,10 +7083,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Corvinul Hunedoara",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -8070,10 +7270,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Viktoria Plzen",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -8257,7 +7456,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Teplice",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -8386,10 +7585,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Zlín",
+        "cote": 2.7,
+        "conseil_short": "🔥 Value Bet — Victoire Zlín @ 2.70"
       },
       "display_badges": [
         "Double chance 12",
@@ -8471,10 +7671,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Zlín",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -8658,7 +7858,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Kalmar",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -8805,10 +8005,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Śląsk Wrocław",
+        "cote": 3.7,
+        "conseil_short": "🔥 Value Bet — Victoire Śląsk Wrocław @ 3.70"
       },
       "display_badges": [
         "Double chance 12",
@@ -8890,10 +8091,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Śląsk Wrocław",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -9077,10 +8278,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Radnički Niš",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -9264,10 +8464,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Galway United",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -9451,10 +8650,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Aarhus GF",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -9614,7 +8812,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire FC CSKA 1948",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -9800,7 +8998,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -9930,10 +9128,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Skalica",
+        "cote": 4.5,
+        "conseil_short": "🔥 Value Bet — Victoire Skalica @ 4.50"
       },
       "display_badges": [
         "Double chance 12",
@@ -10015,10 +9214,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Skalica",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -10202,10 +9401,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Servette FC",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -10389,7 +9587,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -10519,10 +9717,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Mura",
+        "cote": 3.0,
+        "conseil_short": "🔥 Value Bet — Victoire Mura @ 3.00"
       },
       "display_badges": [
         "Double chance 12",
@@ -10604,10 +9803,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Mura",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -10791,10 +9990,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -10921,10 +10119,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire CS Universitatea Craiova",
+        "cote": 2.3,
+        "conseil_short": "🔥 Value Bet — Victoire CS Universitatea Craiova @ 2.30"
       },
       "display_badges": [
         "Double chance 12",
@@ -11006,10 +10205,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire CS Universitatea Craiova",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -11135,10 +10334,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_x2",
-        "pick": "x2",
-        "label": "Double chance X2",
-        "conseil_short": "🎯 Double chance X2"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Tigre",
+        "cote": 1.92,
+        "conseil_short": "🔥 Value Bet — Victoire Tigre @ 1.92"
       },
       "display_badges": [
         "Double chance X2",
@@ -11220,10 +10420,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Tigre",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_x2",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -11407,7 +10607,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire IMT",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -11536,10 +10736,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Radnik Surdulica",
+        "cote": 3.2,
+        "conseil_short": "🔥 Value Bet — Victoire Radnik Surdulica @ 3.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -11621,10 +10822,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Radnik Surdulica",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -11751,10 +10952,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Zbrojovka Brno",
+        "cote": 4.1,
+        "conseil_short": "🔥 Value Bet — Victoire Zbrojovka Brno @ 4.10"
       },
       "display_badges": [
         "Double chance 12",
@@ -11836,10 +11038,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Zbrojovka Brno",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -12023,7 +11225,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Levski Sofia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -12226,7 +11428,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Lech Poznan",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -12355,10 +11557,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Zemplin Michalovce",
+        "cote": 3.45,
+        "conseil_short": "🔥 Value Bet — Victoire Zemplin Michalovce @ 3.45"
       },
       "display_badges": [
         "Double chance 12",
@@ -12440,10 +11643,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Zemplin Michalovce",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -12627,10 +11830,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Lucerne",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -12814,7 +12016,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Drogheda",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -13000,7 +12202,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire CD Recoleta",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -13186,7 +12388,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Coquimbo Unido",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -13372,7 +12574,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Atletico Nacional",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -13500,10 +12702,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_1x",
-        "pick": "1x",
-        "label": "Double chance 1X",
-        "conseil_short": "🎯 Double chance 1X"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Newell's Old Boys",
+        "cote": 2.45,
+        "conseil_short": "🔥 Value Bet — Victoire Newell's Old Boys @ 2.45"
       },
       "display_badges": [
         "Double chance 1X",
@@ -13585,10 +12788,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Newell's Old Boys",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_1x",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -13772,7 +12975,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Independiente Medellin",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -13901,10 +13104,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_x2",
-        "pick": "x2",
-        "label": "Double chance X2",
-        "conseil_short": "🎯 Double chance X2"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Nacional Asuncion",
+        "cote": 2.2,
+        "conseil_short": "🔥 Value Bet — Victoire Nacional Asuncion @ 2.20"
       },
       "display_badges": [
         "Double chance X2"
@@ -13962,10 +13166,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Nacional Asuncion",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_x2",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -14149,7 +13353,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Santos",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -14335,7 +13539,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Athletico Paranaense",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -14521,7 +13725,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Huachipato",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -14706,7 +13910,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire River Plate",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -14891,10 +14095,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire New York Red Bulls",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -15021,10 +14224,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire FC Juarez",
+        "cote": 4.8,
+        "conseil_short": "🔥 Value Bet — Victoire FC Juarez @ 4.80"
       },
       "display_badges": [
         "Double chance 12",
@@ -15106,10 +14310,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire FC Juarez",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -15293,7 +14497,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -15421,10 +14625,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire FC Cincinnati",
+        "cote": 3.4,
+        "conseil_short": "🔥 Value Bet — Victoire FC Cincinnati @ 3.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -15506,10 +14711,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire FC Cincinnati",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -15692,10 +14897,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire DC United",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -15878,10 +15082,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire Inter Miami CF",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -16064,7 +15267,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "🔥 Victoire New England Revolution",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -16193,10 +15396,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Chicago Fire",
+        "cote": 2.4,
+        "conseil_short": "🔥 Value Bet — Victoire Chicago Fire @ 2.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -16278,10 +15482,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Chicago Fire",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -16464,7 +15668,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Nashville SC",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -16592,10 +15796,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Seattle Sounders",
+        "cote": 2.65,
+        "conseil_short": "🔥 Value Bet — Victoire Seattle Sounders @ 2.65"
       },
       "display_badges": [
         "Double chance 12",
@@ -16677,10 +15882,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Seattle Sounders",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -16815,10 +16020,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "moins",
-        "label": "Moins de 2.5 buts",
-        "conseil_short": "🎯 Moins de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Mirassol",
+        "cote": 3.15,
+        "conseil_short": "🔥 Value Bet — Victoire Mirassol @ 3.15"
       },
       "display_badges": [
         "Double chance X2",
@@ -16900,10 +16106,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Victoire Mirassol",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -17092,7 +16298,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Universidad Catolica",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -17277,7 +16483,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Houston Dynamo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -17462,10 +16668,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Vancouver",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -17648,7 +16853,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire St. Louis City",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -17833,7 +17038,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Lanus",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -17962,10 +17167,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Junior De Barranquilla",
+        "cote": 3.4,
+        "conseil_short": "🔥 Value Bet — Victoire Junior De Barranquilla @ 3.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -18047,10 +17253,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Junior De Barranquilla",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -18176,10 +17382,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire FC Dallas",
+        "cote": 2.75,
+        "conseil_short": "🔥 Value Bet — Victoire FC Dallas @ 2.75"
       },
       "display_badges": [
         "Double chance 12",
@@ -18261,10 +17468,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire FC Dallas",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -18447,7 +17654,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Los Angeles FC",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -18575,10 +17782,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Real Salt Lake",
+        "cote": 2.4,
+        "conseil_short": "🔥 Value Bet — Victoire Real Salt Lake @ 2.40"
       },
       "display_badges": [
         "Double chance 12"
@@ -18636,10 +17844,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Real Salt Lake",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -18822,7 +18030,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire San Jose Earthquakes",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -19020,10 +18228,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Atletico San Luis",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -19150,10 +18357,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Atlas",
+        "cote": 2.4,
+        "conseil_short": "🔥 Value Bet — Victoire Atlas @ 2.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -19235,10 +18443,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Atlas",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -19422,7 +18630,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Gangwon FC",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -19608,7 +18816,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Jeju United",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -19794,7 +19002,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Incheon United",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -19980,10 +19188,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire FC Séoul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -20167,7 +19374,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Yunnan Yukun",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -20354,10 +19561,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Shandong Taishan",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -20541,7 +19747,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -20671,10 +19877,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Lahti",
+        "cote": 2.65,
+        "conseil_short": "🔥 Value Bet — Victoire Lahti @ 2.65"
       },
       "display_badges": [
         "Double chance 12",
@@ -20756,10 +19963,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Lahti",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -20943,7 +20150,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Inter Turku",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -21129,7 +20336,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Hammarby IF",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -21315,7 +20522,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire IK Sirius",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -21501,7 +20708,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Riga FC",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -21630,10 +20837,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Dalian Yingbo",
+        "cote": 3.1,
+        "conseil_short": "🔥 Value Bet — Victoire Dalian Yingbo @ 3.10"
       },
       "display_badges": [
         "Double chance 12",
@@ -21715,10 +20923,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire Dalian Yingbo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -21902,7 +21110,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Midtjylland",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -22031,10 +21239,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Sion",
+        "cote": 3.0,
+        "conseil_short": "🔥 Value Bet — Victoire Sion @ 3.00"
       },
       "display_badges": [
         "Double chance 12",
@@ -22116,10 +21325,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Sion",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -22303,7 +21512,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Brann",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -22433,10 +21642,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Wisla Plock",
+        "cote": 4.4,
+        "conseil_short": "🔥 Value Bet — Victoire Wisla Plock @ 4.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -22518,10 +21728,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Wisla Plock",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -22705,7 +21915,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Slavia Prague",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -22834,10 +22044,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire SC Vasas Budapest",
+        "cote": 3.9,
+        "conseil_short": "🔥 Value Bet — Victoire SC Vasas Budapest @ 3.90"
       },
       "display_badges": [
         "Double chance 12",
@@ -22919,10 +22130,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire SC Vasas Budapest",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -23106,7 +22317,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire HJK Helsinki",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -23292,7 +22503,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Copenhague",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -23478,7 +22689,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire GAIS Göteborg",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -23664,7 +22875,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Malmö",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -23850,7 +23061,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Saint-Gall",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24032,7 +23243,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24214,7 +23425,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire FC Universitatea Cluj",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24400,7 +23611,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Molde",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24586,7 +23797,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Bodø/Glimt",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24772,7 +23983,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Sarpsborg",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -24901,10 +24112,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Košice",
+        "cote": 3.45,
+        "conseil_short": "🔥 Value Bet — Victoire Košice @ 3.45"
       },
       "display_badges": [
         "Double chance 12",
@@ -24986,10 +24198,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Košice",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -25116,10 +24328,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire DAC Dunajská Streda",
+        "cote": 2.25,
+        "conseil_short": "🔥 Value Bet — Victoire DAC Dunajská Streda @ 2.25"
       },
       "display_badges": [
         "Double chance 12",
@@ -25201,10 +24414,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire DAC Dunajská Streda",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -25388,7 +24601,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire FK Liepaja",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -25574,7 +24787,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Widzew Łódź",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -25703,10 +24916,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Sigma Olomouc",
+        "cote": 2.65,
+        "conseil_short": "🔥 Value Bet — Victoire Sigma Olomouc @ 2.65"
       },
       "display_badges": [
         "Double chance 12",
@@ -25788,10 +25002,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Sigma Olomouc",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -25918,10 +25132,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Džiugas",
+        "cote": 2.95,
+        "conseil_short": "🔥 Value Bet — Victoire Džiugas @ 2.95"
       },
       "display_badges": [
         "Double chance 12",
@@ -26003,10 +25218,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Džiugas",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -26190,10 +25405,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire FK Auda",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -26320,10 +25534,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire AC Horsens",
+        "cote": 3.2,
+        "conseil_short": "🔥 Value Bet — Victoire AC Horsens @ 3.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -26405,10 +25620,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire AC Horsens",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -26592,7 +25807,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Cherno More",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -26774,10 +25989,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -26957,7 +26171,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Slovan Bratislava",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -27143,7 +26357,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Étoile Rouge Belgrade",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -27329,7 +26543,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Viking",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -27515,7 +26729,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire FCSB",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -27701,7 +26915,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Atlético Ottawa",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -27887,7 +27101,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -28073,7 +27287,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Ferencvaros",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -28258,7 +27472,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Independiente Rivadavia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -28388,10 +27602,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire FK Septemvri Sofia",
+        "cote": 4.2,
+        "conseil_short": "🔥 Value Bet — Victoire FK Septemvri Sofia @ 4.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -28473,10 +27688,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire FK Septemvri Sofia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -28660,10 +27875,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire GKS Katowice",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -28847,7 +28061,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Koper",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -29033,10 +28247,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -29220,7 +28433,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Club Olimpia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -29390,10 +28603,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -29561,7 +28773,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Bahia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -29747,7 +28959,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Partizan Belgrade",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -29933,7 +29145,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire America De Cali",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -30119,10 +29331,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -30306,7 +29517,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Fram Reykjavik",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -30435,10 +29646,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Stjarnan",
+        "cote": 2.45,
+        "conseil_short": "🔥 Value Bet — Victoire Stjarnan @ 2.45"
       },
       "display_badges": [
         "Double chance 12",
@@ -30520,10 +29732,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Stjarnan",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -30649,10 +29861,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Independiente",
+        "cote": 3.3,
+        "conseil_short": "🔥 Value Bet — Victoire Independiente @ 3.30"
       },
       "display_badges": [
         "Double chance 12",
@@ -30734,10 +29947,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Independiente",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -30921,7 +30134,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Forge",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -31079,10 +30292,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -31255,7 +30467,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Guarani Asuncion",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -31441,7 +30653,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Flamengo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -31627,7 +30839,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Bragantino SP",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -31756,10 +30968,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Fluminense",
+        "cote": 2.4,
+        "conseil_short": "🔥 Value Bet — Victoire Fluminense @ 2.40"
       },
       "display_badges": [
         "Double chance 12",
@@ -31829,10 +31042,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "🔥 Victoire Fluminense",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -32016,10 +31229,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Universidad De Chile",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -32203,7 +31415,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Palmeiras",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -32332,10 +31544,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Vitoria",
+        "cote": 2.85,
+        "conseil_short": "🔥 Value Bet — Victoire Vitoria @ 2.85"
       },
       "display_badges": [
         "Double chance 12",
@@ -32417,10 +31630,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Vitoria",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -32603,7 +31816,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Victoire Boca Juniors",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -32790,7 +32003,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Monterrey",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -32968,7 +32181,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Match nul",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -33090,10 +32303,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire LDU Quito",
+        "cote": 2.55,
+        "conseil_short": "🔥 Value Bet — Victoire LDU Quito @ 2.55"
       },
       "display_badges": [
         "Double chance 12",
@@ -33163,10 +32377,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire LDU Quito",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -33350,10 +32564,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire O'Higgins",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -33542,7 +32755,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "🔥 Victoire Pachuca",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -33728,7 +32941,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Once Caldas",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -33890,7 +33103,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Value Bet Détecté : Ext",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -34019,10 +33232,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Voluntari",
+        "cote": 4.2,
+        "conseil_short": "🔥 Value Bet — Victoire Voluntari @ 4.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -34104,10 +33318,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Voluntari",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -34291,7 +33505,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Privilégier le +2.5 buts",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -34477,7 +33691,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Grobinas SC",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -34664,7 +33878,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "🔥 Victoire Ludogorets",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -34849,7 +34063,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Mlada Boleslav",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -35035,7 +34249,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Rosenborg",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -35165,10 +34379,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire AIK Stockholm",
+        "cote": 3.2,
+        "conseil_short": "🔥 Value Bet — Victoire AIK Stockholm @ 3.20"
       },
       "display_badges": [
         "Double chance 12",
@@ -35250,10 +34465,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire AIK Stockholm",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -35437,7 +34652,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Randers",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -35623,10 +34838,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Zaglebie Lubin",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -35810,7 +35024,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire MTK Budapest",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -35997,7 +35211,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Breidablik Kopavogur",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -36126,10 +35340,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Botev Plovdiv",
+        "cote": 4.5,
+        "conseil_short": "🔥 Value Bet — Victoire Botev Plovdiv @ 4.50"
       },
       "display_badges": [
         "Double chance 12"
@@ -36187,10 +35402,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Botev Plovdiv",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -36374,7 +35589,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Rapid Bucarest",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -36556,7 +35771,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -36738,7 +35953,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Tigre",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -36867,10 +36082,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Gimnasia de Mendoza",
+        "cote": 3.35,
+        "conseil_short": "🔥 Value Bet — Victoire Gimnasia de Mendoza @ 3.35"
       },
       "display_badges": [
         "Double chance 12",
@@ -36952,10 +36168,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Gimnasia de Mendoza",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -37139,7 +36355,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Banfield",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -37325,7 +36541,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Argentinos Juniors",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -37454,10 +36670,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Racing Club",
+        "cote": 3.1,
+        "conseil_short": "🔥 Value Bet — Victoire Racing Club @ 3.10"
       },
       "display_badges": [
         "Double chance 12",
@@ -37539,10 +36756,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Racing Club",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -37726,7 +36943,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Santos",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -37911,7 +37128,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Lech Poznan",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -38096,10 +37313,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -38287,7 +37503,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Botafogo",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -38472,7 +37688,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Moins de 2.5 buts",
+      "conseil": "Victoire Vasco da Gama",
       "tendance_buts": "Match Tactique",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -38658,7 +37874,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Fenerbahce",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -38786,10 +38002,11 @@
         }
       ],
       "primary_pick": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "conseil_short": "🎯 Double chance 12"
+        "market": "1n2",
+        "pick": "2",
+        "label": "Victoire Deportivo Riestra",
+        "cote": 3.45,
+        "conseil_short": "🔥 Value Bet — Victoire Deportivo Riestra @ 3.45"
       },
       "display_badges": [
         "Double chance 12"
@@ -38847,10 +38064,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Deportivo Riestra",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -38976,10 +38193,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Gimnasia La Plata",
+        "cote": 3.35,
+        "conseil_short": "🔥 Value Bet — Victoire Gimnasia La Plata @ 3.35"
       },
       "display_badges": [
         "Double chance 12",
@@ -39061,10 +38279,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Gimnasia La Plata",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -39223,7 +38441,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Fluminense",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -39408,7 +38626,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Instituto AC Cordoba",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -39589,7 +38807,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Match nul",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -39718,10 +38936,11 @@
         }
       ],
       "primary_pick": {
-        "market": "over_25",
-        "pick": "plus",
-        "label": "Plus de 2.5 buts",
-        "conseil_short": "🎯 Plus de 2.5 buts"
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire Independiente Rivadavia",
+        "cote": 2.0,
+        "conseil_short": "🔥 Value Bet — Victoire Independiente Rivadavia @ 2.00"
       },
       "display_badges": [
         "Double chance 1X",
@@ -39803,10 +39022,10 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Independiente Rivadavia",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "over_25",
+      "opportunite_type": "1n2",
       "is_opportunite": true
     },
     "marches_supplementaires": {
@@ -39989,7 +39208,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 1X",
+      "conseil": "Victoire Independiente",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -40174,7 +39393,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance X2",
+      "conseil": "Victoire Atletico Tucuman",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -40359,7 +39578,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Plus de 2.5 buts",
+      "conseil": "Victoire Argeș Pitești",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "opportunite_type": "over_25",
@@ -40545,10 +39764,9 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Double chance 12",
+      "conseil": "Victoire Nomme United",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
-      "opportunite_type": "dc_12",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -40580,6 +39798,406 @@
       },
       {
         "score": "5-2",
+        "prob": 3
+      }
+    ],
+    "velora_pick_1n2": "1"
+  },
+  {
+    "id_match": "72345436",
+    "date_match": "31/07/2026 à 19:30",
+    "match_start_ts": 1785519000,
+    "match_status": "PREMATCH",
+    "equipe_domicile": "LASK",
+    "equipe_exterieur": "Grazer AK",
+    "meta_match": {
+      "competition": {
+        "name": "Autriche — Bundesliga",
+        "type": "league",
+        "round": "J1",
+        "stakes_tier": "medium",
+        "category_id": "17",
+        "tournament_id": "29"
+      }
+    },
+    "confidence": {
+      "velora_score": 41.6,
+      "indice_velora": 2,
+      "base_confidence": 0.416,
+      "adjusted_confidence": 0.416,
+      "modifiers": []
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 1.5,
+        "N": 3.5,
+        "2": 4.2
+      },
+      "probabilites": {
+        "1": 58,
+        "N": 24,
+        "2": 18
+      },
+      "probabilites_marche": {
+        "1": 56,
+        "N": 24,
+        "2": 20
+      },
+      "pronostic_1n2": "1",
+      "pronostic_label": "Victoire LASK",
+      "confiance_niveau": "moyenne",
+      "poisson_lambdas": {
+        "home": 2.315,
+        "away": 1.383
+      },
+      "top_scores_modele": [
+        {
+          "score": "2-1",
+          "prob": 9
+        },
+        {
+          "score": "3-1",
+          "prob": 7
+        },
+        {
+          "score": "2-0",
+          "prob": 7
+        },
+        {
+          "score": "1-0",
+          "prob": 6
+        },
+        {
+          "score": "3-0",
+          "prob": 5
+        }
+      ],
+      "prob_over_25_modele": 70,
+      "prob_btts_modele": 67,
+      "football_data_enriched": true,
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [],
+      "display_badges": [
+        "Double chance 1X",
+        "BTTS Oui",
+        "Plus de 2.5 buts"
+      ],
+      "conseils_intelligents": [
+        {
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "prob_pct": 82,
+          "edge": 0.0,
+          "score": 82.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 82% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "over_25",
+          "pick": "plus",
+          "label": "Plus de 2.5 buts",
+          "prob_pct": 70,
+          "edge": 0.0,
+          "score": 70.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "btts",
+          "pick": "oui",
+          "label": "BTTS Oui",
+          "prob_pct": 67,
+          "edge": 0.0,
+          "score": 67.0,
+          "tier": "bon",
+          "raison": "Signal modèle Velora — 67% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        }
+      ],
+      "meilleur_conseil": {
+        "market": "dc_1x",
+        "pick": "1x",
+        "label": "Double chance 1X",
+        "prob_pct": 82,
+        "edge": 0.0,
+        "score": 82.0,
+        "tier": "excellent",
+        "raison": "Signal modèle Velora — 82% (cote Winamax absente sur ce marché)",
+        "stars": 3
+      }
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "Victoire LASK",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "is_opportunite": false
+    },
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "top_scores": [
+      {
+        "score": "2-1",
+        "prob": 9
+      },
+      {
+        "score": "3-1",
+        "prob": 7
+      },
+      {
+        "score": "2-0",
+        "prob": 7
+      },
+      {
+        "score": "1-0",
+        "prob": 6
+      },
+      {
+        "score": "3-0",
+        "prob": 5
+      }
+    ],
+    "velora_pick_1n2": "1"
+  },
+  {
+    "id_match": "72387898",
+    "date_match": "31/07/2026 à 20:30",
+    "match_start_ts": 1785522600,
+    "match_status": "PREMATCH",
+    "equipe_domicile": "SC Otelul Galati",
+    "equipe_exterieur": "Dinamo Bucarest",
+    "meta_match": {
+      "competition": {
+        "name": "Roumanie — SuperLiga",
+        "type": "league",
+        "round": "J3",
+        "stakes_tier": "medium",
+        "category_id": "77",
+        "tournament_id": "219"
+      }
+    },
+    "confidence": {
+      "velora_score": 78.0,
+      "indice_velora": 4,
+      "base_confidence": 0.78,
+      "adjusted_confidence": 0.78,
+      "modifiers": []
+    },
+    "pro_alerts": [],
+    "free_analysis": {
+      "cotes_1n2": {
+        "1": 2.95,
+        "N": 2.85,
+        "2": 2.0
+      },
+      "probabilites": {
+        "1": 46,
+        "N": 21,
+        "2": 33
+      },
+      "probabilites_marche": {
+        "1": 28,
+        "N": 29,
+        "2": 43
+      },
+      "pronostic_1n2": "1",
+      "pronostic_label": "🔥 Victoire SC Otelul Galati",
+      "confiance_niveau": "haute",
+      "poisson_lambdas": {
+        "home": 1.706,
+        "away": 2.114
+      },
+      "top_scores_modele": [
+        {
+          "score": "2-1",
+          "prob": 7
+        },
+        {
+          "score": "3-2",
+          "prob": 4
+        },
+        {
+          "score": "3-1",
+          "prob": 4
+        },
+        {
+          "score": "1-0",
+          "prob": 4
+        },
+        {
+          "score": "2-0",
+          "prob": 3
+        }
+      ],
+      "prob_over_25_modele": 73,
+      "prob_btts_modele": 71,
+      "football_data_enriched": true,
+      "markets_raw": {
+        "over_under_total": {},
+        "team_goals": {}
+      },
+      "value_bets": [
+        {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire SC Otelul Galati",
+          "cote": 2.95,
+          "edge": 1.357,
+          "stars": 5,
+          "is_primary": true
+        }
+      ],
+      "primary_pick": {
+        "market": "1n2",
+        "pick": "1",
+        "label": "Victoire SC Otelul Galati",
+        "cote": 2.95,
+        "conseil_short": "🔥 Value Bet — Victoire SC Otelul Galati @ 2.95"
+      },
+      "display_badges": [
+        "Double chance 12",
+        "BTTS Oui",
+        "Plus de 2.5 buts"
+      ],
+      "conseils_intelligents": [
+        {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "prob_pct": 79,
+          "edge": 0.0,
+          "score": 79.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 79% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "over_25",
+          "pick": "plus",
+          "label": "Plus de 2.5 buts",
+          "prob_pct": 73,
+          "edge": 0.0,
+          "score": 73.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 73% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "btts",
+          "pick": "oui",
+          "label": "BTTS Oui",
+          "prob_pct": 71,
+          "edge": 0.0,
+          "score": 71.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 71% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "1n2",
+          "pick": "1",
+          "label": "Victoire SC Otelul Galati",
+          "cote": 2.95,
+          "prob_pct": 46,
+          "edge": 1.357,
+          "score": 0.4997,
+          "tier": "excellent",
+          "raison": "Proba 46% × cote 2.95 → edge 1.36 — bon équilibre proba/rendement",
+          "stars": 5
+        }
+      ],
+      "meilleur_conseil": {
+        "market": "dc_12",
+        "pick": "12",
+        "label": "Double chance 12",
+        "prob_pct": 79,
+        "edge": 0.0,
+        "score": 79.0,
+        "tier": "excellent",
+        "raison": "Signal modèle Velora — 79% (cote Winamax absente sur ce marché)",
+        "stars": 3
+      }
+    },
+    "premium_analysis": {
+      "score_exact": {
+        "top3": []
+      },
+      "buteur_match": {
+        "top": []
+      },
+      "buteur_mi_temps": {
+        "top": []
+      },
+      "buteur_double": {
+        "top": []
+      },
+      "value_bets": []
+    },
+    "_legacy": {
+      "conseil": "🔥 Victoire SC Otelul Galati",
+      "tendance_buts": "Match Offensif",
+      "marches_supplementaires": {},
+      "opportunite_type": "1n2",
+      "is_opportunite": true
+    },
+    "marches_supplementaires": {
+      "plus_moins_buts": {
+        "1.5": "Indisponible",
+        "2.5": "Indisponible",
+        "3.5": "Indisponible"
+      },
+      "buteur_match": "Indisponible",
+      "buteur_mi_temps": "Indisponible",
+      "buteur_multiple": "Indisponible"
+    },
+    "top_scores": [
+      {
+        "score": "2-1",
+        "prob": 7
+      },
+      {
+        "score": "3-2",
+        "prob": 4
+      },
+      {
+        "score": "3-1",
+        "prob": 4
+      },
+      {
+        "score": "1-0",
+        "prob": 4
+      },
+      {
+        "score": "2-0",
         "prob": 3
       }
     ],
