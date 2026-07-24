@@ -9083,6 +9083,72 @@
                 </div>`;
         }
 
+        function htmlBlocPronosticScoreExact(m, theme = 'foot') {
+            let score = '';
+            let coteHtml = '';
+            let suffix = '';
+            if (theme === 'tennis') {
+                const pse = pronosticScoreExactTennis(m);
+                if (!pse?.score) return '';
+                score = String(pse.score).replace(/-/g, ' - ');
+                const c = fmtCoteTennis(pse.cote);
+                coteHtml = c ? `@ ${c}` : '';
+                suffix = ' · sets Winamax';
+            } else {
+                const winamax = scoresExactCotesWinamax(m);
+                const topBook = winamax[0];
+                const modelRows = scoresAffichablesPourMatch(m);
+                const topModel = Array.isArray(modelRows) ? modelRows[0] : null;
+                if (topBook?.score) {
+                    score = String(topBook.score).replace(/-/g, ' - ');
+                    const c = fmtCoteMarche(topBook.cote);
+                    coteHtml = c != null ? `@ ${c}` : '';
+                    suffix = ' · cote Winamax';
+                } else if (topModel?.score) {
+                    score = String(topModel.score).replace(/-/g, ' - ');
+                    const c = fmtCoteMarche(topModel.cote);
+                    if (c != null) coteHtml = `@ ${c}`;
+                    else if (topModel.prob != null) coteHtml = `(modèle ${topModel.prob}%)`;
+                    suffix = ' · estimation Velora';
+                }
+            }
+            if (!score) return '';
+            const borderCls = theme === 'opp'
+                ? 'border-amber-500/30 bg-amber-500/10'
+                : theme === 'tennis'
+                    ? 'border-lime-500/30 bg-lime-500/10'
+                    : 'border-yellow-500/25 bg-yellow-500/5';
+            const titleCls = theme === 'opp'
+                ? 'text-amber-300/90'
+                : theme === 'tennis'
+                    ? 'text-lime-400/90'
+                    : 'text-yellow-300/90';
+            return `<div class="rounded-xl border ${borderCls} px-4 py-3" role="region" aria-label="Pronostic score exact">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider ${titleCls}">Pronostic score exact</p>
+                    <p class="mt-1.5 text-sm font-extrabold leading-snug text-white sm:text-base">🎲 ${escHtml(score)} ${escHtml(coteHtml)}<span class="text-[11px] font-normal text-gray-500">${escHtml(suffix)}</span></p>
+                </div>`;
+        }
+
+        function pronosticScoreExactTennis(m) {
+            const fa = m?.free_analysis || {};
+            const direct = fa.pronostic_score_exact;
+            if (direct?.score) return direct;
+            const pick = fa.pronostic_vainqueur || fa.meilleur_conseil?.pick || '1';
+            const rows = fa.marches?.score_exact_sets || [];
+            const aligned = rows.filter((s) => {
+                const parts = String(s?.score || '').replace(':', '-').split('-').map((x) => parseInt(x.trim(), 10));
+                if (parts.length !== 2 || parts.some((n) => !Number.isFinite(n))) return false;
+                return String(pick) === '1' ? parts[0] > parts[1] : parts[1] > parts[0];
+            }).sort((a, b) => (Number(a.cote) || 999) - (Number(b.cote) || 999));
+            const top = aligned[0];
+            if (!top?.score) return null;
+            return {
+                score: top.score,
+                cote: top.cote,
+                label: `Score exact ${String(top.score).replace(/-/g, ' ')}`,
+            };
+        }
+
         function htmlBlocPronosticValue(m) {
             const pronostic = libellePronosticCarte(m);
             const valueLabel = libelleValuePickAffichage(m);
@@ -9467,6 +9533,7 @@
             const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
             const conseilsMarches = htmlConseilsIntelligents(m, { scope: 'all', theme: 'foot' });
             const blocsPronosticValue = htmlBlocPronosticValue(m);
+            const blocScoreExact = htmlBlocPronosticScoreExact(m, 'foot');
             const parisSecondaires = htmlBlocParisSecondaires(m);
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
@@ -9500,6 +9567,7 @@
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
                         ${blocsPronosticValue}
+                        ${blocScoreExact}
                         ${parisSecondaires}
                         ${htmlOddsMovement(m)}
                         ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(m.conseil, 'foot')}
@@ -10351,6 +10419,17 @@
                 `<span class="velora-marche-pill">${escHtml(String(s.score || '').replace(/-/g, ' '))} @ ${fmtCoteTennis(s.cote)}</span>`
             ).join('');
 
+            const vi = m.velora_intel || {};
+            const hf = vi.home_form || {};
+            const af = vi.away_form || {};
+            let intelHtml = '';
+            if (fa.winamax_intel_enriched && hf.played && af.played) {
+                const rankBit = vi.home_rank != null && vi.away_rank != null
+                    ? ` · Classement ${vi.home_rank} vs ${vi.away_rank}`
+                    : '';
+                intelHtml = `<p class="mb-2 text-[11px] text-gray-400">Forme Winamax : ${escHtml(j1)} ${hf.wins || 0}V/${hf.losses || 0}D · ${escHtml(j2)} ${af.wins || 0}V/${af.losses || 0}D${rankBit}</p>`;
+            }
+
             return `
                 <article class="glass-card rounded-2xl border border-lime-500/25 bg-lime-950/10 p-4 shadow-lg shadow-black/20 sm:p-5">
                     <header class="mb-3 flex flex-wrap items-start justify-between gap-2">
@@ -10364,11 +10443,13 @@
                             <p><span class="text-gray-500">2</span> <span class="font-bold text-lime-300">${fmtCoteTennis(c['2']) || '—'}</span> <span class="text-gray-600">(${p['2'] || 0}%)</span></p>
                         </div>
                     </header>
+                    ${intelHtml}
                     ${meilleur ? `<div class="mb-3 rounded-lg border border-lime-500/30 bg-lime-500/10 px-3 py-2">
                         <p class="text-[10px] font-bold uppercase tracking-wider text-lime-400/90">Pronostic Velora</p>
                         <p class="text-sm font-semibold text-lime-100">${escHtml(meilleur.label || fa.pronostic_label || '')}</p>
                         ${meilleur.raison ? `<p class="mt-1 text-[11px] text-gray-400">${escHtml(meilleur.raison)}</p>` : ''}
                     </div>` : ''}
+                    ${htmlBlocPronosticScoreExact(m, 'tennis')}
                     ${conseilsHtml ? `<ul class="mb-3 space-y-1">${conseilsHtml}</ul>` : ''}
                     ${ouLine(sets, 'Sets')}
                     ${ouLine(games, 'Jeux')}
