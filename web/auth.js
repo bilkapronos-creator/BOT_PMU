@@ -534,7 +534,7 @@
             if (error) return { ok: false, erreur: formaterErreurAuth(error) };
             session = data.session;
             notifier(session);
-            await chargerProfil();
+            await chargerProfilApresAuth();
             return { ok: true, session };
         });
     }
@@ -554,7 +554,7 @@
             if (data.session) {
                 session = data.session;
                 notifier(session);
-                await chargerProfil();
+                await chargerProfilApresAuth();
                 return { ok: true, session, confirmationEmail: false };
             }
             return {
@@ -686,14 +686,27 @@
             session = sessionData?.session ?? session;
         }
         notifier(session);
-        await chargerProfil();
+        await chargerProfilApresAuth();
         nettoyerHashAuth();
         return { ok: true, session };
     }
 
+    async function chargerProfilApresAuth() {
+        try {
+            await chargerProfil();
+        } catch (err) {
+            console.warn('[Velora Auth] profil après auth :', err);
+        }
+    }
+
     async function signOut() {
         const supabase = getClient();
-        if (!supabase) return { ok: true };
+        if (!supabase) {
+            session = null;
+            reinitialiserEtatInvite();
+            notifier(null);
+            return { ok: true };
+        }
         const { error } = await supabase.auth.signOut();
         if (error) return { ok: false, erreur: formaterErreurAuth(error) };
         session = null;

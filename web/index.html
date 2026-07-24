@@ -3446,6 +3446,13 @@
             localStorage.removeItem(VELORA_PREMIUM_TENNIS_UID_KEY);
         }
 
+        function effacerPassesPremiumLocauxDeconnexion() {
+            localStorage.removeItem(VELORA_PREMIUM_PMU_LS_KEY);
+            localStorage.removeItem(VELORA_PREMIUM_LEGACY_LS_KEY);
+            effacerPassFootLocal();
+            effacerPassTennisLocal();
+        }
+
         /** Pass Foot lié au compte Supabase connecté (évite LS orphelin / autre navigateur). */
         function marquerPassFootLocal(actif = true) {
             const uid = window.VeloraAuth?.getUserId?.();
@@ -4514,6 +4521,29 @@
             }
         }
 
+        function fermerModalAuthSiConnexionReussie() {
+            if (authMode === 'updatePassword') return;
+            const modal = document.getElementById('modalAuth');
+            if (!modal || modal.classList.contains('hidden')) return;
+            fermerModalAuth();
+            authMode = 'login';
+            masquerMessagesAuthModal();
+        }
+
+        async function deconnecterMembreVelora() {
+            const result = await window.VeloraAuth.signOut();
+            if (result?.ok === false) {
+                afficherToastVelora(result.erreur || 'Déconnexion impossible.', 6000, 'error');
+                return;
+            }
+            effacerPassesPremiumLocauxDeconnexion();
+            fermerModalAuth();
+            authMode = 'login';
+            masquerMessagesAuthModal();
+            appliquerStatutPremiumGlobal();
+            appliquerEtatAuth();
+        }
+
         function mettreAJourModalAuthMode() {
             const titre = document.getElementById('modalAuthTitre');
             const sousTitre = document.getElementById('modalAuthSousTitre');
@@ -4716,9 +4746,8 @@
             document.getElementById('btnAuthFromArchives')?.addEventListener('click', () => ouvrirModalAuth('login'));
             document.getElementById('btnAuthClose')?.addEventListener('click', fermerModalAuth);
             document.getElementById('modalAuthBackdrop')?.addEventListener('click', fermerModalAuth);
-            document.getElementById('btnAuthLogout')?.addEventListener('click', async () => {
-                await window.VeloraAuth.signOut();
-                fermerModalAuth();
+            document.getElementById('btnAuthLogout')?.addEventListener('click', () => {
+                deconnecterMembreVelora();
             });
             document.getElementById('btnAuthToggleMode')?.addEventListener('click', () => {
                 authMode = authMode === 'login' ? 'signup' : 'login';
@@ -4862,13 +4891,18 @@
                     return;
                 }
                 fermerModalAuth();
+                authMode = 'login';
+                masquerMessagesAuthModal();
                 appliquerEtatAuth();
                 if (estMembreConnecte()) {
                     afficherSection('archives');
                 }
             });
 
-            window.VeloraAuth.onAuthChange(() => {
+            window.VeloraAuth.onAuthChange((newSession) => {
+                if (newSession?.user?.id) {
+                    fermerModalAuthSiConnexionReussie();
+                }
                 appliquerStatutPremiumGlobal();
                 appliquerEtatAuth();
                 initSupabase();
