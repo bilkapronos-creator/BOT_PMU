@@ -122,3 +122,71 @@ def test_dump_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypa
     os.utime(dump_jour, (recent, recent))
 
     assert run_all._dump_skip_scraper_ci(dump_jour, 6.0) is True
+
+
+def _tennis_doc(kickoff: datetime, home: str = "Joueur A") -> dict:
+    kickoff = kickoff.astimezone(TZ)
+    return {
+        "schema_version": 2,
+        "meta": {
+            "sport": "tennis",
+            "generated_at": datetime.now(tz=TZ).isoformat(),
+            "match_count": 1,
+        },
+        "matchs": [
+            {
+                "id_match": "99",
+                "sport": "tennis",
+                "date_match": kickoff.strftime("%d/%m/%Y à %H:%M"),
+                "match_start_ts": int(kickoff.timestamp()),
+                "equipe_domicile": home,
+                "equipe_exterieur": "Joueur B",
+                "match_status": "PREMATCH",
+            }
+        ],
+    }
+
+
+def test_tennis_ci_frais_exige_journee_pari(tmp_path, monkeypatch):
+    import run_all
+
+    monkeypatch.setattr(run_all, "WEB_ROOT", tmp_path)
+    web_tennis = tmp_path / "api_velora_matchs_tennis.json"
+    now = datetime.now(tz=TZ)
+    hier = now - timedelta(days=1)
+    kick_hier = hier.replace(hour=14, minute=0, second=0, microsecond=0)
+    web_tennis.write_text(
+        json.dumps(_tennis_doc(kick_hier), ensure_ascii=False),
+        encoding="utf-8",
+    )
+    recent = time.time() - 1800
+    os.utime(web_tennis, (recent, recent))
+    monkeypatch.setenv("VELORA_CI_SCRAPER_MAX_AGE_H", "6")
+
+    assert run_all._tennis_ci_donnees_fraiches(6.0) is False
+
+    kick = now.replace(hour=20, minute=0, second=0, microsecond=0)
+    if kick <= now:
+        kick += timedelta(hours=3)
+    web_tennis.write_text(
+        json.dumps(_tennis_doc(kick, home="Aujourd'hui"), ensure_ascii=False),
+        encoding="utf-8",
+    )
+    os.utime(web_tennis, (recent, recent))
+
+    assert run_all._tennis_ci_donnees_fraiches(6.0) is True
+
+
+def test_tennis_json_besoin_regeneration_si_matchs_veille(tmp_path, monkeypatch):
+    import run_all
+
+    monkeypatch.setattr(run_all, "WEB_ROOT", tmp_path)
+    web_tennis = tmp_path / "api_velora_matchs_tennis.json"
+    now = datetime.now(tz=TZ)
+    kick_hier = (now - timedelta(days=1)).replace(hour=12, minute=0, second=0, microsecond=0)
+    web_tennis.write_text(
+        json.dumps(_tennis_doc(kick_hier), ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    assert run_all._tennis_json_besoin_regeneration() is True
