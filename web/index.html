@@ -2988,6 +2988,13 @@
             }
         }
 
+        /** KPI Premium + CTA vitrine selon session / passes (login, logout, Stripe, profil). */
+        function rafraichirUiCommunauteVelora(options = {}) {
+            majVitrineKpiPremium();
+            const stats = options.stats ?? window.__dernieresStatsCommunaute;
+            if (stats) majVitrineCta(stats);
+        }
+
         function ouvrirOffreVitrinePremium(action) {
             if (action === 'signup') {
                 ouvrirModalAuth('signup');
@@ -3282,8 +3289,7 @@
             }
             rendreVitrineFootDetail(foot);
             window.__dernieresStatsCommunaute = stats;
-            majVitrineCta(stats);
-            majVitrineKpiPremium();
+            rafraichirUiCommunauteVelora({ stats });
 
             if (animer) {
                 pulseVitrineTaux([kpiTaux, pmuTaux, footTaux, kpiRoi]);
@@ -3792,6 +3798,7 @@
             if (typeof syncFootModeUi === 'function') syncFootModeUi();
             if (typeof majTennisMeta === 'function') majTennisMeta();
             if (typeof majTennisIndicateursPremiumUi === 'function') majTennisIndicateursPremiumUi();
+            rafraichirUiCommunauteVelora();
             return { pmu, foot, tennis };
         }
 
@@ -4788,6 +4795,7 @@
                 quotaEl.classList.add('hidden');
                 btnPremiumHeader.classList.add('hidden');
                 mettreAJourUiFormulaireAnalyse();
+                rafraichirUiCommunauteVelora();
                 return;
             }
 
@@ -4806,10 +4814,7 @@
                 btnPremiumHeader.classList.add('hidden');
                 if (btnGererAbonnement) btnGererAbonnement.classList.remove('hidden');
                 mettreAJourUiFormulaireAnalyse();
-                majVitrineKpiPremium();
-                if (window.__dernieresStatsCommunaute) {
-                    majVitrineCta(window.__dernieresStatsCommunaute);
-                }
+                rafraichirUiCommunauteVelora();
                 return;
             }
 
@@ -4826,10 +4831,7 @@
 
             btnPremiumHeader.classList.remove('hidden');
             mettreAJourUiFormulaireAnalyse();
-            majVitrineKpiPremium();
-            if (window.__dernieresStatsCommunaute) {
-                majVitrineCta(window.__dernieresStatsCommunaute);
-            }
+            rafraichirUiCommunauteVelora();
         }
 
         function incrementerCompteurUiApresAnalyse() {
@@ -4883,9 +4885,7 @@
             quitterFootOppSiNonPremium();
             syncFootModeUi();
             mettreAJourUiAnalyseAuth();
-            if (window.__dernieresStatsCommunaute) {
-                majVitrineCta(window.__dernieresStatsCommunaute);
-            }
+            rafraichirUiCommunauteVelora();
         }
 
         function initialiserAuthUi() {
@@ -5543,7 +5543,8 @@
             }
             if (window.__dernieresStatsCommunaute) {
                 injecterStatsCommunauteUI(window.__dernieresStatsCommunaute, { animer: false });
-                majVitrineCta(window.__dernieresStatsCommunaute);
+            } else {
+                rafraichirUiCommunauteVelora();
             }
             appliquerVisibiliteVitrineCommunaute();
         }
@@ -6541,7 +6542,10 @@
             };
             veloraAutoRefreshTimer = setInterval(tick, VELORA_AUTO_REFRESH_PROBE_MS);
             document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') tick();
+                if (document.visibilityState === 'visible') {
+                    tick();
+                    rafraichirUiCommunauteVelora();
+                }
             });
             setTimeout(tick, 2500);
         }
@@ -10169,7 +10173,7 @@
                     ${conseilsHtml ? `<ul class="mb-3 space-y-1">${conseilsHtml}</ul>` : ''}
                     ${ouLine(sets, 'Sets')}
                     ${ouLine(games, 'Jeux')}
-                    ${scoresHtml ? `<div class="mt-2 flex flex-wrap gap-1">${scoresHtml}</div>` : ''}
+                    ${scoresHtml ? `<div class="mt-2"><p class="mb-1 text-[10px] font-semibold uppercase tracking-wider text-lime-400/80">Autres scores exacts (sets)</p><div class="flex flex-wrap gap-1">${scoresHtml}</div></div>` : ''}
                 </article>`;
         }
 
