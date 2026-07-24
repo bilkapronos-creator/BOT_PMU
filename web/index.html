@@ -278,6 +278,23 @@
             color: rgb(253, 224, 71);
             font-size: 1.35rem;
         }
+        .vitrine-kpi-card--pass-actif {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.14), rgba(15, 23, 42, 0.8));
+            cursor: default;
+        }
+        .vitrine-kpi-card--pass-actif .vitrine-kpi-value {
+            color: rgb(253, 224, 71);
+            font-size: 1.05rem;
+            line-height: 1.25;
+        }
+        .vitrine-kpi-card--pass-upgrade {
+            cursor: pointer;
+        }
+        .vitrine-kpi-card--pass-upgrade:hover {
+            border-color: rgba(251, 191, 36, 0.55);
+            transform: translateY(-1px);
+        }
         .vitrine-finance-masque { display: none !important; }
         .vitrine-cta {
             margin-top: 1rem;
@@ -1750,8 +1767,8 @@
                             </p>
                         </div>
                         <div id="vitrineKpiCardPremium" class="vitrine-kpi-card vitrine-kpi-card--profit vitrine-kpi-card--cta hidden" role="button" tabindex="0" aria-label="Découvrir Premium">
-                            <span class="vitrine-kpi-label">Premium</span>
-                            <p class="vitrine-kpi-value"><span aria-hidden="true">★</span> Débloquer</p>
+                            <span id="vitrineKpiLabelPremium" class="vitrine-kpi-label">Premium</span>
+                            <p class="vitrine-kpi-value"><span id="vitrineKpiPremiumVal"><span aria-hidden="true">★</span> Débloquer</span></p>
                         </div>
                         <div id="vitrineKpiCardFinance" class="vitrine-kpi-card vitrine-kpi-card--profit vitrine-finance-bloc">
                             <span id="vitrineKpiLabelFinance" class="vitrine-kpi-label">Bénéfice net</span>
@@ -2787,6 +2804,114 @@
             const finance = document.getElementById('vitrineKpiCardFinance');
             if (premium) premium.classList.toggle('hidden', afficherFinance);
             if (finance) finance.classList.toggle('hidden', !afficherFinance);
+            if (!afficherFinance) majVitrineKpiPremium();
+        }
+
+        function libellePassCommunauteVelora() {
+            if (typeof aPackIntegralVelora === 'function' && aPackIntegralVelora()) {
+                return 'Pack intégral';
+            }
+            const passes = [];
+            if (typeof estVeloraPremiumPmu === 'function' && estVeloraPremiumPmu()) passes.push('PMU');
+            if (typeof estVeloraPremiumFoot === 'function' && estVeloraPremiumFoot()) passes.push('Foot');
+            if (typeof estVeloraPremiumTennis === 'function' && estVeloraPremiumTennis()) passes.push('Tennis');
+            if (passes.length === 0) return null;
+            if (passes.length === 1 && passes[0] === 'PMU') return 'Pass PMU';
+            if (passes.length === 1) return `Pass ${passes[0]}`;
+            return passes.join(' · ');
+        }
+
+        function prochaineOffreUpgradeVitrine() {
+            if (typeof estMembreConnecte !== 'function' || !estMembreConnecte()) return null;
+            if (typeof aAccesPremiumVelora === 'function' && !aAccesPremiumVelora()) return null;
+            if (typeof aPackIntegralVelora === 'function' && aPackIntegralVelora()) {
+                const tennis = typeof estVeloraPremiumTennis === 'function' && estVeloraPremiumTennis();
+                if (tennis) return null;
+                return {
+                    action: 'premium_tennis',
+                    label: 'Pass Tennis · 19,99 €/mois',
+                    hint: 'Complétez avec le Pass Tennis pour l’illimité ATP / WTA.',
+                };
+            }
+            const pmu = typeof estVeloraPremiumPmu === 'function' && estVeloraPremiumPmu();
+            const foot = typeof estVeloraPremiumFoot === 'function' && estVeloraPremiumFoot();
+            const tennis = typeof estVeloraPremiumTennis === 'function' && estVeloraPremiumTennis();
+            const manque = [];
+            if (!pmu) manque.push('pmu');
+            if (!foot) manque.push('foot');
+            if (!tennis) manque.push('tennis');
+            if (manque.length === 0) return null;
+            if (manque.length >= 2) {
+                return {
+                    action: 'bundle',
+                    label: 'Pack Intégral · -25 %',
+                    hint: 'Passez au Pack Intégral pour PMU, Foot et Tennis illimités.',
+                };
+            }
+            if (manque[0] === 'foot') {
+                return {
+                    action: 'premium_foot',
+                    label: 'Pass Foot · 19,99 €/mois',
+                    hint: 'Ajoutez le Pass Foot : radar Value Bets et recherches illimitées.',
+                };
+            }
+            if (manque[0] === 'pmu') {
+                return {
+                    action: 'premium_pmu',
+                    label: 'Pass PMU illimité',
+                    hint: 'Ajoutez le Pass PMU : analyses courses illimitées et archives.',
+                };
+            }
+            return {
+                action: 'premium_tennis',
+                label: 'Pass Tennis · 19,99 €/mois',
+                hint: 'Ajoutez le Pass Tennis : recherches et marchés Winamax illimités.',
+            };
+        }
+
+        function majVitrineKpiPremium() {
+            const card = document.getElementById('vitrineKpiCardPremium');
+            const labelEl = document.getElementById('vitrineKpiLabelPremium');
+            const valEl = document.getElementById('vitrineKpiPremiumVal');
+            if (!card || !labelEl || !valEl) return;
+
+            const connecte = typeof estMembreConnecte === 'function' && estMembreConnecte();
+            const abonnementActif = connecte
+                && typeof aAccesPremiumVelora === 'function'
+                && aAccesPremiumVelora();
+            const passLibelle = abonnementActif ? libellePassCommunauteVelora() : null;
+            const upgrade = abonnementActif ? prochaineOffreUpgradeVitrine() : null;
+
+            card.classList.remove('vitrine-kpi-card--pass-actif', 'vitrine-kpi-card--pass-upgrade');
+            card.dataset.vitrinePremiumAction = '';
+
+            if (!abonnementActif) {
+                labelEl.textContent = 'Premium';
+                valEl.innerHTML = '<span aria-hidden="true">★</span> Débloquer';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', connecte ? 'Passer Premium' : 'Découvrir Premium');
+                card.classList.add('vitrine-kpi-card--cta');
+                card.dataset.vitrinePremiumAction = connecte ? 'premium' : 'signup';
+                return;
+            }
+
+            labelEl.textContent = 'Mon abonnement';
+            valEl.textContent = passLibelle || 'Premium actif';
+            card.classList.add('vitrine-kpi-card--pass-actif');
+            card.classList.remove('vitrine-kpi-card--cta');
+
+            if (upgrade) {
+                card.classList.add('vitrine-kpi-card--pass-upgrade');
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', `${passLibelle} — ${upgrade.label}`);
+                card.dataset.vitrinePremiumAction = upgrade.action;
+            } else {
+                card.removeAttribute('role');
+                card.removeAttribute('tabindex');
+                card.setAttribute('aria-label', passLibelle || 'Abonnement actif');
+            }
         }
 
         function majVitrineCta(stats) {
@@ -2820,6 +2945,16 @@
                     btnSecondary.textContent = 'Voir Premium';
                     btnSecondary.dataset.vitrineAction = 'premium';
                 }
+                return;
+            }
+
+            const passActuel = libellePassCommunauteVelora();
+            const upgrade = prochaineOffreUpgradeVitrine();
+            if (passActuel && upgrade) {
+                texte.textContent = `${passActuel} actif — ${upgrade.hint}`;
+                btnPrimary.textContent = upgrade.label;
+                btnPrimary.dataset.vitrineAction = upgrade.action;
+                if (btnSecondary) btnSecondary.classList.add('hidden');
                 return;
             }
 
@@ -3148,6 +3283,7 @@
             rendreVitrineFootDetail(foot);
             window.__dernieresStatsCommunaute = stats;
             majVitrineCta(stats);
+            majVitrineKpiPremium();
 
             if (animer) {
                 pulseVitrineTaux([kpiTaux, pmuTaux, footTaux, kpiRoi]);
@@ -4670,6 +4806,10 @@
                 btnPremiumHeader.classList.add('hidden');
                 if (btnGererAbonnement) btnGererAbonnement.classList.remove('hidden');
                 mettreAJourUiFormulaireAnalyse();
+                majVitrineKpiPremium();
+                if (window.__dernieresStatsCommunaute) {
+                    majVitrineCta(window.__dernieresStatsCommunaute);
+                }
                 return;
             }
 
@@ -4686,6 +4826,10 @@
 
             btnPremiumHeader.classList.remove('hidden');
             mettreAJourUiFormulaireAnalyse();
+            majVitrineKpiPremium();
+            if (window.__dernieresStatsCommunaute) {
+                majVitrineCta(window.__dernieresStatsCommunaute);
+            }
         }
 
         function incrementerCompteurUiApresAnalyse() {
@@ -10137,10 +10281,15 @@
         });
         const vitrineKpiPremium = document.getElementById('vitrineKpiCardPremium');
         vitrineKpiPremium?.addEventListener('click', () => {
+            const action = vitrineKpiPremium.dataset.vitrinePremiumAction;
+            if (action) {
+                ouvrirOffreVitrinePremium(action === 'premium' ? 'premium_foot' : action);
+                return;
+            }
             if (typeof estMembreConnecte === 'function' && estMembreConnecte()) {
                 const sport = typeof sportActif !== 'undefined' ? sportActif : 'foot';
-                const action = sport === 'pmu' ? 'premium_pmu' : sport === 'tennis' ? 'premium_tennis' : 'premium_foot';
-                ouvrirOffreVitrinePremium(action);
+                const fallback = sport === 'pmu' ? 'premium_pmu' : sport === 'tennis' ? 'premium_tennis' : 'premium_foot';
+                ouvrirOffreVitrinePremium(fallback);
             } else {
                 ouvrirOffreVitrinePremium('signup');
             }
