@@ -1,21 +1,76 @@
 {
   "matches": {
-    "66349530": {
-      "matchtimeExtended": "39:09"
+    "63301349": {
+      "available": true,
+      "mainBetId": 667955071,
+      "moreBets": 25,
+      "filters": [
+        185,
+        186,
+        187,
+        188,
+        191,
+        192,
+        194,
+        195,
+        196,
+        198,
+        200
+      ],
+      "isHot": true
+    }
+  },
+  "bets": {
+    "667955071": {
+      "betId": 667955071,
+      "matchId": 63301349,
+      "marketId": 251,
+      "outcomes": [
+        2077736795,
+        2077736796
+      ],
+      "available": true,
+      "template": "2way",
+      "isAlternativeMainBet": false,
+      "betTypeIsLive": true,
+      "betTitle": "Vainqueur",
+      "betTypeName": "Vainqueur",
+      "betType": 3294,
+      "betTypeCategoryId": 1,
+      "betCategories": [
+        1
+      ],
+      "betTypeCategory": "Résultat",
+      "betTypeHelp": "",
+      "betGroup": 667955071
+    }
+  },
+  "outcomes": {
+    "2077709900": {
+      "hotUsers": 68
     },
-    "72387886": {
-      "moreBets": 104,
-      "matchtimeExtended": "52:32"
+    "2077736795": {
+      "betId": 667955071,
+      "label": "Miami Marlins",
+      "available": true,
+      "code": "1",
+      "percentDistribution": null,
+      "icon": "ah0oxtu0",
+      "hotUsers": 36
+    },
+    "2077736796": {
+      "betId": 667955071,
+      "label": "San Diego Padres",
+      "available": true,
+      "code": "2",
+      "percentDistribution": null,
+      "icon": "66Nm9LU_"
     }
   },
   "odds": {
-    "2079109790": 3.05,
-    "2079109791": 6,
-    "2079151584": 26
-  },
-  "outcomes": {
-    "2072027917": {
-      "hotUsers": 171
-    }
+    "2077709899": 2.1,
+    "2077709900": 1.6,
+    "2077736795": 1.86,
+    "2077736796": 1.76
   }
 }
