@@ -200,7 +200,6 @@ jobs:
         run: |
           set -e
           git fetch origin main
-          git merge --ff-only origin/main
           added=0
           for f in \
             api_velora_matchs.json \
@@ -230,6 +229,8 @@ jobs:
             exit 0
           fi
           git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
+          # Arbre propre avant push/rebase (évite « local changes would be overwritten »).
+          git reset --hard HEAD
           for attempt in 1 2 3; do
             if git push origin HEAD:main; then
               echo "Push réussi (tentative ${attempt})."
@@ -237,7 +238,11 @@ jobs:
             fi
             echo "Push refusé (tentative ${attempt}/3) — rebase sur origin/main…"
             git fetch origin main
-            git rebase origin/main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "::warning::Rebase en conflit — nouvelle tentative après fetch."
+            fi
+            git reset --hard HEAD
             sleep $((attempt * 2))
           done
           echo "::error::git push échoué après 3 tentatives (conflit ou permissions)."

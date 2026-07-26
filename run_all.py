@@ -335,15 +335,6 @@ def push_vercel_git() -> bool:
             log_error(label, "git fetch origin main a échoué", f"{r_fetch.stdout}\n{r_fetch.stderr}")
             return False
 
-        r_merge = run_git(["git", "merge", "--ff-only", "origin/main"])
-        if r_merge.returncode != 0:
-            log_error(
-                label,
-                "git merge --ff-only origin/main a échoué",
-                f"{r_merge.stdout}\n{r_merge.stderr}",
-            )
-            return False
-
         r_add = run_git(["git", "add", "-f", *to_commit])
         if r_add.returncode != 0:
             log_error(label, "git add -f a échoué", f"{r_add.stdout}\n{r_add.stderr}")
@@ -360,8 +351,19 @@ def push_vercel_git() -> bool:
             return False
         log(f'  git commit -m "{GIT_COMMIT_MSG}"')
 
-        r_push = run_git(["git", "push", "origin", "HEAD:main"])
-        if r_push.returncode != 0:
+        run_git(["git", "reset", "--hard", "HEAD"])
+
+        for attempt in range(1, 4):
+            r_push = run_git(["git", "push", "origin", "HEAD:main"])
+            if r_push.returncode == 0:
+                break
+            log(f"  git push refusé (tentative {attempt}/3) — rebase…")
+            run_git(["git", "fetch", "origin", "main"])
+            r_rebase = run_git(["git", "rebase", "origin/main"])
+            if r_rebase.returncode != 0:
+                run_git(["git", "rebase", "--abort"])
+            run_git(["git", "reset", "--hard", "HEAD"])
+        else:
             log_error(label, "git push a échoué", f"{r_push.stdout}\n{r_push.stderr}")
             return False
         if r_push.stdout.strip():
