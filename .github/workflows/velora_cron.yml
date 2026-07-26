@@ -17,6 +17,7 @@ on:
       - "parser_winamax.py"
       - "parser_winamax_tennis.py"
       - ".github/workflows/velora_cron.yml"
+      - "scripts/ci_push_velora_json.sh"
       - "velora_engine/**"
   workflow_dispatch:
 
@@ -40,7 +41,7 @@ jobs:
     timeout-minutes: 120
     concurrency:
       group: velora-pipeline-main
-      cancel-in-progress: false
+      cancel-in-progress: true
 
     steps:
       - name: Checkout
@@ -197,53 +198,4 @@ jobs:
 
       - name: Commit et push JSON (web/ + racine → Vercel)
         if: success()
-        run: |
-          set -e
-          git fetch origin main
-          added=0
-          for f in \
-            api_velora_matchs.json \
-            api_velora_matchs_tennis.json \
-            api_velora_premium.json \
-            dump_winamax_html.json \
-            web/api_velora_matchs.json \
-            web/api_velora_matchs_tennis.json \
-            web/api_velora_premium.json \
-            web/api_velora_communaute.json \
-            web/velora_archives_foot.json \
-            web/velora_foot_resultats.json \
-            web/velora_odds_history.json \
-            web/velora_foot_calibration.json \
-            web/velora_pronos_history.json; do
-            if [ -f "$f" ]; then
-              git add -f "$f"
-              added=1
-            fi
-          done
-          if [ "$added" -eq 0 ]; then
-            echo "Aucun fichier JSON trouvé après le pipeline."
-            exit 1
-          fi
-          if git diff --staged --quiet; then
-            echo "JSON inchangés — pas de push."
-            exit 0
-          fi
-          git commit -m "ci: mise à jour JSON Velora (matchs, premium, archives)"
-          # Arbre propre avant push/rebase (évite « local changes would be overwritten »).
-          git reset --hard HEAD
-          for attempt in 1 2 3; do
-            if git push origin HEAD:main; then
-              echo "Push réussi (tentative ${attempt})."
-              exit 0
-            fi
-            echo "Push refusé (tentative ${attempt}/3) — rebase sur origin/main…"
-            git fetch origin main
-            if ! git rebase origin/main; then
-              git rebase --abort || true
-              echo "::warning::Rebase en conflit — nouvelle tentative après fetch."
-            fi
-            git reset --hard HEAD
-            sleep $((attempt * 2))
-          done
-          echo "::error::git push échoué après 3 tentatives (conflit ou permissions)."
-          exit 1
+        run: bash scripts/ci_push_velora_json.sh
