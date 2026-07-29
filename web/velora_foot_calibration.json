@@ -1,7 +1,7 @@
 {
   "version": 1,
   "edge_thresholds": {
-    "1n2": 1.09,
+    "1n2": 1.07,
     "dc_1x": 1.05,
     "dc_x2": 1.05,
     "ou_total": 1.08,
@@ -12,6 +12,16 @@
   },
   "suggestions": [
     {
+      "marche": "score_exact",
+      "label": "Score exact (top 3)",
+      "edge_key": "score_exact",
+      "edge_actuel": 1.15,
+      "edge_suggere": 1.21,
+      "taux_pct": 20,
+      "echantillon": 144,
+      "raison": "20% de réussite sur 144 matchs — seuil relevé"
+    },
+    {
       "marche": "value_1n2",
       "label": "Value 1N2",
       "edge_key": "1n2",
@@ -20,26 +30,6 @@
       "taux_pct": 42,
       "echantillon": 126,
       "raison": "42% de réussite sur 126 matchs — seuil relevé"
-    },
-    {
-      "marche": "score_exact",
-      "label": "Score exact (top 3)",
-      "edge_key": "score_exact",
-      "edge_actuel": 1.15,
-      "edge_suggere": 1.21,
-      "taux_pct": 19,
-      "echantillon": 141,
-      "raison": "19% de réussite sur 141 matchs — seuil relevé"
-    },
-    {
-      "marche": "pronostic_1n2",
-      "label": "Pronostic 1N2",
-      "edge_key": "1n2",
-      "edge_actuel": 1.07,
-      "edge_suggere": 1.09,
-      "taux_pct": 43,
-      "echantillon": 21,
-      "raison": "43% de réussite sur 21 matchs — seuil relevé"
     },
     {
       "marche": "over_25",
@@ -53,6 +43,20 @@
     }
   ],
   "detail_par_marche": {
+    "pronostic_1n2": {
+      "label": "Pronostic 1N2",
+      "total": 24,
+      "succes": 11,
+      "taux": 46,
+      "profit_net": -117.5
+    },
+    "score_exact": {
+      "label": "Score exact (top 3)",
+      "total": 144,
+      "succes": 29,
+      "taux": 20,
+      "profit_net": -975.4
+    },
     "value_1n2": {
       "label": "Value 1N2",
       "total": 126,
@@ -60,26 +64,12 @@
       "taux": 42,
       "profit_net": 208.4
     },
-    "score_exact": {
-      "label": "Score exact (top 3)",
-      "total": 141,
-      "succes": 27,
-      "taux": 19,
-      "profit_net": -965.6
-    },
     "double_chance": {
       "label": "Double chance",
       "total": 106,
       "succes": 59,
       "taux": 56,
       "profit_net": -128.7
-    },
-    "pronostic_1n2": {
-      "label": "Pronostic 1N2",
-      "total": 21,
-      "succes": 9,
-      "taux": 43,
-      "profit_net": -107.7
     },
     "over_25": {
       "label": "Over 2.5",
