@@ -1,813 +1,11 @@
 {
   "schema_version": 2,
   "meta": {
-    "generated_at": "2026-07-29T10:09:54.045333+02:00",
+    "generated_at": "2026-07-29T13:19:51.115699+02:00",
     "engine": "velora-pro-2",
-    "match_count": 14
+    "match_count": 10
   },
   "matchs": [
-    {
-      "id_match": "72529104",
-      "date_match": "29/07/2026 à 02:15",
-      "match_start_ts": 1785284100,
-      "match_status": "LIVE",
-      "equipe_domicile": "Argentinos Juniors",
-      "equipe_exterieur": "Estudiantes Río Cuarto",
-      "meta_match": {
-        "competition": {
-          "name": "Argentine — Primera División",
-          "type": "other",
-          "round": "J2",
-          "stakes_tier": "medium",
-          "category_id": "48",
-          "tournament_id": "162285"
-        }
-      },
-      "confidence": {
-        "velora_score": 56.1,
-        "indice_velora": 3,
-        "base_confidence": 0.561,
-        "adjusted_confidence": 0.561,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.12,
-          "N": 6.75,
-          "2": 38.0
-        },
-        "probabilites": {
-          "1": 86,
-          "N": 12,
-          "2": 2
-        },
-        "probabilites_marche": {
-          "1": 84,
-          "N": 14,
-          "2": 2
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Argentinos Juniors",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 3.957,
-          "away": 0.611
-        },
-        "top_scores_modele": [
-          {
-            "score": "3-0",
-            "prob": 11
-          },
-          {
-            "score": "4-0",
-            "prob": 11
-          },
-          {
-            "score": "5-0",
-            "prob": 8
-          },
-          {
-            "score": "2-0",
-            "prob": 8
-          },
-          {
-            "score": "3-1",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 73,
-        "prob_btts_modele": 40,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [
-          "Double chance 1X",
-          "BTTS Non",
-          "Plus de 2.5 buts"
-        ],
-        "conseils_intelligents": [
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "prob_pct": 98,
-            "edge": 0.0,
-            "score": 98.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 98% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "over_25",
-            "pick": "plus",
-            "label": "Plus de 2.5 buts",
-            "prob_pct": 73,
-            "edge": 0.0,
-            "score": 73.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 73% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "btts",
-            "pick": "non",
-            "label": "BTTS Non",
-            "prob_pct": 60,
-            "edge": 0.0,
-            "score": 60.0,
-            "tier": "bon",
-            "raison": "Signal modèle Velora — 60% (cote Winamax absente sur ce marché)",
-            "stars": 2
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "prob_pct": 98,
-          "edge": 0.0,
-          "score": 98.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 98% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Double chance 1X",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Double chance 1X",
-      "top_scores": [
-        {
-          "score": "3-0",
-          "prob": 11
-        },
-        {
-          "score": "4-0",
-          "prob": 11
-        },
-        {
-          "score": "5-0",
-          "prob": 8
-        },
-        {
-          "score": "2-0",
-          "prob": 8
-        },
-        {
-          "score": "3-1",
-          "prob": 7
-        }
-      ],
-      "velora_pick_1n2": "1"
-    },
-    {
-      "id_match": "72529106",
-      "date_match": "29/07/2026 à 02:15",
-      "match_start_ts": 1785284100,
-      "match_status": "LIVE",
-      "equipe_domicile": "Rosario Central",
-      "equipe_exterieur": "Racing Club",
-      "meta_match": {
-        "competition": {
-          "name": "Argentine — Primera División",
-          "type": "other",
-          "round": "J2",
-          "stakes_tier": "medium",
-          "category_id": "48",
-          "tournament_id": "162285"
-        }
-      },
-      "confidence": {
-        "velora_score": 57.5,
-        "indice_velora": 3,
-        "base_confidence": 0.575,
-        "adjusted_confidence": 0.575,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 2.5,
-          "N": 1.94,
-          "2": 4.4
-        },
-        "probabilites": {
-          "1": 46,
-          "N": 25,
-          "2": 29
-        },
-        "probabilites_marche": {
-          "1": 35,
-          "N": 45,
-          "2": 20
-        },
-        "pronostic_1n2": "2",
-        "pronostic_label": "Victoire Racing Club",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.07,
-          "away": 1.565
-        },
-        "top_scores_modele": [
-          {
-            "score": "1-2",
-            "prob": 7
-          },
-          {
-            "score": "0-1",
-            "prob": 4
-          },
-          {
-            "score": "2-3",
-            "prob": 4
-          },
-          {
-            "score": "1-3",
-            "prob": 3
-          },
-          {
-            "score": "0-2",
-            "prob": 3
-          }
-        ],
-        "prob_over_25_modele": 70,
-        "prob_btts_modele": 69,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Racing Club",
-            "cote": 4.4,
-            "edge": 1.672,
-            "stars": 5,
-            "is_primary": true
-          },
-          {
-            "market": "dc_x2",
-            "pick": "dc_x2",
-            "label": "Double chance X2",
-            "edge": 1.672,
-            "stars": 5,
-            "is_primary": false
-          }
-        ],
-        "primary_pick": {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "cote": null,
-          "conseil_short": "🎯 Plus de 2.5 buts"
-        },
-        "display_badges": [
-          "Double chance 12",
-          "BTTS Oui",
-          "Plus de 2.5 buts"
-        ],
-        "conseils_intelligents": [
-          {
-            "market": "over_25",
-            "pick": "plus",
-            "label": "Plus de 2.5 buts",
-            "prob_pct": 70,
-            "edge": 0.0,
-            "score": 70.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "dc_12",
-            "pick": "12",
-            "label": "Double chance 12",
-            "prob_pct": 70,
-            "edge": 0.0,
-            "score": 70.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "btts",
-            "pick": "oui",
-            "label": "BTTS Oui",
-            "prob_pct": 69,
-            "edge": 0.0,
-            "score": 69.0,
-            "tier": "bon",
-            "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "1n2",
-            "pick": "2",
-            "label": "Victoire Racing Club",
-            "cote": 4.4,
-            "prob_pct": 38,
-            "edge": 1.672,
-            "score": 0.9713,
-            "tier": "excellent",
-            "raison": "Proba 38% × cote 4.40 → edge 1.67 — bon équilibre proba/rendement",
-            "stars": 5
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 70,
-          "edge": 0.0,
-          "score": 70.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Plus de 2.5 buts",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "opportunite_type": "1n2",
-        "is_opportunite": true
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Plus de 2.5 buts",
-      "top_scores": [
-        {
-          "score": "1-2",
-          "prob": 7
-        },
-        {
-          "score": "0-1",
-          "prob": 4
-        },
-        {
-          "score": "2-3",
-          "prob": 4
-        },
-        {
-          "score": "1-3",
-          "prob": 3
-        },
-        {
-          "score": "0-2",
-          "prob": 3
-        }
-      ],
-      "velora_pick_1n2": "2",
-      "probabilites": {
-        "1": 46,
-        "N": 25,
-        "2": 29
-      }
-    },
-    {
-      "id_match": "71798272",
-      "date_match": "29/07/2026 à 02:30",
-      "match_start_ts": 1785285000,
-      "match_status": "LIVE",
-      "equipe_domicile": "Santos",
-      "equipe_exterieur": "FC UCV",
-      "meta_match": {
-        "competition": {
-          "name": "International — Copa Sudamericana",
-          "type": "cup",
-          "round": "Match retour",
-          "stakes_tier": "medium",
-          "category_id": "4",
-          "tournament_id": "99936"
-        }
-      },
-      "confidence": {
-        "velora_score": 57.5,
-        "indice_velora": 3,
-        "base_confidence": 0.575,
-        "adjusted_confidence": 0.575,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.32,
-          "N": 3.9,
-          "2": 10.0
-        },
-        "probabilites": {
-          "1": 74,
-          "N": 18,
-          "2": 8
-        },
-        "probabilites_marche": {
-          "1": 68,
-          "N": 23,
-          "2": 9
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Santos",
-        "confiance_niveau": "haute",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 3.116,
-          "away": 1.133
-        },
-        "top_scores_modele": [
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "2-1",
-            "prob": 8
-          },
-          {
-            "score": "3-0",
-            "prob": 7
-          },
-          {
-            "score": "2-0",
-            "prob": 7
-          },
-          {
-            "score": "4-1",
-            "prob": 6
-          }
-        ],
-        "prob_over_25_modele": 76,
-        "prob_btts_modele": 62,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [
-          "Double chance 1X",
-          "BTTS Oui",
-          "Plus de 2.5 buts"
-        ],
-        "conseils_intelligents": [
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "prob_pct": 92,
-            "edge": 0.0,
-            "score": 92.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "over_25",
-            "pick": "plus",
-            "label": "Plus de 2.5 buts",
-            "prob_pct": 76,
-            "edge": 0.0,
-            "score": 76.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 76% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "btts",
-            "pick": "oui",
-            "label": "BTTS Oui",
-            "prob_pct": 62,
-            "edge": 0.0,
-            "score": 62.0,
-            "tier": "bon",
-            "raison": "Signal modèle Velora — 62% (cote Winamax absente sur ce marché)",
-            "stars": 2
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "prob_pct": 92,
-          "edge": 0.0,
-          "score": 92.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 92% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Double chance 1X",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Double chance 1X",
-      "top_scores": [
-        {
-          "score": "3-1",
-          "prob": 8
-        },
-        {
-          "score": "2-1",
-          "prob": 8
-        },
-        {
-          "score": "3-0",
-          "prob": 7
-        },
-        {
-          "score": "2-0",
-          "prob": 7
-        },
-        {
-          "score": "4-1",
-          "prob": 6
-        }
-      ],
-      "velora_pick_1n2": "1"
-    },
-    {
-      "id_match": "73209210",
-      "date_match": "29/07/2026 à 03:00",
-      "match_start_ts": 1785286800,
-      "match_status": "LIVE",
-      "equipe_domicile": "Cavalry",
-      "equipe_exterieur": "Supra du Québec",
-      "meta_match": {
-        "competition": {
-          "name": "Canada — Canadian Premier League",
-          "type": "league",
-          "stakes_tier": "medium",
-          "category_id": "388",
-          "tournament_id": "80244"
-        }
-      },
-      "confidence": {
-        "velora_score": 47.8,
-        "indice_velora": 2,
-        "base_confidence": 0.478,
-        "adjusted_confidence": 0.478,
-        "modifiers": []
-      },
-      "pro_alerts": [],
-      "free_analysis": {
-        "cotes_1n2": {
-          "1": 1.21,
-          "N": 5.8,
-          "2": 10.5
-        },
-        "probabilites": {
-          "1": 72,
-          "N": 19,
-          "2": 9
-        },
-        "probabilites_marche": {
-          "1": 75,
-          "N": 16,
-          "2": 9
-        },
-        "pronostic_1n2": "1",
-        "pronostic_label": "Victoire Cavalry",
-        "confiance_niveau": "moyenne",
-        "line_signal": "stable",
-        "poisson_lambdas": {
-          "home": 2.706,
-          "away": 0.937
-        },
-        "top_scores_modele": [
-          {
-            "score": "2-0",
-            "prob": 10
-          },
-          {
-            "score": "2-1",
-            "prob": 9
-          },
-          {
-            "score": "3-0",
-            "prob": 9
-          },
-          {
-            "score": "3-1",
-            "prob": 8
-          },
-          {
-            "score": "1-0",
-            "prob": 7
-          }
-        ],
-        "prob_over_25_modele": 68,
-        "prob_btts_modele": 55,
-        "football_data_enriched": true,
-        "markets_raw": {
-          "over_under_total": {},
-          "team_goals": {}
-        },
-        "value_bets": [],
-        "display_badges": [
-          "Double chance 1X",
-          "BTTS Oui",
-          "Plus de 2.5 buts"
-        ],
-        "conseils_intelligents": [
-          {
-            "market": "dc_1x",
-            "pick": "1x",
-            "label": "Double chance 1X",
-            "prob_pct": 91,
-            "edge": 0.0,
-            "score": 91.0,
-            "tier": "excellent",
-            "raison": "Signal modèle Velora — 91% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "over_25",
-            "pick": "plus",
-            "label": "Plus de 2.5 buts",
-            "prob_pct": 68,
-            "edge": 0.0,
-            "score": 68.0,
-            "tier": "bon",
-            "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
-            "stars": 3
-          },
-          {
-            "market": "btts",
-            "pick": "oui",
-            "label": "BTTS Oui",
-            "prob_pct": 55,
-            "edge": 0.0,
-            "score": 55.0,
-            "tier": "bon",
-            "raison": "Signal modèle Velora — 55% (cote Winamax absente sur ce marché)",
-            "stars": 2
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "prob_pct": 91,
-          "edge": 0.0,
-          "score": 91.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 91% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      },
-      "premium_analysis": {
-        "score_exact": {
-          "top3": []
-        },
-        "buteur_match": {
-          "top": []
-        },
-        "buteur_mi_temps": {
-          "top": []
-        },
-        "buteur_double": {
-          "top": []
-        },
-        "value_bets": []
-      },
-      "_legacy": {
-        "conseil": "Double chance 1X",
-        "tendance_buts": "Match Offensif",
-        "marches_supplementaires": {},
-        "is_opportunite": false
-      },
-      "marches_supplementaires": {
-        "plus_moins_buts": {
-          "1.5": "Indisponible",
-          "2.5": "Indisponible",
-          "3.5": "Indisponible"
-        },
-        "buteur_match": "Indisponible",
-        "buteur_mi_temps": "Indisponible",
-        "buteur_multiple": "Indisponible"
-      },
-      "indice_velora": 0,
-      "indice_velora_label": "Non calculable",
-      "velora_score": null,
-      "conseil": "Double chance 1X",
-      "top_scores": [
-        {
-          "score": "2-0",
-          "prob": 10
-        },
-        {
-          "score": "2-1",
-          "prob": 9
-        },
-        {
-          "score": "3-0",
-          "prob": 9
-        },
-        {
-          "score": "3-1",
-          "prob": 8
-        },
-        {
-          "score": "1-0",
-          "prob": 7
-        }
-      ],
-      "velora_pick_1n2": "1"
-    },
     {
       "id_match": "72176812",
       "date_match": "29/07/2026 à 17:00",
@@ -955,7 +153,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 12",
+        "conseil": "Victoire Kairat",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -1156,7 +354,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 1X",
+        "conseil": "Victoire Kauno Žalgiris",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -1357,7 +555,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 1X",
+        "conseil": "Victoire Lech Poznan",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -1558,7 +756,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 1X",
+        "conseil": "Victoire Copenhague",
         "tendance_buts": "Match Tactique",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -1702,11 +900,11 @@
           }
         ],
         "primary_pick": {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "cote": null,
-          "conseil_short": "🎯 Double chance 12"
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Levski Sofia",
+          "cote": 3.8,
+          "conseil_short": "🔥 Value Bet — Victoire Levski Sofia @ 3.80"
         },
         "display_badges": [
           "Double chance 12",
@@ -1788,7 +986,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 12",
+        "conseil": "Victoire Levski Sofia",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "opportunite_type": "1n2",
@@ -1933,11 +1131,11 @@
           }
         ],
         "primary_pick": {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "cote": null,
-          "conseil_short": "🎯 Double chance 12"
+          "market": "1n2",
+          "pick": "2",
+          "label": "Victoire Vikingur Reykjavik",
+          "cote": 4.7,
+          "conseil_short": "🔥 Value Bet — Victoire Vikingur Reykjavik @ 4.70"
         },
         "display_badges": [
           "Double chance 12",
@@ -2019,7 +1217,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 12",
+        "conseil": "Victoire Vikingur Reykjavik",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "opportunite_type": "1n2",
@@ -2217,7 +1415,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 12",
+        "conseil": "Match nul",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -2414,7 +1612,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance X2",
+        "conseil": "Victoire Fenerbahce",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -2615,7 +1813,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 1X",
+        "conseil": "Victoire Slovan Bratislava",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
@@ -2804,7 +2002,7 @@
         "value_bets": []
       },
       "_legacy": {
-        "conseil": "Double chance 1X",
+        "conseil": "Victoire Benfica",
         "tendance_buts": "Match Offensif",
         "marches_supplementaires": {},
         "is_opportunite": false
