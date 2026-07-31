@@ -2,9 +2,1204 @@
   "schema_version": 2,
   "meta": {
     "sport": "tennis",
-    "generated_at": "2026-07-31T13:26:29.637963+02:00",
+    "generated_at": "2026-07-31T15:45:38.211422+02:00",
     "engine": "velora-tennis-1",
-    "match_count": 0
+    "match_count": 13
   },
-  "matchs": []
+  "matchs": [
+    {
+      "id_match": "73061224",
+      "sport": "tennis",
+      "date_match": "01/08/2026 à 06:00",
+      "match_start_ts": 1785556800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Cameron Norrie",
+      "equipe_exterieur": "Denis Shapovalov",
+      "joueur_1": "Cameron Norrie",
+      "joueur_2": "Denis Shapovalov",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.78,
+          "2": 2.0
+        },
+        "probabilites": {
+          "1": 53,
+          "2": 47
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Cameron Norrie",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Cameron Norrie",
+            "cote": 1.78,
+            "prob_pct": 53,
+            "edge": 0.943,
+            "score": -0.057,
+            "tier": "standard",
+            "raison": "Pronostic marché : Cameron Norrie (53%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Cameron Norrie",
+          "cote": 1.78,
+          "prob_pct": 53,
+          "edge": 0.943,
+          "score": -0.057,
+          "tier": "standard",
+          "raison": "Pronostic marché : Cameron Norrie (53%)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Cameron Norrie",
+      "cotes": {
+        "1": 1.78,
+        "2": 2.0
+      },
+      "probabilites": {
+        "1": 53,
+        "2": 47
+      }
+    },
+    {
+      "id_match": "73061226",
+      "sport": "tennis",
+      "date_match": "01/08/2026 à 04:30",
+      "match_start_ts": 1785551400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Coleman Wong",
+      "equipe_exterieur": "Arthur Gea",
+      "joueur_1": "Coleman Wong",
+      "joueur_2": "Arthur Gea",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.15,
+          "2": 1.68
+        },
+        "probabilites": {
+          "1": 77,
+          "2": 23
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Coleman Wong",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Coleman Wong",
+            "cote": 2.15,
+            "prob_pct": 77,
+            "edge": 1.655,
+            "score": 0.655,
+            "tier": "excellent",
+            "raison": "Outsider Coleman Wong : proba 77% × cote 2.15 → edge 1.66",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Coleman Wong",
+          "cote": 2.15,
+          "prob_pct": 77,
+          "edge": 1.655,
+          "score": 0.655,
+          "tier": "excellent",
+          "raison": "Outsider Coleman Wong : proba 77% × cote 2.15 → edge 1.66",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Coleman Wong",
+            "cote": 2.15,
+            "prob_pct": 77,
+            "edge": 1.655,
+            "score": 0.655,
+            "tier": "excellent",
+            "raison": "Outsider Coleman Wong : proba 77% × cote 2.15 → edge 1.66",
+            "stars": 5
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Coleman Wong",
+      "cotes": {
+        "1": 2.15,
+        "2": 1.68
+      },
+      "probabilites": {
+        "1": 77,
+        "2": 23
+      }
+    },
+    {
+      "id_match": "73062266",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 20:00",
+      "match_start_ts": 1785520800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Elisabetta Cocciaretto",
+      "equipe_exterieur": "Naomi Osaka",
+      "joueur_1": "Elisabetta Cocciaretto",
+      "joueur_2": "Naomi Osaka",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 5.6,
+          "2": 1.14
+        },
+        "probabilites": {
+          "1": 17,
+          "2": 83
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Naomi Osaka",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.14,
+            "prob_pct": 83,
+            "edge": 0.946,
+            "score": -0.054,
+            "tier": "bon",
+            "raison": "Favori net Naomi Osaka (83% implicite, cote 1.14)",
+            "stars": 4
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.14,
+            "prob_pct": 75,
+            "edge": 0.855,
+            "score": -0.145,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Naomi Osaka (écart 6 pts sur 5 matchs)",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.14,
+            "prob_pct": 72,
+            "edge": 0.821,
+            "score": -0.179,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (71 vs 13) — avantage Naomi Osaka",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Naomi Osaka",
+          "cote": 1.14,
+          "prob_pct": 83,
+          "edge": 0.946,
+          "score": -0.054,
+          "tier": "bon",
+          "raison": "Favori net Naomi Osaka (83% implicite, cote 1.14)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Naomi Osaka",
+      "cotes": {
+        "1": 5.6,
+        "2": 1.14
+      },
+      "probabilites": {
+        "1": 17,
+        "2": 83
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "LLLWW",
+          "played": 5,
+          "wins": 2,
+          "draws": 0,
+          "losses": 3,
+          "points": 6,
+          "max_points": 15,
+          "pct": 40.0
+        },
+        "away_form": {
+          "raw": "WWWLW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 71,
+        "away_rank": 13,
+        "h2h": null,
+        "form_edge": -6,
+        "rank_edge": -58
+      }
+    },
+    {
+      "id_match": "73062268",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 22:00",
+      "match_start_ts": 1785528000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Diana Shnaider",
+      "equipe_exterieur": "Ludmilla Samsonova",
+      "joueur_1": "Diana Shnaider",
+      "joueur_2": "Ludmilla Samsonova",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.8,
+          "2": 1.98
+        },
+        "probabilites": {
+          "1": 94,
+          "2": 6
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Diana Shnaider",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Diana Shnaider",
+            "cote": 1.8,
+            "prob_pct": 94,
+            "edge": 1.692,
+            "score": 0.692,
+            "tier": "standard",
+            "raison": "Pronostic marché : Diana Shnaider (94%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Diana Shnaider",
+          "cote": 1.8,
+          "prob_pct": 94,
+          "edge": 1.692,
+          "score": 0.692,
+          "tier": "standard",
+          "raison": "Pronostic marché : Diana Shnaider (94%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Diana Shnaider",
+            "cote": 1.8,
+            "prob_pct": 94,
+            "edge": 1.692,
+            "score": 0.692,
+            "tier": "standard",
+            "raison": "Pronostic marché : Diana Shnaider (94%)",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Diana Shnaider",
+      "cotes": {
+        "1": 1.8,
+        "2": 1.98
+      },
+      "probabilites": {
+        "1": 94,
+        "2": 6
+      }
+    },
+    {
+      "id_match": "73062270",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 18:05",
+      "match_start_ts": 1785513900,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Jessica Pegula",
+      "equipe_exterieur": "Anna Kalinskaya",
+      "joueur_1": "Jessica Pegula",
+      "joueur_2": "Anna Kalinskaya",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.32,
+          "2": 3.35
+        },
+        "probabilites": {
+          "1": 72,
+          "2": 28
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Jessica Pegula",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Jessica Pegula",
+            "cote": 1.32,
+            "prob_pct": 72,
+            "edge": 0.95,
+            "score": -0.05,
+            "tier": "bon",
+            "raison": "Favori net Jessica Pegula (72% implicite, cote 1.32)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Jessica Pegula",
+          "cote": 1.32,
+          "prob_pct": 72,
+          "edge": 0.95,
+          "score": -0.05,
+          "tier": "bon",
+          "raison": "Favori net Jessica Pegula (72% implicite, cote 1.32)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Jessica Pegula",
+      "cotes": {
+        "1": 1.32,
+        "2": 3.35
+      },
+      "probabilites": {
+        "1": 72,
+        "2": 28
+      }
+    },
+    {
+      "id_match": "73062280",
+      "sport": "tennis",
+      "date_match": "01/08/2026 à 00:30",
+      "match_start_ts": 1785537000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Alexandra Eala",
+      "equipe_exterieur": "Elina Svitolina",
+      "joueur_1": "Alexandra Eala",
+      "joueur_2": "Elina Svitolina",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.45,
+          "2": 1.54
+        },
+        "probabilites": {
+          "1": 41,
+          "2": 59
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Elina Svitolina",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elina Svitolina",
+            "cote": 1.54,
+            "prob_pct": 59,
+            "edge": 0.909,
+            "score": -0.091,
+            "tier": "standard",
+            "raison": "Pronostic marché : Elina Svitolina (59%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Elina Svitolina",
+          "cote": 1.54,
+          "prob_pct": 59,
+          "edge": 0.909,
+          "score": -0.091,
+          "tier": "standard",
+          "raison": "Pronostic marché : Elina Svitolina (59%)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Elina Svitolina",
+      "cotes": {
+        "1": 2.45,
+        "2": 1.54
+      },
+      "probabilites": {
+        "1": 41,
+        "2": 59
+      }
+    },
+    {
+      "id_match": "73063932",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 20:00",
+      "match_start_ts": 1785520800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Elvina Kalieva",
+      "equipe_exterieur": "Peyton Stearns",
+      "joueur_1": "Elvina Kalieva",
+      "joueur_2": "Peyton Stearns",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.45,
+          "2": 1.31
+        },
+        "probabilites": {
+          "1": 25,
+          "2": 75
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Peyton Stearns",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Peyton Stearns",
+            "cote": 1.31,
+            "prob_pct": 75,
+            "edge": 0.983,
+            "score": -0.017,
+            "tier": "bon",
+            "raison": "Favori net Peyton Stearns (75% implicite, cote 1.31)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Peyton Stearns",
+          "cote": 1.31,
+          "prob_pct": 75,
+          "edge": 0.983,
+          "score": -0.017,
+          "tier": "bon",
+          "raison": "Favori net Peyton Stearns (75% implicite, cote 1.31)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Peyton Stearns",
+      "cotes": {
+        "1": 3.45,
+        "2": 1.31
+      },
+      "probabilites": {
+        "1": 25,
+        "2": 75
+      }
+    },
+    {
+      "id_match": "73063934",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 18:00",
+      "match_start_ts": 1785513600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Kristina Liutova",
+      "equipe_exterieur": "Catherine McNally",
+      "joueur_1": "Kristina Liutova",
+      "joueur_2": "Catherine McNally",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.0,
+          "2": 1.39
+        },
+        "probabilites": {
+          "1": 36,
+          "2": 64
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Kristina Liutova",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Kristina Liutova",
+            "cote": 3.0,
+            "prob_pct": 36,
+            "edge": 1.08,
+            "score": 0.08,
+            "tier": "bon",
+            "raison": "Outsider Kristina Liutova : proba 36% × cote 3.00 → edge 1.08",
+            "stars": 4
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Catherine McNally",
+            "cote": 1.39,
+            "prob_pct": 64,
+            "edge": 0.89,
+            "score": -0.11,
+            "tier": "bon",
+            "raison": "Favori net Catherine McNally (64% implicite, cote 1.39)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Kristina Liutova",
+          "cote": 3.0,
+          "prob_pct": 36,
+          "edge": 1.08,
+          "score": 0.08,
+          "tier": "bon",
+          "raison": "Outsider Kristina Liutova : proba 36% × cote 3.00 → edge 1.08",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Kristina Liutova",
+            "cote": 3.0,
+            "prob_pct": 36,
+            "edge": 1.08,
+            "score": 0.08,
+            "tier": "bon",
+            "raison": "Outsider Kristina Liutova : proba 36% × cote 3.00 → edge 1.08",
+            "stars": 4
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Kristina Liutova",
+      "cotes": {
+        "1": 3.0,
+        "2": 1.39
+      },
+      "probabilites": {
+        "1": 36,
+        "2": 64
+      }
+    },
+    {
+      "id_match": "73063944",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 22:00",
+      "match_start_ts": 1785528000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Anastasia Zakharova",
+      "equipe_exterieur": "Renata Zarazua",
+      "joueur_1": "Anastasia Zakharova",
+      "joueur_2": "Renata Zarazua",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.62,
+          "2": 2.25
+        },
+        "probabilites": {
+          "1": 90,
+          "2": 10
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Anastasia Zakharova",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Anastasia Zakharova",
+            "cote": 1.62,
+            "prob_pct": 75,
+            "edge": 1.215,
+            "score": 0.215,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Anastasia Zakharova (écart 6 pts sur 5 matchs)",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Renata Zarazua",
+            "cote": 2.25,
+            "prob_pct": 13,
+            "edge": 0.292,
+            "score": -0.708,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (101 vs 83) — avantage Renata Zarazua",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Anastasia Zakharova",
+          "cote": 1.62,
+          "prob_pct": 75,
+          "edge": 1.215,
+          "score": 0.215,
+          "tier": "bon",
+          "raison": "Forme récente Winamax favorable à Anastasia Zakharova (écart 6 pts sur 5 matchs)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Anastasia Zakharova",
+            "cote": 1.62,
+            "prob_pct": 75,
+            "edge": 1.215,
+            "score": 0.215,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Anastasia Zakharova (écart 6 pts sur 5 matchs)",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Anastasia Zakharova",
+      "cotes": {
+        "1": 1.62,
+        "2": 2.25
+      },
+      "probabilites": {
+        "1": 90,
+        "2": 10
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "LLLWW",
+          "played": 5,
+          "wins": 2,
+          "draws": 0,
+          "losses": 3,
+          "points": 6,
+          "max_points": 15,
+          "pct": 40.0
+        },
+        "home_rank": 101,
+        "away_rank": 83,
+        "h2h": null,
+        "form_edge": 6,
+        "rank_edge": -18
+      }
+    },
+    {
+      "id_match": "73087114",
+      "sport": "tennis",
+      "date_match": "01/08/2026 à 00:00",
+      "match_start_ts": 1785535200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Rafael Jodar",
+      "equipe_exterieur": "Lorenzo Musetti",
+      "joueur_1": "Rafael Jodar",
+      "joueur_2": "Lorenzo Musetti",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.48,
+          "2": 2.6
+        },
+        "probabilites": {
+          "1": 88,
+          "2": 12
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Lorenzo Musetti",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Lorenzo Musetti",
+            "cote": 2.6,
+            "prob_pct": 15,
+            "edge": 0.39,
+            "score": -0.61,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (24 vs 15) — avantage Lorenzo Musetti",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Lorenzo Musetti",
+          "cote": 2.6,
+          "prob_pct": 15,
+          "edge": 0.39,
+          "score": -0.61,
+          "tier": "bon",
+          "raison": "Écart classement ATP/WTA (24 vs 15) — avantage Lorenzo Musetti",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Lorenzo Musetti",
+      "cotes": {
+        "1": 1.48,
+        "2": 2.6
+      },
+      "probabilites": {
+        "1": 88,
+        "2": 12
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 24,
+        "away_rank": 15,
+        "h2h": null,
+        "form_edge": 0,
+        "rank_edge": -9
+      }
+    },
+    {
+      "id_match": "73087116",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 21:10",
+      "match_start_ts": 1785525000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Taylor Fritz",
+      "equipe_exterieur": "Alex Michelsen",
+      "joueur_1": "Taylor Fritz",
+      "joueur_2": "Alex Michelsen",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.43,
+          "2": 2.8
+        },
+        "probabilites": {
+          "1": 66,
+          "2": 34
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Alex Michelsen",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Alex Michelsen",
+            "cote": 2.8,
+            "prob_pct": 38,
+            "edge": 1.064,
+            "score": 0.064,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Alex Michelsen (écart 3 pts sur 5 matchs)",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Taylor Fritz",
+            "cote": 1.43,
+            "prob_pct": 69,
+            "edge": 0.987,
+            "score": -0.013,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (10 vs 40) — avantage Taylor Fritz",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Taylor Fritz",
+            "cote": 1.43,
+            "prob_pct": 66,
+            "edge": 0.944,
+            "score": -0.056,
+            "tier": "bon",
+            "raison": "Favori net Taylor Fritz (66% implicite, cote 1.43)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Alex Michelsen",
+          "cote": 2.8,
+          "prob_pct": 38,
+          "edge": 1.064,
+          "score": 0.064,
+          "tier": "bon",
+          "raison": "Forme récente Winamax favorable à Alex Michelsen (écart 3 pts sur 5 matchs)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Alex Michelsen",
+      "cotes": {
+        "1": 1.43,
+        "2": 2.8
+      },
+      "probabilites": {
+        "1": 66,
+        "2": 34
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WWWWW",
+          "played": 5,
+          "wins": 5,
+          "draws": 0,
+          "losses": 0,
+          "points": 15,
+          "max_points": 15,
+          "pct": 100.0
+        },
+        "home_rank": 10,
+        "away_rank": 40,
+        "h2h": null,
+        "form_edge": -3,
+        "rank_edge": 30
+      }
+    },
+    {
+      "id_match": "73087118",
+      "sport": "tennis",
+      "date_match": "31/07/2026 à 20:00",
+      "match_start_ts": 1785520800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Alex De Minaur",
+      "equipe_exterieur": "Brandon Nakashima",
+      "joueur_1": "Alex De Minaur",
+      "joueur_2": "Brandon Nakashima",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.54,
+          "2": 2.45
+        },
+        "probabilites": {
+          "1": 93,
+          "2": 7
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Alex De Minaur",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Alex De Minaur",
+            "cote": 1.54,
+            "prob_pct": 93,
+            "edge": 1.432,
+            "score": 0.432,
+            "tier": "standard",
+            "raison": "Pronostic marché : Alex De Minaur (93%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Alex De Minaur",
+          "cote": 1.54,
+          "prob_pct": 93,
+          "edge": 1.432,
+          "score": 0.432,
+          "tier": "standard",
+          "raison": "Pronostic marché : Alex De Minaur (93%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Alex De Minaur",
+            "cote": 1.54,
+            "prob_pct": 93,
+            "edge": 1.432,
+            "score": 0.432,
+            "tier": "standard",
+            "raison": "Pronostic marché : Alex De Minaur (93%)",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Alex De Minaur",
+      "cotes": {
+        "1": 1.54,
+        "2": 2.45
+      },
+      "probabilites": {
+        "1": 93,
+        "2": 7
+      }
+    },
+    {
+      "id_match": "73087128",
+      "sport": "tennis",
+      "date_match": "01/08/2026 à 02:00",
+      "match_start_ts": 1785542400,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Alejandro Tabilo",
+      "equipe_exterieur": "Ben Shelton",
+      "joueur_1": "Alejandro Tabilo",
+      "joueur_2": "Ben Shelton",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.5,
+          "2": 1.3
+        },
+        "probabilites": {
+          "1": 27,
+          "2": 73
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Ben Shelton",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ben Shelton",
+            "cote": 1.3,
+            "prob_pct": 73,
+            "edge": 0.949,
+            "score": -0.051,
+            "tier": "bon",
+            "raison": "Favori net Ben Shelton (73% implicite, cote 1.30)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Ben Shelton",
+          "cote": 1.3,
+          "prob_pct": 73,
+          "edge": 0.949,
+          "score": -0.051,
+          "tier": "bon",
+          "raison": "Favori net Ben Shelton (73% implicite, cote 1.30)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Ben Shelton",
+      "cotes": {
+        "1": 3.5,
+        "2": 1.3
+      },
+      "probabilites": {
+        "1": 27,
+        "2": 73
+      }
+    }
+  ]
 }
