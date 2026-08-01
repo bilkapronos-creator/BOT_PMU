@@ -1,4 +1,4 @@
-const CACHE_NAME = 'velora-v11';
+const CACHE_NAME = 'velora-v12';
 const ASSETS = [
   '/',
   '/index.html',
@@ -31,10 +31,24 @@ self.addEventListener('fetch', (e) => {
   if (e.request.mode === 'navigate' && estNavigationPageStatique(url)) {
     return;
   }
+  // Données live (JSON) : jamais de fallback cache — évite matchs périmés sur mobile/PWA
+  if (url.pathname.endsWith('.json')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
 
   e.respondWith(
     fetch(e.request).catch(() => {
       return caches.match(e.request);
     })
   );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => Promise.all(
+      keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)),
+    )),
+  );
+  self.clients.claim();
 });

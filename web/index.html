@@ -825,15 +825,22 @@
             scroll-margin-top: 5.5rem;
         }
         @media (max-width: 1023px) {
-            #dashboardLayout.layout-invite-analyse {
+            #dashboardLayout.layout-invite-analyse,
+            #dashboardLayout.layout-foot-resultats-mobile {
                 display: flex;
                 flex-direction: column;
             }
-            #dashboardLayout.layout-invite-analyse #colonneDroite {
+            #dashboardLayout.layout-invite-analyse #colonneDroite,
+            #dashboardLayout.layout-foot-resultats-mobile #colonneDroite {
                 order: -1;
             }
-            #dashboardLayout.layout-invite-analyse #colonneGauche {
+            #dashboardLayout.layout-invite-analyse #colonneGauche,
+            #dashboardLayout.layout-foot-resultats-mobile #colonneGauche {
                 order: 0;
+            }
+            #sectionFootball,
+            #footResultats {
+                scroll-margin-top: 5.5rem;
             }
         }
         #blocFootGauche.foot-sidebar-opp-mode {
@@ -3333,6 +3340,17 @@
             const masquer = focusAnalyseSportActif();
             section.classList.toggle('hidden', masquer);
             if (masquer) replierVitrineCommunauteDetail();
+        }
+
+        /** Mobile : panneau résultats au-dessus de la recherche quand une analyse Foot est affichée. */
+        function appliquerLayoutMobileFootResultats() {
+            const layout = document.getElementById('dashboardLayout');
+            if (!layout) return;
+            const oppActif = footModeOpportunites && peutUtiliserRadarFootOpp();
+            const afficheResultats = sportActif === 'foot'
+                && sectionActive === 'pronostic'
+                && (footPeutAfficherResultats() || oppActif);
+            layout.classList.toggle('layout-foot-resultats-mobile', afficheResultats);
         }
 
         /** Replie le panneau détaillé (PMU / Foot) sans masquer les KPI. */
@@ -6110,8 +6128,13 @@
                 || document.getElementById('colonneDroite');
             if (!cible) return;
             const mobile = window.matchMedia('(max-width: 1023px)').matches;
+            const scroll = () => {
+                cible.scrollIntoView({ behavior: mobile ? 'smooth' : 'auto', block: mobile ? 'start' : 'nearest' });
+            };
+            appliquerLayoutMobileFootResultats();
             requestAnimationFrame(() => {
-                cible.scrollIntoView({ behavior: 'smooth', block: mobile ? 'start' : 'nearest' });
+                scroll();
+                if (mobile) setTimeout(scroll, 320);
             });
         }
 
@@ -9826,6 +9849,8 @@
                 zone.innerHTML = liste.map(carteAlerteOpportunite).join('');
                 majFootOppZonesVides(liste.length);
                 zone.classList.toggle('hidden', liste.length === 0);
+                appliquerVisibiliteVitrineCommunaute();
+                appliquerLayoutMobileFootResultats();
                 return;
             }
 
@@ -9843,6 +9868,7 @@
                     accueil.classList.toggle('hidden', !footMatchsCharges);
                 }
                 appliquerVisibiliteVitrineCommunaute();
+                appliquerLayoutMobileFootResultats();
                 return;
             }
 
@@ -9869,6 +9895,7 @@
             const loading = document.getElementById('footLoading');
             if (loading) loading.classList.add('hidden');
             appliquerVisibiliteVitrineCommunaute();
+            appliquerLayoutMobileFootResultats();
         }
 
         function impliedProbas1n2FromCotes(cotes) {
