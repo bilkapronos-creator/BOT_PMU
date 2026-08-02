@@ -5444,6 +5444,8 @@
         let veloraPaywallProduitActif = 'foot';
         let oppMatchs = [];
         let oppMatchsCharges = false;
+        const OPP_AFFICHAGE_PAR_PAGE = 40;
+        let footOppLimiteAffichage = OPP_AFFICHAGE_PAR_PAGE;
         let oppMajDate = null;
         const tabArchives = document.getElementById('tabArchives');
 
@@ -5548,6 +5550,16 @@
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;');
+        }
+
+        function estViewportMobileVelora() {
+            return window.matchMedia('(max-width: 1023px)').matches;
+        }
+
+        function safeEtoilesRepeat(char, count, max = 5) {
+            const n = Math.floor(Number(count));
+            if (!Number.isFinite(n) || n <= 0) return '';
+            return char.repeat(Math.max(0, Math.min(max, n)));
         }
 
         function navSportClasses(actif) {
@@ -6023,18 +6035,22 @@
             if (footModeOpportunites === actif) return;
             const zone = document.getElementById('footResultats');
             zone?.classList.add('is-fading');
-            await new Promise((r) => setTimeout(r, 160));
-            footModeOpportunites = actif;
-            syncFootModeUi();
-            const erreur = document.getElementById('footErreur');
-            if (erreur) erreur.classList.add('hidden');
-            if (actif) {
-                await chargerOppMatchs();
-            } else {
-                if (!footMatchsCharges) await chargerFootMatchs();
-                else renderFootMatchs();
+            try {
+                await new Promise((r) => setTimeout(r, 160));
+                footModeOpportunites = actif;
+                footOppLimiteAffichage = OPP_AFFICHAGE_PAR_PAGE;
+                syncFootModeUi();
+                const erreur = document.getElementById('footErreur');
+                if (erreur) erreur.classList.add('hidden');
+                if (actif) {
+                    await chargerOppMatchs();
+                } else {
+                    if (!footMatchsCharges) await chargerFootMatchs();
+                    else renderFootMatchs();
+                }
+            } finally {
+                zone?.classList.remove('is-fading');
             }
-            zone?.classList.remove('is-fading');
         }
 
         function onFootSearchInput(e) {
@@ -7452,7 +7468,7 @@
                 const fa = m?.free_analysis || {};
                 const best = fa.meilleur_conseil || (Array.isArray(fa.conseils_intelligents) ? fa.conseils_intelligents[0] : null);
                 if (best && Number(best.stars) > 0) {
-                    return `${'⭐'.repeat(Math.min(5, Number(best.stars)))} · Modèle actif`;
+                    return `${safeEtoilesRepeat('⭐', best.stars)} · Modèle actif`;
                 }
                 const probs = m?.probabilites || fa.probabilites || {};
                 const maxP = Math.max(Number(probs['1']) || 0, Number(probs.N) || 0, Number(probs['2']) || 0);
@@ -7481,7 +7497,7 @@
                 return '—';
             }
             const v = Math.max(1, Math.min(5, Number(n) || 1));
-            return '⭐'.repeat(v);
+            return safeEtoilesRepeat('⭐', v);
         }
 
         function conseilParleOver25Buts(conseil) {
@@ -8585,7 +8601,12 @@
                 footPremiumIndexPromise = null;
                 return new Map();
             }
-            if (footPremiumIndex) return footPremiumIndex;
+            // Mobile : premium_analysis déjà dans api_velora_matchs.json — évite un 2e JSON ~1,2 Mo
+            if (estViewportMobileVelora()) {
+                if (!(footPremiumIndex instanceof Map)) footPremiumIndex = new Map();
+                return footPremiumIndex;
+            }
+            if (footPremiumIndex instanceof Map) return footPremiumIndex;
             if (!footPremiumIndexPromise) {
                 footPremiumIndexPromise = fetchVeloraMatchsList(VELORA_JSON_PREMIUM)
                     .then((list) => {
@@ -8621,8 +8642,9 @@
         /** Fusionne premium_analysis v2 + api_velora_premium.json + marches_supplementaires. */
         function footMatchEnrichiPremium(m) {
             if (!m) return m;
+            try {
             const id = String(m?.id_match || '').trim();
-            const premRow = id && footPremiumIndex ? footPremiumIndex.get(id) : null;
+            const premRow = id && footPremiumIndex instanceof Map ? footPremiumIndex.get(id) : null;
             const normPrem = premRow ? normalizeFootMatch(premRow) : null;
 
             const msBase = m.marches_supplementaires || {};
@@ -8708,6 +8730,10 @@
                         : m.buteurs_mi_temps),
                 marches_supplementaires: msMerged,
             };
+            } catch (e) {
+                console.warn('[Velora] footMatchEnrichiPremium', m?.id_match, e);
+                return m;
+            }
         }
 
         function extractPremiumAnalysisData(m) {
@@ -9113,7 +9139,7 @@
             const rows = conseils.slice(0, 5).map((c, i) => {
                 const cls = tierCls[c.tier] || tierCls.bon;
                 const cote = c.cote ? `@ ${Number(c.cote).toFixed(2)}` : '';
-                const stars = c.stars ? '★'.repeat(Math.min(5, Number(c.stars))) : '';
+                const stars = safeEtoilesRepeat('★', c.stars);
                 const raison = c.raison ? `<p class="mt-1 text-[10px] leading-snug opacity-75">${escHtml(c.raison)}</p>` : '';
                 return `<li class="rounded-lg border px-3 py-2 ${cls}">
                     <div class="flex items-start justify-between gap-2">
@@ -9567,7 +9593,20 @@
                 </details>`;
         }
 
+        function htmlCarteFootMatchErreur(m, err) {
+            const dom = escHtml(m?.equipe_domicile || '—');
+            const ext = escHtml(m?.equipe_exterieur || '—');
+            const id = escHtml(m?.id_match || '');
+            console.warn('[Velora] carteFootMatch', id, err);
+            return `
+                <article class="foot-match-card glass-card rounded-2xl border border-red-500/30 bg-red-950/20 p-4 shadow-lg" data-match-id="${id}">
+                    <h3 class="text-base font-bold text-white">${dom} <span class="font-normal text-gray-500">—</span> ${ext}</h3>
+                    <p class="mt-2 text-xs leading-relaxed text-red-200/90">Analyse partielle — rechargez la page si le problème persiste.</p>
+                </article>`;
+        }
+
         function carteFootMatch(m) {
+            try {
             const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
@@ -9631,6 +9670,9 @@
                         </details>` : ''}
                     </div>
                 </article>`;
+            } catch (err) {
+                return htmlCarteFootMatchErreur(m, err);
+            }
         }
 
         function majFootMeta() {
@@ -9832,6 +9874,7 @@
             const videClassique = document.getElementById('footZoneVide');
             const accueil = document.getElementById('footZoneAccueil');
             if (!zone) return;
+            zone.classList.remove('is-fading');
 
             if (!peutUtiliserRadarFootOpp()) {
                 purgerDonneesOppFoot();
@@ -9841,16 +9884,27 @@
             }
 
             if (footModeOpportunites && peutUtiliserRadarFootOpp()) {
-                const liste = oppMatchsFiltres();
+                zone.classList.remove('is-fading');
+                const { total, visible, restantes } = oppMatchsListeAffichee();
                 majFootMeta();
                 if (accueil) accueil.classList.add('hidden');
                 if (videClassique) videClassique.classList.add('hidden');
                 zone.className = 'foot-resultats-panel space-y-5';
-                zone.innerHTML = liste.map(carteAlerteOpportunite).join('');
-                majFootOppZonesVides(liste.length);
-                zone.classList.toggle('hidden', liste.length === 0);
+                const htmlCartes = [];
+                for (const m of visible) {
+                    try {
+                        htmlCartes.push(carteAlerteOpportunite(m));
+                    } catch (err) {
+                        console.error('[Velora] Rendu opp Foot :', m?.id_match, err);
+                        htmlCartes.push(htmlCarteFootMatchErreur(m, err));
+                    }
+                }
+                zone.innerHTML = htmlCartes.join('') + htmlFootOppAfficherPlus(restantes);
+                majFootOppZonesVides(total);
+                zone.classList.toggle('hidden', total === 0);
                 appliquerVisibiliteVitrineCommunaute();
                 appliquerLayoutMobileFootResultats();
+                if (total > 0) defilerVersResultatsFoot();
                 return;
             }
 
@@ -9878,15 +9932,24 @@
                 ? 'foot-resultats-panel space-y-5'
                 : 'foot-resultats-panel space-y-4';
             const erreur = document.getElementById('footErreur');
-            try {
-                zone.innerHTML = liste.map(carteFootMatch).join('');
-                if (erreur) erreur.classList.add('hidden');
-            } catch (err) {
-                console.error('[Velora] Rendu carte Foot :', err);
-                zone.innerHTML = '';
-                if (erreur) {
+            const htmlCartes = [];
+            let echecs = 0;
+            for (const m of liste) {
+                try {
+                    htmlCartes.push(carteFootMatch(m));
+                } catch (err) {
+                    echecs += 1;
+                    console.error('[Velora] Rendu carte Foot :', m?.id_match, err);
+                    htmlCartes.push(htmlCarteFootMatchErreur(m, err));
+                }
+            }
+            zone.innerHTML = htmlCartes.join('');
+            if (erreur) {
+                if (echecs >= liste.length && liste.length > 0) {
                     erreur.textContent = 'Erreur d\'affichage de l\'analyse. Rechargez la page.';
                     erreur.classList.remove('hidden');
+                } else {
+                    erreur.classList.add('hidden');
                 }
             }
             majFootZoneVideRecherche(liste.length);
@@ -10090,6 +10153,27 @@
                 });
         }
 
+        function oppMatchsListeAffichee() {
+            const liste = oppMatchsFiltres();
+            const lim = Math.max(OPP_AFFICHAGE_PAR_PAGE, footOppLimiteAffichage || OPP_AFFICHAGE_PAR_PAGE);
+            return {
+                total: liste.length,
+                visible: liste.slice(0, lim),
+                restantes: Math.max(0, liste.length - lim),
+            };
+        }
+
+        function htmlFootOppAfficherPlus(restantes) {
+            if (!restantes || restantes <= 0) return '';
+            return `
+                <div class="flex justify-center pt-2">
+                    <button type="button" id="btnFootOppAfficherPlus"
+                        class="rounded-xl border border-amber-500/40 bg-amber-500/10 px-5 py-2.5 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/20">
+                        Afficher ${restantes} pépite${restantes > 1 ? 's' : ''} de plus
+                    </button>
+                </div>`;
+        }
+
         function setOppMajAffichage(date) {
             const el = document.getElementById('oppMajHeureVal');
             if (!el) return;
@@ -10175,6 +10259,7 @@
                 await chargerOddsHistory();
                 oppMatchs = await fetchOppPremiumJson();
                 oppMatchsCharges = true;
+                footOppLimiteAffichage = OPP_AFFICHAGE_PAR_PAGE;
                 oppMajDate = new Date();
                 setOppMajAffichage(oppMajDate);
             } catch (e) {
@@ -10193,6 +10278,7 @@
         }
 
         function carteAlerteOpportunite(m) {
+            try {
             const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
@@ -10260,6 +10346,9 @@
                         ${scoresBloc}
                     </div>
                 </article>`;
+            } catch (err) {
+                return htmlCarteFootMatchErreur(m, err);
+            }
         }
 
         async function rechargerTennisMatchsServeur(options = {}) {
@@ -10662,6 +10751,12 @@
             }
         });
         document.getElementById('footResultats')?.addEventListener('click', (ev) => {
+            if (ev.target.closest('#btnFootOppAfficherPlus')) {
+                ev.preventDefault();
+                footOppLimiteAffichage += OPP_AFFICHAGE_PAR_PAGE;
+                renderFootMatchs();
+                return;
+            }
             if (ev.target.closest('[data-foot-premium-cta]')) {
                 ev.preventDefault();
                 showPaywallModal('premium_offer_foot');
