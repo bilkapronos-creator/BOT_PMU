@@ -1,7 +1,7 @@
 {
   "version": 1,
   "edge_thresholds": {
-    "1n2": 1.07,
+    "1n2": 1.09,
     "dc_1x": 1.05,
     "dc_x2": 1.05,
     "ou_total": 1.08,
@@ -12,21 +12,31 @@
   },
   "suggestions": [
     {
+      "marche": "pronostic_1n2",
+      "label": "Pronostic 1N2",
+      "edge_key": "1n2",
+      "edge_actuel": 1.05,
+      "edge_suggere": 1.07,
+      "taux_pct": 43,
+      "echantillon": 30,
+      "raison": "43% de réussite sur 30 matchs — seuil relevé"
+    },
+    {
       "marche": "score_exact",
       "label": "Score exact (top 3)",
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
       "edge_suggere": 1.21,
       "taux_pct": 20,
-      "echantillon": 153,
-      "raison": "20% de réussite sur 153 matchs — seuil relevé"
+      "echantillon": 158,
+      "raison": "20% de réussite sur 158 matchs — seuil relevé"
     },
     {
       "marche": "value_1n2",
       "label": "Value 1N2",
       "edge_key": "1n2",
-      "edge_actuel": 1.05,
-      "edge_suggere": 1.07,
+      "edge_actuel": 1.07,
+      "edge_suggere": 1.09,
       "taux_pct": 41,
       "echantillon": 131,
       "raison": "41% de réussite sur 131 matchs — seuil relevé"
@@ -43,26 +53,26 @@
     }
   ],
   "detail_par_marche": {
+    "pronostic_1n2": {
+      "label": "Pronostic 1N2",
+      "total": 30,
+      "succes": 13,
+      "taux": 43,
+      "profit_net": -157.3
+    },
+    "score_exact": {
+      "label": "Score exact (top 3)",
+      "total": 158,
+      "succes": 32,
+      "taux": 20,
+      "profit_net": -1085.1
+    },
     "double_chance": {
       "label": "Double chance",
       "total": 114,
       "succes": 64,
       "taux": 56,
       "profit_net": -84.6
-    },
-    "score_exact": {
-      "label": "Score exact (top 3)",
-      "total": 153,
-      "succes": 31,
-      "taux": 20,
-      "profit_net": -1045.2
-    },
-    "pronostic_1n2": {
-      "label": "Pronostic 1N2",
-      "total": 25,
-      "succes": 11,
-      "taux": 44,
-      "profit_net": -127.5
     },
     "value_1n2": {
       "label": "Value 1N2",
