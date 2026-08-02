@@ -1,4 +1,4 @@
-const CACHE_NAME = 'velora-v13';
+const CACHE_NAME = 'velora-v15';
 const ASSETS = [
   '/',
   '/index.html',

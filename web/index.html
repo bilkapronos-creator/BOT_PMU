@@ -5562,6 +5562,15 @@
             return char.repeat(Math.max(0, Math.min(max, n)));
         }
 
+        function footRenderSection(section, fn, matchId) {
+            try {
+                return fn();
+            } catch (err) {
+                console.warn('[Velora] footRenderSection', section, matchId, err);
+                return '';
+            }
+        }
+
         function navSportClasses(actif) {
             return actif
                 ? 'glass-card rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 shadow-sm transition'
@@ -6292,7 +6301,8 @@
         }
 
         function cotesHistoriqueMatch(matchId) {
-            return (veloraOddsHistory?.by_match || {})[String(matchId)] || [];
+            const raw = (veloraOddsHistory?.by_match || {})[String(matchId)];
+            return Array.isArray(raw) ? raw : [];
         }
 
         function cotes1n2FromMatch(m) {
@@ -6863,14 +6873,27 @@
             return s;
         }
 
-        function archiveFootEstEnAttente(a) {
+        function archiveFootStatutEnAttenteDirect(a) {
             const st = normaliserStatutArchiveFoot(a?.statut);
             const sp = normaliserStatutArchiveFoot(a?.statut_pari);
             if (st === 'EN_ATTENTE' || sp === 'EN_ATTENTE') return true;
             const rawSt = String(a?.statut || '').trim().toLowerCase();
             const rawSp = String(a?.statut_pari || '').trim().toLowerCase();
-            if (/^en attente/.test(rawSt) || /^en attente/.test(rawSp)) return true;
-            if (archiveFootEstValidee(a)) return false;
+            return /^en attente/.test(rawSt) || /^en attente/.test(rawSp);
+        }
+
+        function archiveFootEstValideeDirect(a) {
+            if (!a?.score_final) return false;
+            const sp = String(a?.statut_pari || '').trim().toUpperCase().replace(/É/g, 'E');
+            if (!/^(GAGNE|GAGNANT|PERDU|PERDANT)$/.test(sp)) return false;
+            if (a?.reussi_foot == null) return false;
+            const st = String(a?.statut || '').toUpperCase().replace(/É/g, 'E');
+            return st === 'TERMINEE' || st === 'TERMINE';
+        }
+
+        function archiveFootEstEnAttente(a) {
+            if (archiveFootStatutEnAttenteDirect(a)) return true;
+            if (archiveFootEstValideeDirect(a)) return false;
             if (a?.score_final) return false;
             return a?.reussi_foot == null && !a?.financier;
         }
@@ -6883,13 +6906,8 @@
         }
 
         function archiveFootEstValidee(a) {
-            if (archiveFootEstEnAttente(a)) return false;
-            if (!a?.score_final) return false;
-            const sp = String(a?.statut_pari || '').trim().toUpperCase();
-            if (!/^(GAGNÉ|GAGNE|GAGNANT|PERDU|PERDANT)$/.test(sp.replace('É', 'E'))) return false;
-            if (a?.reussi_foot == null) return false;
-            const st = String(a?.statut || '').toUpperCase();
-            return st === 'TERMINÉE' || st === 'TERMINEE' || st === 'TERMINE';
+            if (archiveFootStatutEnAttenteDirect(a)) return false;
+            return archiveFootEstValideeDirect(a);
         }
 
         function archivesFootTermineesSeulement(archives) {
@@ -7749,7 +7767,8 @@
 
         /** Probabilités modèle Velora (Poisson), alignées au pronostic 1N2. */
         function scoresProbablesModele(m) {
-            return scoresAffichablesPourMatch(m);
+            const rows = scoresAffichablesPourMatch(m);
+            return Array.isArray(rows) ? rows : [];
         }
 
         function primaryPickFromMatch(m) {
@@ -7898,8 +7917,16 @@
             return true;
         }
 
+        function filtrerScoresSelonPronostic1n2(m, scores) {
+            if (!Array.isArray(scores) || !scores.length) return [];
+            const pick = pronosticPick1n2PourScores(m);
+            if (!pick) return scores;
+            const aligned = scores.filter((s) => scoreCoherentAvecPronostic(s?.score, pick));
+            return aligned.length ? aligned : scores;
+        }
+
         function filtrerScoresSelonMarchesFoot(m, scores) {
-            let rows = filtrerScoresSelonPronostic(m, scores);
+            let rows = filtrerScoresSelonPronostic1n2(m, scores);
             const bttsPick = inferVeloraBttsPick(m);
             if (bttsPick) {
                 rows = rows.filter((s) => scoreCoherentAvecBtts(s?.score, bttsPick));
@@ -9107,15 +9134,20 @@
         }
 
         function htmlMarchesPremiumVelora(m, theme = 'foot') {
-            const conseils = htmlConseilsIntelligents(m, { scope: 'premium', theme });
-            const cotes = htmlMarketsRawPremiumPanel(m, theme);
-            if (!conseils && !cotes) return '';
-            return `
+            try {
+                const conseils = htmlConseilsIntelligents(m, { scope: 'premium', theme });
+                const cotes = htmlMarketsRawPremiumPanel(m, theme);
+                if (!conseils && !cotes) return '';
+                return `
                 <div class="space-y-3" role="region" aria-label="Marchés premium Velora">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-violet-300/90">Marchés Premium Velora</p>
                     <p class="text-[10px] leading-relaxed text-gray-500">Double chance, DNB, mi-temps, handicap, buts équipe, over/under, BTTS — réservé Pass Foot.</p>
                     ${conseils}${cotes}
                 </div>`;
+            } catch (err) {
+                console.warn('[Velora] htmlMarchesPremiumVelora', m?.id_match, err);
+                return '';
+            }
         }
 
         function htmlConseilsIntelligents(m, options = {}) {
@@ -9299,7 +9331,7 @@
             const prem = enr?.premium_analysis;
             const valueBets = prem && Array.isArray(prem.value_bets) ? prem.value_bets : [];
             const topScores = scoresExactCotesWinamax(enr).slice(0, 3);
-            const modelScores = scoresProbablesModele(enr).slice(0, 5);
+            const modelScores = (scoresProbablesModele(enr) || []).slice(0, 5);
             const buteurs = buteursFromMatch(enr).slice(0, 4);
             const buteursMiTemps = buteursMiTempsFromMatch(enr).slice(0, 4);
             const doubles = prem ? premiumScorersList(prem, 'buteur_double').slice(0, 3) : [];
@@ -9378,6 +9410,7 @@
         }
 
         function htmlFootPremiumAnalysisSection(m) {
+            try {
             const isPremiumUser = estVeloraPremiumFoot() === true;
 
             if (isPremiumUser) {
@@ -9444,6 +9477,10 @@
                         </button>
                     </div>
                 </div>`;
+            } catch (err) {
+                console.warn('[Velora] htmlFootPremiumAnalysisSection', m?.id_match, err);
+                return '';
+            }
         }
 
         function htmlBlocScorersMarches(ms, key, title, theme) {
@@ -9488,11 +9525,12 @@
         }
 
         function htmlVoirPlusParis(m, theme = 'foot') {
+            try {
             const enr = footMatchEnrichiPremium(m);
             const buteurs = buteursFromMatch(enr);
             const buteursMt = buteursMiTempsFromMatch(enr);
             const scores = scoresExactCotesWinamax(enr);
-            const scoresModele = scoresProbablesModele(enr);
+            const scoresModele = scoresProbablesModele(enr) || [];
             const legacyMs = enr.marches_supplementaires;
             const legacyBm = !buteurs.length
                 ? htmlBlocScorersMarches(legacyMs, 'buteur_match', 'Buteurs match', theme)
@@ -9532,6 +9570,10 @@
                         ${buteursHtml}${buteursMtHtml}${scoresHtml}
                     </div>
                 </details>`;
+            } catch (err) {
+                console.warn('[Velora] htmlVoirPlusParis', m?.id_match, err);
+                return '';
+            }
         }
 
         function htmlOuLigneCompact(label, lineVal, theme) {
@@ -9606,7 +9648,7 @@
         }
 
         function carteFootMatch(m) {
-            try {
+            const mid = m?.id_match;
             const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
@@ -9617,31 +9659,36 @@
                 : Array.isArray(scoresAlignes) && scoresAlignes.length
                     ? scoresAlignes.map((s) => `<li class="flex justify-between text-xs text-gray-400"><span>${escHtml(String(s.score || '').replace(/-/g, ' - '))}</span>${htmlScoreProbCell(s)}</li>`).join('')
                     : '';
-            const signalBadges = htmlVeloraAnalyseBadges(m, 'foot', 'signals');
-            const badgesRow = htmlFootFreeBadgesRow(m, 'foot');
-            const conseilsMarches = htmlConseilsIntelligents(m, { scope: 'all', theme: 'foot' });
-            const blocsPronosticValue = htmlBlocPronosticValue(m);
-            const blocScoreExact = htmlBlocPronosticScoreExact(m, 'foot');
-            const parisSecondaires = htmlBlocParisSecondaires(m);
+            const signalBadges = footRenderSection('signalBadges', () => htmlVeloraAnalyseBadges(m, 'foot', 'signals'), mid);
+            const badgesRow = footRenderSection('badgesRow', () => htmlFootFreeBadgesRow(m, 'foot'), mid);
+            const conseilsMarches = footRenderSection('conseilsMarches', () => htmlConseilsIntelligents(m, { scope: 'all', theme: 'foot' }), mid);
+            const blocsPronosticValue = footRenderSection('pronosticValue', () => htmlBlocPronosticValue(m), mid);
+            const blocScoreExact = footRenderSection('scoreExact', () => htmlBlocPronosticScoreExact(m, 'foot'), mid);
+            const parisSecondaires = footRenderSection('parisSecondaires', () => htmlBlocParisSecondaires(m), mid);
             const mAffichage = estVeloraPremiumFoot() ? footMatchEnrichiPremium(m) : m;
             const plusParis = estVeloraPremiumFoot()
-                ? (htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'))
-                : htmlFootPremiumAnalysisSection(m);
+                ? footRenderSection('plusParis', () => htmlFootPremiumAnalysisSection(m) + htmlVoirPlusParis(mAffichage, 'foot'), mid)
+                : footRenderSection('premiumPaywall', () => htmlFootPremiumAnalysisSection(m), mid);
             const alertMeta = classifyConseilAlert(m.conseil);
             const footCardExtra = alertMeta ? alertMeta.footCardClass : '';
+            const liveBadge = footRenderSection('live', () => htmlFootLiveBadge(m), mid);
+            const indice = footRenderSection('indice', () => libelleIndiceVelora(m), mid) || '—';
+            const oddsMove = footRenderSection('oddsMove', () => htmlOddsMovement(m), mid);
+            const conseilBloc = conseilVeloraRedondant(m) ? '' : footRenderSection('conseil', () => htmlConseilVelora(m.conseil, 'foot'), mid);
+            const adminBloc = footRenderSection('admin', () => htmlVeloraAdminTechnique(m), mid);
 
             return `
                 <article class="foot-match-card glass-card overflow-hidden rounded-2xl border border-white/10 shadow-lg shadow-black/20 transition hover:border-cyan-500/25 ${footCardExtra}" data-match-id="${escHtml(m.id_match)}">
                     <div class="foot-match-card-header flex flex-wrap items-start justify-between gap-3 border-b border-white/10 bg-gradient-to-r from-gray-900/80 to-cyan-950/30">
                         <div class="min-w-0 flex-1 pr-1">
                             <span class="block text-[10px] font-medium leading-tight tracking-wide text-slate-500">${escHtml(m.date_match || '')}</span>
-                            ${htmlFootLiveBadge(m)}
+                            ${liveBadge}
                             <h3 class="foot-match-title mt-0.5 text-base font-bold text-white sm:text-lg">${escHtml(m.equipe_domicile)} <span class="font-normal text-gray-500">—</span> ${escHtml(m.equipe_exterieur)}</h3>
                             ${signalBadges}
                         </div>
                         <div class="shrink-0 text-right">
                             <p class="text-[10px] uppercase tracking-widest text-amber-400/80">Indice Velora</p>
-                            <p class="text-sm leading-none" title="${escHtml(String(m.indice_velora_label || (m.velora_score != null ? m.velora_score + '/100' : (Number(m.indice_velora) || 0) + '/5')))}">${libelleIndiceVelora(m)}</p>
+                            <p class="text-sm leading-none" title="${escHtml(String(m.indice_velora_label || (m.velora_score != null ? m.velora_score + '/100' : (Number(m.indice_velora) || 0) + '/5')))}">${indice}</p>
                         </div>
                     </div>
                     <div class="foot-match-card-body space-y-4">
@@ -9657,12 +9704,12 @@
                         ${blocsPronosticValue}
                         ${blocScoreExact}
                         ${parisSecondaires}
-                        ${htmlOddsMovement(m)}
-                        ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(m.conseil, 'foot')}
+                        ${oddsMove}
+                        ${conseilBloc}
                         ${badgesRow}
                         ${conseilsMarches}
                         ${plusParis}
-                        ${htmlVeloraAdminTechnique(m)}
+                        ${adminBloc}
                         ${scoresMoteurHtml ? `
                         <details class="group rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">
                             <summary class="cursor-pointer list-none text-xs font-semibold text-gray-400 marker:content-none group-open:text-cyan-300">Scores probables (modèle Velora)</summary>
@@ -9670,9 +9717,6 @@
                         </details>` : ''}
                     </div>
                 </article>`;
-            } catch (err) {
-                return htmlCarteFootMatchErreur(m, err);
-            }
         }
 
         function majFootMeta() {
@@ -9892,12 +9936,7 @@
                 zone.className = 'foot-resultats-panel space-y-5';
                 const htmlCartes = [];
                 for (const m of visible) {
-                    try {
-                        htmlCartes.push(carteAlerteOpportunite(m));
-                    } catch (err) {
-                        console.error('[Velora] Rendu opp Foot :', m?.id_match, err);
-                        htmlCartes.push(htmlCarteFootMatchErreur(m, err));
-                    }
+                    htmlCartes.push(carteAlerteOpportunite(m));
                 }
                 zone.innerHTML = htmlCartes.join('') + htmlFootOppAfficherPlus(restantes);
                 majFootOppZonesVides(total);
@@ -9933,25 +9972,11 @@
                 : 'foot-resultats-panel space-y-4';
             const erreur = document.getElementById('footErreur');
             const htmlCartes = [];
-            let echecs = 0;
             for (const m of liste) {
-                try {
-                    htmlCartes.push(carteFootMatch(m));
-                } catch (err) {
-                    echecs += 1;
-                    console.error('[Velora] Rendu carte Foot :', m?.id_match, err);
-                    htmlCartes.push(htmlCarteFootMatchErreur(m, err));
-                }
+                htmlCartes.push(carteFootMatch(m));
             }
             zone.innerHTML = htmlCartes.join('');
-            if (erreur) {
-                if (echecs >= liste.length && liste.length > 0) {
-                    erreur.textContent = 'Erreur d\'affichage de l\'analyse. Rechargez la page.';
-                    erreur.classList.remove('hidden');
-                } else {
-                    erreur.classList.add('hidden');
-                }
-            }
+            if (erreur) erreur.classList.add('hidden');
             majFootZoneVideRecherche(liste.length);
             if (videClassique) videClassique.classList.toggle('hidden', liste.length > 0);
             zone.classList.toggle('hidden', liste.length === 0);
@@ -10075,11 +10100,7 @@
         }
 
         function filtrerScoresSelonPronostic(m, scores) {
-            if (!Array.isArray(scores) || !scores.length) return [];
-            const pick = pronosticPick1n2PourScores(m);
-            if (!pick) return filtrerScoresSelonMarchesFoot(m, scores);
-            const aligned = scores.filter((s) => scoreCoherentAvecPronostic(s?.score, pick));
-            return filtrerScoresSelonMarchesFoot(m, aligned.length ? aligned : scores);
+            return filtrerScoresSelonMarchesFoot(m, scores);
         }
 
         function trierScoresParProbDesc(scores) {
@@ -10278,7 +10299,7 @@
         }
 
         function carteAlerteOpportunite(m) {
-            try {
+            const mid = m?.id_match;
             const p = probasUiPourMatch(m);
             const p1 = Number(p['1']) || 0;
             const pn = Number(p.N) || 0;
@@ -10287,16 +10308,16 @@
             const cardTheme = alertMeta?.cardClass || '';
             const oppType = opportuniteTypeEffectif(m) || alertMeta?.type || 'standard';
             const hide1n2 = oppCacheMarcheSecondaire(m);
-            const signalBadges = htmlVeloraAnalyseBadges(m, 'opp', 'signals');
-            const blocsPronosticValue = hide1n2 ? '' : htmlBlocPronosticValue(m);
+            const signalBadges = footRenderSection('signalBadges', () => htmlVeloraAnalyseBadges(m, 'opp', 'signals'), mid);
+            const blocsPronosticValue = hide1n2 ? '' : footRenderSection('pronosticValue', () => htmlBlocPronosticValue(m), mid);
             const detail = String(m.opportunite_detail || m.conseil || '').trim();
-            const scoresHtml = htmlTopScoresList(m.top_scores, m);
+            const scoresHtml = footRenderSection('topScores', () => htmlTopScoresList(m.top_scores, m), mid);
             const pariFocus = hide1n2 && detail
                 ? `<div class="opp-pari-focus velora-match-conseil-wrap"><p class="text-[10px] font-semibold uppercase tracking-wider text-amber-400/90">À jouer</p><p class="opp-pari-focus-value foot-match-conseil-text mt-1">${escHtml(detail)}</p></div>`
                 : '';
             const bloc1n2 = hide1n2
                 ? ''
-                : `
+                : footRenderSection('bloc1n2', () => `
                         <div>
                             <p class="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Nos probabilités</p>
                             <div class="foot-prob-bar" role="img" aria-label="Dom ${p1}%, Nul ${pn}%, Ext ${p2}%">
@@ -10306,49 +10327,58 @@
                             </div>
                             <p class="mt-1.5 text-center text-xs text-gray-400">Dom: <span class="font-semibold text-emerald-400">${p1}%</span> | Nul: <span class="font-semibold text-yellow-400">${pn}%</span> | Ext: <span class="font-semibold text-cyan-400">${p2}%</span></p>
                         </div>
-                        ${htmlVelora1n2PickRow(m, 'opp')}`;
+                        ${htmlVelora1n2PickRow(m, 'opp')}`, mid);
             const extraMarches = hide1n2
-                ? htmlOppMarchesSecondaires(m)
-                : `${htmlMarchesPillsRow(m, 'opp')}${htmlVoirPlusParis(m, 'opp')}`;
+                ? footRenderSection('oppMarches', () => htmlOppMarchesSecondaires(m), mid)
+                : footRenderSection('extraMarches', () => `${htmlMarchesPillsRow(m, 'opp')}${htmlVoirPlusParis(m, 'opp')}`, mid);
             const scoresBloc = hide1n2
                 ? ''
-                : `
+                : (scoresHtml ? `
                         <div class="rounded-lg border border-white/10 bg-black/20 px-3 py-2.5">
                             <p class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">Scores probables</p>
                             <ul class="space-y-1.5">${scoresHtml}</ul>
-                        </div>`;
+                        </div>` : '');
+            const neonHero = footRenderSection('neonHero', () => htmlOppNeonHero(m), mid);
+            const banner = footRenderSection('banner', () => htmlOppAlertBanner(conseilAffichageMatch(m), m), mid);
+            const marchesPremium = estVeloraPremiumFoot()
+                ? footRenderSection('marchesPremium', () => htmlMarchesPremiumVelora(m, 'opp'), mid)
+                : '';
+            const oddsMove = hide1n2 ? '' : footRenderSection('oddsMove', () => htmlOddsMovement(m), mid);
+            const conseilBloc = conseilVeloraRedondant(m)
+                ? ''
+                : footRenderSection('conseil', () => htmlConseilVelora(conseilAffichageMatch(m), 'opp', m), mid);
+            const adminBloc = footRenderSection('admin', () => htmlVeloraAdminTechnique(m), mid);
+            const liveBadge = footRenderSection('live', () => htmlFootLiveBadge(m), mid);
+            const indice = footRenderSection('indice', () => libelleIndiceVelora(m), mid) || '—';
 
             return `
                 <article class="opp-alert-card relative overflow-hidden rounded-2xl ${cardTheme}" data-match-id="${escHtml(m.id_match)}" data-alert-type="${escHtml(oppType)}" data-opp-type="${escHtml(oppType)}">
-                    ${htmlOppNeonHero(m)}
-                    ${htmlOppAlertBanner(conseilAffichageMatch(m), m)}
+                    ${neonHero}
+                    ${banner}
                     <div class="foot-match-card-body space-y-4">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div class="min-w-0 flex-1 pr-1">
                                 <span class="block text-[10px] font-medium text-slate-500">${escHtml(m.date_match || '')}</span>
-                                ${htmlFootLiveBadge(m)}
+                                ${liveBadge}
                                 <h3 class="foot-match-title mt-0.5 text-lg font-bold text-white">${escHtml(m.equipe_domicile)} <span class="text-amber-400/80">—</span> ${escHtml(m.equipe_exterieur)}</h3>
                                 ${signalBadges}
                             </div>
                             <div class="shrink-0 text-right">
                                 <p class="text-[10px] uppercase tracking-widest text-amber-400">Indice Velora</p>
-                                <p class="text-base leading-none">${libelleIndiceVelora(m)}</p>
+                                <p class="text-base leading-none">${indice}</p>
                             </div>
                         </div>
                         ${pariFocus}
                         ${blocsPronosticValue}
-                        ${estVeloraPremiumFoot() ? htmlMarchesPremiumVelora(m, 'opp') : ''}
-                        ${hide1n2 ? '' : htmlOddsMovement(m)}
-                        ${conseilVeloraRedondant(m) ? '' : htmlConseilVelora(conseilAffichageMatch(m), 'opp', m)}
+                        ${marchesPremium}
+                        ${oddsMove}
+                        ${conseilBloc}
                         ${bloc1n2}
-                        ${htmlVeloraAdminTechnique(m)}
+                        ${adminBloc}
                         ${extraMarches}
                         ${scoresBloc}
                     </div>
                 </article>`;
-            } catch (err) {
-                return htmlCarteFootMatchErreur(m, err);
-            }
         }
 
         async function rechargerTennisMatchsServeur(options = {}) {
