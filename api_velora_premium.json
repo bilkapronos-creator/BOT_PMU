@@ -5277,29 +5277,33 @@
       "confiance_niveau": "faible",
       "line_signal": "stable",
       "poisson_lambdas": {
-        "home": 1.339,
-        "away": 1.421
+        "home": 1.764,
+        "away": 1.871
       },
       "top_scores_modele": [
         {
           "score": "1-1",
-          "prob": 12
-        },
-        {
-          "score": "0-0",
-          "prob": 6
+          "prob": 9
         },
         {
           "score": "2-2",
-          "prob": 6
+          "prob": 7
+        },
+        {
+          "score": "0-0",
+          "prob": 3
         },
         {
           "score": "3-3",
+          "prob": 3
+        },
+        {
+          "score": "4-4",
           "prob": 1
         }
       ],
-      "prob_over_25_modele": 52,
-      "prob_btts_modele": 56,
+      "prob_over_25_modele": 70,
+      "prob_btts_modele": 70,
       "football_data_enriched": true,
       "markets_raw": {
         "over_under_total": {},
@@ -5308,41 +5312,53 @@
       "value_bets": [],
       "display_badges": [
         "Double chance 12",
-        "BTTS Oui"
+        "BTTS Oui",
+        "Plus de 2.5 buts"
       ],
       "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 69,
-          "edge": 0.0,
-          "score": 69.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
         {
           "market": "btts",
           "pick": "oui",
           "label": "BTTS Oui",
-          "prob_pct": 56,
+          "prob_pct": 70,
           "edge": 0.0,
-          "score": 56.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 56% (cote Winamax absente sur ce marché)",
-          "stars": 2
+          "score": 70.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "over_25",
+          "pick": "plus",
+          "label": "Plus de 2.5 buts",
+          "prob_pct": 70,
+          "edge": 0.0,
+          "score": 70.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "dc_12",
+          "pick": "12",
+          "label": "Double chance 12",
+          "prob_pct": 70,
+          "edge": 0.0,
+          "score": 70.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
+          "stars": 3
         }
       ],
       "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 69,
+        "market": "btts",
+        "pick": "oui",
+        "label": "BTTS Oui",
+        "prob_pct": 70,
         "edge": 0.0,
-        "score": 69.0,
-        "tier": "bon",
-        "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
+        "score": 70.0,
+        "tier": "excellent",
+        "raison": "Signal modèle Velora — 70% (cote Winamax absente sur ce marché)",
         "stars": 3
       }
     },
@@ -5363,8 +5379,9 @@
     },
     "_legacy": {
       "conseil": "Match nul",
-      "tendance_buts": "Match Tactique",
+      "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
+      "opportunite_type": "btts",
       "is_opportunite": false
     },
     "marches_supplementaires": {
@@ -5380,18 +5397,22 @@
     "top_scores": [
       {
         "score": "1-1",
-        "prob": 12
-      },
-      {
-        "score": "0-0",
-        "prob": 6
+        "prob": 9
       },
       {
         "score": "2-2",
-        "prob": 6
+        "prob": 7
+      },
+      {
+        "score": "0-0",
+        "prob": 3
       },
       {
         "score": "3-3",
+        "prob": 3
+      },
+      {
+        "score": "4-4",
         "prob": 1
       }
     ],
@@ -24674,6 +24695,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Feyenoord",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.389,
         "away": 2.195
@@ -24859,6 +24881,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire La Gantoise",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.041,
         "away": 1.61
@@ -25044,6 +25067,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire St. Pauli",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.234,
         "away": 1.518
@@ -25229,6 +25253,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.061,
         "away": 1.562
@@ -25406,6 +25431,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.684,
         "away": 1.952
@@ -25591,6 +25617,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Utrecht",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.942,
         "away": 1.764
@@ -25806,6 +25833,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Ajax Amsterdam",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.307,
         "away": 2.322
@@ -25991,6 +26019,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Cruzeiro",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.116,
         "away": 0.679
@@ -26176,6 +26205,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.094,
         "away": 1.465
@@ -26353,6 +26383,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Zulte Waregem",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.731,
         "away": 2.156
@@ -26568,6 +26599,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Heerenveen",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.654,
         "away": 1.993
@@ -26752,6 +26784,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Sheffield United",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.472,
         "away": 2.125
@@ -26937,6 +26970,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Victoire CS Universitatea Craiova",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.297,
         "away": 1.35
@@ -27122,6 +27156,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Anderlecht",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.157,
         "away": 1.403
@@ -27307,6 +27342,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire FC Porto",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.78,
         "away": 0.957
@@ -27492,6 +27528,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Royal Antwerp FC",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.275,
         "away": 1.384
@@ -27677,6 +27714,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire FCSB",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.468,
         "away": 2.235
@@ -27862,6 +27900,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Victoire Palmeiras",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 3.167,
         "away": 1.7
@@ -28047,6 +28086,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Bahia",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.351,
         "away": 0.907
@@ -28232,6 +28272,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Gil Vicente",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.12,
         "away": 1.469
@@ -28417,6 +28458,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Braga",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.379,
         "away": 2.211
@@ -28602,6 +28644,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Benfica",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.769,
         "away": 0.814
@@ -28775,6 +28818,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.408,
         "away": 1.387
@@ -28919,10 +28963,10 @@
       }
     },
     "confidence": {
-      "velora_score": 45.2,
-      "indice_velora": 2,
-      "base_confidence": 0.452,
-      "adjusted_confidence": 0.452,
+      "indice_velora": 0,
+      "indice_label": "Non calculable",
+      "base_confidence": 0.5,
+      "adjusted_confidence": 0.5,
       "modifiers": []
     },
     "pro_alerts": [],
@@ -28933,46 +28977,47 @@
         "2": 5.7
       },
       "probabilites": {
-        "1": 47,
-        "N": 24,
-        "2": 29
+        "1": 56,
+        "N": 25,
+        "2": 19
       },
       "probabilites_marche": {
         "1": 62,
         "N": 23,
         "2": 15
       },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire Central Cordoba",
-      "confiance_niveau": "moyenne",
+      "pronostic_1n2": "1",
+      "pronostic_label": "🔥 Value Bet Détecté : Ext",
+      "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
-        "home": 2.11,
-        "away": 1.038
+        "home": 2.578,
+        "away": 1.268
       },
       "top_scores_modele": [
         {
-          "score": "1-2",
-          "prob": 5
+          "score": "2-1",
+          "prob": 9
         },
         {
-          "score": "0-1",
-          "prob": 4
+          "score": "3-1",
+          "prob": 8
         },
         {
-          "score": "0-2",
-          "prob": 2
+          "score": "2-0",
+          "prob": 7
         },
         {
-          "score": "2-3",
-          "prob": 2
+          "score": "3-0",
+          "prob": 6
         },
         {
-          "score": "1-3",
-          "prob": 2
+          "score": "1-0",
+          "prob": 6
         }
       ],
-      "prob_over_25_modele": 60,
-      "prob_btts_modele": 56,
+      "prob_over_25_modele": 72,
+      "prob_btts_modele": 65,
       "football_data_enriched": true,
       "markets_raw": {
         "over_under_total": {},
@@ -28980,66 +29025,54 @@
       },
       "value_bets": [],
       "display_badges": [
-        "Double chance 12",
+        "Double chance 1X",
         "BTTS Oui",
         "Plus de 2.5 buts"
       ],
       "conseils_intelligents": [
         {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 76,
+          "market": "dc_1x",
+          "pick": "1x",
+          "label": "Double chance 1X",
+          "prob_pct": 81,
           "edge": 0.0,
-          "score": 76.0,
+          "score": 81.0,
           "tier": "excellent",
-          "raison": "Signal modèle Velora — 76% (cote Winamax absente sur ce marché)",
+          "raison": "Signal modèle Velora — 81% (cote Winamax absente sur ce marché)",
           "stars": 3
         },
         {
           "market": "over_25",
           "pick": "plus",
           "label": "Plus de 2.5 buts",
-          "prob_pct": 60,
+          "prob_pct": 72,
           "edge": 0.0,
-          "score": 60.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 60% (cote Winamax absente sur ce marché)",
-          "stars": 2
+          "score": 72.0,
+          "tier": "excellent",
+          "raison": "Signal modèle Velora — 72% (cote Winamax absente sur ce marché)",
+          "stars": 3
         },
         {
           "market": "btts",
           "pick": "oui",
           "label": "BTTS Oui",
-          "prob_pct": 56,
+          "prob_pct": 65,
           "edge": 0.0,
-          "score": 56.0,
+          "score": 65.0,
           "tier": "bon",
-          "raison": "Signal modèle Velora — 56% (cote Winamax absente sur ce marché)",
-          "stars": 2
-        },
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Central Cordoba",
-          "cote": 5.7,
-          "prob_pct": 29,
-          "edge": 1.653,
-          "score": 0.8832,
-          "tier": "excellent",
-          "raison": "Proba 29% × cote 5.70 → edge 1.65 — bon équilibre proba/rendement",
-          "stars": 5
+          "raison": "Signal modèle Velora — 65% (cote Winamax absente sur ce marché)",
+          "stars": 3
         }
       ],
       "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 76,
+        "market": "dc_1x",
+        "pick": "1x",
+        "label": "Double chance 1X",
+        "prob_pct": 81,
         "edge": 0.0,
-        "score": 76.0,
+        "score": 81.0,
         "tier": "excellent",
-        "raison": "Signal modèle Velora — 76% (cote Winamax absente sur ce marché)",
+        "raison": "Signal modèle Velora — 81% (cote Winamax absente sur ce marché)",
         "stars": 3
       }
     },
@@ -29059,7 +29092,7 @@
       "value_bets": []
     },
     "_legacy": {
-      "conseil": "Victoire Central Cordoba",
+      "conseil": "🔥 Value Bet Détecté : Ext",
       "tendance_buts": "Match Offensif",
       "marches_supplementaires": {},
       "is_opportunite": false
@@ -29076,27 +29109,27 @@
     },
     "top_scores": [
       {
-        "score": "1-2",
-        "prob": 5
+        "score": "2-1",
+        "prob": 9
       },
       {
-        "score": "0-1",
-        "prob": 4
+        "score": "3-1",
+        "prob": 8
       },
       {
-        "score": "0-2",
-        "prob": 2
+        "score": "2-0",
+        "prob": 7
       },
       {
-        "score": "2-3",
-        "prob": 2
+        "score": "3-0",
+        "prob": 6
       },
       {
-        "score": "1-3",
-        "prob": 2
+        "score": "1-0",
+        "prob": 6
       }
     ],
-    "velora_pick_1n2": "2"
+    "velora_pick_1n2": "1"
   },
   {
     "id_match": "73265140",
@@ -29142,30 +29175,31 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
-        "home": 1.474,
-        "away": 0.891
+        "home": 1.742,
+        "away": 1.053
       },
       "top_scores_modele": [
         {
           "score": "1-1",
-          "prob": 12
+          "prob": 11
         },
         {
           "score": "0-0",
-          "prob": 9
+          "prob": 6
         },
         {
           "score": "2-2",
-          "prob": 4
+          "prob": 5
         },
         {
           "score": "3-3",
           "prob": 1
         }
       ],
-      "prob_over_25_modele": 42,
-      "prob_btts_modele": 45,
+      "prob_over_25_modele": 53,
+      "prob_btts_modele": 54,
       "football_data_enriched": true,
       "markets_raw": {
         "over_under_total": {},
@@ -29173,9 +29207,7 @@
       },
       "value_bets": [],
       "display_badges": [
-        "Double chance 1X",
-        "BTTS Non",
-        "Moins de 2.5 buts"
+        "Double chance 1X"
       ],
       "conseils_intelligents": [
         {
@@ -29188,28 +29220,6 @@
           "tier": "excellent",
           "raison": "Signal modèle Velora — 78% (cote Winamax absente sur ce marché)",
           "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "moins",
-          "label": "Moins de 2.5 buts",
-          "prob_pct": 58,
-          "edge": 0.0,
-          "score": 58.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 58% (cote Winamax absente sur ce marché)",
-          "stars": 2
-        },
-        {
-          "market": "btts",
-          "pick": "non",
-          "label": "BTTS Non",
-          "prob_pct": 55,
-          "edge": 0.0,
-          "score": 55.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 55% (cote Winamax absente sur ce marché)",
-          "stars": 2
         }
       ],
       "meilleur_conseil": {
@@ -29258,15 +29268,15 @@
     "top_scores": [
       {
         "score": "1-1",
-        "prob": 12
+        "prob": 11
       },
       {
         "score": "0-0",
-        "prob": 9
+        "prob": 6
       },
       {
         "score": "2-2",
-        "prob": 4
+        "prob": 5
       },
       {
         "score": "3-3",
@@ -29319,6 +29329,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Lanus",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.164,
         "away": 0.956
@@ -29534,6 +29545,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Independiente",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.737,
         "away": 1.45
@@ -29719,6 +29731,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Boca Juniors",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.161,
         "away": 0.702
@@ -29904,6 +29917,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Newell's Old Boys",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.899,
         "away": 1.617
@@ -30119,6 +30133,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.291,
         "away": 1.504
@@ -30289,6 +30304,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Atletico Tucuman",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.281,
         "away": 1.429
@@ -30474,6 +30490,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.83,
         "away": 1.545
@@ -30660,6 +30677,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Belgrano",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.703,
         "away": 1.917
@@ -30875,6 +30893,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.999,
         "away": 1.622
@@ -31060,6 +31079,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Tigre",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.058,
         "away": 2.49
@@ -31280,6 +31300,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.772,
         "away": 1.023
@@ -31433,6 +31454,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Athletico Paranaense",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.399,
         "away": 2.052
@@ -31636,9 +31658,9 @@
         "2": 3.15
       },
       "probabilites": {
-        "1": 50,
-        "N": 29,
-        "2": 21
+        "1": 51,
+        "N": 27,
+        "2": 22
       },
       "probabilites_marche": {
         "1": 44,
@@ -31648,34 +31670,35 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Bragantino SP",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
-        "home": 1.359,
-        "away": 1.065
+        "home": 1.979,
+        "away": 1.55
       },
       "top_scores_modele": [
-        {
-          "score": "1-0",
-          "prob": 12
-        },
         {
           "score": "2-1",
           "prob": 9
         },
         {
-          "score": "2-0",
-          "prob": 8
-        },
-        {
           "score": "3-1",
-          "prob": 4
+          "prob": 6
         },
         {
-          "score": "3-0",
-          "prob": 4
+          "score": "1-0",
+          "prob": 6
+        },
+        {
+          "score": "2-0",
+          "prob": 6
+        },
+        {
+          "score": "3-2",
+          "prob": 5
         }
       ],
-      "prob_over_25_modele": 44,
-      "prob_btts_modele": 49,
+      "prob_over_25_modele": 68,
+      "prob_btts_modele": 67,
       "football_data_enriched": true,
       "markets_raw": {
         "over_under_total": {},
@@ -31684,41 +31707,53 @@
       "value_bets": [],
       "display_badges": [
         "Double chance 1X",
-        "Moins de 2.5 buts"
+        "BTTS Oui",
+        "Plus de 2.5 buts"
       ],
       "conseils_intelligents": [
         {
           "market": "dc_1x",
           "pick": "1x",
           "label": "Double chance 1X",
-          "prob_pct": 79,
+          "prob_pct": 78,
           "edge": 0.0,
-          "score": 79.0,
+          "score": 78.0,
           "tier": "excellent",
-          "raison": "Signal modèle Velora — 79% (cote Winamax absente sur ce marché)",
+          "raison": "Signal modèle Velora — 78% (cote Winamax absente sur ce marché)",
           "stars": 3
         },
         {
           "market": "over_25",
-          "pick": "moins",
-          "label": "Moins de 2.5 buts",
-          "prob_pct": 56,
+          "pick": "plus",
+          "label": "Plus de 2.5 buts",
+          "prob_pct": 68,
           "edge": 0.0,
-          "score": 56.0,
+          "score": 68.0,
           "tier": "bon",
-          "raison": "Signal modèle Velora — 56% (cote Winamax absente sur ce marché)",
-          "stars": 2
+          "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
+          "stars": 3
+        },
+        {
+          "market": "btts",
+          "pick": "oui",
+          "label": "BTTS Oui",
+          "prob_pct": 67,
+          "edge": 0.0,
+          "score": 67.0,
+          "tier": "bon",
+          "raison": "Signal modèle Velora — 67% (cote Winamax absente sur ce marché)",
+          "stars": 3
         }
       ],
       "meilleur_conseil": {
         "market": "dc_1x",
         "pick": "1x",
         "label": "Double chance 1X",
-        "prob_pct": 79,
+        "prob_pct": 78,
         "edge": 0.0,
-        "score": 79.0,
+        "score": 78.0,
         "tier": "excellent",
-        "raison": "Signal modèle Velora — 79% (cote Winamax absente sur ce marché)",
+        "raison": "Signal modèle Velora — 78% (cote Winamax absente sur ce marché)",
         "stars": 3
       }
     },
@@ -31755,24 +31790,24 @@
     },
     "top_scores": [
       {
-        "score": "1-0",
-        "prob": 12
-      },
-      {
         "score": "2-1",
         "prob": 9
       },
       {
-        "score": "2-0",
-        "prob": 8
-      },
-      {
         "score": "3-1",
-        "prob": 4
+        "prob": 6
       },
       {
-        "score": "3-0",
-        "prob": 4
+        "score": "1-0",
+        "prob": 6
+      },
+      {
+        "score": "2-0",
+        "prob": 6
+      },
+      {
+        "score": "3-2",
+        "prob": 5
       }
     ],
     "velora_pick_1n2": "1"
@@ -31821,6 +31856,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Victoire Flamengo",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.794,
         "away": 1.092
