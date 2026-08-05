@@ -1,608 +1,5 @@
 [
   {
-    "id_match": "72204594",
-    "date_match": "05/08/2026 à 11:00",
-    "match_start_ts": 1785920400,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "SG USC Landhaus/Austria Vienna (F)",
-    "equipe_exterieur": "Znk Hajduk Split (F)",
-    "meta_match": {
-      "competition": {
-        "name": "SG USC Landhaus/Austria Vienna (F) — Znk Hajduk Split (F)",
-        "type": "other",
-        "stakes_tier": "medium",
-        "category_id": "800000542",
-        "tournament_id": "172011"
-      }
-    },
-    "confidence": {
-      "indice_velora": 0,
-      "indice_label": "Non calculable",
-      "base_confidence": 0.5,
-      "adjusted_confidence": 0.5,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 1.07,
-        "N": 8.0,
-        "2": 17.0
-      },
-      "probabilites": {
-        "1": 71,
-        "N": 18,
-        "2": 11
-      },
-      "probabilites_marche": {
-        "1": 84,
-        "N": 11,
-        "2": 5
-      },
-      "pronostic_1n2": "1",
-      "pronostic_label": "🔥 Value Bet Détecté : Nul",
-      "confiance_niveau": "faible",
-      "poisson_lambdas": {
-        "home": 2.247,
-        "away": 0.548
-      },
-      "top_scores_modele": [
-        {
-          "score": "2-0",
-          "prob": 15
-        },
-        {
-          "score": "1-0",
-          "prob": 14
-        },
-        {
-          "score": "3-0",
-          "prob": 12
-        },
-        {
-          "score": "2-1",
-          "prob": 8
-        },
-        {
-          "score": "4-0",
-          "prob": 6
-        }
-      ],
-      "prob_over_25_modele": 52,
-      "prob_btts_modele": 37,
-      "football_data_enriched": true,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [],
-      "display_badges": [
-        "Double chance 1X",
-        "BTTS Non"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_1x",
-          "pick": "1x",
-          "label": "Double chance 1X",
-          "prob_pct": 89,
-          "edge": 0.0,
-          "score": 89.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "non",
-          "label": "BTTS Non",
-          "prob_pct": 63,
-          "edge": 0.0,
-          "score": 63.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 63% (cote Winamax absente sur ce marché)",
-          "stars": 2
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_1x",
-        "pick": "1x",
-        "label": "Double chance 1X",
-        "prob_pct": 89,
-        "edge": 0.0,
-        "score": 89.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 89% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "🔥 Value Bet Détecté : Nul",
-      "tendance_buts": "Match Tactique",
-      "marches_supplementaires": {},
-      "is_opportunite": false
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "2-0",
-        "prob": 15
-      },
-      {
-        "score": "1-0",
-        "prob": 14
-      },
-      {
-        "score": "3-0",
-        "prob": 12
-      },
-      {
-        "score": "2-1",
-        "prob": 8
-      },
-      {
-        "score": "4-0",
-        "prob": 6
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 1.07,
-      "N": 8.0,
-      "2": 17.0
-    },
-    "probabilites": {
-      "1": 71,
-      "N": 18,
-      "2": 11
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 1X",
-    "velora_pick_1n2": "1"
-  },
-  {
-    "id_match": "72204600",
-    "date_match": "05/08/2026 à 13:00",
-    "match_start_ts": 1785927600,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "ZNK Sfk 2000 Sarajevo (F)",
-    "equipe_exterieur": "PSV Eindhoven (F)",
-    "meta_match": {
-      "competition": {
-        "name": "ZNK Sfk 2000 Sarajevo (F) — PSV Eindhoven (F)",
-        "type": "other",
-        "stakes_tier": "medium",
-        "category_id": "800000542",
-        "tournament_id": "172011"
-      }
-    },
-    "confidence": {
-      "velora_score": 61.1,
-      "indice_velora": 3,
-      "base_confidence": 0.611,
-      "adjusted_confidence": 0.611,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 14.0,
-        "N": 8.5,
-        "2": 1.08
-      },
-      "probabilites": {
-        "1": 5,
-        "N": 14,
-        "2": 81
-      },
-      "probabilites_marche": {
-        "1": 6,
-        "N": 11,
-        "2": 83
-      },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire PSV Eindhoven (F)",
-      "confiance_niveau": "haute",
-      "poisson_lambdas": {
-        "home": 0.773,
-        "away": 2.874
-      },
-      "top_scores_modele": [
-        {
-          "score": "0-2",
-          "prob": 11
-        },
-        {
-          "score": "0-3",
-          "prob": 10
-        },
-        {
-          "score": "1-2",
-          "prob": 8
-        },
-        {
-          "score": "1-3",
-          "prob": 8
-        },
-        {
-          "score": "0-1",
-          "prob": 7
-        }
-      ],
-      "prob_over_25_modele": 68,
-      "prob_btts_modele": 49,
-      "football_data_enriched": true,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [],
-      "display_badges": [
-        "Double chance X2",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_x2",
-          "pick": "x2",
-          "label": "Double chance X2",
-          "prob_pct": 95,
-          "edge": 0.0,
-          "score": 95.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 95% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 68,
-          "edge": 0.0,
-          "score": 68.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 68% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_x2",
-        "pick": "x2",
-        "label": "Double chance X2",
-        "prob_pct": 95,
-        "edge": 0.0,
-        "score": 95.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 95% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Victoire PSV Eindhoven (F)",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "is_opportunite": false
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "0-2",
-        "prob": 11
-      },
-      {
-        "score": "0-3",
-        "prob": 10
-      },
-      {
-        "score": "1-2",
-        "prob": 8
-      },
-      {
-        "score": "1-3",
-        "prob": 8
-      },
-      {
-        "score": "0-1",
-        "prob": 7
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 14.0,
-      "N": 8.5,
-      "2": 1.08
-    },
-    "probabilites": {
-      "1": 5,
-      "N": 14,
-      "2": 81
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance X2",
-    "velora_pick_1n2": "2"
-  },
-  {
-    "id_match": "72204610",
-    "date_match": "05/08/2026 à 13:00",
-    "match_start_ts": 1785927600,
-    "match_status": "PREMATCH",
-    "equipe_domicile": "Valerenga (F)",
-    "equipe_exterieur": "Malmo FF (F)",
-    "meta_match": {
-      "competition": {
-        "name": "Valerenga (F) — Malmo FF (F)",
-        "type": "other",
-        "stakes_tier": "medium",
-        "category_id": "800000542",
-        "tournament_id": "172011"
-      }
-    },
-    "confidence": {
-      "velora_score": 47.0,
-      "indice_velora": 2,
-      "base_confidence": 0.47,
-      "adjusted_confidence": 0.47,
-      "modifiers": []
-    },
-    "pro_alerts": [],
-    "free_analysis": {
-      "cotes_1n2": {
-        "1": 2.45,
-        "N": 3.4,
-        "2": 2.4
-      },
-      "probabilites": {
-        "1": 28,
-        "N": 24,
-        "2": 48
-      },
-      "probabilites_marche": {
-        "1": 36,
-        "N": 26,
-        "2": 38
-      },
-      "pronostic_1n2": "2",
-      "pronostic_label": "Victoire Malmo FF (F)",
-      "confiance_niveau": "moyenne",
-      "poisson_lambdas": {
-        "home": 1.775,
-        "away": 1.823
-      },
-      "top_scores_modele": [
-        {
-          "score": "1-2",
-          "prob": 8
-        },
-        {
-          "score": "0-1",
-          "prob": 5
-        },
-        {
-          "score": "1-3",
-          "prob": 5
-        },
-        {
-          "score": "0-2",
-          "prob": 5
-        },
-        {
-          "score": "2-3",
-          "prob": 4
-        }
-      ],
-      "prob_over_25_modele": 69,
-      "prob_btts_modele": 69,
-      "football_data_enriched": true,
-      "markets_raw": {
-        "over_under_total": {},
-        "team_goals": {}
-      },
-      "value_bets": [
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Malmo FF (F)",
-          "cote": 2.4,
-          "edge": 1.152,
-          "stars": 4,
-          "is_primary": true
-        }
-      ],
-      "primary_pick": {
-        "market": "1n2",
-        "pick": "2",
-        "label": "Victoire Malmo FF (F)",
-        "cote": 2.4,
-        "conseil_short": "🔥 Value Bet — Victoire Malmo FF (F) @ 2.40"
-      },
-      "display_badges": [
-        "Double chance 12",
-        "BTTS Oui",
-        "Plus de 2.5 buts"
-      ],
-      "conseils_intelligents": [
-        {
-          "market": "dc_12",
-          "pick": "12",
-          "label": "Double chance 12",
-          "prob_pct": 76,
-          "edge": 0.0,
-          "score": 76.0,
-          "tier": "excellent",
-          "raison": "Signal modèle Velora — 76% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "btts",
-          "pick": "oui",
-          "label": "BTTS Oui",
-          "prob_pct": 69,
-          "edge": 0.0,
-          "score": 69.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "over_25",
-          "pick": "plus",
-          "label": "Plus de 2.5 buts",
-          "prob_pct": 69,
-          "edge": 0.0,
-          "score": 69.0,
-          "tier": "bon",
-          "raison": "Signal modèle Velora — 69% (cote Winamax absente sur ce marché)",
-          "stars": 3
-        },
-        {
-          "market": "1n2",
-          "pick": "2",
-          "label": "Victoire Malmo FF (F)",
-          "cote": 2.4,
-          "prob_pct": 48,
-          "edge": 1.152,
-          "score": 0.208,
-          "tier": "excellent",
-          "raison": "Proba 48% × cote 2.40 → edge 1.15 — bon équilibre proba/rendement",
-          "stars": 4
-        }
-      ],
-      "meilleur_conseil": {
-        "market": "dc_12",
-        "pick": "12",
-        "label": "Double chance 12",
-        "prob_pct": 76,
-        "edge": 0.0,
-        "score": 76.0,
-        "tier": "excellent",
-        "raison": "Signal modèle Velora — 76% (cote Winamax absente sur ce marché)",
-        "stars": 3
-      }
-    },
-    "premium_analysis": {
-      "score_exact": {
-        "top3": []
-      },
-      "buteur_match": {
-        "top": []
-      },
-      "buteur_mi_temps": {
-        "top": []
-      },
-      "buteur_double": {
-        "top": []
-      },
-      "value_bets": []
-    },
-    "_legacy": {
-      "conseil": "Victoire Malmo FF (F)",
-      "tendance_buts": "Match Offensif",
-      "marches_supplementaires": {},
-      "opportunite_type": "1n2",
-      "is_opportunite": true
-    },
-    "marches_supplementaires": {
-      "plus_moins_buts": {
-        "1.5": "Indisponible",
-        "2.5": "Indisponible",
-        "3.5": "Indisponible"
-      },
-      "buteur_match": "Indisponible",
-      "buteur_mi_temps": "Indisponible",
-      "buteur_multiple": "Indisponible"
-    },
-    "top_scores": [
-      {
-        "score": "1-2",
-        "prob": 8
-      },
-      {
-        "score": "0-1",
-        "prob": 5
-      },
-      {
-        "score": "1-3",
-        "prob": 5
-      },
-      {
-        "score": "0-2",
-        "prob": 5
-      },
-      {
-        "score": "2-3",
-        "prob": 4
-      }
-    ],
-    "les_deux_marquent": "Données indisponibles",
-    "cotes": {
-      "1": 2.45,
-      "N": 3.4,
-      "2": 2.4
-    },
-    "probabilites": {
-      "1": 28,
-      "N": 24,
-      "2": 48
-    },
-    "indice_velora": 0,
-    "indice_velora_label": "Non calculable",
-    "velora_score": null,
-    "conseil": "Double chance 12",
-    "velora_pick_1n2": "2"
-  },
-  {
     "id_match": "72204700",
     "date_match": "05/08/2026 à 15:00",
     "match_start_ts": 1785934800,
@@ -645,6 +42,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Ajax Amsterdam (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.982,
         "away": 1.514
@@ -844,6 +242,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Heart of Midlothian Wfc (F)",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.308,
         "away": 2.344
@@ -1043,6 +442,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Czarni Sosnowiec (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.498,
         "away": 2.161
@@ -1242,6 +642,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Ferencvarosi TC (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.208,
         "away": 1.441
@@ -1441,6 +842,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire FC Farul Constanta (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.126,
         "away": 1.533
@@ -1670,6 +1072,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire FSK St.Pölten-Spratzern (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.898,
         "away": 1.873
@@ -2130,6 +1533,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire HJK Helsinki (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.55,
         "away": 4.5
@@ -2329,6 +1733,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire HB Koege (F)",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.99,
         "away": 0.785
@@ -2717,7 +2122,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Keflavik",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.996,
         "away": 1.683
@@ -2917,6 +2322,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Privilégier le +2.5 buts",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.569,
         "away": 0.623
@@ -3518,6 +2924,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Slavia Prague (F)",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.071,
         "away": 1.627
@@ -3717,6 +3124,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.221,
         "away": 1.474
@@ -4130,6 +3538,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire SCU Torreense (F)",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.66,
         "away": 0.959
@@ -4342,7 +3751,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire KR Reykjavik",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.442,
         "away": 2.059
@@ -5274,12 +4683,22 @@
         "prob": 3
       }
     ],
-    "velora_pick_1n2": "1",
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 2.15,
+      "N": 3.7,
+      "2": 2.55
+    },
     "probabilites": {
       "1": 40,
       "N": 25,
       "2": 35
-    }
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance 12",
+    "velora_pick_1n2": "1"
   },
   {
     "id_match": "72529126",
@@ -5495,6 +4914,21 @@
         "prob": 4
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 2.35,
+      "N": 2.7,
+      "2": 2.95
+    },
+    "probabilites": {
+      "1": 30,
+      "N": 26,
+      "2": 44
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance 12",
     "velora_pick_1n2": "2"
   },
   {
@@ -5681,6 +5115,21 @@
         "prob": 5
       }
     ],
+    "les_deux_marquent": "Données indisponibles",
+    "cotes": {
+      "1": 1.56,
+      "N": 3.9,
+      "2": 4.3
+    },
+    "probabilites": {
+      "1": 63,
+      "N": 21,
+      "2": 16
+    },
+    "indice_velora": 0,
+    "indice_velora_label": "Non calculable",
+    "velora_score": null,
+    "conseil": "Double chance 1X",
     "velora_pick_1n2": "1"
   },
   {
@@ -5727,7 +5176,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Querétaro",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.143,
         "away": 1.442
@@ -6299,7 +5748,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Los Angeles FC",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.88,
         "away": 1.804
@@ -6515,7 +5964,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire KuPS",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.58,
         "away": 2.124
@@ -7494,7 +6943,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Rapid Vienne",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.931,
         "away": 2.689
@@ -8426,7 +7875,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Lech Poznan",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.709,
         "away": 0.926
@@ -8612,7 +8061,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Hradec Kralove",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.501,
         "away": 2.145
@@ -9413,7 +8862,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Žalgiris",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.61,
         "away": 2.187
@@ -9801,7 +9250,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire La Gantoise",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.631,
         "away": 1.952
@@ -10749,7 +10198,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire PAOK Salonique",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.324,
         "away": 1.342
@@ -11132,7 +10581,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire DAC Dunajská Streda",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 4.5,
         "away": 1.82
@@ -11699,7 +11148,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire ML Vitebsk",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.664,
         "away": 1.083
@@ -12248,7 +11697,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Nordsjælland",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.049,
         "away": 2.569
@@ -12791,7 +12240,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Bohemians",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.15,
         "away": 2.516
@@ -13165,7 +12614,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire KF Shkëndija",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.482,
         "away": 1.202
@@ -14476,7 +13925,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Chicago Fire",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.333,
         "away": 1.37
@@ -15838,7 +15287,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire MTK Budapest",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.772,
         "away": 1.82
@@ -17825,6 +17274,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "🔥 Victoire Wisla Plock",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.103,
         "away": 1.412
@@ -19206,7 +18656,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Stevenage",
       "confiance_niveau": "faible",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.951,
         "away": 1.724
@@ -19582,7 +19032,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Wrexham",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.104,
         "away": 1.429
@@ -19798,7 +19248,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Famalicao",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.645,
         "away": 1.839
@@ -20014,7 +19464,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Rosario Central",
       "confiance_niveau": "faible",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.39,
         "away": 1.195
@@ -21922,6 +21372,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Academica Coimbra",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.116,
         "away": 1.481
@@ -26005,7 +25456,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Penafiel",
       "confiance_niveau": "faible",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.279,
         "away": 0.952
@@ -26779,7 +26230,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Ballymena",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.178,
         "away": 1.39
@@ -27173,7 +26624,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Dungannon",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.266,
         "away": 2.531
@@ -27932,7 +27383,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Bolton",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.565,
         "away": 1.972
@@ -32230,7 +31681,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Telstar",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.424,
         "away": 1.259
@@ -33232,7 +32683,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Elfsborg",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.868,
         "away": 1.744
@@ -33604,6 +33055,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.806,
         "away": 1.806
@@ -34749,7 +34201,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "🔥 Victoire FC CSKA 1948",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.659,
         "away": 1.855
@@ -34965,7 +34417,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Komárno",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.743,
         "away": 1.791
@@ -35799,6 +35251,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Osijek",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.525,
         "away": 2.135
@@ -36941,7 +36394,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire FC Arouca",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.094,
         "away": 1.451
@@ -37157,6 +36610,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Amarante FC",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.318,
         "away": 1.244
@@ -42879,6 +42333,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.596,
         "away": 0.652
@@ -43064,7 +42519,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Sporting Portugal",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.962,
         "away": 2.636
@@ -43837,6 +43292,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.709,
         "away": 1.086
@@ -44380,7 +43836,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Aucas",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.28,
         "away": 1.34
@@ -44752,6 +44208,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.849,
         "away": 0.872
@@ -45461,7 +44918,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire CSD Macará",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.896,
         "away": 1.164
@@ -46025,6 +45482,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.48,
         "away": 1.315
@@ -46783,7 +46241,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire FC Felgueiras",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.844,
         "away": 1.693
@@ -47185,7 +46643,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Qingdao West Coast",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.297,
         "away": 1.349
@@ -50035,6 +49493,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Super Nova",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.676,
         "away": 2.088
@@ -50220,6 +49679,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "🔥 Victoire FK Auda",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.585,
         "away": 2.031
@@ -50807,7 +50267,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Bohemians",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.516,
         "away": 2.021
@@ -51365,6 +50825,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Džiugas",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.599,
         "away": 1.936
@@ -51580,7 +51041,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Lyngby",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.985,
         "away": 1.549
@@ -53560,6 +53021,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire AVS Futebol SAD",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.362,
         "away": 1.304
@@ -53961,7 +53423,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Ham-Kam",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.949,
         "away": 1.636
@@ -54333,6 +53795,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Victoire Riga FC",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 4.5,
         "away": 2.383
@@ -56130,7 +55593,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Nafta",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.842,
         "away": 1.768
@@ -56562,6 +56025,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.948,
         "away": 1.694
@@ -59039,6 +58503,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire IA Akranes",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.301,
         "away": 1.284
@@ -59410,6 +58875,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire KA Akureyri",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.85,
         "away": 1.603
@@ -59595,6 +59061,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Keflavik",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.69,
         "away": 1.373
@@ -59966,7 +59433,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Vojvodina",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.566,
         "away": 1.078
@@ -60932,7 +60399,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Maribor",
       "confiance_niveau": "faible",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.937,
         "away": 1.538
@@ -61118,7 +60585,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Bravo",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.18,
         "away": 1.557
@@ -62482,7 +61949,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Železničar",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.894,
         "away": 1.725
@@ -62668,7 +62135,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Gil Vicente",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.058,
         "away": 1.531
@@ -63214,6 +62681,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Breidablik Kopavogur",
       "confiance_niveau": "haute",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.233,
         "away": 1.519
@@ -63590,7 +63058,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Club Atletico Barracas Central",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.343,
         "away": 1.353
@@ -63992,6 +63460,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Double Chance DC X2",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.729,
         "away": 0.75
@@ -64557,7 +64026,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "🔥 Victoire Colo Colo",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 3.515,
         "away": 4.5
@@ -65301,7 +64770,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "Match nul",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.793,
         "away": 0.878
@@ -65492,6 +64961,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.755,
         "away": 0.724
@@ -65667,7 +65137,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Mura",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 2.042,
         "away": 1.611
@@ -65853,7 +65323,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Corvinul Hunedoara",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.96,
         "away": 1.629
@@ -66421,7 +65891,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Djurgardens",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.145,
         "away": 1.588
@@ -66799,6 +66269,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Śląsk Wrocław",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.88,
         "away": 1.756
@@ -67602,7 +67073,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire FCSB",
       "confiance_niveau": "moyenne",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.505,
         "away": 2.085
@@ -68189,6 +67660,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Fram Reykjavik",
       "confiance_niveau": "moyenne",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.812,
         "away": 1.79
@@ -68560,6 +68032,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.138,
         "away": 0.813
@@ -69089,6 +68562,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : DC 1X",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 0.997,
         "away": 0.956
@@ -69852,6 +69326,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.922,
         "away": 0.801
@@ -70012,6 +69487,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.562,
         "away": 1.233
@@ -70176,6 +69652,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.624,
         "away": 1.171
@@ -70340,6 +69817,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.547,
         "away": 1.248
@@ -70504,6 +69982,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Nul",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.268,
         "away": 1.527
@@ -70673,6 +70152,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.923,
         "away": 0.872
@@ -70833,6 +70313,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Ext",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.679,
         "away": 1.116
@@ -70997,6 +70478,7 @@
       "pronostic_1n2": "N",
       "pronostic_label": "🔥 Value Bet Détecté : Dom",
       "confiance_niveau": "faible",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.718,
         "away": 1.077
@@ -71957,7 +71439,7 @@
       "pronostic_1n2": "2",
       "pronostic_label": "Victoire Independiente Del Valle",
       "confiance_niveau": "haute",
-      "line_signal": "cote_baisse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.463,
         "away": 1.59
@@ -72143,7 +71625,7 @@
       "pronostic_1n2": "1",
       "pronostic_label": "Victoire Bolivar",
       "confiance_niveau": "haute",
-      "line_signal": "cote_hausse",
+      "line_signal": "stable",
       "poisson_lambdas": {
         "home": 1.605,
         "away": 1.216
