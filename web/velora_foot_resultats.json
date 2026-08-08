@@ -3,7 +3,7 @@
     "description": "Scores finaux par id_match Winamax — alimente velora_archiver_foot.py",
     "format": "id_match: { \"domicile\": X, \"exterieur\": Y }",
     "sync_winamax": "automatique via velora_archiver_foot.py (étape A)",
-    "derniere_sync": "2026-08-08T03:19:30.149208+02:00"
+    "derniere_sync": "2026-08-08T05:43:24.540872+02:00"
   },
   "matchs": {
     "61623942": {
@@ -1420,6 +1420,30 @@
     },
     "72204594": {
       "domicile": 2,
+      "exterieur": 0
+    },
+    "73265154": {
+      "domicile": 0,
+      "exterieur": 1
+    },
+    "69652900": {
+      "domicile": 5,
+      "exterieur": 1
+    },
+    "69652898": {
+      "domicile": 1,
+      "exterieur": 0
+    },
+    "68686060": {
+      "domicile": 1,
+      "exterieur": 0
+    },
+    "69652890": {
+      "domicile": 2,
+      "exterieur": 0
+    },
+    "69652896": {
+      "domicile": 1,
       "exterieur": 0
     }
   }
