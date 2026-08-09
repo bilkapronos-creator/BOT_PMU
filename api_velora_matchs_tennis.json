@@ -2,17 +2,130 @@
   "schema_version": 2,
   "meta": {
     "sport": "tennis",
-    "generated_at": "2026-08-08T04:46:52.692199+02:00",
+    "generated_at": "2026-08-09T03:09:52.871542+02:00",
     "engine": "velora-tennis-1",
-    "match_count": 8
+    "match_count": 11
   },
   "matchs": [
     {
+      "id_match": "73252856",
+      "sport": "tennis",
+      "date_match": "10/08/2026 à 00:00",
+      "match_start_ts": 1786312800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Joao Fonseca",
+      "equipe_exterieur": "Ben Shelton",
+      "joueur_1": "Joao Fonseca",
+      "joueur_2": "Ben Shelton",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.0,
+          "2": 1.82
+        },
+        "probabilites": {
+          "1": 28,
+          "2": 72
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Ben Shelton",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ben Shelton",
+            "cote": 1.82,
+            "prob_pct": 72,
+            "edge": 1.31,
+            "score": 0.31,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (27 vs 10) — avantage Ben Shelton",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Ben Shelton",
+          "cote": 1.82,
+          "prob_pct": 72,
+          "edge": 1.31,
+          "score": 0.31,
+          "tier": "bon",
+          "raison": "Écart classement ATP/WTA (27 vs 10) — avantage Ben Shelton",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ben Shelton",
+            "cote": 1.82,
+            "prob_pct": 72,
+            "edge": 1.31,
+            "score": 0.31,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (27 vs 10) — avantage Ben Shelton",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Ben Shelton",
+      "cotes": {
+        "1": 2.0,
+        "2": 1.82
+      },
+      "probabilites": {
+        "1": 28,
+        "2": 72
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 27,
+        "away_rank": 10,
+        "h2h": null,
+        "form_edge": 0,
+        "rank_edge": -17
+      }
+    },
+    {
       "id_match": "73252858",
       "sport": "tennis",
-      "date_match": "09/08/2026 à 00:00",
-      "match_start_ts": 1786226400,
-      "match_status": "PREMATCH",
+      "date_match": "09/08/2026 à 02:10",
+      "match_start_ts": 1786234200,
+      "match_status": "LIVE",
       "equipe_domicile": "Jiri Lehecka",
       "equipe_exterieur": "Rafael Jodar",
       "joueur_1": "Jiri Lehecka",
@@ -26,16 +139,16 @@
       },
       "free_analysis": {
         "cotes_2way": {
-          "1": 2.15,
-          "2": 1.72
+          "1": 2.2,
+          "2": 1.5
         },
         "probabilites": {
-          "1": 18,
-          "2": 82
+          "1": 41,
+          "2": 59
         },
         "pronostic_vainqueur": "2",
         "pronostic_label": "Vainqueur Rafael Jodar",
-        "confiance_niveau": "haute",
+        "confiance_niveau": "moyenne",
         "marches": {
           "sets_total": {},
           "games_total": {},
@@ -46,10 +159,10 @@
             "market": "vainqueur",
             "pick": "2",
             "label": "Vainqueur Rafael Jodar",
-            "cote": 1.72,
-            "prob_pct": 75,
-            "edge": 1.29,
-            "score": 0.29,
+            "cote": 1.5,
+            "prob_pct": 63,
+            "edge": 0.945,
+            "score": -0.055,
             "tier": "bon",
             "raison": "Forme récente Winamax favorable à Rafael Jodar (écart 3 pts sur 5 matchs)",
             "stars": 3
@@ -59,38 +172,25 @@
           "market": "vainqueur",
           "pick": "2",
           "label": "Vainqueur Rafael Jodar",
-          "cote": 1.72,
-          "prob_pct": 75,
-          "edge": 1.29,
-          "score": 0.29,
+          "cote": 1.5,
+          "prob_pct": 63,
+          "edge": 0.945,
+          "score": -0.055,
           "tier": "bon",
           "raison": "Forme récente Winamax favorable à Rafael Jodar (écart 3 pts sur 5 matchs)",
           "stars": 3
         },
-        "value_bets": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Rafael Jodar",
-            "cote": 1.72,
-            "prob_pct": 75,
-            "edge": 1.29,
-            "score": 0.29,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Rafael Jodar (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          }
-        ],
+        "value_bets": [],
         "winamax_intel_enriched": true
       },
       "conseil": "Vainqueur Rafael Jodar",
       "cotes": {
-        "1": 2.15,
-        "2": 1.72
+        "1": 2.2,
+        "2": 1.5
       },
       "probabilites": {
-        "1": 18,
-        "2": 82
+        "1": 41,
+        "2": 59
       },
       "velora_intel": {
         "home_form": {
@@ -123,8 +223,8 @@
     {
       "id_match": "73252860",
       "sport": "tennis",
-      "date_match": "09/08/2026 à 01:10",
-      "match_start_ts": 1786230600,
+      "date_match": "09/08/2026 à 02:50",
+      "match_start_ts": 1786236600,
       "match_status": "PREMATCH",
       "equipe_domicile": "Arthur Fils",
       "equipe_exterieur": "Cameron Norrie",
@@ -143,12 +243,12 @@
           "2": 3.1
         },
         "probabilites": {
-          "1": 69,
-          "2": 31
+          "1": 95,
+          "2": 5
         },
-        "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Cameron Norrie",
-        "confiance_niveau": "faible",
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Arthur Fils",
+        "confiance_niveau": "haute",
         "marches": {
           "sets_total": {},
           "games_total": {},
@@ -157,15 +257,15 @@
         "conseils_intelligents": [
           {
             "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Cameron Norrie",
-            "cote": 3.1,
-            "prob_pct": 35,
-            "edge": 1.085,
-            "score": 0.085,
+            "pick": "1",
+            "label": "Vainqueur Arthur Fils",
+            "cote": 1.39,
+            "prob_pct": 95,
+            "edge": 1.32,
+            "score": 0.32,
             "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Cameron Norrie (écart 3 pts sur 5 matchs)",
-            "stars": 3
+            "raison": "Favori net Arthur Fils (95% implicite, cote 1.39)",
+            "stars": 4
           },
           {
             "market": "vainqueur",
@@ -181,53 +281,53 @@
           },
           {
             "market": "vainqueur",
-            "pick": "1",
-            "label": "Vainqueur Arthur Fils",
-            "cote": 1.39,
-            "prob_pct": 69,
-            "edge": 0.959,
-            "score": -0.041,
-            "tier": "bon",
-            "raison": "Favori net Arthur Fils (69% implicite, cote 1.39)",
-            "stars": 4
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "vainqueur",
-          "pick": "2",
-          "label": "Vainqueur Cameron Norrie",
-          "cote": 3.1,
-          "prob_pct": 35,
-          "edge": 1.085,
-          "score": 0.085,
-          "tier": "bon",
-          "raison": "Forme récente Winamax favorable à Cameron Norrie (écart 3 pts sur 5 matchs)",
-          "stars": 3
-        },
-        "value_bets": [
-          {
-            "market": "vainqueur",
             "pick": "2",
             "label": "Vainqueur Cameron Norrie",
             "cote": 3.1,
-            "prob_pct": 35,
-            "edge": 1.085,
-            "score": 0.085,
+            "prob_pct": 9,
+            "edge": 0.279,
+            "score": -0.721,
             "tier": "bon",
             "raison": "Forme récente Winamax favorable à Cameron Norrie (écart 3 pts sur 5 matchs)",
             "stars": 3
           }
         ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Arthur Fils",
+          "cote": 1.39,
+          "prob_pct": 95,
+          "edge": 1.32,
+          "score": 0.32,
+          "tier": "bon",
+          "raison": "Favori net Arthur Fils (95% implicite, cote 1.39)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Arthur Fils",
+            "cote": 1.39,
+            "prob_pct": 95,
+            "edge": 1.32,
+            "score": 0.32,
+            "tier": "bon",
+            "raison": "Favori net Arthur Fils (95% implicite, cote 1.39)",
+            "stars": 4
+          }
+        ],
         "winamax_intel_enriched": true
       },
-      "conseil": "Vainqueur Cameron Norrie",
+      "conseil": "Vainqueur Arthur Fils",
       "cotes": {
         "1": 1.39,
         "2": 3.1
       },
       "probabilites": {
-        "1": 69,
-        "2": 31
+        "1": 95,
+        "2": 5
       },
       "velora_intel": {
         "home_form": {
@@ -258,15 +358,15 @@
       }
     },
     {
-      "id_match": "73252880",
+      "id_match": "73252866",
       "sport": "tennis",
-      "date_match": "08/08/2026 à 19:40",
-      "match_start_ts": 1786210800,
+      "date_match": "09/08/2026 à 18:30",
+      "match_start_ts": 1786293000,
       "match_status": "PREMATCH",
-      "equipe_domicile": "Arthur Rinderknech",
-      "equipe_exterieur": "Brandon Nakashima",
-      "joueur_1": "Arthur Rinderknech",
-      "joueur_2": "Brandon Nakashima",
+      "equipe_domicile": "Tallon Griekspoor",
+      "equipe_exterieur": "Daniel Mérida",
+      "joueur_1": "Tallon Griekspoor",
+      "joueur_2": "Daniel Mérida",
       "meta_match": {
         "competition": {
           "name": "Tennis",
@@ -276,140 +376,15 @@
       },
       "free_analysis": {
         "cotes_2way": {
-          "1": 2.95,
-          "2": 1.42
+          "1": 1.8,
+          "2": 2.05
         },
         "probabilites": {
-          "1": 8,
-          "2": 92
+          "1": 63,
+          "2": 37
         },
         "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Brandon Nakashima",
-        "confiance_niveau": "haute",
-        "marches": {
-          "sets_total": {},
-          "games_total": {},
-          "score_exact_sets": []
-        },
-        "conseils_intelligents": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Brandon Nakashima",
-            "cote": 1.42,
-            "prob_pct": 92,
-            "edge": 1.306,
-            "score": 0.306,
-            "tier": "bon",
-            "raison": "Favori net Brandon Nakashima (92% implicite, cote 1.42)",
-            "stars": 4
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Brandon Nakashima",
-            "cote": 1.42,
-            "prob_pct": 75,
-            "edge": 1.065,
-            "score": 0.065,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Brandon Nakashima (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "vainqueur",
-          "pick": "2",
-          "label": "Vainqueur Brandon Nakashima",
-          "cote": 1.42,
-          "prob_pct": 92,
-          "edge": 1.306,
-          "score": 0.306,
-          "tier": "bon",
-          "raison": "Favori net Brandon Nakashima (92% implicite, cote 1.42)",
-          "stars": 4
-        },
-        "value_bets": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Brandon Nakashima",
-            "cote": 1.42,
-            "prob_pct": 92,
-            "edge": 1.306,
-            "score": 0.306,
-            "tier": "bon",
-            "raison": "Favori net Brandon Nakashima (92% implicite, cote 1.42)",
-            "stars": 4
-          }
-        ],
-        "winamax_intel_enriched": true
-      },
-      "conseil": "Vainqueur Brandon Nakashima",
-      "cotes": {
-        "1": 2.95,
-        "2": 1.42
-      },
-      "probabilites": {
-        "1": 8,
-        "2": 92
-      },
-      "velora_intel": {
-        "home_form": {
-          "raw": "WLLWW",
-          "played": 5,
-          "wins": 3,
-          "draws": 0,
-          "losses": 2,
-          "points": 9,
-          "max_points": 15,
-          "pct": 60.0
-        },
-        "away_form": {
-          "raw": "WWLWW",
-          "played": 5,
-          "wins": 4,
-          "draws": 0,
-          "losses": 1,
-          "points": 12,
-          "max_points": 15,
-          "pct": 80.0
-        },
-        "home_rank": 29,
-        "away_rank": 31,
-        "h2h": null,
-        "form_edge": -3,
-        "rank_edge": 2
-      }
-    },
-    {
-      "id_match": "73252888",
-      "sport": "tennis",
-      "date_match": "08/08/2026 à 02:25",
-      "match_start_ts": 1786148700,
-      "match_status": "LIVE",
-      "equipe_domicile": "Alexei Popyrin",
-      "equipe_exterieur": "Thiago Tirante",
-      "joueur_1": "Alexei Popyrin",
-      "joueur_2": "Thiago Tirante",
-      "meta_match": {
-        "competition": {
-          "name": "Tennis",
-          "type": "tennis",
-          "stakes_tier": "medium"
-        }
-      },
-      "free_analysis": {
-        "cotes_2way": {
-          "1": 1.72,
-          "2": 1.86
-        },
-        "probabilites": {
-          "1": 52,
-          "2": 48
-        },
-        "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Thiago Tirante",
+        "pronostic_label": "Vainqueur Daniel Mérida",
         "confiance_niveau": "faible",
         "marches": {
           "sets_total": {},
@@ -420,51 +395,39 @@
           {
             "market": "vainqueur",
             "pick": "2",
-            "label": "Vainqueur Thiago Tirante",
-            "cote": 1.86,
-            "prob_pct": 52,
-            "edge": 0.967,
-            "score": -0.033,
+            "label": "Vainqueur Daniel Mérida",
+            "cote": 2.05,
+            "prob_pct": 41,
+            "edge": 0.84,
+            "score": -0.16,
             "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Thiago Tirante (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Thiago Tirante",
-            "cote": 1.86,
-            "prob_pct": 51,
-            "edge": 0.949,
-            "score": -0.051,
-            "tier": "bon",
-            "raison": "Écart classement ATP/WTA (139 vs 65) — avantage Thiago Tirante",
+            "raison": "Forme récente Winamax favorable à Daniel Mérida (écart 3 pts sur 5 matchs)",
             "stars": 3
           }
         ],
         "meilleur_conseil": {
           "market": "vainqueur",
           "pick": "2",
-          "label": "Vainqueur Thiago Tirante",
-          "cote": 1.86,
-          "prob_pct": 52,
-          "edge": 0.967,
-          "score": -0.033,
+          "label": "Vainqueur Daniel Mérida",
+          "cote": 2.05,
+          "prob_pct": 41,
+          "edge": 0.84,
+          "score": -0.16,
           "tier": "bon",
-          "raison": "Forme récente Winamax favorable à Thiago Tirante (écart 3 pts sur 5 matchs)",
+          "raison": "Forme récente Winamax favorable à Daniel Mérida (écart 3 pts sur 5 matchs)",
           "stars": 3
         },
         "value_bets": [],
         "winamax_intel_enriched": true
       },
-      "conseil": "Vainqueur Thiago Tirante",
+      "conseil": "Vainqueur Daniel Mérida",
       "cotes": {
-        "1": 1.72,
-        "2": 1.86
+        "1": 1.8,
+        "2": 2.05
       },
       "probabilites": {
-        "1": 52,
-        "2": 48
+        "1": 63,
+        "2": 37
       },
       "velora_intel": {
         "home_form": {
@@ -478,7 +441,7 @@
           "pct": 60.0
         },
         "away_form": {
-          "raw": "WWLWW",
+          "raw": "WLWWW",
           "played": 5,
           "wins": 4,
           "draws": 0,
@@ -487,23 +450,23 @@
           "max_points": 15,
           "pct": 80.0
         },
-        "home_rank": 139,
-        "away_rank": 65,
+        "home_rank": 69,
+        "away_rank": 63,
         "h2h": null,
         "form_edge": -3,
-        "rank_edge": -74
+        "rank_edge": -6
       }
     },
     {
-      "id_match": "73252894",
+      "id_match": "73252868",
       "sport": "tennis",
-      "date_match": "08/08/2026 à 01:00",
-      "match_start_ts": 1786143600,
-      "match_status": "LIVE",
-      "equipe_domicile": "Casper Ruud",
-      "equipe_exterieur": "Joao Fonseca",
-      "joueur_1": "Casper Ruud",
-      "joueur_2": "Joao Fonseca",
+      "date_match": "09/08/2026 à 19:40",
+      "match_start_ts": 1786297200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Learner Tien",
+      "equipe_exterieur": "Thiago Tirante",
+      "joueur_1": "Learner Tien",
+      "joueur_2": "Thiago Tirante",
       "meta_match": {
         "competition": {
           "name": "Tennis",
@@ -513,16 +476,16 @@
       },
       "free_analysis": {
         "cotes_2way": {
-          "1": 11.0,
-          "2": 1.02
+          "1": 1.4,
+          "2": 3.05
         },
         "probabilites": {
-          "1": 8,
-          "2": 92
+          "1": 76,
+          "2": 24
         },
         "pronostic_vainqueur": "1",
-        "pronostic_label": "Vainqueur Casper Ruud",
-        "confiance_niveau": "faible",
+        "pronostic_label": "Vainqueur Learner Tien",
+        "confiance_niveau": "haute",
         "marches": {
           "sets_total": {},
           "games_total": {},
@@ -532,438 +495,63 @@
           {
             "market": "vainqueur",
             "pick": "1",
-            "label": "Vainqueur Casper Ruud",
-            "cote": 11.0,
-            "prob_pct": 11,
-            "edge": 1.21,
-            "score": 0.21,
+            "label": "Vainqueur Learner Tien",
+            "cote": 1.4,
+            "prob_pct": 76,
+            "edge": 1.064,
+            "score": 0.064,
             "tier": "bon",
-            "raison": "Écart classement ATP/WTA (14 vs 27) — avantage Casper Ruud",
+            "raison": "Favori net Learner Tien (76% implicite, cote 1.40)",
+            "stars": 4
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Learner Tien",
+            "cote": 1.4,
+            "prob_pct": 72,
+            "edge": 1.008,
+            "score": 0.008,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (19 vs 65) — avantage Learner Tien",
             "stars": 3
           },
           {
             "market": "vainqueur",
             "pick": "2",
-            "label": "Vainqueur Joao Fonseca",
-            "cote": 1.02,
-            "prob_pct": 92,
-            "edge": 0.938,
-            "score": -0.062,
+            "label": "Vainqueur Thiago Tirante",
+            "cote": 3.05,
+            "prob_pct": 28,
+            "edge": 0.854,
+            "score": -0.146,
             "tier": "bon",
-            "raison": "Favori net Joao Fonseca (92% implicite, cote 1.02)",
-            "stars": 4
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Joao Fonseca",
-            "cote": 1.02,
-            "prob_pct": 75,
-            "edge": 0.765,
-            "score": -0.235,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Joao Fonseca (écart 3 pts sur 5 matchs)",
+            "raison": "Forme récente Winamax favorable à Thiago Tirante (écart 3 pts sur 5 matchs)",
             "stars": 3
           }
         ],
         "meilleur_conseil": {
           "market": "vainqueur",
           "pick": "1",
-          "label": "Vainqueur Casper Ruud",
-          "cote": 11.0,
-          "prob_pct": 11,
-          "edge": 1.21,
-          "score": 0.21,
+          "label": "Vainqueur Learner Tien",
+          "cote": 1.4,
+          "prob_pct": 76,
+          "edge": 1.064,
+          "score": 0.064,
           "tier": "bon",
-          "raison": "Écart classement ATP/WTA (14 vs 27) — avantage Casper Ruud",
-          "stars": 3
-        },
-        "value_bets": [
-          {
-            "market": "vainqueur",
-            "pick": "1",
-            "label": "Vainqueur Casper Ruud",
-            "cote": 11.0,
-            "prob_pct": 11,
-            "edge": 1.21,
-            "score": 0.21,
-            "tier": "bon",
-            "raison": "Écart classement ATP/WTA (14 vs 27) — avantage Casper Ruud",
-            "stars": 3
-          }
-        ],
-        "winamax_intel_enriched": true
-      },
-      "conseil": "Vainqueur Casper Ruud",
-      "cotes": {
-        "1": 11.0,
-        "2": 1.02
-      },
-      "probabilites": {
-        "1": 8,
-        "2": 92
-      },
-      "velora_intel": {
-        "home_form": {
-          "raw": "LLWLW",
-          "played": 5,
-          "wins": 2,
-          "draws": 0,
-          "losses": 3,
-          "points": 6,
-          "max_points": 15,
-          "pct": 40.0
-        },
-        "away_form": {
-          "raw": "LWWLW",
-          "played": 5,
-          "wins": 3,
-          "draws": 0,
-          "losses": 2,
-          "points": 9,
-          "max_points": 15,
-          "pct": 60.0
-        },
-        "home_rank": 14,
-        "away_rank": 27,
-        "h2h": null,
-        "form_edge": -3,
-        "rank_edge": 13
-      }
-    },
-    {
-      "id_match": "73252902",
-      "sport": "tennis",
-      "date_match": "08/08/2026 à 02:50",
-      "match_start_ts": 1786150200,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Learner Tien",
-      "equipe_exterieur": "Tommy Paul",
-      "joueur_1": "Learner Tien",
-      "joueur_2": "Tommy Paul",
-      "meta_match": {
-        "competition": {
-          "name": "Tennis",
-          "type": "tennis",
-          "stakes_tier": "medium"
-        }
-      },
-      "free_analysis": {
-        "cotes_2way": {
-          "1": 2.4,
-          "2": 1.58
-        },
-        "probabilites": {
-          "1": 8,
-          "2": 92
-        },
-        "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Tommy Paul",
-        "confiance_niveau": "haute",
-        "marches": {
-          "sets_total": {},
-          "games_total": {},
-          "score_exact_sets": []
-        },
-        "conseils_intelligents": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Tommy Paul",
-            "cote": 1.58,
-            "prob_pct": 75,
-            "edge": 1.185,
-            "score": 0.185,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Tommy Paul (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "vainqueur",
-          "pick": "2",
-          "label": "Vainqueur Tommy Paul",
-          "cote": 1.58,
-          "prob_pct": 75,
-          "edge": 1.185,
-          "score": 0.185,
-          "tier": "bon",
-          "raison": "Forme récente Winamax favorable à Tommy Paul (écart 3 pts sur 5 matchs)",
-          "stars": 3
-        },
-        "value_bets": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Tommy Paul",
-            "cote": 1.58,
-            "prob_pct": 75,
-            "edge": 1.185,
-            "score": 0.185,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Tommy Paul (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          }
-        ],
-        "winamax_intel_enriched": true
-      },
-      "conseil": "Vainqueur Tommy Paul",
-      "cotes": {
-        "1": 2.4,
-        "2": 1.58
-      },
-      "probabilites": {
-        "1": 8,
-        "2": 92
-      },
-      "velora_intel": {
-        "home_form": {
-          "raw": "LWLLW",
-          "played": 5,
-          "wins": 2,
-          "draws": 0,
-          "losses": 3,
-          "points": 6,
-          "max_points": 15,
-          "pct": 40.0
-        },
-        "away_form": {
-          "raw": "WWLLW",
-          "played": 5,
-          "wins": 3,
-          "draws": 0,
-          "losses": 2,
-          "points": 9,
-          "max_points": 15,
-          "pct": 60.0
-        },
-        "home_rank": 19,
-        "away_rank": 21,
-        "h2h": null,
-        "form_edge": -3,
-        "rank_edge": 2
-      }
-    },
-    {
-      "id_match": "73256012",
-      "sport": "tennis",
-      "date_match": "08/08/2026 à 02:47",
-      "match_start_ts": 1786150066,
-      "match_status": "PREMATCH",
-      "equipe_domicile": "Catherine McNally",
-      "equipe_exterieur": "Alexandra Eala",
-      "joueur_1": "Catherine McNally",
-      "joueur_2": "Alexandra Eala",
-      "meta_match": {
-        "competition": {
-          "name": "Tennis",
-          "type": "tennis",
-          "stakes_tier": "medium"
-        }
-      },
-      "free_analysis": {
-        "cotes_2way": {
-          "1": 3.05,
-          "2": 1.39
-        },
-        "probabilites": {
-          "1": 6,
-          "2": 94
-        },
-        "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Alexandra Eala",
-        "confiance_niveau": "haute",
-        "marches": {
-          "sets_total": {},
-          "games_total": {},
-          "score_exact_sets": []
-        },
-        "conseils_intelligents": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Alexandra Eala",
-            "cote": 1.39,
-            "prob_pct": 94,
-            "edge": 1.307,
-            "score": 0.307,
-            "tier": "bon",
-            "raison": "Favori net Alexandra Eala (94% implicite, cote 1.39)",
-            "stars": 4
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Alexandra Eala",
-            "cote": 1.39,
-            "prob_pct": 75,
-            "edge": 1.042,
-            "score": 0.042,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Alexandra Eala (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Alexandra Eala",
-            "cote": 1.39,
-            "prob_pct": 72,
-            "edge": 1.001,
-            "score": 0.001,
-            "tier": "bon",
-            "raison": "Écart classement ATP/WTA (70 vs 20) — avantage Alexandra Eala",
-            "stars": 3
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "vainqueur",
-          "pick": "2",
-          "label": "Vainqueur Alexandra Eala",
-          "cote": 1.39,
-          "prob_pct": 94,
-          "edge": 1.307,
-          "score": 0.307,
-          "tier": "bon",
-          "raison": "Favori net Alexandra Eala (94% implicite, cote 1.39)",
+          "raison": "Favori net Learner Tien (76% implicite, cote 1.40)",
           "stars": 4
-        },
-        "value_bets": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Alexandra Eala",
-            "cote": 1.39,
-            "prob_pct": 94,
-            "edge": 1.307,
-            "score": 0.307,
-            "tier": "bon",
-            "raison": "Favori net Alexandra Eala (94% implicite, cote 1.39)",
-            "stars": 4
-          }
-        ],
-        "winamax_intel_enriched": true
-      },
-      "conseil": "Vainqueur Alexandra Eala",
-      "cotes": {
-        "1": 3.05,
-        "2": 1.39
-      },
-      "probabilites": {
-        "1": 6,
-        "2": 94
-      },
-      "velora_intel": {
-        "home_form": {
-          "raw": "WWLWW",
-          "played": 5,
-          "wins": 4,
-          "draws": 0,
-          "losses": 1,
-          "points": 12,
-          "max_points": 15,
-          "pct": 80.0
-        },
-        "away_form": {
-          "raw": "WWWWW",
-          "played": 5,
-          "wins": 5,
-          "draws": 0,
-          "losses": 0,
-          "points": 15,
-          "max_points": 15,
-          "pct": 100.0
-        },
-        "home_rank": 70,
-        "away_rank": 20,
-        "h2h": null,
-        "form_edge": -3,
-        "rank_edge": -50
-      }
-    },
-    {
-      "id_match": "73256014",
-      "sport": "tennis",
-      "date_match": "08/08/2026 à 01:47",
-      "match_start_ts": 1786146452,
-      "match_status": "LIVE",
-      "equipe_domicile": "Taylor Townsend",
-      "equipe_exterieur": "Belinda Bencic",
-      "joueur_1": "Taylor Townsend",
-      "joueur_2": "Belinda Bencic",
-      "meta_match": {
-        "competition": {
-          "name": "Tennis",
-          "type": "tennis",
-          "stakes_tier": "medium"
-        }
-      },
-      "free_analysis": {
-        "cotes_2way": {
-          "1": 2.25,
-          "2": 1.46
-        },
-        "probabilites": {
-          "1": 39,
-          "2": 61
-        },
-        "pronostic_vainqueur": "2",
-        "pronostic_label": "Vainqueur Belinda Bencic",
-        "confiance_niveau": "moyenne",
-        "marches": {
-          "sets_total": {},
-          "games_total": {},
-          "score_exact_sets": []
-        },
-        "conseils_intelligents": [
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Belinda Bencic",
-            "cote": 1.46,
-            "prob_pct": 65,
-            "edge": 0.949,
-            "score": -0.051,
-            "tier": "bon",
-            "raison": "Forme récente Winamax favorable à Belinda Bencic (écart 3 pts sur 5 matchs)",
-            "stars": 3
-          },
-          {
-            "market": "vainqueur",
-            "pick": "2",
-            "label": "Vainqueur Belinda Bencic",
-            "cote": 1.46,
-            "prob_pct": 64,
-            "edge": 0.934,
-            "score": -0.066,
-            "tier": "bon",
-            "raison": "Écart classement ATP/WTA (110 vs 14) — avantage Belinda Bencic",
-            "stars": 3
-          }
-        ],
-        "meilleur_conseil": {
-          "market": "vainqueur",
-          "pick": "2",
-          "label": "Vainqueur Belinda Bencic",
-          "cote": 1.46,
-          "prob_pct": 65,
-          "edge": 0.949,
-          "score": -0.051,
-          "tier": "bon",
-          "raison": "Forme récente Winamax favorable à Belinda Bencic (écart 3 pts sur 5 matchs)",
-          "stars": 3
         },
         "value_bets": [],
         "winamax_intel_enriched": true
       },
-      "conseil": "Vainqueur Belinda Bencic",
+      "conseil": "Vainqueur Learner Tien",
       "cotes": {
-        "1": 2.25,
-        "2": 1.46
+        "1": 1.4,
+        "2": 3.05
       },
       "probabilites": {
-        "1": 39,
-        "2": 61
+        "1": 76,
+        "2": 24
       },
       "velora_intel": {
         "home_form": {
@@ -977,7 +565,7 @@
           "pct": 60.0
         },
         "away_form": {
-          "raw": "WWWLW",
+          "raw": "WLWWW",
           "played": 5,
           "wins": 4,
           "draws": 0,
@@ -986,11 +574,708 @@
           "max_points": 15,
           "pct": 80.0
         },
-        "home_rank": 110,
-        "away_rank": 14,
+        "home_rank": 19,
+        "away_rank": 65,
         "h2h": null,
         "form_edge": -3,
-        "rank_edge": -96
+        "rank_edge": 46
+      }
+    },
+    {
+      "id_match": "73252870",
+      "sport": "tennis",
+      "date_match": "10/08/2026 à 01:10",
+      "match_start_ts": 1786317000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Botic Van De Zandschulp",
+      "equipe_exterieur": "Jakub Mensik",
+      "joueur_1": "Botic Van De Zandschulp",
+      "joueur_2": "Jakub Mensik",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.2,
+          "2": 1.37
+        },
+        "probabilites": {
+          "1": 30,
+          "2": 70
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Jakub Mensik",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Jakub Mensik",
+            "cote": 1.37,
+            "prob_pct": 72,
+            "edge": 0.986,
+            "score": -0.014,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (70 vs 17) — avantage Jakub Mensik",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Jakub Mensik",
+            "cote": 1.37,
+            "prob_pct": 70,
+            "edge": 0.959,
+            "score": -0.041,
+            "tier": "bon",
+            "raison": "Favori net Jakub Mensik (70% implicite, cote 1.37)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Jakub Mensik",
+          "cote": 1.37,
+          "prob_pct": 72,
+          "edge": 0.986,
+          "score": -0.014,
+          "tier": "bon",
+          "raison": "Écart classement ATP/WTA (70 vs 17) — avantage Jakub Mensik",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Jakub Mensik",
+      "cotes": {
+        "1": 3.2,
+        "2": 1.37
+      },
+      "probabilites": {
+        "1": 30,
+        "2": 70
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "LLWWW",
+          "played": 5,
+          "wins": 3,
+          "draws": 0,
+          "losses": 2,
+          "points": 9,
+          "max_points": 15,
+          "pct": 60.0
+        },
+        "away_form": {
+          "raw": "LWLWW",
+          "played": 5,
+          "wins": 3,
+          "draws": 0,
+          "losses": 2,
+          "points": 9,
+          "max_points": 15,
+          "pct": 60.0
+        },
+        "home_rank": 70,
+        "away_rank": 17,
+        "h2h": null,
+        "form_edge": 0,
+        "rank_edge": -53
+      }
+    },
+    {
+      "id_match": "73255960",
+      "sport": "tennis",
+      "date_match": "09/08/2026 à 20:30",
+      "match_start_ts": 1786300200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Alina Korneeva",
+      "equipe_exterieur": "Cori Gauff",
+      "joueur_1": "Alina Korneeva",
+      "joueur_2": "Cori Gauff",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.9,
+          "2": 1.27
+        },
+        "probabilites": {
+          "1": 25,
+          "2": 75
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Cori Gauff",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Cori Gauff",
+            "cote": 1.27,
+            "prob_pct": 75,
+            "edge": 0.953,
+            "score": -0.047,
+            "tier": "bon",
+            "raison": "Favori net Cori Gauff (75% implicite, cote 1.27)",
+            "stars": 4
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Cori Gauff",
+            "cote": 1.27,
+            "prob_pct": 72,
+            "edge": 0.914,
+            "score": -0.086,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (89 vs 4) — avantage Cori Gauff",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Cori Gauff",
+          "cote": 1.27,
+          "prob_pct": 75,
+          "edge": 0.953,
+          "score": -0.047,
+          "tier": "bon",
+          "raison": "Favori net Cori Gauff (75% implicite, cote 1.27)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Cori Gauff",
+      "cotes": {
+        "1": 3.9,
+        "2": 1.27
+      },
+      "probabilites": {
+        "1": 25,
+        "2": 75
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "LWWWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 89,
+        "away_rank": 4,
+        "h2h": null,
+        "form_edge": 0,
+        "rank_edge": -85
+      }
+    },
+    {
+      "id_match": "73255962",
+      "sport": "tennis",
+      "date_match": "10/08/2026 à 01:05",
+      "match_start_ts": 1786316700,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Leylah Fernandez",
+      "equipe_exterieur": "Naomi Osaka",
+      "joueur_1": "Leylah Fernandez",
+      "joueur_2": "Naomi Osaka",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.1,
+          "2": 1.38
+        },
+        "probabilites": {
+          "1": 31,
+          "2": 69
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Naomi Osaka",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.38,
+            "prob_pct": 73,
+            "edge": 1.007,
+            "score": 0.007,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Naomi Osaka (écart 3 pts sur 5 matchs)",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.38,
+            "prob_pct": 72,
+            "edge": 0.994,
+            "score": -0.006,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (34 vs 13) — avantage Naomi Osaka",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Naomi Osaka",
+            "cote": 1.38,
+            "prob_pct": 69,
+            "edge": 0.952,
+            "score": -0.048,
+            "tier": "bon",
+            "raison": "Favori net Naomi Osaka (69% implicite, cote 1.38)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Naomi Osaka",
+          "cote": 1.38,
+          "prob_pct": 73,
+          "edge": 1.007,
+          "score": 0.007,
+          "tier": "bon",
+          "raison": "Forme récente Winamax favorable à Naomi Osaka (écart 3 pts sur 5 matchs)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Naomi Osaka",
+      "cotes": {
+        "1": 3.1,
+        "2": 1.38
+      },
+      "probabilites": {
+        "1": 31,
+        "2": 69
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "LWLWW",
+          "played": 5,
+          "wins": 3,
+          "draws": 0,
+          "losses": 2,
+          "points": 9,
+          "max_points": 15,
+          "pct": 60.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 34,
+        "away_rank": 13,
+        "h2h": null,
+        "form_edge": -3,
+        "rank_edge": -21
+      }
+    },
+    {
+      "id_match": "73255964",
+      "sport": "tennis",
+      "date_match": "09/08/2026 à 18:30",
+      "match_start_ts": 1786293000,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Ludmilla Samsonova",
+      "equipe_exterieur": "Elena Rybakina",
+      "joueur_1": "Ludmilla Samsonova",
+      "joueur_2": "Elena Rybakina",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.75,
+          "2": 1.29
+        },
+        "probabilites": {
+          "1": 5,
+          "2": 95
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Elena Rybakina",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elena Rybakina",
+            "cote": 1.29,
+            "prob_pct": 95,
+            "edge": 1.226,
+            "score": 0.226,
+            "tier": "bon",
+            "raison": "Favori net Elena Rybakina (95% implicite, cote 1.29)",
+            "stars": 4
+          },
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elena Rybakina",
+            "cote": 1.29,
+            "prob_pct": 72,
+            "edge": 0.929,
+            "score": -0.071,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (55 vs 2) — avantage Elena Rybakina",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Elena Rybakina",
+          "cote": 1.29,
+          "prob_pct": 95,
+          "edge": 1.226,
+          "score": 0.226,
+          "tier": "bon",
+          "raison": "Favori net Elena Rybakina (95% implicite, cote 1.29)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elena Rybakina",
+            "cote": 1.29,
+            "prob_pct": 95,
+            "edge": 1.226,
+            "score": 0.226,
+            "tier": "bon",
+            "raison": "Favori net Elena Rybakina (95% implicite, cote 1.29)",
+            "stars": 4
+          }
+        ],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Elena Rybakina",
+      "cotes": {
+        "1": 3.75,
+        "2": 1.29
+      },
+      "probabilites": {
+        "1": 5,
+        "2": 95
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WLWWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 55,
+        "away_rank": 2,
+        "h2h": null,
+        "form_edge": 0,
+        "rank_edge": -53
+      }
+    },
+    {
+      "id_match": "73255966",
+      "sport": "tennis",
+      "date_match": "09/08/2026 à 01:04",
+      "match_start_ts": 1786230277,
+      "match_status": "LIVE",
+      "equipe_domicile": "Aryna Sabalenka",
+      "equipe_exterieur": "Ekaterina Alexandrova",
+      "joueur_1": "Aryna Sabalenka",
+      "joueur_2": "Ekaterina Alexandrova",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.38,
+          "2": 2.5
+        },
+        "probabilites": {
+          "1": 64,
+          "2": 36
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Aryna Sabalenka",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Aryna Sabalenka",
+            "cote": 1.38,
+            "prob_pct": 68,
+            "edge": 0.938,
+            "score": -0.062,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Aryna Sabalenka (écart 3 pts sur 5 matchs)",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Aryna Sabalenka",
+            "cote": 1.38,
+            "prob_pct": 67,
+            "edge": 0.925,
+            "score": -0.075,
+            "tier": "bon",
+            "raison": "Écart classement ATP/WTA (1 vs 19) — avantage Aryna Sabalenka",
+            "stars": 3
+          },
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Aryna Sabalenka",
+            "cote": 1.38,
+            "prob_pct": 64,
+            "edge": 0.883,
+            "score": -0.117,
+            "tier": "bon",
+            "raison": "Favori net Aryna Sabalenka (64% implicite, cote 1.38)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Aryna Sabalenka",
+          "cote": 1.38,
+          "prob_pct": 68,
+          "edge": 0.938,
+          "score": -0.062,
+          "tier": "bon",
+          "raison": "Forme récente Winamax favorable à Aryna Sabalenka (écart 3 pts sur 5 matchs)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Aryna Sabalenka",
+      "cotes": {
+        "1": 1.38,
+        "2": 2.5
+      },
+      "probabilites": {
+        "1": 64,
+        "2": 36
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "away_form": {
+          "raw": "WLLWW",
+          "played": 5,
+          "wins": 3,
+          "draws": 0,
+          "losses": 2,
+          "points": 9,
+          "max_points": 15,
+          "pct": 60.0
+        },
+        "home_rank": 1,
+        "away_rank": 19,
+        "h2h": null,
+        "form_edge": 3,
+        "rank_edge": 18
+      }
+    },
+    {
+      "id_match": "73255968",
+      "sport": "tennis",
+      "date_match": "09/08/2026 à 03:00",
+      "match_start_ts": 1786237200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Elina Svitolina",
+      "equipe_exterieur": "Amanda Anisimova",
+      "joueur_1": "Elina Svitolina",
+      "joueur_2": "Amanda Anisimova",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.62,
+          "2": 2.25
+        },
+        "probabilites": {
+          "1": 87,
+          "2": 13
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Amanda Anisimova",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Amanda Anisimova",
+            "cote": 2.25,
+            "prob_pct": 17,
+            "edge": 0.383,
+            "score": -0.617,
+            "tier": "bon",
+            "raison": "Forme récente Winamax favorable à Amanda Anisimova (écart 3 pts sur 5 matchs)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Amanda Anisimova",
+          "cote": 2.25,
+          "prob_pct": 17,
+          "edge": 0.383,
+          "score": -0.617,
+          "tier": "bon",
+          "raison": "Forme récente Winamax favorable à Amanda Anisimova (écart 3 pts sur 5 matchs)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": true
+      },
+      "conseil": "Vainqueur Amanda Anisimova",
+      "cotes": {
+        "1": 1.62,
+        "2": 2.25
+      },
+      "probabilites": {
+        "1": 87,
+        "2": 13
+      },
+      "velora_intel": {
+        "home_form": {
+          "raw": "LWLWW",
+          "played": 5,
+          "wins": 3,
+          "draws": 0,
+          "losses": 2,
+          "points": 9,
+          "max_points": 15,
+          "pct": 60.0
+        },
+        "away_form": {
+          "raw": "WWLWW",
+          "played": 5,
+          "wins": 4,
+          "draws": 0,
+          "losses": 1,
+          "points": 12,
+          "max_points": 15,
+          "pct": 80.0
+        },
+        "home_rank": 9,
+        "away_rank": 10,
+        "h2h": null,
+        "form_edge": -3,
+        "rank_edge": 1
       }
     }
   ]
