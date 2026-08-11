@@ -2,9 +2,659 @@
   "schema_version": 2,
   "meta": {
     "sport": "tennis",
-    "generated_at": "2026-08-10T05:35:44.626131+02:00",
+    "generated_at": "2026-08-11T02:55:11.442050+02:00",
     "engine": "velora-tennis-1",
-    "match_count": 0
+    "match_count": 8
   },
-  "matchs": []
+  "matchs": [
+    {
+      "id_match": "73252872",
+      "sport": "tennis",
+      "date_match": "11/08/2026 à 18:30",
+      "match_start_ts": 1786465800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Luciano Darderi",
+      "equipe_exterieur": "Brandon Nakashima",
+      "joueur_1": "Luciano Darderi",
+      "joueur_2": "Brandon Nakashima",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.05,
+          "2": 1.39
+        },
+        "probabilites": {
+          "1": 13,
+          "2": 87
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Brandon Nakashima",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Brandon Nakashima",
+            "cote": 1.39,
+            "prob_pct": 87,
+            "edge": 1.209,
+            "score": 0.209,
+            "tier": "bon",
+            "raison": "Favori net Brandon Nakashima (87% implicite, cote 1.39)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Brandon Nakashima",
+          "cote": 1.39,
+          "prob_pct": 87,
+          "edge": 1.209,
+          "score": 0.209,
+          "tier": "bon",
+          "raison": "Favori net Brandon Nakashima (87% implicite, cote 1.39)",
+          "stars": 4
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Brandon Nakashima",
+            "cote": 1.39,
+            "prob_pct": 87,
+            "edge": 1.209,
+            "score": 0.209,
+            "tier": "bon",
+            "raison": "Favori net Brandon Nakashima (87% implicite, cote 1.39)",
+            "stars": 4
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Brandon Nakashima",
+      "cotes": {
+        "1": 3.05,
+        "2": 1.39
+      },
+      "probabilites": {
+        "1": 13,
+        "2": 87
+      }
+    },
+    {
+      "id_match": "73252882",
+      "sport": "tennis",
+      "date_match": "12/08/2026 à 01:10",
+      "match_start_ts": 1786489800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Daniel Mérida",
+      "equipe_exterieur": "Learner Tien",
+      "joueur_1": "Daniel Mérida",
+      "joueur_2": "Learner Tien",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.75,
+          "2": 1.46
+        },
+        "probabilites": {
+          "1": 49,
+          "2": 51
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur Daniel Mérida",
+        "confiance_niveau": "faible",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Daniel Mérida",
+            "cote": 2.75,
+            "prob_pct": 49,
+            "edge": 1.347,
+            "score": 0.347,
+            "tier": "excellent",
+            "raison": "Outsider Daniel Mérida : proba 49% × cote 2.75 → edge 1.35",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur Daniel Mérida",
+          "cote": 2.75,
+          "prob_pct": 49,
+          "edge": 1.347,
+          "score": 0.347,
+          "tier": "excellent",
+          "raison": "Outsider Daniel Mérida : proba 49% × cote 2.75 → edge 1.35",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur Daniel Mérida",
+            "cote": 2.75,
+            "prob_pct": 49,
+            "edge": 1.347,
+            "score": 0.347,
+            "tier": "excellent",
+            "raison": "Outsider Daniel Mérida : proba 49% × cote 2.75 → edge 1.35",
+            "stars": 5
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Daniel Mérida",
+      "cotes": {
+        "1": 2.75,
+        "2": 1.46
+      },
+      "probabilites": {
+        "1": 49,
+        "2": 51
+      }
+    },
+    {
+      "id_match": "73252884",
+      "sport": "tennis",
+      "date_match": "12/08/2026 à 00:00",
+      "match_start_ts": 1786485600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Jakub Mensik",
+      "equipe_exterieur": "Ben Shelton",
+      "joueur_1": "Jakub Mensik",
+      "joueur_2": "Ben Shelton",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.1,
+          "2": 1.76
+        },
+        "probabilites": {
+          "1": 9,
+          "2": 91
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Ben Shelton",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ben Shelton",
+            "cote": 1.76,
+            "prob_pct": 91,
+            "edge": 1.602,
+            "score": 0.602,
+            "tier": "standard",
+            "raison": "Pronostic marché : Ben Shelton (91%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Ben Shelton",
+          "cote": 1.76,
+          "prob_pct": 91,
+          "edge": 1.602,
+          "score": 0.602,
+          "tier": "standard",
+          "raison": "Pronostic marché : Ben Shelton (91%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Ben Shelton",
+            "cote": 1.76,
+            "prob_pct": 91,
+            "edge": 1.602,
+            "score": 0.602,
+            "tier": "standard",
+            "raison": "Pronostic marché : Ben Shelton (91%)",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Ben Shelton",
+      "cotes": {
+        "1": 2.1,
+        "2": 1.76
+      },
+      "probabilites": {
+        "1": 9,
+        "2": 91
+      }
+    },
+    {
+      "id_match": "73254152",
+      "sport": "tennis",
+      "date_match": "11/08/2026 à 20:40",
+      "match_start_ts": 1786473600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "O.Luz / R.Matos",
+      "equipe_exterieur": "G.Andreozzi / M.Guinard",
+      "joueur_1": "O.Luz / R.Matos",
+      "joueur_2": "G.Andreozzi / M.Guinard",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.4,
+          "2": 1.52
+        },
+        "probabilites": {
+          "1": 39,
+          "2": 61
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur G.Andreozzi / M.Guinard",
+        "confiance_niveau": "moyenne",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur G.Andreozzi / M.Guinard",
+            "cote": 1.52,
+            "prob_pct": 61,
+            "edge": 0.927,
+            "score": -0.073,
+            "tier": "standard",
+            "raison": "Pronostic marché : G.Andreozzi / M.Guinard (61%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur G.Andreozzi / M.Guinard",
+          "cote": 1.52,
+          "prob_pct": 61,
+          "edge": 0.927,
+          "score": -0.073,
+          "tier": "standard",
+          "raison": "Pronostic marché : G.Andreozzi / M.Guinard (61%)",
+          "stars": 3
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur G.Andreozzi / M.Guinard",
+      "cotes": {
+        "1": 2.4,
+        "2": 1.52
+      },
+      "probabilites": {
+        "1": 39,
+        "2": 61
+      }
+    },
+    {
+      "id_match": "73254166",
+      "sport": "tennis",
+      "date_match": "11/08/2026 à 18:30",
+      "match_start_ts": 1786465800,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "H.Heliovaara / H.Patten",
+      "equipe_exterieur": "F.Cerundolo / T.M.Etcheverry ",
+      "joueur_1": "H.Heliovaara / H.Patten",
+      "joueur_2": "F.Cerundolo / T.M.Etcheverry ",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.1,
+          "2": 6.0
+        },
+        "probabilites": {
+          "1": 85,
+          "2": 15
+        },
+        "pronostic_vainqueur": "1",
+        "pronostic_label": "Vainqueur H.Heliovaara / H.Patten",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "1",
+            "label": "Vainqueur H.Heliovaara / H.Patten",
+            "cote": 1.1,
+            "prob_pct": 85,
+            "edge": 0.935,
+            "score": -0.065,
+            "tier": "bon",
+            "raison": "Favori net H.Heliovaara / H.Patten (85% implicite, cote 1.10)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "1",
+          "label": "Vainqueur H.Heliovaara / H.Patten",
+          "cote": 1.1,
+          "prob_pct": 85,
+          "edge": 0.935,
+          "score": -0.065,
+          "tier": "bon",
+          "raison": "Favori net H.Heliovaara / H.Patten (85% implicite, cote 1.10)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur H.Heliovaara / H.Patten",
+      "cotes": {
+        "1": 1.1,
+        "2": 6.0
+      },
+      "probabilites": {
+        "1": 85,
+        "2": 15
+      }
+    },
+    {
+      "id_match": "73255980",
+      "sport": "tennis",
+      "date_match": "11/08/2026 à 02:28",
+      "match_start_ts": 1786408087,
+      "match_status": "LIVE",
+      "equipe_domicile": "Ekaterina Alexandrova",
+      "equipe_exterieur": "Elina Svitolina",
+      "joueur_1": "Ekaterina Alexandrova",
+      "joueur_2": "Elina Svitolina",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 3.1,
+          "2": 1.25
+        },
+        "probabilites": {
+          "1": 29,
+          "2": 71
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Elina Svitolina",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elina Svitolina",
+            "cote": 1.25,
+            "prob_pct": 71,
+            "edge": 0.887,
+            "score": -0.113,
+            "tier": "bon",
+            "raison": "Favori net Elina Svitolina (71% implicite, cote 1.25)",
+            "stars": 4
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Elina Svitolina",
+          "cote": 1.25,
+          "prob_pct": 71,
+          "edge": 0.887,
+          "score": -0.113,
+          "tier": "bon",
+          "raison": "Favori net Elina Svitolina (71% implicite, cote 1.25)",
+          "stars": 4
+        },
+        "value_bets": [],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Elina Svitolina",
+      "cotes": {
+        "1": 3.1,
+        "2": 1.25
+      },
+      "probabilites": {
+        "1": 29,
+        "2": 71
+      }
+    },
+    {
+      "id_match": "73255984",
+      "sport": "tennis",
+      "date_match": "12/08/2026 à 01:00",
+      "match_start_ts": 1786489200,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Belinda Bencic",
+      "equipe_exterieur": "Cori Gauff",
+      "joueur_1": "Belinda Bencic",
+      "joueur_2": "Cori Gauff",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 2.35,
+          "2": 1.6
+        },
+        "probabilites": {
+          "1": 6,
+          "2": 94
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Cori Gauff",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Cori Gauff",
+            "cote": 1.6,
+            "prob_pct": 94,
+            "edge": 1.504,
+            "score": 0.504,
+            "tier": "standard",
+            "raison": "Pronostic marché : Cori Gauff (94%)",
+            "stars": 3
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Cori Gauff",
+          "cote": 1.6,
+          "prob_pct": 94,
+          "edge": 1.504,
+          "score": 0.504,
+          "tier": "standard",
+          "raison": "Pronostic marché : Cori Gauff (94%)",
+          "stars": 3
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Cori Gauff",
+            "cote": 1.6,
+            "prob_pct": 94,
+            "edge": 1.504,
+            "score": 0.504,
+            "tier": "standard",
+            "raison": "Pronostic marché : Cori Gauff (94%)",
+            "stars": 3
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Cori Gauff",
+      "cotes": {
+        "1": 2.35,
+        "2": 1.6
+      },
+      "probabilites": {
+        "1": 6,
+        "2": 94
+      }
+    },
+    {
+      "id_match": "73255986",
+      "sport": "tennis",
+      "date_match": "12/08/2026 à 02:30",
+      "match_start_ts": 1786494600,
+      "match_status": "PREMATCH",
+      "equipe_domicile": "Naomi Osaka",
+      "equipe_exterieur": "Elena Rybakina",
+      "joueur_1": "Naomi Osaka",
+      "joueur_2": "Elena Rybakina",
+      "meta_match": {
+        "competition": {
+          "name": "Tennis",
+          "type": "tennis",
+          "stakes_tier": "medium"
+        }
+      },
+      "free_analysis": {
+        "cotes_2way": {
+          "1": 1.92,
+          "2": 1.92
+        },
+        "probabilites": {
+          "1": 34,
+          "2": 66
+        },
+        "pronostic_vainqueur": "2",
+        "pronostic_label": "Vainqueur Elena Rybakina",
+        "confiance_niveau": "haute",
+        "marches": {
+          "sets_total": {},
+          "games_total": {},
+          "score_exact_sets": []
+        },
+        "conseils_intelligents": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elena Rybakina",
+            "cote": 1.92,
+            "prob_pct": 66,
+            "edge": 1.267,
+            "score": 0.267,
+            "tier": "excellent",
+            "raison": "Outsider Elena Rybakina : proba 66% × cote 1.92 → edge 1.27",
+            "stars": 5
+          }
+        ],
+        "meilleur_conseil": {
+          "market": "vainqueur",
+          "pick": "2",
+          "label": "Vainqueur Elena Rybakina",
+          "cote": 1.92,
+          "prob_pct": 66,
+          "edge": 1.267,
+          "score": 0.267,
+          "tier": "excellent",
+          "raison": "Outsider Elena Rybakina : proba 66% × cote 1.92 → edge 1.27",
+          "stars": 5
+        },
+        "value_bets": [
+          {
+            "market": "vainqueur",
+            "pick": "2",
+            "label": "Vainqueur Elena Rybakina",
+            "cote": 1.92,
+            "prob_pct": 66,
+            "edge": 1.267,
+            "score": 0.267,
+            "tier": "excellent",
+            "raison": "Outsider Elena Rybakina : proba 66% × cote 1.92 → edge 1.27",
+            "stars": 5
+          }
+        ],
+        "winamax_intel_enriched": false
+      },
+      "conseil": "Vainqueur Elena Rybakina",
+      "cotes": {
+        "1": 1.92,
+        "2": 1.92
+      },
+      "probabilites": {
+        "1": 34,
+        "2": 66
+      }
+    }
+  ]
 }
