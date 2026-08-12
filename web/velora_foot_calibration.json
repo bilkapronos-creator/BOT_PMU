@@ -18,8 +18,8 @@
       "edge_actuel": 1.15,
       "edge_suggere": 1.21,
       "taux_pct": 18,
-      "echantillon": 225,
-      "raison": "18% de réussite sur 225 matchs — seuil relevé"
+      "echantillon": 226,
+      "raison": "18% de réussite sur 226 matchs — seuil relevé"
     },
     {
       "marche": "value_1n2",
@@ -28,8 +28,8 @@
       "edge_actuel": 1.05,
       "edge_suggere": 1.07,
       "taux_pct": 41,
-      "echantillon": 133,
-      "raison": "41% de réussite sur 133 matchs — seuil relevé"
+      "echantillon": 134,
+      "raison": "41% de réussite sur 134 matchs — seuil relevé"
     },
     {
       "marche": "over_25",
@@ -45,17 +45,17 @@
   "detail_par_marche": {
     "double_chance": {
       "label": "Double chance",
-      "total": 151,
-      "succes": 84,
+      "total": 152,
+      "succes": 85,
       "taux": 56,
-      "profit_net": -115.3
+      "profit_net": -110.3
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 225,
+      "total": 226,
       "succes": 41,
       "taux": 18,
-      "profit_net": -1664.2
+      "profit_net": -1674.2
     },
     "pronostic_1n2": {
       "label": "Pronostic 1N2",
@@ -66,10 +66,10 @@
     },
     "value_1n2": {
       "label": "Value 1N2",
-      "total": 133,
+      "total": 134,
       "succes": 55,
       "taux": 41,
-      "profit_net": 213.8
+      "profit_net": 203.8
     },
     "over_25": {
       "label": "Over 2.5",
