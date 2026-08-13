@@ -12,6 +12,16 @@
   },
   "suggestions": [
     {
+      "marche": "value_1n2",
+      "label": "Value 1N2",
+      "edge_key": "1n2",
+      "edge_actuel": 1.05,
+      "edge_suggere": 1.07,
+      "taux_pct": 41,
+      "echantillon": 135,
+      "raison": "41% de réussite sur 135 matchs — seuil relevé"
+    },
+    {
       "marche": "score_exact",
       "label": "Score exact (top 3)",
       "edge_key": "score_exact",
@@ -20,16 +30,6 @@
       "taux_pct": 18,
       "echantillon": 228,
       "raison": "18% de réussite sur 228 matchs — seuil relevé"
-    },
-    {
-      "marche": "value_1n2",
-      "label": "Value 1N2",
-      "edge_key": "1n2",
-      "edge_actuel": 1.05,
-      "edge_suggere": 1.07,
-      "taux_pct": 41,
-      "echantillon": 134,
-      "raison": "41% de réussite sur 134 matchs — seuil relevé"
     },
     {
       "marche": "over_25",
@@ -43,6 +43,13 @@
     }
   ],
   "detail_par_marche": {
+    "value_1n2": {
+      "label": "Value 1N2",
+      "total": 135,
+      "succes": 55,
+      "taux": 41,
+      "profit_net": 193.8
+    },
     "score_exact": {
       "label": "Score exact (top 3)",
       "total": 228,
@@ -63,13 +70,6 @@
       "succes": 18,
       "taux": 45,
       "profit_net": -206.8
-    },
-    "value_1n2": {
-      "label": "Value 1N2",
-      "total": 134,
-      "succes": 55,
-      "taux": 41,
-      "profit_net": 203.8
     },
     "over_25": {
       "label": "Over 2.5",
