@@ -17,9 +17,9 @@
       "edge_key": "1n2",
       "edge_actuel": 1.05,
       "edge_suggere": 1.07,
-      "taux_pct": 40,
-      "echantillon": 141,
-      "raison": "40% de réussite sur 141 matchs — seuil relevé"
+      "taux_pct": 41,
+      "echantillon": 143,
+      "raison": "41% de réussite sur 143 matchs — seuil relevé"
     },
     {
       "marche": "score_exact",
@@ -27,9 +27,9 @@
       "edge_key": "score_exact",
       "edge_actuel": 1.15,
       "edge_suggere": 1.21,
-      "taux_pct": 18,
-      "echantillon": 230,
-      "raison": "18% de réussite sur 230 matchs — seuil relevé"
+      "taux_pct": 19,
+      "echantillon": 231,
+      "raison": "19% de réussite sur 231 matchs — seuil relevé"
     },
     {
       "marche": "over_25",
@@ -45,24 +45,24 @@
   "detail_par_marche": {
     "value_1n2": {
       "label": "Value 1N2",
-      "total": 141,
-      "succes": 57,
-      "taux": 40,
-      "profit_net": 179.3
+      "total": 143,
+      "succes": 58,
+      "taux": 41,
+      "profit_net": 175.1
     },
     "score_exact": {
       "label": "Score exact (top 3)",
-      "total": 230,
-      "succes": 42,
-      "taux": 18,
-      "profit_net": -1704.1
+      "total": 231,
+      "succes": 43,
+      "taux": 19,
+      "profit_net": -1704.0
     },
     "double_chance": {
       "label": "Double chance",
-      "total": 154,
-      "succes": 87,
-      "taux": 56,
-      "profit_net": -89.8
+      "total": 155,
+      "succes": 88,
+      "taux": 57,
+      "profit_net": -83.4
     },
     "pronostic_1n2": {
       "label": "Pronostic 1N2",
