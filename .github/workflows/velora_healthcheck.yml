@@ -1,0 +1,35 @@
+# Surveillance prod : JSON foot assez complet et récent (sans relancer le scrape lourd).
+name: Velora Healthcheck (prod)
+
+on:
+  schedule:
+    - cron: "8 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  VELORA_CI_FOOT_MIN_MATCHS: "80"
+  VELORA_CI_FOOT_MAX_AGE_H: "3"
+
+jobs:
+  prod-foot-json:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Vérifier api_velora_matchs.json en production
+        run: python scripts/ci_check_prod_foot_json.py
+
+      - name: Alerte webhook (optionnel)
+        if: failure()
+        env:
+          VELORA_ALERT_WEBHOOK_URL: ${{ secrets.VELORA_ALERT_WEBHOOK_URL }}
+        run: |
+          bash scripts/ci_alert_webhook.sh \
+            "Velora — base foot prod anormale" \
+            "Healthcheck prod : trop peu de matchs ou JSON périmé. Voir velora-pronos.com et le cron scraper."

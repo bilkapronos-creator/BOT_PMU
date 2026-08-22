@@ -18,6 +18,9 @@ on:
       - "parser_winamax_tennis.py"
       - ".github/workflows/velora_cron.yml"
       - "scripts/ci_push_velora_json.sh"
+      - "scripts/ci_check_prod_foot_json.py"
+      - "scripts/ci_alert_webhook.sh"
+      - ".github/workflows/velora_healthcheck.yml"
       - "velora_engine/**"
   workflow_dispatch:
 
@@ -32,6 +35,8 @@ env:
   VELORA_CI_SCRAPER_OPTIONAL: "1"
   # Skip scrape seulement si JSON/dump < 2 h ET matchs du jour encore à jouer
   VELORA_CI_SCRAPER_MAX_AGE_H: "2"
+  VELORA_CI_FOOT_MIN_MATCHS: "80"
+  VELORA_CI_FOOT_MAX_AGE_H: "3"
   VELORA_PROXY_INTERACTIVE: "0"
   VELORA_DUMP_WAIT_MS: "90000"
 
@@ -112,7 +117,19 @@ jobs:
           VELORA_DUMP_TENNIS_POLL_SEC: "50"
           SNIPER_WINDOW_HOURS: "168"
           VELORA_CI_MATCHS_MAX_AGE_H: "6"
+          VELORA_CI_FOOT_MIN_MATCHS: "80"
+          VELORA_DUMP_FOOT_MIN_MATCHES: "80"
+          VELORA_DUMP_FOOT_COMPETITIONS: "12"
+          VELORA_DUMP_FOOT_SCROLL: "10"
         run: xvfb-run -a python run_all.py
+
+      - name: Vérifier volume et fraîcheur JSON Foot (seuil prod)
+        if: always()
+        env:
+          VELORA_FOOT_JSON_URL: web/api_velora_matchs.json
+          VELORA_CI_FOOT_MIN_MATCHS: "80"
+          VELORA_CI_FOOT_MAX_AGE_H: "6"
+        run: python scripts/ci_check_prod_foot_json.py
 
       - name: Vérifier matchs du jour (recherche Foot vide si 0)
         if: always()
@@ -199,3 +216,12 @@ jobs:
       - name: Commit et push JSON (web/ + racine → Vercel)
         if: success()
         run: bash scripts/ci_push_velora_json.sh
+
+      - name: Alerte webhook (optionnel)
+        if: failure()
+        env:
+          VELORA_ALERT_WEBHOOK_URL: ${{ secrets.VELORA_ALERT_WEBHOOK_URL }}
+        run: |
+          bash scripts/ci_alert_webhook.sh \
+            "Velora — pipeline en échec" \
+            "Scrape, validation JSON ou push a échoué. Les clients peuvent voir une base incomplète."
