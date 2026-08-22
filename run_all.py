@@ -565,6 +565,21 @@ def _match_est_termine_ou_live(match: dict) -> bool:
     return ts < time.time() - MATCH_FINISHED_GRACE_SEC
 
 
+def _json_est_fichier_matchs_foot(path: Path) -> bool:
+    return path.name.lower() == "api_velora_matchs.json"
+
+
+def _json_foot_a_venir_sous_seuil(path: Path) -> bool:
+    """Vrai si api_velora_matchs.json existe mais est anormalement petite (scrape partiel)."""
+    if not _json_est_fichier_matchs_foot(path):
+        return False
+    if not path.is_file():
+        return False
+    min_matchs = int(os.environ.get("VELORA_CI_FOOT_MIN_MATCHS", "80"))
+    count = _json_matchs_a_venir_count(path)
+    return 0 < count < min_matchs
+
+
 def _json_contient_matchs_a_venir_journee(path: Path) -> bool:
     """Matchs betting_day encore à jouer (ou en direct) — sinon re-scrape requis."""
     if not path.is_file():
@@ -619,6 +634,8 @@ def _json_skip_scraper_ci(path: Path, max_heures: float) -> bool:
         return False
     if _json_effective_age_hours(path) > max_heures:
         return False
+    if _json_foot_a_venir_sous_seuil(path):
+        return False
     return _json_contient_matchs_a_venir_journee(path)
 
 
@@ -631,6 +648,8 @@ def _json_utilisable_ci(path: Path, max_heures: float) -> bool:
         return False
     age_h = (time.time() - path.stat().st_mtime) / 3600.0
     if age_h > max_heures:
+        return False
+    if _json_foot_a_venir_sous_seuil(path):
         return False
     return _json_contient_matchs_a_venir_journee(path)
 
@@ -656,6 +675,8 @@ def _matchs_json_necessite_parser(path: Path) -> bool:
     if not path.is_file() or path.stat().st_size < 4:
         return True
     if _json_matchs_a_venir_count(path) == 0:
+        return True
+    if _json_foot_a_venir_sous_seuil(path):
         return True
     max_age = float(os.environ.get("VELORA_CI_MATCHS_MAX_AGE_H", "6"))
     meta_age = _json_meta_age_hours(path)
@@ -709,6 +730,15 @@ def _tennis_json_besoin_regeneration() -> bool:
     if not paths:
         return True
     return any(_matchs_json_necessite_parser(p) for p in paths)
+
+
+def _foot_json_sous_seuil_ci() -> bool:
+    """Vrai si les JSON foot servis ont trop peu de matchs à venir."""
+    assert WEB_ROOT is not None
+    for path in (MATCHS_JSON, WEB_ROOT / "api_velora_matchs.json"):
+        if _json_foot_a_venir_sous_seuil(path):
+            return True
+    return False
 
 
 def _aucun_match_foot_a_venir_ci() -> bool:
@@ -942,8 +972,14 @@ def executer_phase_scraper() -> bool:
                 pass
         if dump_sans_tennis:
             force_tennis_scrape = True
-        force_scrape_foot = _aucun_match_foot_a_venir_ci()
-        if force_scrape_foot:
+        force_scrape_foot = _aucun_match_foot_a_venir_ci() or _foot_json_sous_seuil_ci()
+        if force_scrape_foot and _foot_json_sous_seuil_ci() and not _aucun_match_foot_a_venir_ci():
+            log(
+                "CI : base foot anormalement petite (< "
+                f"{os.environ.get('VELORA_CI_FOOT_MIN_MATCHS', '80')} matchs à venir) — "
+                "scrape Winamax forcé (VELORA_PROXY_URL requis).",
+            )
+        elif force_scrape_foot:
             log(
                 "CI : 0 match Foot à venir en JSON — scrape Winamax forcé "
                 "(VELORA_PROXY_URL proxy France requis sur GitHub Actions).",

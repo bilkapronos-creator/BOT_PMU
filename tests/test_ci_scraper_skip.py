@@ -93,6 +93,26 @@ def test_json_skip_scraper_ci_refuse_si_matchs_journee_termines(tmp_path):
     assert run_all._json_skip_scraper_ci(fichier, 6.0) is False
 
 
+def test_json_skip_scraper_ci_refuse_si_foot_sous_seuil(tmp_path, monkeypatch):
+    import run_all
+
+    now = datetime.now(tz=TZ)
+    kick = now.replace(hour=20, minute=0, second=0, microsecond=0)
+    if kick <= now:
+        kick += timedelta(hours=3)
+    rows = [_match_row(kick.replace(hour=(kick.hour + i) % 24), home=f"Club{i}") for i in range(20)]
+    fichier = tmp_path / "api_velora_matchs.json"
+    fichier.write_text(json.dumps({"matchs": rows}, ensure_ascii=False), encoding="utf-8")
+    recent = time.time() - 1800
+    os.utime(fichier, (recent, recent))
+    monkeypatch.setenv("VELORA_CI_SCRAPER_MAX_AGE_H", "6")
+    monkeypatch.setenv("VELORA_CI_FOOT_MIN_MATCHS", "80")
+
+    assert run_all._json_contient_matchs_a_venir_journee(fichier) is True
+    assert run_all._json_foot_a_venir_sous_seuil(fichier) is True
+    assert run_all._json_skip_scraper_ci(fichier, 6.0) is False
+
+
 def test_dump_skip_scraper_ci_exige_journee_et_fichier_recent(tmp_path, monkeypatch):
     import run_all
 

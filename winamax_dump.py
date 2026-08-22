@@ -26,8 +26,10 @@ URLS = (
     "https://www.winamax.fr/paris-sportifs/sports/5",
     "https://www.winamax.fr/paris-sportifs",
 )
+FOOTBALL_SPORT_ID = 1
 TENNIS_SPORT_ID = 5
 TENNIS_URL = URLS[1]
+FOOT_URL = URLS[0]
 OUT = Path(__file__).resolve().parent / "dump_winamax_html.json"
 DEBUG_HTML = Path(__file__).resolve().parent / "dump_winamax_debug.html"
 UA = (
@@ -40,6 +42,8 @@ REGEX_MAX_SECONDS = int(os.environ.get("VELORA_DUMP_REGEX_SEC", "25"))
 GOTO_TIMEOUT_MS = int(os.environ.get("VELORA_DUMP_GOTO_MS", "90000"))
 HTTP_TIMEOUT_SEC = int(os.environ.get("VELORA_DUMP_HTTP_TIMEOUT", "35"))
 TENNIS_POLL_SEC = float(os.environ.get("VELORA_DUMP_TENNIS_POLL_SEC", "45"))
+FOOT_POLL_SEC = float(os.environ.get("VELORA_DUMP_FOOT_POLL_SEC", "35"))
+FOOT_SCROLL_PASSES = int(os.environ.get("VELORA_DUMP_FOOT_SCROLL", "10"))
 
 
 class WinamaxDumpError(Exception):
@@ -165,10 +169,11 @@ def _harvest_state_chunks_from_text(text: str) -> list[dict]:
     return chunks
 
 
-def _poll_tennis_matches_in_page(page, max_seconds: float = TENNIS_POLL_SEC) -> int:
-    """Winamax injecte le tennis via Socket.IO — attendre que PRELOADED_STATE se remplisse."""
+def _poll_sport_matches_in_page(page, sport_id: int, max_seconds: float, min_ready: int = 3) -> int:
+    """Attend que PRELOADED_STATE accumule les matchs d'un sport (Socket.IO / lazy load)."""
     deadline = time.monotonic() + max_seconds
     last_n = 0
+    stable = 0
     while time.monotonic() < deadline:
         try:
             n = page.evaluate(
@@ -176,20 +181,34 @@ def _poll_tennis_matches_in_page(page, max_seconds: float = TENNIS_POLL_SEC) -> 
                 const s = window.PRELOADED_STATE;
                 if (!s || !s.matches) return 0;
                 return Object.values(s.matches).filter(
-                    (m) => m && Number(m.sportId) === {TENNIS_SPORT_ID}
+                    (m) => m && Number(m.sportId) === {sport_id}
                 ).length;
             }}"""
             )
             n = int(n or 0)
             if n > last_n:
-                print(f"[winamax_dump] poll Socket.IO → PRELOADED_STATE tennis: {n}")
+                print(f"[winamax_dump] poll PRELOADED_STATE sportId={sport_id}: {n}")
                 last_n = n
-            if n >= 3:
+                stable = 0
+            elif n >= min_ready:
+                stable += 1
+                if stable >= 2:
+                    return n
+            if n >= min_ready and min_ready >= 50:
                 return n
         except Exception:
             pass
         time.sleep(2.0)
     return last_n
+
+
+def _poll_tennis_matches_in_page(page, max_seconds: float = TENNIS_POLL_SEC) -> int:
+    """Winamax injecte le tennis via Socket.IO — attendre que PRELOADED_STATE se remplisse."""
+    return _poll_sport_matches_in_page(page, TENNIS_SPORT_ID, max_seconds, min_ready=3)
+
+
+def _poll_foot_matches_in_page(page, max_seconds: float = FOOT_POLL_SEC) -> int:
+    return _poll_sport_matches_in_page(page, FOOTBALL_SPORT_ID, max_seconds, min_ready=50)
 
 
 def _click_tennis_nav(page) -> None:
@@ -455,10 +474,19 @@ def _slice_state_for_url(state: dict, url: str) -> dict | None:
     return sliced
 
 
-def _tennis_tournament_urls(state: dict, max_urls: int = 10) -> list[str]:
+def _sport_expected_match_count(state: dict, sport_id: int) -> int:
     sports = state.get("sports") or {}
-    tennis = sports.get(str(TENNIS_SPORT_ID)) or sports.get(TENNIS_SPORT_ID) or {}
-    cat_ids = tennis.get("categories") or []
+    meta = sports.get(str(sport_id)) or sports.get(sport_id) or {}
+    try:
+        return int(meta.get("mainMatchCount") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _tournament_urls_for_sport(state: dict, sport_id: int, max_urls: int = 10) -> list[str]:
+    sports = state.get("sports") or {}
+    sport = sports.get(str(sport_id)) or sports.get(sport_id) or {}
+    cat_ids = sport.get("categories") or []
     cats = state.get("categories") or {}
     tournaments = state.get("tournaments") or {}
     ranked: list[tuple[int, int]] = []
@@ -484,10 +512,65 @@ def _tennis_tournament_urls(state: dict, max_urls: int = 10) -> list[str]:
         if tid in seen:
             continue
         seen.add(tid)
-        urls.append(f"https://www.winamax.fr/paris-sportifs/sports/5/tournaments/{tid}")
+        urls.append(f"https://www.winamax.fr/paris-sportifs/sports/{sport_id}/tournaments/{tid}")
         if len(urls) >= max_urls:
             break
     return urls
+
+
+def _tennis_tournament_urls(state: dict, max_urls: int = 10) -> list[str]:
+    return _tournament_urls_for_sport(state, TENNIS_SPORT_ID, max_urls)
+
+
+def _foot_competition_urls(state: dict, max_urls: int = 12) -> list[str]:
+    return _tournament_urls_for_sport(state, FOOTBALL_SPORT_ID, max_urls)
+
+
+def _foot_need_more_matches(data: dict | None) -> bool:
+    target = int(os.environ.get("VELORA_DUMP_FOOT_MIN_MATCHES", "80"))
+    foot_n = _count_matches_by_sport_id(data or {}).get(FOOTBALL_SPORT_ID, 0)
+    if foot_n >= target:
+        return False
+    expected = _sport_expected_match_count(data or {}, FOOTBALL_SPORT_ID)
+    if expected > 0 and foot_n >= max(target, int(expected * 0.55)):
+        return False
+    return True
+
+
+def _scrape_foot_competition_urls(
+    page,
+    data: dict | None,
+    sources: list[str],
+) -> dict | None:
+    if not _foot_need_more_matches(data):
+        return data
+    max_urls = int(os.environ.get("VELORA_DUMP_FOOT_COMPETITIONS", "12"))
+    urls = _foot_competition_urls(data or {}, max_urls=max_urls)
+    if not urls:
+        print("[winamax_dump] Métadonnées foot sans compétitions listées — skip URLs compétitions.")
+        return data
+    target = int(os.environ.get("VELORA_DUMP_FOOT_MIN_MATCHES", "80"))
+    foot_n = _count_matches_by_sport_id(data or {}).get(FOOTBALL_SPORT_ID, 0)
+    print(
+        f"[winamax_dump] Foot incomplet ({foot_n}<{target}) — "
+        f"visite jusqu'à {len(urls)} page(s) compétition…",
+    )
+    for url in urls:
+        if not _foot_need_more_matches(data):
+            break
+        try:
+            chunk, src = _try_url(page, url, state_ready=False)
+            if chunk is not None:
+                before = _count_matches_by_sport_id(data or {}).get(FOOTBALL_SPORT_ID, 0)
+                data = _merge_winamax_states(data, chunk)
+                after = _count_matches_by_sport_id(data or {}).get(FOOTBALL_SPORT_ID, 0)
+                sources.append(f"{url} ({src})")
+                print(f"[winamax_dump] Compétition foot: {before} -> {after} — {url}")
+        except WinamaxDumpError as e:
+            print(f"[winamax_dump] compétition {url} — {e}", file=sys.stderr)
+        except Exception as e:
+            print(f"[winamax_dump] compétition ignorée {url}: {e}", file=sys.stderr)
+    return data
 
 
 def _scrape_tennis_tournament_urls(
@@ -663,7 +746,7 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
     page.on("response", on_response)
 
     try:
-        wait_until = "networkidle" if expected_sport == TENNIS_SPORT_ID else "domcontentloaded"
+        wait_until = "networkidle" if expected_sport in (TENNIS_SPORT_ID, FOOTBALL_SPORT_ID) else "domcontentloaded"
         try:
             page.goto(url, timeout=GOTO_TIMEOUT_MS, wait_until=wait_until)
         except Exception as e:
@@ -679,9 +762,20 @@ def _try_url(page, url: str, *, state_ready: bool) -> tuple[object | None, str]:
             polled = _poll_tennis_matches_in_page(page)
             if polled > 0:
                 state_ready = True
+        elif expected_sport == FOOTBALL_SPORT_ID:
+            _scroll_to_load_matches(page, times=FOOT_SCROLL_PASSES)
+            state_ready = _wait_for_sport_id_matches(page, FOOTBALL_SPORT_ID)
+            polled = _poll_foot_matches_in_page(page)
+            if polled > 0:
+                state_ready = True
         elif "/tournaments/" in url and "/sports/5" in url:
             _scroll_to_load_matches(page)
             polled = _poll_tennis_matches_in_page(page, max_seconds=min(TENNIS_POLL_SEC, 25.0))
+            if polled > 0:
+                state_ready = True
+        elif "/tournaments/" in url and "/sports/1" in url:
+            _scroll_to_load_matches(page, times=6)
+            polled = _poll_foot_matches_in_page(page, max_seconds=min(FOOT_POLL_SEC, 25.0))
             if polled > 0:
                 state_ready = True
         elif not state_ready:
@@ -938,6 +1032,7 @@ def main() -> None:
                 except Exception as e:
                     print(f"[winamax_dump] retry tennis ignoré: {e}", file=sys.stderr)
 
+            data = _scrape_foot_competition_urls(page, data, sources)
             data = _scrape_tennis_tournament_urls(page, data, sources)
 
             if data is not None and sources:
